@@ -1,0 +1,327 @@
+{%- doc -%}
+  Renders a collection grid poster from a collection_grid_poster metaobject.
+
+  Expected metaobject fields:
+  - sort_order: starting column (1-based), or left / middle / right
+  - span_row / span_column (or span_colum): how many grid tracks to occupy
+  - text_position / text_position_mobile: preset keyword or raw CSS
+  - legacy span: still supported as column span fallback
+
+  @param {object} poster - Metaobject entry (collection_grid_poster)
+  @param {number} [index] - Optional index for unique keys
+  @param {number} [page] - Current pagination page
+{%- enddoc -%}
+
+{% liquid
+  assign poster_image = poster.image
+  if poster_image == blank and poster.image.value != blank
+    assign poster_image = poster.image.value
+  endif
+
+  assign poster_mobile_image = poster.mobile_image
+  if poster_mobile_image == blank and poster.mobile_image.value != blank
+    assign poster_mobile_image = poster.mobile_image.value
+  endif
+
+  assign poster_link = poster.link
+  if poster_link == blank and poster.link.value != blank
+    assign poster_link = poster.link.value
+  endif
+
+  assign poster_title = poster.title
+  if poster_title == blank and poster.title.value != blank
+    assign poster_title = poster.title.value
+  endif
+
+  assign poster_content = poster.content
+  if poster_content == blank and poster.content.value != blank
+    assign poster_content = poster.content.value
+  endif
+
+  # Span Row
+  assign span_row_raw = poster.span_row
+  if span_row_raw == blank
+    assign span_row_raw = poster['span_row']
+  endif
+  if span_row_raw.value != blank
+    assign span_row_raw = span_row_raw.value
+  endif
+  assign span_row_raw = span_row_raw | strip | downcase
+
+  # Span Column (also accept typo handle span_colum)
+  assign span_col_raw = poster.span_column
+  if span_col_raw == blank
+    assign span_col_raw = poster['span_column']
+  endif
+  if span_col_raw == blank
+    assign span_col_raw = poster.span_colum
+  endif
+  if span_col_raw == blank
+    assign span_col_raw = poster['span_colum']
+  endif
+  if span_col_raw.value != blank
+    assign span_col_raw = span_col_raw.value
+  endif
+  if span_col_raw == blank
+    assign span_col_raw = poster.span
+    if span_col_raw.value != blank
+      assign span_col_raw = span_col_raw.value
+    endif
+  endif
+  assign span_col_raw = span_col_raw | strip | downcase
+
+  if span_row_raw == blank
+    assign span_row_raw = '1'
+  endif
+  if span_col_raw == blank
+    assign span_col_raw = '1'
+  endif
+
+  assign span_row_num = span_row_raw | plus: 0
+  assign span_col_num = span_col_raw | plus: 0
+
+  # Sort Order = starting column (1-based). Also accepts left / middle / right.
+  assign col_start_raw = poster.sort_order
+  if col_start_raw == blank
+    assign col_start_raw = poster['sort_order']
+  endif
+  if col_start_raw.value != blank
+    assign col_start_raw = col_start_raw.value
+  endif
+  assign col_start_raw = col_start_raw | strip | downcase
+  assign col_start_num = col_start_raw | plus: 0
+  assign col_start_mode = 'number'
+
+  if col_start_raw == blank
+    assign col_start_num = 1
+  elsif col_start_raw == 'left' or col_start_raw == 'start'
+    assign col_start_num = 1
+  elsif col_start_raw == 'middle' or col_start_raw == 'center'
+    assign col_start_mode = 'middle'
+    assign col_start_num = 2
+  elsif col_start_raw == 'right' or col_start_raw == 'end'
+    assign col_start_mode = 'right'
+  elsif col_start_num < 1
+    assign col_start_num = 1
+  endif
+
+  assign span_style = ''
+  assign span_class = 'collection-grid-poster--sized'
+
+  if span_col_raw == 'full' or span_col_raw == 'all' or span_col_raw == '1/-1'
+    assign span_style = span_style | append: 'grid-column: 1 / -1;'
+  elsif span_col_raw == 'half'
+    assign span_col_num = 2
+    if col_start_mode == 'right'
+      assign span_style = span_style | append: 'grid-column: span 2 / -1;'
+    else
+      assign span_style = span_style | append: '--poster-col-start: ' | append: col_start_num | append: '; --poster-span-col: 2; grid-column: var(--poster-col-start) / span var(--poster-span-col);'
+    endif
+  elsif span_col_num >= 1
+    if col_start_mode == 'right'
+      assign span_style = span_style | append: '--poster-span-col: ' | append: span_col_num | append: '; grid-column: span var(--poster-span-col) / -1;'
+    else
+      assign span_style = span_style | append: '--poster-col-start: ' | append: col_start_num | append: '; --poster-span-col: ' | append: span_col_num | append: '; grid-column: var(--poster-col-start) / span var(--poster-span-col);'
+    endif
+  else
+    assign span_style = span_style | append: 'grid-column: 1 / -1;'
+  endif
+
+  if span_row_raw == 'full' or span_row_raw == 'all'
+    assign span_style = span_style | append: 'grid-row: 1 / -1;'
+  elsif span_row_num >= 1
+    assign span_style = span_style | append: '--poster-span-row: ' | append: span_row_num | append: '; grid-row: span var(--poster-span-row);'
+  else
+    assign span_style = span_style | append: '--poster-span-row: 1; grid-row: span var(--poster-span-row);'
+  endif
+
+  if span_row_num > 1
+    assign span_class = span_class | append: ' collection-grid-poster--multi-row'
+  endif
+  if span_col_raw == 'full' or span_col_raw == 'all' or span_col_raw == '1/-1' or span_col_num >= 4
+    assign span_class = span_class | append: ' collection-grid-poster--wide'
+  endif
+
+  # Text Position (desktop)
+  assign text_position_raw = poster.text_position
+  if text_position_raw == blank
+    assign text_position_raw = poster['text_position']
+  endif
+  if text_position_raw.value != blank
+    assign text_position_raw = text_position_raw.value
+  endif
+  assign text_position_raw = text_position_raw | strip
+  assign text_position_key = text_position_raw | downcase | replace: ' ', '-' | replace: '_', '-'
+  assign text_position_class = 'collection-grid-poster__info--center'
+  assign text_position_style = ''
+
+  if text_position_raw contains ':'
+    assign text_position_style = text_position_raw
+    assign text_position_class = 'collection-grid-poster__info--custom'
+  elsif text_position_key == 'top-left' or text_position_key == 'left-top'
+    assign text_position_class = 'collection-grid-poster__info--top-left'
+  elsif text_position_key == 'top' or text_position_key == 'top-center' or text_position_key == 'center-top'
+    assign text_position_class = 'collection-grid-poster__info--top-center'
+  elsif text_position_key == 'top-right' or text_position_key == 'right-top'
+    assign text_position_class = 'collection-grid-poster__info--top-right'
+  elsif text_position_key == 'left' or text_position_key == 'center-left' or text_position_key == 'middle-left'
+    assign text_position_class = 'collection-grid-poster__info--center-left'
+  elsif text_position_key == 'right' or text_position_key == 'center-right' or text_position_key == 'middle-right'
+    assign text_position_class = 'collection-grid-poster__info--center-right'
+  elsif text_position_key == 'bottom-left' or text_position_key == 'left-bottom'
+    assign text_position_class = 'collection-grid-poster__info--bottom-left'
+  elsif text_position_key == 'bottom' or text_position_key == 'bottom-center' or text_position_key == 'center-bottom'
+    assign text_position_class = 'collection-grid-poster__info--bottom-center'
+  elsif text_position_key == 'bottom-right' or text_position_key == 'right-bottom'
+    assign text_position_class = 'collection-grid-poster__info--bottom-right'
+  elsif text_position_key == 'center' or text_position_key == 'middle' or text_position_key == blank
+    assign text_position_class = 'collection-grid-poster__info--center'
+  else
+    assign text_position_class = 'collection-grid-poster__info--' | append: text_position_key
+  endif
+
+  # Text Position Mobile
+  assign text_position_mobile_raw = poster.text_position_mobile
+  if text_position_mobile_raw == blank
+    assign text_position_mobile_raw = poster['text_position_mobile']
+  endif
+  if text_position_mobile_raw.value != blank
+    assign text_position_mobile_raw = text_position_mobile_raw.value
+  endif
+  assign text_position_mobile_raw = text_position_mobile_raw | strip
+  assign text_position_mobile_key = text_position_mobile_raw | downcase | replace: ' ', '-' | replace: '_', '-'
+  assign text_position_mobile_class = ''
+  assign text_position_mobile_style = ''
+  assign has_mobile_text_position = false
+
+  if text_position_mobile_raw != blank
+    assign has_mobile_text_position = true
+    if text_position_mobile_raw contains ':'
+      assign text_position_mobile_style = text_position_mobile_raw
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--custom'
+    elsif text_position_mobile_key == 'top-left' or text_position_mobile_key == 'left-top'
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--top-left'
+    elsif text_position_mobile_key == 'top' or text_position_mobile_key == 'top-center' or text_position_mobile_key == 'center-top'
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--top-center'
+    elsif text_position_mobile_key == 'top-right' or text_position_mobile_key == 'right-top'
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--top-right'
+    elsif text_position_mobile_key == 'left' or text_position_mobile_key == 'center-left' or text_position_mobile_key == 'middle-left'
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--center-left'
+    elsif text_position_mobile_key == 'right' or text_position_mobile_key == 'center-right' or text_position_mobile_key == 'middle-right'
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--center-right'
+    elsif text_position_mobile_key == 'bottom-left' or text_position_mobile_key == 'left-bottom'
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--bottom-left'
+    elsif text_position_mobile_key == 'bottom' or text_position_mobile_key == 'bottom-center' or text_position_mobile_key == 'center-bottom'
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--bottom-center'
+    elsif text_position_mobile_key == 'bottom-right' or text_position_mobile_key == 'right-bottom'
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--bottom-right'
+    elsif text_position_mobile_key == 'center' or text_position_mobile_key == 'middle'
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--center'
+    else
+      assign text_position_mobile_class = 'collection-grid-poster__info-m--' | append: text_position_mobile_key
+    endif
+  endif
+
+  assign alt_text = poster.display_name | default: poster.display_name.value | default: poster_title | escape
+  if alt_text == blank
+    assign alt_text = 'Collection poster'
+  endif
+
+  assign poster_uid = 'cgp-'
+  if page != blank
+    assign poster_uid = poster_uid | append: page | append: '-'
+  endif
+  if index != blank
+    assign poster_uid = poster_uid | append: index
+  else
+    assign poster_uid = poster_uid | append: '0'
+  endif
+%}
+
+{% if poster_image != blank %}
+  {% if text_position_style != blank or text_position_mobile_style != blank %}
+    {% style %}
+      {% if text_position_style != blank %}
+        {% if has_mobile_text_position %}
+          @media screen and (min-width: 750px) {
+            [data-poster-uid="{{ poster_uid }}"] .collection-grid-poster__info {
+              {{ text_position_style }}
+            }
+          }
+        {% else %}
+          [data-poster-uid="{{ poster_uid }}"] .collection-grid-poster__info {
+            {{ text_position_style }}
+          }
+        {% endif %}
+      {% endif %}
+      {% if text_position_mobile_style != blank %}
+        @media screen and (max-width: 749px) {
+          [data-poster-uid="{{ poster_uid }}"] .collection-grid-poster__info {
+            {{ text_position_mobile_style }}
+          }
+        }
+      {% endif %}
+    {% endstyle %}
+  {% endif %}
+
+  <li
+    class="product-grid__item collection-grid-poster {{ span_class }}"
+    data-collection-grid-poster
+    data-poster-uid="{{ poster_uid }}"
+    style="{{ span_style }}"
+    {% if index %}
+      data-poster-index="{{ index }}"
+    {% endif %}
+    {% if page %}
+      data-page="{{ page }}"
+    {% endif %}
+  >
+    {% if poster_link != blank %}
+      <a class="collection-grid-poster__link" href="{{ poster_link }}"{% if poster_title != blank %} aria-label="{{ poster_title | escape }}"{% endif %}>
+    {% else %}
+      <div class="collection-grid-poster__link">
+    {% endif %}
+
+    <div class="collection-grid-poster__media">
+      <picture>
+        {% if poster_mobile_image != blank %}
+          <source
+            media="(max-width: 749px)"
+            srcset="
+              {{ poster_mobile_image | image_url: width: 750 }} 750w,
+              {{ poster_mobile_image | image_url: width: 1100 }} 1100w
+            "
+            sizes="100vw"
+          >
+        {% endif %}
+        {{
+          poster_image
+          | image_url: width: 2000
+          | image_tag:
+            class: 'collection-grid-poster__img',
+            widths: '600, 900, 1200, 1600, 2000',
+            sizes: '100vw',
+            loading: 'lazy',
+            alt: alt_text
+        }}
+      </picture>
+    </div>
+
+    {% if poster_title != blank or poster_content != blank %}
+      <div class="collection-grid-poster__info {{ text_position_class }}{% if has_mobile_text_position %} {{ text_position_mobile_class }}{% endif %}">
+        {% if poster_title != blank %}
+          <h3 class="collection-grid-poster__title">{{ poster_title | escape | newline_to_br }}</h3>
+        {% endif %}
+        {% if poster_content != blank %}
+          <div class="collection-grid-poster__content">{{ poster_content | escape | newline_to_br }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if poster_link != blank %}
+      </a>
+    {% else %}
+      </div>
+    {% endif %}
+  </li>
+{% endif %}

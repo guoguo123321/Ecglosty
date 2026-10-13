@@ -1,0 +1,1057 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-primary--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "color_scheme": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "lg_section_nFzbUg": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_ytqftV": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1200px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 30,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "24px,0px,24px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "24px,0px,24px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "24px,0px,24px,0px"
+          },
+          "blocks": {
+            "brc_nav_wK8GgU": {
+              "type": "_brc-nav",
+              "name": "breadcrumbs",
+              "settings": {},
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "brc_nav_wK8GgU"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_ytqftV"
+      ],
+      "disabled": true,
+      "name": "Breadcrumbs",
+      "settings": {}
+    },
+    "brand_about_hero": {
+      "type": "brand-about-hero",
+      "disabled": true,
+      "name": "Brand About Hero",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1100px",
+        "image": "shopify://shop_images/banner.jpg",
+        "eyebrow": "About ECGLOSTY",
+        "heading": "Jewelry made for the stories we keep",
+        "text": "We believe every piece should feel personal—crafted with intention, worn with meaning, and carried forward as a mark of who you are.",
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,0px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,0px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,0px,0px"
+      }
+    },
+    "brand_about_quote": {
+      "type": "brand-about-quote",
+      "disabled": true,
+      "name": "Brand About Quote",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1100px",
+        "color_scheme": "scheme-bf98fe81-fb96-40fd-a2c2-b2c072d066f7",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 60,
+        "quote": "For us, jewelry has never been only about sparkle. It is about doing craftsmanship differently—honoring memory, celebrating individuality, and inspiring others to choose pieces with purpose.",
+        "author": "ECGLOSTY Founding Team",
+        "cl_bg": "#073746",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "90px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "brand_about_story": {
+      "type": "brand-about-story",
+      "disabled": true,
+      "name": "Brand About Story",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1100px",
+        "color_scheme": "",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Our Beginning",
+        "icon_heading": "las la-gem",
+        "top_subheading": "Brand Story",
+        "tophead_mb": 60,
+        "content": "<p>It began with a simple question: how can jewelry feel more human? Not louder, not heavier—just more true to the moments that shape a life.</p><p>From the first sketches to the final polish, ECGLOSTY grew from that question. We set out to create pieces that celebrate individuality and preserve cherished memories—quietly elegant, carefully made, and ready to live with you every day.</p><p>Years later, that belief still guides every choice we make: design with purpose, craft with care, and leave room for the story only you can write.</p>",
+        "image": "shopify://shop_images/gallery-5.jpg",
+        "image_position": "right",
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "90px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "brand_about_values": {
+      "type": "brand-about-values",
+      "blocks": {
+        "value_1": {
+          "type": "item",
+          "settings": {
+            "title": "Craft with Intention",
+            "text": "Every curve and setting is considered. We design for beauty that lasts, not trends that fade."
+          }
+        },
+        "value_2": {
+          "type": "item",
+          "settings": {
+            "title": "Honesty in Every Detail",
+            "text": "From materials to making, we aim for clarity you can trust—so your choice feels confident."
+          }
+        },
+        "value_3": {
+          "type": "item",
+          "settings": {
+            "title": "Human First",
+            "text": "Jewelry marks people and milestones. We put care for customers, makers, and communities at the center."
+          }
+        },
+        "value_4": {
+          "type": "item",
+          "settings": {
+            "title": "Beauty with Responsibility",
+            "text": "We pursue better materials and thoughtful practices, so elegance and impact can travel together."
+          }
+        }
+      },
+      "block_order": [
+        "value_1",
+        "value_2",
+        "value_3",
+        "value_4"
+      ],
+      "disabled": true,
+      "name": "Brand About Values",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1100px",
+        "color_scheme": "",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "What We Stand For",
+        "icon_heading": "las la-gem",
+        "top_subheading": "Like pillars that hold a house upright, these values shape how we design, source, and serve.",
+        "tophead_mb": 60,
+        "cl_bg": "#f7f8f8",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "90px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "brand_about_mission": {
+      "type": "brand-about-mission",
+      "disabled": true,
+      "name": "Brand About Mission",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1100px",
+        "color_scheme": "",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Where We’re Going",
+        "icon_heading": "las la-gem",
+        "top_subheading": "Mission & Vision",
+        "tophead_mb": 60,
+        "mission_label": "Our Mission",
+        "mission_heading": "Make jewelry more meaningful",
+        "mission_text": "<p>To create fine jewelry that helps people honor love, memory, and self-expression—through transparent craftsmanship and design that delights in the details.</p>",
+        "vision_label": "Our Vision",
+        "vision_heading": "A more thoughtful jewelry future",
+        "vision_text": "<p>To become a house known for intentional design and lasting quality—where every piece feels uniquely yours, and every choice leaves a positive mark on people and planet.</p>",
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "90px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "brand_about_responsibility": {
+      "type": "brand-about-responsibility",
+      "disabled": true,
+      "name": "Brand Responsibility",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1100px",
+        "color_scheme": "",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Impact Beyond the Jewel",
+        "icon_heading": "las la-gem",
+        "top_subheading": "Social Responsibility",
+        "tophead_mb": 60,
+        "content": "<p>We take a purposeful approach to how jewelry is sourced and crafted, because artistry should respect the people and places it comes from.</p><p>From more responsible materials to supporting the hands that bring designs to life, we work to leave a positive imprint—quietly, consistently, and with the same care we give each finished piece.</p><p>For ECGLOSTY, responsibility is not a campaign. It is part of the story we want to keep writing with you.</p>",
+        "image": "shopify://shop_images/gallery-6.jpg",
+        "image_position": "left",
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,30px,0px"
+      }
+    },
+    "brand_about_story_G3UdA8": {
+      "type": "brand-about-story",
+      "name": "Brand About Story",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
+        "design_heading": "6",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Our Beginning",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 30,
+        "content": "<h3><strong>A New Definition of Luxury</strong></h3><p>Most jewelry is bought for a moment. The best jewelry is worn through all the ones that follow.<br/><br/>That’s the thought we started with. Not “what will sell” or “what looks good in a case,” but a simpler question: what makes a piece worth reaching for, day after day, year after year?<br/><br/>For us, it comes down to a few things you can’t see in a photo. How a ring sits next to another band. How a necklace moves when you walk. How a pair of earrings becomes so familiar you forget they’re there—until someone else notices.<br/><br/>We make fine jewelry with lab-grown diamonds and solid gold. Not because it’s trendy, but because these materials let us focus on what actually matters: cut, proportion, weight, and the way every detail works together over time.</p>",
+        "image": "shopify://shop_images/4.jpg",
+        "image_position": "right",
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "90px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "brand_about_quote_3WVAat": {
+      "type": "brand-about-quote",
+      "name": "Brand About Quote",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "color_scheme": "scheme-499ec373-31ab-4791-949e-fcf919aa95ba",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 60,
+        "quote": "We don’t design for a single photograph. We design for the hundredth wear.",
+        "author": "ECGLOSTY® Founding Team",
+        "cl_bg": "#073746",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "90px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "media_with_content_KUbdxd": {
+      "type": "media-with-content",
+      "blocks": {
+        "media": {
+          "type": "_media-without-appearance",
+          "static": true,
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/ff4bcd7b-f21e-4a57-a96d-e156e0351d0d.png",
+            "link": "",
+            "video_loop": true,
+            "video_autoplay": false,
+            "image_position": "cover",
+            "video_position": "cover"
+          },
+          "blocks": {}
+        },
+        "content": {
+          "type": "_content-without-appearance",
+          "static": true,
+          "settings": {
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "space-between",
+            "gap": 24
+          },
+          "blocks": {
+            "text_wCn9BK": {
+              "type": "text",
+              "name": "t:names.caption",
+              "settings": {
+                "text": "<p>Why We Started</p>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "group_GqLnYq": {
+              "type": "group",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 12,
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fill",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "text_WbUyfw": {
+                  "type": "text",
+                  "name": "t:names.heading",
+                  "settings": {
+                    "text": "<p>We wanted to strip that back</p>",
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "h3",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "text_kebVf3": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Jewelry has always been about meaning. But somewhere along the way, it became about everything else—logos, price tags, occasions you had to wait for.<br/><br/>A ring marks a promise. A necklace carries a memory. A pair of studs becomes a reflex, not a decision. Those are the real reasons jewelry exists. Not to signal status, but to become part of your daily life.<br/><br/>So we started ECGLOSTY with a quiet rule: less about what a piece says about you, more about how it feels when you wear it.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_WbUyfw",
+                "text_kebVf3"
+              ]
+            },
+            "button_rRg6UT": {
+              "type": "button",
+              "settings": {
+                "label": "",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "style_class": "link",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_wCn9BK",
+            "group_GqLnYq",
+            "button_rRg6UT"
+          ]
+        }
+      },
+      "name": "t:names.editorial",
+      "settings": {
+        "media_position": "left",
+        "media_width": "medium",
+        "media_height": "60svh",
+        "section_width": "full-width",
+        "extend_media": true,
+        "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "hero_NRXJx7": {
+      "type": "hero",
+      "blocks": {
+        "text_fHDW8x": {
+          "type": "text",
+          "settings": {
+            "text": "<p>—————————<br/><br/>                   <em> The quality<br/>                    of the diamond.<br/><br/>                    The feel<br/>                    of solid gold.<br/><br/>                    The proportion<br/>                    of a setting.<br/><br/>                    The balance<br/>                    of a silhouette.<br/><br/>                    The way something sits,<br/>                    moves, and wears over time.</em><br/><br/>                         —————————</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 32,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_fHDW8x"
+      ],
+      "name": "t:names.hero",
+      "settings": {
+        "media_type_1": "image",
+        "image_1": "shopify://shop_images/c2903a15-48fc-4dd2-9788-1f08bec5fcc2.png",
+        "media_type_2": "image",
+        "stack_media_on_mobile": false,
+        "custom_mobile_media": true,
+        "media_type_1_mobile": "image",
+        "image_1_mobile": "shopify://shop_images/26220fc6-0445-4069-a182-ab3dc571086e.png",
+        "media_type_2_mobile": "image",
+        "link": "",
+        "open_in_new_tab": false,
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "auto",
+        "section_height_custom": 100,
+        "color_scheme": "scheme-499ec373-31ab-4791-949e-fcf919aa95ba",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "gradient",
+        "gradient_direction": "to top",
+        "blurred_reflection": false,
+        "reflection_opacity": 75,
+        "padding-block-start": 24,
+        "padding-block-end": 24
+      }
+    },
+    "brand_about_story_4CbWCW": {
+      "type": "brand-about-story",
+      "name": "Brand About Story",
+      "settings": {
+        "layout": "custom-container",
+        "custom_container": "1200px",
+        "color_scheme": "",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "What We Actually Do",
+        "icon_heading": "las la-gem",
+        "top_subheading": "--Luxury Lies in the Details--",
+        "tophead_mb": 24,
+        "content": "<p>You won’t find overdesigned settings or novelty shapes here. We spend our time on the details that are easy to miss but hard to get right.<br/><br/>The height of a prong—high enough to let the diamond catch light, low enough to stay out of the way.<br/><br/>The thickness of a band—substantial without being heavy, thin enough to stack comfortably.<br/><br/>The relationship between a center stone and the accents around it—balanced, not crowded.<br/><br/>These aren’t marketing points. They’re decisions we make because they affect how a piece wears, not just how it looks on day one.</p>",
+        "image": "shopify://shop_images/f624a8b2-43e4-4f71-9cd8-214fa4af4e8c.png",
+        "image_position": "right",
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "90px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "brand_about_values_KAahqc": {
+      "type": "brand-about-values",
+      "blocks": {
+        "item_XqzNaG": {
+          "type": "item",
+          "settings": {
+            "title": "Modern Luxury",
+            "text": "Fine jewelry should fit naturally into modern life.\nIt can belong at a wedding, at dinner, at work, or with a T-shirt and jeans. A piece does not need to wait for an occasion to feel special."
+          }
+        },
+        "item_pkeMmx": {
+          "type": "item",
+          "settings": {
+            "title": "Timeless Design",
+            "text": "We prefer good proportion over novelty.\n\nTrends can be useful references, but they are not the reason a piece should exist. The goal is to create jewelry that still feels right after the trend around it has moved on."
+          }
+        },
+        "item_wRMgbR": {
+          "type": "item",
+          "settings": {
+            "title": "Personal Meaning",
+            "text": "We can design the jewelry. We cannot decide what it will come to mean to you.\nThat part happens later — through the proposal, the anniversary, the ordinary day, the person who gave it to you, or the years you spend wearing it."
+          }
+        },
+        "item_4YHBVB": {
+          "type": "item",
+          "settings": {
+            "title": "Honest Value",
+            "text": "We want more of what you spend to be present in the jewelry itself — in the diamond, the gold, the design, and the work required to make the piece well.\n\nThese principles guide what we make, but also what we leave out."
+          }
+        }
+      },
+      "block_order": [
+        "item_XqzNaG",
+        "item_pkeMmx",
+        "item_wRMgbR",
+        "item_4YHBVB"
+      ],
+      "name": "Brand About Values",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "color_scheme": "scheme-b0b6c6df-26fa-4b2e-87bc-05b9a110f914",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 60,
+        "cl_bg": "#f7f5f0",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "90px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "section_kwrpR3": {
+      "type": "section",
+      "blocks": {
+        "image_JFixmN": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/2.jpg",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "custom",
+            "custom_width": 60,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "group_fPDdGP": {
+          "type": "group",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "width": "custom",
+            "custom_width": 35,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "text_RJLhcg": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<p>On Diamonds</p>",
+                "width": "fit-content",
+                "max_width": "narrow",
+                "alignment": "left",
+                "type_preset": "h3",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_rQ4wJR": {
+              "type": "text",
+              "settings": {
+                "text": "<p>We use lab-grown diamonds because they are real diamonds—identical in every way that matters, from crystal structure to brilliance. The difference is choice.</p>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "popup_link_AYmEGe": {
+              "type": "popup-link",
+              "name": "t:names.popup_link",
+              "settings": {
+                "behavior": "default",
+                "heading": "Learn more",
+                "type_preset": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "text_XaLUFU": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>The right diamond is the one that makes sense for you</p>",
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "h3",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 16,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "text_w3pjBt": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>That choice means you can prioritize a better cut, a clearer stone, or simply a larger diamond for the same budget. It also means you don’t have to compromise on what you value most.<br/><br/>Every diamond we set is selected with the same care we give to the gold and the design. Not because it’s the only way, but because it’s the right way for us.</p>",
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_XaLUFU",
+                "text_w3pjBt"
+              ]
+            }
+          },
+          "block_order": [
+            "text_RJLhcg",
+            "text_rQ4wJR",
+            "popup_link_AYmEGe"
+          ]
+        }
+      },
+      "block_order": [
+        "image_JFixmN",
+        "group_fPDdGP"
+      ],
+      "name": "t:names.image_with_text",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 32,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
+    "section_MWqaUA": {
+      "type": "section",
+      "blocks": {
+        "text_6PReze": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<h3>Why It Works</h3>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_k3ybjT": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>The real test isn’t the first time you put it on. It’s the hundredth time. The morning you reach for it without thinking. The night you forget to take it off and realize it feels like part of you.<br/><br/>That’s what we’re building for.<br/><br/>Solid gold that holds its shape. Settings that stay secure. Proportions that look right from every angle, not just in the mirror.<br/><br/>We can’t decide what your jewelry will come to mean—that part is yours. But we can make sure the piece itself never gets in the way of that meaning.</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "button_mhn8tc": {
+          "type": "button",
+          "name": "t:names.button",
+          "disabled": true,
+          "settings": {
+            "label": "Shop now",
+            "link": "shopify://collections/all",
+            "open_in_new_tab": false,
+            "style_class": "button",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_6PReze",
+        "text_k3ybjT",
+        "button_mhn8tc"
+      ],
+      "name": "t:names.rich_text_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 25,
+        "section_width": "page-width",
+        "section_height": "small",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-499ec373-31ab-4791-949e-fcf919aa95ba",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
+    "brand_about_story_gr7GiV": {
+      "type": "brand-about-story",
+      "name": "Brand About Story",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "color_scheme": "",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "One Last Thing",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 60,
+        "content": "<p>Fine jewelry has a long history, and much of what made it special still holds true. Craftsmanship matters. Materials matter. A well-cut diamond still stops you for a moment.<br/><br/>But luxury doesn’t have to be static. New technology, new values, and new ways of choosing are all part of the same story—just a different chapter.<br/><br/>We respect what came before. We’re just not bound by every rule that came with it.<br/><br/>Because in the end, luxury is simpler than it’s often made to seem:<br/><br/>It’s not about owning more.<br/>It’s about knowing what’s worth keeping.</p>",
+        "image": "shopify://shop_images/049b3584-9a81-4356-8648-f157b32ad22b.jpg",
+        "image_position": "right",
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "50px,0px,50px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "lg_section_nFzbUg",
+    "brand_about_hero",
+    "brand_about_quote",
+    "brand_about_story",
+    "brand_about_values",
+    "brand_about_mission",
+    "brand_about_responsibility",
+    "brand_about_story_G3UdA8",
+    "brand_about_quote_3WVAat",
+    "media_with_content_KUbdxd",
+    "hero_NRXJx7",
+    "brand_about_story_4CbWCW",
+    "brand_about_values_KAahqc",
+    "section_kwrpR3",
+    "section_MWqaUA",
+    "brand_about_story_gr7GiV"
+  ]
+}

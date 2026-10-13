@@ -1,0 +1,51 @@
+{%- doc -%}
+  Output the minimum product card size for cards in a product grid (main collection and search results).
+
+  @param {object} section - Section object that contains the product card block.
+
+  @example
+  {% capture product_card_size %}
+    {% render 'util-product-grid-card-size' section: section %}
+  {% endcapture %}
+{%- enddoc -%}
+
+{% liquid
+  # custom-width uses the same card sizing as centered (page width)
+  assign is_constrained_width = false
+  if section.settings.product_grid_width == 'centered' or section.settings.product_grid_width == 'custom-width'
+    assign is_constrained_width = true
+  endif
+
+  if section.settings.layout_type == 'organic'
+    if is_constrained_width
+      assign product_card_size = '250px'
+    else
+      assign product_card_size = '260px'
+    endif
+  elsif is_constrained_width
+    # Hardcoded values for product card size when width set to 'centered' / 'custom-width'
+    case section.settings.product_card_size
+      when 'small'
+        assign product_card_size = '165px'
+      when 'medium'
+        assign product_card_size = '250px'
+      when 'large'
+        assign product_card_size = '340px'
+      when 'extra-large'
+        assign product_card_size = '480px'
+    endcase
+  else
+    # Hardcoded values for product card size when width set to 'full-width'
+    case section.settings.product_card_size
+      when 'small'
+        assign product_card_size = '180px'
+      when 'medium'
+        assign product_card_size = '260px'
+      when 'large'
+        assign product_card_size = '365px'
+      when 'extra-large'
+        assign product_card_size = '530px'
+    endcase
+  endif
+  echo product_card_size
+%}

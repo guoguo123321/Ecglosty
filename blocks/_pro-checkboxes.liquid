@@ -1,0 +1,40 @@
+{% liquid
+  assign blo_setts = block.settings
+%}
+<div class="pro-checkboxes {{ block.id }}"
+  style="
+  --pc-margin:{{ blo_setts.pc_margin }};
+  --mb-margin:{{ blo_setts.mb_margin }};
+  --pc-padding:{{ blo_setts.pc_padding }};
+  --mb-padding:{{ blo_setts.mb_padding }};">
+  <input type="checkbox" id="pro-check-{{ block.id }}" {% if blo_setts.checked %}checked{% endif %}>
+  <label for="pro-check-{{ block.id }}">{{ blo_setts.title }}</label>
+</div>
+{% style %}
+  .{{ block.id }}.pro-checkboxes{margin:var(--pc-margin);padding:var(--pc-padding);}
+  @media(max-width:767px){
+    .{{ block.id }}.pro-checkboxes{margin:var(--mb-margin);padding:var(--mb-padding);}
+  }
+{% endstyle %}
+{% schema %}
+  {
+    "name": "fold",
+    "settings": [
+      {"type": "text","id": "title","label": "title","default":"title"},
+      {"type": "checkbox","id": "checked","label": "is checked?","default":false},
+
+      {"type": "header","content": "Margin"},
+      {"type": "text","id": "pc_margin","label": "pc margin","default":"0"},
+      {"type": "text","id": "mb_margin","label": "mb margin","default":"0"},
+      {"type": "header","content": "Padding"},
+      {"type": "text","id": "pc_padding","label": "pc padding","default":"0"},
+      {"type": "text","id": "mb_padding","label": "mb padding","default":"0"},
+    ],
+    "presets":[
+      {
+        "name":"pro-checkboxes",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

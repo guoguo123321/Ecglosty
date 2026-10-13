@@ -1,0 +1,55 @@
+{%- liquid
+  assign bk_stts = block.settings
+-%}
+{% if bk_stts.image != blank %}
+  <img class="lgs-bl-item lgs-img-child lgs-hidden-mobile-{{ bk_stts.hidden_mobile }}" src="{{ bk_stts.image | image_url }}" width="{{ bk_stts.image.width }}" height="{{ bk_stts.image.height }}" {%- render 'bk_cus_style', type: 'image', bk_stts: bk_stts -%}>
+{%- else -%}
+  {{ 'product-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff'}}
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.image",
+  "settings": [
+    {"type": "image_picker","id": "image","label": "image"},
+    {
+      "type": "number",
+      "id": "img_width",
+      "label": "Image width (Unit: px)",
+      "info": "Set 0 to use width default of image",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "img_width_mb",
+      "label": "Image width on mobile (Unit: px)",
+      "info": "Set 0 to use width default of image",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "hidden_mobile",
+      "label": "Hidden on mobile",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "mgb",
+      "label": "Margin bottom (Unit: px)",
+      "default": 20
+    },
+    {
+      "type": "number",
+      "id": "mgb_mb",
+      "label": "Margin bottom on mobile(Unit: px)",
+      "default": 20
+    },
+  ],
+  "presets":[
+    {
+      "name":"image",
+      "category": "t:categories.lg",
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,320 @@
+{%- liquid
+  assign panel_settings = block.settings
+  assign store_handle = panel_settings.menu_handle | strip
+  assign store_title = panel_settings.menu_title | strip
+  assign store_item_index = panel_settings.menu_item_index | default: 0
+  assign columns = panel_settings.columns | default: 4
+  assign layout = panel_settings.layout | default: 'columns'
+  assign content_width = panel_settings.content_width | default: 1220
+  assign content_align = panel_settings.content_align | default: 'center'
+
+  if content_align == 'left'
+    assign columns_justify = 'flex-start'
+    assign panel_margin_inline = '0 auto'
+  elsif content_align == 'right'
+    assign columns_justify = 'flex-end'
+    assign panel_margin_inline = 'auto 0'
+  else
+    assign content_align = 'center'
+    assign columns_justify = 'center'
+    assign panel_margin_inline = 'auto'
+  endif
+
+  if layout == 'columns'
+    assign use_columns_layout = true
+  else
+    assign use_columns_layout = false
+  endif
+-%}
+
+<div
+  class="mega-menu-panel-store"
+  aria-hidden="true"
+  data-panel-block-id="{{ block.id }}"
+  data-menu-handle="{{ store_handle | escape }}"
+  data-menu-title="{{ store_title | escape }}"
+  data-menu-item-index="{{ store_item_index }}"
+  data-columns="{{ columns }}"
+  data-content-align="{{ content_align }}"
+  data-content-width="{{ content_width }}"
+  data-layout="{% if use_columns_layout %}columns{% else %}cards{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <div
+    class="mega-menu-panel-content mega-menu-panel-content--align-{{ content_align }}"
+    data-content-align="{{ content_align }}"
+    style="--mega-menu-panel-content-width: {{ content_width }}px; --mega-menu-columns-justify: {{ columns_justify }}; --mega-menu-panel-margin-inline: {{ panel_margin_inline }};"
+  >
+    <div class="mega-menu section section--full-width-margin">
+      <div class="mega-menu__grid mega-menu__grid--custom{% if use_columns_layout %} mega-menu__grid--columns{% endif %}">
+        {%- if use_columns_layout -%}
+          <div class="mega-menu-columns">
+            {% content_for 'blocks' %}
+          </div>
+        {%- else -%}
+          <ul
+            class="mega-menu__list mega-menu-custom list-unstyled"
+            style="--mega-menu-custom-columns: {{ columns }};"
+          >
+            {%- if block.block_order.size > 0 -%}
+              {%- for child_id in block.block_order -%}
+                {%- assign child_block = block.blocks[child_id] -%}
+                {%- if child_block != blank and child_block.type == '_mega-menu-item' -%}
+                  {%- render 'mega-menu-custom-item',
+                    settings: child_block.settings,
+                    shopify_attributes: child_block.shopify_attributes
+                  -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- for child_block in block.blocks -%}
+                {%- if child_block.type == '_mega-menu-item' -%}
+                  {%- render 'mega-menu-custom-item',
+                    settings: child_block.settings,
+                    shopify_attributes: child_block.shopify_attributes
+                  -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </ul>
+        {%- endif -%}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .mega-menu-panel-store {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .mega-menu-columns {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: var(--mega-menu-columns-justify, center);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .mega-menu-columns > .mega-menu-column {
+    flex: 1 1 0;
+    width: auto;
+    max-width: var(--mega-menu-column-width, 320px);
+    min-width: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "超级导航面板",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_mega-menu-column"
+    },
+    {
+      "type": "_mega-menu-item"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "匹配主导航"
+    },
+    {
+      "type": "paragraph",
+      "content": "请在左侧选中「Header / 页头」后添加本面板。多语言时标题会翻译，建议填写「菜单位置」或用 | 分隔各语言标题别名。"
+    },
+    {
+      "type": "text",
+      "id": "menu_title",
+      "label": "导航名称（推荐）",
+      "info": "与主导航标题一致。多语言可用 | 分隔，如 ENGAGEMENT RINGS|VERLOBUNGSRINGE"
+    },
+    {
+      "type": "text",
+      "id": "menu_handle",
+      "label": "导航标识（可选）",
+      "info": "填小写 handle，如 engagement-rings。多语言可用 | 分隔别名"
+    },
+    {
+      "type": "range",
+      "id": "menu_item_index",
+      "label": "菜单位置（多语言推荐）",
+      "info": "0=关闭；1=第一个一级菜单，2=第二个，以此类推。多语言时优先用这个，不依赖标题翻译。",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "布局"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "版心宽度",
+      "info": "大屏时的最大版心宽度；屏幕更窄时自动不超过 100%，无需为窄屏单独改值。",
+      "min": 1000,
+      "max": 1400,
+      "step": 20,
+      "unit": "px",
+      "default": 1220
+    },
+    {
+      "type": "select",
+      "id": "content_align",
+      "label": "版心对齐",
+      "options": [
+        {
+          "value": "left",
+          "label": "左对齐"
+        },
+        {
+          "value": "center",
+          "label": "居中"
+        },
+        {
+          "value": "right",
+          "label": "右对齐"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "布局样式",
+      "options": [
+        {
+          "value": "columns",
+          "label": "多列分组（推荐，如图 Shop By Style）"
+        },
+        {
+          "value": "cards",
+          "label": "图片卡片网格"
+        }
+      ],
+      "default": "columns"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "卡片网格列数（仅「图片卡片」布局）",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "visible_if": "{{ block.settings.layout == 'cards' }}"
+    },
+    {
+      "type": "select",
+      "id": "content_source",
+      "label": "内容来源",
+      "options": [
+        {
+          "value": "blocks",
+          "label": "本面板下的区块"
+        },
+        {
+          "value": "metaobjects",
+          "label": "元对象（仅 Liquid 模式）"
+        },
+        {
+          "value": "both",
+          "label": "两者都显示"
+        }
+      ],
+      "default": "blocks"
+    }
+  ],
+  "presets": [
+    {
+      "name": "超级导航面板",
+      "settings": {
+        "layout": "columns",
+      },
+      "blocks": [
+        {
+          "type": "_mega-menu-column",
+          "settings": {
+            "title": "Shop By Style",
+            "sub_columns": "2",
+            "icon_style": "square"
+          },
+          "blocks": [
+            {
+              "type": "_mega-menu-item",
+              "settings": {
+                "title": "Solitaire"
+              }
+            },
+            {
+              "type": "_mega-menu-item",
+              "settings": {
+                "title": "Halo"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_mega-menu-column",
+          "settings": {
+            "title": "Shop By Shape",
+            "sub_columns": "2",
+            "icon_style": "square"
+          },
+          "blocks": [
+            {
+              "type": "_mega-menu-item",
+              "settings": {
+                "title": "Round"
+              }
+            },
+            {
+              "type": "_mega-menu-item",
+              "settings": {
+                "title": "Princess"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_mega-menu-column",
+          "settings": {
+            "title": "Shop By Metal",
+            "sub_columns": "1",
+            "icon_style": "circle"
+          },
+          "blocks": [
+            {
+              "type": "_mega-menu-item",
+              "settings": {
+                "title": "14K White Gold"
+              }
+            },
+            {
+              "type": "_mega-menu-item",
+              "settings": {
+                "title": "Platinum"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

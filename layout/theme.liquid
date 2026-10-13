@@ -1,0 +1,224 @@
+<!doctype html>
+  <html
+    {% if request.design_mode %}
+      class="shopify-design-mode"
+    {% endif %}
+    lang="{{ request.locale.iso_code }}"
+  >
+    <head>
+      {% comment %} Delay GA until after load so it does not compete with LCP on mobile {% endcomment %}
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.addEventListener('load', function () {
+          var loadGtag = function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=G-XS7W9RVVN1';
+            s.onload = function () {
+              gtag('js', new Date());
+              gtag('config', 'G-XS7W9RVVN1', { transport_type: 'beacon' });
+            };
+            document.head.appendChild(s);
+          };
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadGtag, { timeout: 3000 });
+          } else {
+            setTimeout(loadGtag, 2000);
+          }
+        });
+      </script>
+      {%- if settings.favicon != blank -%}
+        <link
+          rel="icon"
+          type="image/png"
+          href="{{ settings.favicon | image_url: width: 32, height: 32 }}"
+        >
+      {%- endif -%}
+  
+      {% # theme-check-disable RemoteAsset %}
+      {% comment %} This a way to wait for main content to load when navigating to a new page so that the view transitions can work consistently {% endcomment %}
+      {% if settings.transition_to_main_product or settings.page_transition_enabled %}
+        <link
+          rel="expect"
+          href="#MainContent"
+          blocking="render"
+          id="view-transition-render-blocker"
+        >
+      {% endif %}
+  
+      {%- render 'meta-tags' -%}
+      {%- render 'stylesheets' -%}
+      {%- render 'fonts' -%}
+      {%- comment -%}
+        importmap MUST be in <head> before any type=module (e.g. header.js),
+        otherwise sticky header / menu modules fail to resolve @theme/*.
+      {%- endcomment -%}
+      {%- render 'scripts' -%}
+      {%- render 'theme-styles-variables' -%}
+      {%- render 'color-schemes' -%}
+
+      {% if request.design_mode %}
+        {%- render 'theme-editor' -%}
+      {% endif %}
+  
+      {{ content_for_header }}
+      {% # theme-check-enable RemoteAsset %}
+
+      {% comment %}
+        Combined Listings: URL updates + MainContent refresh, swatch DOM preserved.
+        CRITICAL: use Shopify asset_url ?v= (do NOT strip to ?mpg= — CDN served 0-byte empty file).
+        Verify: __mpgSoftNav.build === "20260814k"  (if undefined, hardnav.js failed to load)
+      {% endcomment %}
+      {% if request.page_type == 'product' %}
+        <!-- mpg-hardnav-20260814k -->
+        <style id="mpg-preserve-combined-listings">
+          .mpg-swatch:not(.mpg-card) {
+            view-transition-name: mpg-combined-listings;
+          }
+          ::view-transition-group(mpg-combined-listings) {
+            animation: none !important;
+            z-index: 2;
+          }
+          ::view-transition-old(mpg-combined-listings),
+          ::view-transition-new(mpg-combined-listings) {
+            animation: none !important;
+            mix-blend-mode: normal !important;
+            height: 100%;
+            width: 100%;
+          }
+          ::view-transition-old(root),
+          ::view-transition-new(root) {
+            animation-duration: 0.01s !important;
+            mix-blend-mode: normal !important;
+          }
+        </style>
+        <script src="{{ 'combined-listings-hardnav.js' | asset_url }}" defer></script>
+      {% endif %}
+
+      {% assign model_viewer_templates = 'ring-setting,diamond' | split: ',' %}
+      {% if template.name == 'product' and model_viewer_templates contains template.suffix %}
+        <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+      {% endif %}
+      <style>
+      :root {
+        --button-active-bg: {{ settings.button_active_bg | default: '#125B6E' }};
+        --button-active-color: {{ settings.button_active_color | default: '#ffffff' }};
+      }
+    </style>
+
+    </head>
+  
+    <body class="template-{{ request.page_type | handle }}{% if page %} page-{{ page.handle }}{% endif %} page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">
+      {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
+      <div id="header-group">
+        {% sections 'header-group' %}
+      </div>
+  
+      <script>
+        // Inline header height and menu style calculations to prevent layout shift
+        // Note: Updates in calculateHeaderGroupHeight(), updateTransparentHeaderOffset() and setHeaderMenuStyle() utilities.js should be kept in sync with this function
+        (function setHeaderHeighCustomProperties() {
+          /*
+           * Header calculation functions for maintaining CSS variables
+           * Mimic calculateHeaderGroupHeight() in utilities.js
+           */
+          const header = document.querySelector('header-component');
+          const headerGroup = document.querySelector('#header-group');
+          const hasHeaderSection = headerGroup?.querySelector('.header-section');
+  
+          if (!header || !headerGroup) return;
+  
+          const headerTopRow = header.querySelector('.header__row--top');
+          const headerHeight = header.offsetHeight;
+  
+          // Calculate the total height of the header group
+          let headerGroupHeight = 0;
+          const children = headerGroup.children;
+          for (let i = 0; i < children.length; i++) {
+            const element = children[i];
+            if (element === header || !(element instanceof HTMLElement)) continue;
+            headerGroupHeight += element.offsetHeight;
+          }
+  
+          // Check for transparent header special case
+          if (header.hasAttribute('transparent') && header.parentElement?.nextElementSibling) {
+            headerGroupHeight += headerHeight;
+          }
+  
+          // Set CSS variables
+          document.body.style.setProperty('--header-height', `${headerHeight}px`);
+          document.body.style.setProperty('--header-group-height', `${headerGroupHeight}px`);
+  
+          if (headerTopRow) {
+            window.requestAnimationFrame(function () {
+              document.body.style.setProperty('--top-row-height', `${headerTopRow.offsetHeight}px`);
+            });
+          }
+  
+          /**
+           * Updates CSS custom properties for transparent header offset calculation
+           * Mimic updateTransparentHeaderOffset() in utilities.js
+           */
+  
+          if (!hasHeaderSection || !header?.hasAttribute('transparent')) {
+            document.body.style.setProperty('--transparent-header-offset-boolean', '0');
+            return;
+          }
+  
+          const hasImmediateSection = hasHeaderSection.nextElementSibling?.classList.contains('shopify-section');
+  
+          const shouldApplyOffset = !hasImmediateSection ? '1' : '0';
+          document.body.style.setProperty('--transparent-header-offset-boolean', shouldApplyOffset);
+        })();
+  
+        (function setHeaderMenuStyle() {
+          const headerComponent = document.querySelector('#header-component');
+          if (headerComponent) {
+            // Keep in sync with setHeaderMenuStyle() in utilities.js
+            const narrowViewport = window.matchMedia('(max-width: 989px)').matches;
+            const designMode =
+              document.documentElement.classList.contains('shopify-design-mode') ||
+              (window.Shopify && window.Shopify.designMode);
+            let useDrawer = narrowViewport;
+            if (narrowViewport && !designMode) {
+              const desktopInput = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+              const vvScale = window.visualViewport && Math.abs(window.visualViewport.scale - 1) > 0.02;
+              const sizeZoom =
+                window.outerWidth > 0 &&
+                window.innerWidth > 0 &&
+                window.outerWidth / window.innerWidth >= 1.12;
+              const browserZoomed = Boolean(vvScale || sizeZoom);
+              const physicalDesktop =
+                (window.screen && window.screen.availWidth >= 990) || window.outerWidth >= 990;
+              const pcZoomedNarrow = desktopInput && browserZoomed && physicalDesktop;
+              useDrawer = !pcZoomedNarrow;
+            }
+            headerComponent.dataset.menuStyle = useDrawer ? 'drawer' : 'menu';
+          }
+        })();
+      </script>
+  
+      <main
+        id="MainContent"
+        class="content-for-layout"
+        role="main"
+        data-page-transition-enabled="{{ settings.page_transition_enabled }}"
+        data-product-transition="{{ settings.transition_to_main_product }}"
+        data-template="{{ template }}"
+      >
+        {{ content_for_layout }}
+      </main>
+  
+      <footer>
+        {% sections 'footer-group' %}
+      </footer>
+  
+      {% render 'search-modal' %}
+  
+      {% if settings.quick_add or settings.mobile_quick_add %}
+        {% render 'quick-add-modal' %}
+      {% endif %}
+    </body>
+  </html>
+  

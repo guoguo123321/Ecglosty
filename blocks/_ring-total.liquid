@@ -1,0 +1,46 @@
+{% liquid
+  assign blo_setts = block.settings
+%}
+<div class="ring-total-box {{ block.id }}"
+  style="
+  --pc-margin:{{ blo_setts.pc_margin }};
+  --mb-margin:{{ blo_setts.mb_margin }};
+  --pc-padding:{{ blo_setts.pc_padding }};
+  --mb-padding:{{ blo_setts.mb_padding }};">
+  <div class="ring-total-info">
+    <div class="ring-total-title">{{ blo_setts.title }}</div>
+    {% if blo_setts.content != blank %}<div class="ring-total-content">{{ blo_setts.content }}</div>{% endif %}
+  </div>
+
+  <div class="ring-total-price">
+    <span translate="no">$1,290</span>
+  </div>
+</div>
+{% style %}
+  .{{ block.id }}.ring-total-box{margin:var(--pc-margin);padding:var(--pc-padding);}
+  @media(max-width:767px){
+    .{{ block.id }}.ring-total-box{margin:var(--mb-margin);padding:var(--mb-padding);}
+  }
+{% endstyle %}
+{% schema %}
+  {
+    "name": "fold",
+    "settings": [
+      {"type": "text","id": "title","label": "title","default":"title"},
+      {"type": "html","id": "content","label": "content","default":"content"},
+
+      {"type": "header","content": "Margin"},
+      {"type": "text","id": "pc_margin","label": "pc margin","default":"0"},
+      {"type": "text","id": "mb_margin","label": "mb margin","default":"0"},
+      {"type": "header","content": "Padding"},
+      {"type": "text","id": "pc_padding","label": "pc padding","default":"0"},
+      {"type": "text","id": "mb_padding","label": "mb padding","default":"0"},
+    ],
+    "presets":[
+      {
+        "name":"ring-total",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

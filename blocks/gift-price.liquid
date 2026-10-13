@@ -1,0 +1,34 @@
+
+{%- liquid
+  assign blo_setts = block.settings
+  assign scheme = blo_setts.color_scheme
+-%}
+<div
+  class="gift-price-box"
+  style="
+    --color-background: rgb({{ scheme.settings.background.rgba }});
+    --color-foreground: rgb({{ scheme.settings.foreground.rgba }});
+  "
+>
+  {% content_for 'blocks' %}
+</div>
+{% schema %}
+  {
+    "name": "gift-price",
+    "settings":[
+      {"type": "header","content": "Colors"},
+      {"type": "color_scheme","id": "color_scheme","label": "t:settings.color_scheme","default": "scheme-1","info": "Item background (Background) and text (Text)"}
+    ],
+    "blocks": [
+      {
+        "type": "_gift-price-item"
+      },
+    ],
+    "presets":[
+      {
+        "name":"gift-price",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

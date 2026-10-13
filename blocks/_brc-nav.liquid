@@ -1,0 +1,15 @@
+{% render 'breadcrumbs',
+  settings: block.settings,
+  shopify_attributes: block.shopify_attributes,
+%}
+{% schema %}
+  {
+    "name": "breadcrumbs",
+    "presets":[
+      {
+        "name":"breadcrumbs",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

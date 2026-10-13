@@ -1,0 +1,325 @@
+{%- liquid
+  assign word_count = article.content | strip_html | split: ' ' | size
+  assign reading_time = word_count | divided_by: 200 | at_least: 1
+  assign show_toc = section.settings.show_toc
+  assign show_breadcrumb = section.settings.show_breadcrumb
+  assign show_reading_time = section.settings.show_reading_time
+  assign show_tags = section.settings.show_tags
+-%}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div class="section color-{{ section.settings.color_scheme }}">
+  <div
+    class="
+      spacing-style
+      layout-panel-flex
+      layout-panel-flex--column
+      section-content-wrapper
+      mobile-column
+      blog-article-page
+    "
+    style="
+      {% render 'layout-panel-style', settings: section.settings %}
+      {% render 'spacing-style', settings: section.settings %}
+    "
+  >
+    {%- if show_breadcrumb -%}
+      <nav class="article-seo__breadcrumb" aria-label="{{ 'accessibility.breadcrumbs' | t }}">
+        <a href="{{ routes.root_url }}">{{ 'blogs.article.home' | t }}</a>
+        <span class="article-seo__sep" aria-hidden="true">/</span>
+        <a href="{{ blog.url }}">{{ blog.title }}</a>
+        <span class="article-seo__sep" aria-hidden="true">/</span>
+        <span aria-current="page">{{ article.title }}</span>
+      </nav>
+    {%- endif -%}
+
+    <header class="blog-article-page__header">
+      {%- content_for 'block', id: 'blog-post-title', type: 'text' %}
+      {%- content_for 'block', id: 'blog-post-details', type: '_blog-post-info-text' %}
+
+      {%- if show_reading_time -%}
+        <div class="article-seo__meta">
+          <span class="article-seo__reading-time">
+            {{- 'blogs.article.reading_time' | t: count: reading_time -}}
+          </span>
+          <span class="article-seo__words">
+            {{- 'blogs.article.word_count' | t: count: word_count -}}
+          </span>
+        </div>
+      {%- endif -%}
+    </header>
+
+    {%- if article.image -%}
+      {%- content_for 'block', id: 'blog-post-image', type: '_blog-post-featured-image' %}
+    {%- endif -%}
+
+    <div class="blog-article-layout{% if show_toc %} blog-article-layout--with-toc{% endif %}">
+      {%- if show_toc -%}
+        <aside class="article-toc-wrap" data-article-toc-wrap hidden>
+          <nav class="article-toc" data-article-toc aria-label="{{ 'blogs.article.table_of_contents' | t }}">
+            <p class="article-toc__title">{{ 'blogs.article.table_of_contents' | t }}</p>
+            <ol class="article-toc__list" data-article-toc-list></ol>
+          </nav>
+        </aside>
+      {%- endif -%}
+
+      <div class="blog-article-layout__main">
+        {%- content_for 'block', id: 'blog-post-content', type: '_blog-post-content' %}
+
+        {%- if show_tags and article.tags.size > 0 -%}
+          <div class="article-seo__tags">
+            <span class="article-seo__tags-label">{{ 'blogs.article.tags' | t }}</span>
+            <ul class="article-seo__tags-list">
+              {%- for tag in article.tags -%}
+                <li>
+                  <a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {% content_for 'blocks' %}
+
+    {% if blog.comments_enabled? %}
+      <div class="blog-post-comments-container">
+        <h2 class="h3">{{- 'blogs.article.comments_heading' | t: count: article.comments_count -}}</h2>
+
+        <div class="blog-post-comments">
+          {% paginate article.comments by 10 %}
+            {% for comment in article.comments %}
+              <div class="blog-post-comment">
+                {{ comment.content }}
+                <div class="blog-post-comment__author">
+                  <span class="blog-post-comment__author-name">{{- comment.author -}}</span>
+                  <span>{{- 'blogs.article.comment_author_separator' | t -}}</span>
+                  <span class="blog-post-comment__date">
+                    {{- comment.created_at | time_tag: format: 'date' -}}
+                  </span>
+                </div>
+              </div>
+            {% endfor %}
+
+            <div class="blog-post-comments-pagination">
+              {{- paginate | default_pagination -}}
+            </div>
+          {% endpaginate %}
+        </div>
+
+        {% render 'blog-comment-form', article: article, section_id: section.id %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{%- if show_toc -%}
+  <script src="{{ 'article-toc.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ article.title | json }},
+    "description": {{ article.excerpt | default: article.content | strip_html | truncate: 160 | json }},
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+    "dateModified": {{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+    "author": {
+      "@type": "Person",
+      "name": {{ article.author | json }}
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "url": {{ request.origin | json }}
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ request.origin | append: article.url | json }}
+    },
+    "wordCount": {{ word_count }},
+    "timeRequired": "PT{{ reading_time }}M",
+    "articleSection": {{ blog.title | json }}
+    {%- if article.image -%}
+      ,"image": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }}
+    {%- endif -%}
+    {%- if article.tags.size > 0 -%}
+      ,"keywords": {{ article.tags | join: ', ' | json }}
+    {%- endif -%}
+  }
+</script>
+
+{%- if show_breadcrumb -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": {{ 'blogs.article.home' | t | json }},
+          "item": {{ request.origin | append: routes.root_url | json }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ blog.title | json }},
+          "item": {{ request.origin | append: blog.url | json }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": {{ article.title | json }},
+          "item": {{ request.origin | append: article.url | json }}
+        }
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  .blog-post-comments-container {
+    width: 100%;
+    max-width: var(--normal-content-width);
+    margin: 0 auto;
+  }
+
+  .blog-post-comments {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-3xl);
+  }
+
+  .blog-post-comment__author {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-2xs);
+    margin-top: var(--margin-md);
+    font-size: var(--font-size--body-sm);
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+  }
+
+  .blog-post-comments-pagination {
+    display: flex;
+    justify-content: center;
+    gap: var(--gap-2xs);
+  }
+
+  .blog-post-comments-pagination,
+  .blog-post-comments-pagination a {
+    color: var(--color-foreground);
+  }
+
+  .blog-post-comments-pagination .current {
+    color: var(--color-foreground);
+  }
+
+  .blog-post-comments-pagination .current,
+  .blog-post-comments-pagination a {
+    display: block;
+    padding: var(--padding-2xs) var(--padding-xs);
+  }
+
+  .blog-post-comments-pagination .current,
+  .blog-post-comments-pagination a:hover {
+    border-bottom: 1px solid var(--color-foreground);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.blog_post",
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "t:settings.show_breadcrumb",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_toc",
+      "label": "t:settings.show_table_of_contents",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reading_time",
+      "label": "t:settings.show_reading_time",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "t:settings.show_tags",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "content_direction",
+      "label": "t:settings.direction",
+      "options": [
+        {
+          "value": "column",
+          "label": "t:options.vertical"
+        }
+      ],
+      "default": "column",
+      "visible_if": "{{ section.settings.gap < 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": []
+}
+{% endschema %}

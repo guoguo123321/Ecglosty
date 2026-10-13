@@ -1,0 +1,240 @@
+{%- liquid
+  assign bk_stts = block.settings
+-%}
+{% comment %} <div class="img-with-col-box lgs-row"> {% endcomment %}
+  <div class="lgs-col-item lgs-col-lg-{{ bk_stts.col_dk }} lgs-col-md-{{ bk_stts.col_tb }} lgs-col-{{ bk_stts.col_mb }} ">
+    <div class="lgs-col-inner {{ bk_stts.content_align }} {{ bk_stts.content_align_tb }} {{ bk_stts.content_align_mb }}">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+{% comment %} </div> {% endcomment %}
+{% schema %}
+  {
+    "name": "image with item",
+    "settings":[
+      {"type": "select","id": "content_align",
+        "options": [
+          {"label": "Left","value": "lgs-text-lg-start"},
+          {"label": "Center","value": "lgs-text-lg-center"},
+          {"label": "Right","value": "lgs-text-lg-end"}
+        ],
+        "label": "Content align","default": "lgs-text-lg-start"
+      },
+      {"type": "header","content": "+ Options on Tablet"},
+      {"type": "select","id": "content_align_tb",
+        "options": [
+          {"label": "Left","value": "lgs-text-md-start"},
+          {"label": "Center","value": "lgs-text-md-center"},
+          {"label": "Right","value": "lgs-text-md-end"}
+        ],
+        "label": "Content align","default": "lgs-text-md-start"
+      },
+      {"type": "header","content": "+ Options on Mobile"},
+      {"type": "select","id": "content_align_mb",
+        "options": [
+          {"label": "Left","value": "lgs-text-start"},
+          {"label": "Center","value": "lgs-text-center"},
+          {"label": "Right","value": "lgs-text-end"}
+        ],
+        "label": "Content align","default": "lgs-text-start"
+      },
+      {
+        "type": "select",
+        "id": "col_dk",
+        "label": "Item width",
+        "default": "3",
+        "options": [
+          {
+            "value": "12",
+            "label": "100%"
+          },
+          {
+            "value": "11",
+            "label": "91.66%"
+          },
+          {
+            "value": "10",
+            "label": "83.33%"
+          },
+          {
+            "value": "9",
+            "label": "75%"
+          },
+          {
+            "value": "8",
+            "label": "66.66%"
+          },
+          {
+            "value": "7",
+            "label": "58.33%"
+          },
+          {
+            "value": "6",
+            "label": "50%"
+          },
+          {
+            "value": "5",
+            "label": "41.66%"
+          },
+          {
+            "value": "4",
+            "label": "33.33%"
+          },
+          {
+            "value": "3",
+            "label": "25%"
+          },
+          {
+            "value": "15",
+            "label": "20%"
+          },
+          {
+            "value": "2",
+            "label": "16.66%"
+          },
+          {
+            "value": "1",
+            "label": "8.33%"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "col_tb",
+        "label": "Item width (Tablet)",
+        "default": "6",
+        "options": [
+          {
+            "value": "12",
+            "label": "100%"
+          },
+          {
+            "value": "11",
+            "label": "91.66%"
+          },
+          {
+            "value": "10",
+            "label": "83.33%"
+          },
+          {
+            "value": "9",
+            "label": "75%"
+          },
+          {
+            "value": "8",
+            "label": "66.66%"
+          },
+          {
+            "value": "7",
+            "label": "58.33%"
+          },
+          {
+            "value": "6",
+            "label": "50%"
+          },
+          {
+            "value": "5",
+            "label": "41.66%"
+          },
+          {
+            "value": "4",
+            "label": "33.33%"
+          },
+          {
+            "value": "3",
+            "label": "25%"
+          },
+          {
+            "value": "15",
+            "label": "20%"
+          },
+          {
+            "value": "2",
+            "label": "16.66%"
+          },
+          {
+            "value": "1",
+            "label": "8.33%"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "col_mb",
+        "label": "Item width (Mobile)",
+        "default": "12",
+        "options": [
+          {
+            "value": "12",
+            "label": "100%"
+          },
+          {
+            "value": "11",
+            "label": "91.66%"
+          },
+          {
+            "value": "10",
+            "label": "83.33%"
+          },
+          {
+            "value": "9",
+            "label": "75%"
+          },
+          {
+            "value": "8",
+            "label": "66.66%"
+          },
+          {
+            "value": "7",
+            "label": "58.33%"
+          },
+          {
+            "value": "6",
+            "label": "50%"
+          },
+          {
+            "value": "5",
+            "label": "41.66%"
+          },
+          {
+            "value": "4",
+            "label": "33.33%"
+          },
+          {
+            "value": "3",
+            "label": "25%"
+          },
+          {
+            "value": "15",
+            "label": "20%"
+          },
+          {
+            "value": "2",
+            "label": "16.66%"
+          },
+          {
+            "value": "1",
+            "label": "8.33%"
+          }
+        ]
+      },
+    ],
+    "blocks": [
+      {
+        "type": "img"
+      },
+      {
+        "type": "_text"
+      },
+      {
+        "type": "_button"
+      },
+    ],
+    "presets":[
+      {
+        "name":"image with item",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

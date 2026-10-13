@@ -1,0 +1,40 @@
+{%- doc -%}
+  Renders one mega menu card (image + title + link).
+
+  @param {object} settings - Settings with image, title, link
+  @param {string} [shopify_attributes] - Optional block attributes string
+{%- enddoc -%}
+
+{% liquid
+  assign item_title = settings.title
+  assign item_url = settings.link
+  assign item_image = settings.image
+%}
+
+<li class="mega-menu-custom__item"{% if shopify_attributes != blank %} {{ shopify_attributes }}{% endif %}>
+  {% if item_url != blank %}
+    <a href="{{ item_url }}" class="mega-menu-custom__link">
+  {% else %}
+    <div class="mega-menu-custom__link">
+  {% endif %}
+    {% if item_image != blank %}
+      {{
+        item_image
+        | image_url: width: 600
+        | image_tag:
+          loading: 'lazy',
+          class: 'mega-menu-custom__image',
+          widths: '200, 300, 400, 600',
+          sizes: '(min-width: 990px) 200px, 45vw',
+          alt: item_title
+      }}
+    {% endif %}
+    {% if item_title != blank %}
+      <span class="mega-menu-custom__title wrap-text">{{ item_title }}</span>
+    {% endif %}
+  {% if item_url != blank %}
+    </a>
+  {% else %}
+    </div>
+  {% endif %}
+</li>

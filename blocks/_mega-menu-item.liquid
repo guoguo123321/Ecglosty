@@ -1,0 +1,35 @@
+{% render 'mega-menu-custom-item',
+  settings: block.settings,
+  shopify_attributes: block.shopify_attributes,
+  layout: 'row'
+%}
+
+{% schema %}
+{
+  "name": "超级导航项",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "图片"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "标题",
+      "default": "导航项"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "链接"
+    }
+  ],
+  "presets": [
+    {
+      "name": "超级导航项"
+    }
+  ]
+}
+{% endschema %}

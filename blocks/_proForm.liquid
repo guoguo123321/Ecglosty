@@ -1,0 +1,38 @@
+<form>
+  {% content_for 'blocks' %}
+</form>
+{% schema %}
+{
+  "name": "t:names.divider",
+  "tag": null,
+    "blocks": [
+      {
+        "type": "@app"
+      },
+      {
+        "type": "_divider"
+      },
+      {
+        "type": "_fold"
+      },
+      {
+        "type": "_choose-setting"
+      },
+      {
+        "type": "_variant"
+      },
+      {
+        "type": "_pro-checkboxes"
+      },
+      {
+        "type": "_ring-total"
+      },
+    ],
+  "presets": [
+    {
+      "name": "product form",
+      "category": "t:categories.lg"
+    }
+  ]
+}
+{% endschema %}

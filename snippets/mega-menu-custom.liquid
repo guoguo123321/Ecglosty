@@ -1,0 +1,192 @@
+{%- doc -%}
+  Renders a custom mega menu from theme blocks and/or metaobjects.
+
+  @param {object} link - Top-level navigation link
+  @param {object} panel - Matched _mega-menu-panel block (optional)
+  @param {string} id - Unique DOM id prefix
+  @param {object} section - Section object
+  @param {number} [image_border_radius] - Image corner radius in px
+{%- enddoc -%}
+
+{% liquid
+  assign border_radius = image_border_radius | default: 0
+  assign menu_handle = link.handle
+  assign has_block_items = false
+  assign has_column_blocks = false
+  assign has_metaobject_items = false
+  assign mega_menu_metaobjects = blank
+  assign use_columns_layout = false
+  assign panel_columns = 4
+
+  if panel != blank
+    assign panel_settings = panel.settings
+    assign content_source = panel_settings.content_source | default: 'blocks'
+    assign panel_columns = panel_settings.columns | default: 4
+    assign columns = panel_settings.columns | default: 4
+    assign layout = panel_settings.layout | default: 'columns'
+
+    if layout == 'columns'
+      assign use_columns_layout = true
+    endif
+  else
+    assign content_source = 'metaobjects'
+    assign columns = 4
+  endif
+
+  if content_source != 'blocks' and panel != blank
+    assign has_block_items = has_block_items | default: false
+  endif
+
+  assign link_title_handle = link.title | handleize
+  if content_source != 'blocks'
+    if shop.metaobjects.mega_menu != blank
+      assign mega_menu_metaobjects = shop.metaobjects.mega_menu.values
+    elsif shop.metaobjects['mega-menu'] != blank
+      assign mega_menu_metaobjects = shop.metaobjects['mega-menu'].values
+    endif
+    if mega_menu_metaobjects != blank
+      for mo in mega_menu_metaobjects
+        assign mo_handle = mo.menu_handle.value | default: mo.menu_handle | default: '' | handleize
+        if mo_handle == menu_handle or mo_handle == link_title_handle
+          assign has_metaobject_items = true
+          break
+        endif
+      endfor
+    endif
+  endif
+%}
+
+{% if has_block_items or has_column_blocks or has_metaobject_items or panel != blank %}
+  <div
+    class="mega-menu__grid mega-menu__grid--custom{% if use_columns_layout %} mega-menu__grid--columns{% endif %}"
+    data-menu-grid-id="{{ id }}"
+    style="--mega-menu-panel-columns: {{ panel_columns }}; --mega-menu-custom-columns: {{ columns }};"
+  >
+    {%- if panel != blank and panel.settings.header != blank -%}
+      <div class="mega-menu-panel-header">{{ panel.settings.header }}</div>
+    {%- endif -%}
+
+    {%- if use_columns_layout and panel != blank and content_source != 'metaobjects' -%}
+      <div class="mega-menu-columns">
+        {% if panel.block_order.size > 0 %}
+          {% for child_id in panel.block_order %}
+            {% assign child_block = panel.blocks[child_id] %}
+            {% if child_block != blank and child_block.type == '_mega-menu-column' %}
+              {% render 'mega-menu-custom-column', block: child_block, section: section %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% for child_block in panel.blocks %}
+            {% if child_block.type == '_mega-menu-column' %}
+              {% render 'mega-menu-custom-column', block: child_block, section: section %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    {%- else -%}
+      <ul
+        data-menu-list-id="{{ id }}"
+        class="mega-menu__list mega-menu-custom list-unstyled"
+        style="--menu-image-border-radius: {{ border_radius }}px; --mega-menu-custom-columns: {{ columns }};"
+      >
+        {% if panel != blank and content_source != 'metaobjects' %}
+          {% if panel.block_order.size > 0 %}
+            {% for item_id in panel.block_order %}
+              {% assign item_block = panel.blocks[item_id] %}
+              {% if item_block != blank and item_block.type == '_mega-menu-item' %}
+                {% render 'mega-menu-custom-item',
+                  settings: item_block.settings,
+                  shopify_attributes: item_block.shopify_attributes
+                %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% for item_block in panel.blocks %}
+              {% if item_block.type == '_mega-menu-item' %}
+                {% render 'mega-menu-custom-item',
+                  settings: item_block.settings,
+                  shopify_attributes: item_block.shopify_attributes
+                %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+
+        {% if content_source != 'blocks' and mega_menu_metaobjects != blank %}
+          {% for mo in mega_menu_metaobjects %}
+            {% liquid
+              assign mo_handle = mo.menu_handle.value | default: mo.menu_handle | default: '' | handleize
+              unless mo_handle == menu_handle or mo_handle == link_title_handle
+                continue
+              endunless
+
+              assign mo_title = mo.title.value | default: mo.title
+              assign mo_image = mo.image.value | default: mo.image
+              assign mo_url = mo.link.value | default: mo.url.value | default: mo.link
+            %}
+            <li class="mega-menu-custom__item">
+              {% if mo_url != blank %}
+                <a href="{{ mo_url }}" class="mega-menu-custom__link">
+              {% else %}
+                <div class="mega-menu-custom__link">
+              {% endif %}
+                {% if mo_image != blank %}
+                  <span class="mega-menu-custom__icon">
+                    {{
+                      mo_image
+                      | image_url: width: 120
+                      | image_tag:
+                        loading: 'lazy',
+                        class: 'mega-menu-custom__image',
+                        widths: '60, 80, 120',
+                        sizes: '48px',
+                        alt: mo_title
+                    }}
+                  </span>
+                {% endif %}
+                {% if mo_title != blank %}
+                  <span class="mega-menu-custom__title wrap-text">{{ mo_title }}</span>
+                {% endif %}
+              {% if mo_url != blank %}
+                </a>
+              {% else %}
+                </div>
+              {% endif %}
+            </li>
+          {% endfor %}
+        {% endif %}
+
+        {% if has_block_items == false and has_metaobject_items == false and panel != blank %}
+          <li class="mega-menu-custom__item mega-menu-custom__placeholder">
+            <p class="mega-menu-custom__hint">
+              已匹配「{{ link.title }}」。请在本面板下添加「超级导航列」及导航项，并上传图标图片后保存主题。
+            </p>
+          </li>
+        {% endif %}
+      </ul>
+    {%- endif -%}
+
+    {%- if panel != blank and panel.settings.btn_title != blank -%}
+      <footer class="mega-menu-panel-footer">
+        <a class="mega-menu-panel-more" href="{{ panel.settings.btn_link }}">
+          <span>{{ panel.settings.btn_title }}</span>
+          <span class="mega-menu-panel-more__chevron" aria-hidden="true">&gt;</span>
+        </a>
+      </footer>
+    {%- endif -%}
+  </div>
+
+  {% unless use_columns_layout %}
+    {% style %}
+      [data-menu-grid-id="{{ id }}"] {
+        --menu-columns-desktop: {{ columns }};
+        --menu-columns-tablet: {{ columns | at_most: 4 }};
+      }
+
+      [data-menu-list-id="{{ id }}"] {
+        --menu-columns-desktop: {{ columns }};
+        --menu-columns-tablet: {{ columns | at_most: 4 }};
+      }
+    {% endstyle %}
+  {% endunless %}
+{% endif %}

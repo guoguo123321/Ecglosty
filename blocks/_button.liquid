@@ -1,0 +1,74 @@
+{% liquid
+  assign bk_stts = block.settings
+  assign button_style = bk_stts.button_style
+%}
+<a href="{{ bk_stts.button_link }}" target="{{ bk_stts.target_link }}" class="lgs-bl-item lgs-animation-{{ bk_stts.animation }} lgs-btn lgs-btn-custom lgs-pe-auto lgs-fnt-fm-{{ bk_stts.fontf }} lgs-animation-{{ bk_stts.animation }} lgs-hidden-mobile-{{ bk_stts.hidden_mobile }} lgs-btn-style-{{ button_style }} {% if button_style == 'default' or button_style == 'outline' %}lgs-btn-effect-{{ bk_stts.button_effect }}{% endif %}" {%- render 'bk_cus_style', type: 'custom_button', bk_stts: bk_stts -%}>{{ bk_stts.button_text }}</a>
+{% schema %}
+  {
+    "name": "Button",
+    "settings": [
+          {"type": "text","id": "button_text","label": "Button label","default": "Button label","info": "If set blank will not show"},
+          {"type": "url","id": "button_link","label": "Button link","info": "If set blank will not show"},
+          {"type": "select","id": "target_link","label": "Open link in","default": "_self",
+            "options": [
+              {"value": "_self","label": "Current window"},
+              {"value": "_blank","label": "New window"}
+            ]
+          },
+          {"type": "select","id": "fontf","default": "inherit","label": "Font family",
+            "options": [
+              {"label": "Inherit","value": "inherit"}, 
+              {"label": "Font Family #1","value": "1"},
+              {"label": "Font Family #2","value": "2"}, 
+              {"label": "Font Family #3","value": "3"}
+            ]
+          }, 
+          {"type": "select","id": "button_style","label": "Button style",
+            "options": [
+              {"label": "Default","value": "default"}, 
+              {"label": "Outline","value": "outline"}, 
+              {"label": "Bordered bottom","value": "bordered"}, 
+              {"label": "Link","value": "link"}
+            ]
+          }, 
+          {"type": "select","id": "button_effect","label": "Button hover effect","default": "default","info": "Only working button style default, outline",
+            "options": [
+              {"label": "Default","value": "default"},
+              {"label": "Fade","value": "fade"},
+              {"label": "Rectangle out","value": "rectangle-out"},
+              {"label": "Sweep to right","value": "sweep-to-right"}, 
+              {"label": "Sweep to left","value": "sweep-to-left"}, 
+              {"label": "Sweep to bottom","value": "sweep-to-bottom"}, 
+              {"label": "Sweep to top","value": "sweep-to-top"}, 
+              {"label": "Shutter out horizontal","value": "shutter-out-horizontal"}, 
+              {"label": "Outline","value": "outline"}, 
+              {"label": "Shadow","value": "shadow"}
+            ]
+          }, 
+          {"type": "color","id": "pri_cl","label": "Primary color","default": "#222"}, 
+          {"type": "color","id": "second_cl","label": "Secondary color","info": "Only working button style default","default": "#fff"}, 
+          {"type": "color","id": "pri_cl_hover","label": "Primary color hover","default": "#56cfe1"}, 
+          {"type": "color","id": "second_cl_hover","label": "Secondary color hover","info": "Only working button style default, outline","default": "#fff"}, 
+          {"type": "range","id": "fsbutton","label": "Font size","max": 50,"min": 10,"step": 1,"unit": "px","default": 14}, 
+          {"type": "range","id": "fwbutton","label": "Font weight","min": 100,"max": 900,"step": 100,"default": 400},
+          {"type": "range","id":"button_ls","label":"Letter spacing","min":0,"max":10,"step":0.1,"unit":"px","default":0},
+          {"type": "range","id": "button_mh","label": "Min height","min": 30,"max": 80,"step": 1,"unit": "px","default": 42,"info": "Only working button style default, outline"}, 
+          {"type": "range","id": "button_bdr","label": "Border radius","min": 0,"max": 40,"step": 1,"unit": "px","default": 0,"info": "Only working button style default, outline"}, 
+          {"type": "range","id": "button_pd_lr","label": "Padding left/right","min": 0,"max": 100,"step": 1,"unit": "px","default": 20,"info": "Only working button style default, outline"}, 
+          {"type": "number","id": "button_mgb","label": "Margin bottom","default": 0}, 
+          {"type": "header","content": "+ Option Mobile"}, 
+          {"type": "checkbox","id": "hidden_mobile","label": "Hidden on mobile","default": false}, 
+          {"type": "range","id": "fsbutton_mb","label": "Font size (Mobile)","max": 50,"min": 0,"step": 1,"unit": "px","default": 10}, 
+          {"type": "range","id": "button_mh_mb","label": "Min height (Mobile)","min": 10,"max": 50,"step": 1,"unit": "px","default": 36,"info": "Only working button style default, outline"}, 
+          {"type": "range","id": "button_pd_lr_mb","label": "Padding left/right (Mobile)","min": 0,"max": 100,"step": 1,"unit": "px","default": 15,"info": "Only working button style default, outline"}, 
+          {"type":"range","id":"button_ls_mb","label":"Letter spacing (Mobile)","min":0,"max":10,"step":0.1,"unit":"px","default":0},
+          {"type": "number","id": "button_mgb_mb","label": "Margin bottom (Mobile)","default": 0}, 
+    ],
+    "presets":[
+      {
+        "name":"Button",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

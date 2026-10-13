@@ -1,0 +1,2583 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "header_announcements_9jGBFp": {
+      "type": "header-announcements",
+      "blocks": {
+        "announcement_BxgCk9": {
+          "type": "_announcement",
+          "settings": {
+            "text": "Fall Sale! Save $200 on orders of $2,000 or more.",
+            "link": "",
+            "font": "var(--font-subheading--family)",
+            "font_size": "0.875rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "announcement_BxgCk9"
+      ],
+      "name": "t:names.announcement_bar",
+      "settings": {
+        "speed": 3,
+        "section_width": "page-width",
+        "color_scheme": "scheme-bf98fe81-fb96-40fd-a2c2-b2c072d066f7",
+        "divider_width": 1,
+        "padding-block-start": 10,
+        "padding-block-end": 10
+      }
+    },
+    "announce_y4gTrJ": {
+      "type": "announce",
+      "blocks": {
+        "custom_text_6NfdCw": {
+          "type": "custom_text",
+          "settings": {
+            "text": "Fall Sale! Save $200 on orders of $2,000 or more.",
+            "remove_br_tag": false,
+            "tag": "div",
+            "fontf": "2",
+            "text_cl": "#ffffff",
+            "text_fs": 13,
+            "text_lh": 20,
+            "text_fw": 600,
+            "text_mgb": 0,
+            "font_italic": false,
+            "text_shadow": false,
+            "hidden_mobile": false,
+            "text_fs_mb": 10,
+            "text_lh_mb": 11,
+            "text_mgb_mobile": 0
+          }
+        },
+        "custom_text_gBQVkk": {
+          "type": "custom_text",
+          "disabled": true,
+          "settings": {
+            "text": "MOTHER'S DAY SALE EXTENDED: UP TO 25% OFF ｜ Shop Now",
+            "remove_br_tag": false,
+            "tag": "div",
+            "fontf": "2",
+            "text_cl": "#ffffff",
+            "text_fs": 13,
+            "text_lh": 20,
+            "text_fw": 600,
+            "text_mgb": 0,
+            "font_italic": false,
+            "text_shadow": false,
+            "hidden_mobile": false,
+            "text_fs_mb": 10,
+            "text_lh_mb": 10,
+            "text_mgb_mobile": 0
+          }
+        }
+      },
+      "block_order": [
+        "custom_text_6NfdCw",
+        "custom_text_gBQVkk"
+      ],
+      "disabled": true,
+      "name": "Announce",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "design_heading": "1",
+        "box_align": "lgs-text-center",
+        "heading_align": "lgs-text-center",
+        "top_heading": "",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 30,
+        "cl_bg": "#06374c",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "12px,0px,12px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "12px,0px,12px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "12px,0px,12px,0px"
+      }
+    },
+    "header_section": {
+      "type": "header",
+      "blocks": {
+        "mega_menu_panel_LUHRRn": {
+          "type": "_mega-menu-panel",
+          "name": "ENGAGEMENT RINGS",
+          "settings": {
+            "menu_title": "ENGAGEMENT RINGS",
+            "menu_handle": "ENGAGEMENT RINGS",
+            "menu_item_index": 1,
+            "content_width": 1300,
+            "content_align": "center",
+            "layout": "columns",
+            "columns": 2,
+            "content_source": "blocks"
+          },
+          "blocks": {
+            "mega_menu_column_RptdhE": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "SHOP BY STYLE",
+                "sub_columns": "2",
+                "column_width": 600,
+                "icon_style": "square",
+                "btn_title": "Shop All Engagement Rings",
+                "btn_link": "shopify://collections/start-with-a-setting"
+              },
+              "blocks": {
+                "mega_menu_item_MXPwA9": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Solitaire.webp",
+                    "title": "Solitaire",
+                    "link": "shopify://collections/solitaire-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_4TkhBj": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Vintage.webp",
+                    "title": "Bridal Sets",
+                    "link": "shopify://collections/bridal-sets-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_hAkgRY": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Three_Stone.webp",
+                    "title": "Three Stone",
+                    "link": "shopify://collections/three-stone-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_Bx3NTD": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/East_West.webp",
+                    "title": "Luxe",
+                    "link": "shopify://collections/luxe-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_KxK4GE": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Bezel.webp",
+                    "title": "Bezel",
+                    "link": "shopify://collections/bezel-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_zrFpgY": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Cathedral.webp",
+                    "title": "Classic",
+                    "link": "shopify://collections/classic-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_8feqpY": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Pave.webp",
+                    "title": "Accents",
+                    "link": "shopify://collections/accents-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_9BM7KB": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Nature.webp",
+                    "title": "Nature Inspired",
+                    "link": "shopify://collections/nature-inspired-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_teyFid": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Halo.webp",
+                    "title": "Halo",
+                    "link": "shopify://collections/halo-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_rfa6QF": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Pave.webp",
+                    "title": "Toi et Moi",
+                    "link": "shopify://collections/toi-et-moi-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_dVxjNc": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Hidden_Halo.webp",
+                    "title": "Hidden Halo",
+                    "link": "shopify://collections/hidden-halo-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_cKpaV6": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/Pave.webp",
+                    "title": "Men's",
+                    "link": "shopify://collections/mens-engagement-rings"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_MXPwA9",
+                "mega_menu_item_4TkhBj",
+                "mega_menu_item_hAkgRY",
+                "mega_menu_item_Bx3NTD",
+                "mega_menu_item_KxK4GE",
+                "mega_menu_item_zrFpgY",
+                "mega_menu_item_8feqpY",
+                "mega_menu_item_9BM7KB",
+                "mega_menu_item_teyFid",
+                "mega_menu_item_rfa6QF",
+                "mega_menu_item_dVxjNc",
+                "mega_menu_item_cKpaV6"
+              ]
+            },
+            "mega_menu_column_ReMKPN": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "SHOP BY SHAPE",
+                "sub_columns": "2",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_MTaetJ": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/round_0700100d-26ff-4193-8737-2d7000caba5c.webp",
+                    "title": "Round",
+                    "link": "shopify://collections/round-diamond-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_kEQUKy": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/oval_f69c32c9-ffef-4951-8852-1be255a82033.webp",
+                    "title": "Oval",
+                    "link": "shopify://collections/oval-diamond-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_KkJhbq": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/cushion_bed75b22-de73-4c55-867a-48ad52f2b8c7.webp",
+                    "title": "Cushion",
+                    "link": "shopify://collections/cushion-diamond-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_kxYV3J": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/pear_d928d8cd-7296-4381-a6fc-5c61d084ef84.webp",
+                    "title": "Pear",
+                    "link": "shopify://collections/pear-diamond-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_hp9rb9": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/princess_01a91118-6527-41e3-8d71-2440cabaa77f.webp",
+                    "title": "Princess",
+                    "link": "shopify://collections/princess-diamond-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_x3Wkzg": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/emerald_58ccb787-b7d4-41eb-895e-ab5274fcac20.webp",
+                    "title": "Emerald",
+                    "link": "shopify://collections/emerald-diamond-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_diX83g": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/marquise_608e1059-de3c-4846-bd88-ec1a3500caa7.webp",
+                    "title": "Marquise",
+                    "link": "shopify://collections/marquise-diamond-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_6dNWfr": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/asscher_13b92a80-5b0e-4959-ac66-669b0a94bdb4.webp",
+                    "title": "Asscher",
+                    "link": "shopify://collections/asscher-diamond-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_azQKQx": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/radiant_a6e656c6-31f8-4896-b903-e6521556c020.webp",
+                    "title": "Radiant",
+                    "link": "shopify://collections/radiant-diamond-engagement-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_tmwgmj": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/heart_afda3a2f-b4e1-4e11-8be0-403558db0a17.webp",
+                    "title": "Heart",
+                    "link": "shopify://collections/heart-diamond-engagement-rings"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_MTaetJ",
+                "mega_menu_item_kEQUKy",
+                "mega_menu_item_KkJhbq",
+                "mega_menu_item_kxYV3J",
+                "mega_menu_item_hp9rb9",
+                "mega_menu_item_x3Wkzg",
+                "mega_menu_item_diX83g",
+                "mega_menu_item_6dNWfr",
+                "mega_menu_item_azQKQx",
+                "mega_menu_item_tmwgmj"
+              ]
+            },
+            "mega_menu_column_pqJBiz": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "SHOP BY METAL",
+                "sub_columns": "1",
+                "column_width": 150,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_RF7HAk": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "14K White Gold",
+                    "link": "shopify://collections/engagement-rings-in-14k-white-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_MUtPXR": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color2.png",
+                    "title": "14K Yellow Gold",
+                    "link": "shopify://collections/engagement-rings-in-14k-yellow-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_zcmHMM": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color3.png",
+                    "title": "14K Rose Gold",
+                    "link": "shopify://collections/engagement-rings-in-14k-rose-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_YTKETr": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "18K White Gold",
+                    "link": "shopify://collections/engagement-rings-in-18k-white-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_ePhnRN": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color2.png",
+                    "title": "18K Yellow Gold",
+                    "link": "shopify://collections/engagement-rings-in-18k-yellow-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_KV3dGT": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color3.png",
+                    "title": "18K Rose Gold",
+                    "link": "shopify://collections/engagement-rings-in-18k-rose-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_LiqTgy": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "Platinum",
+                    "link": "shopify://collections/engagement-rings-in-platinum"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_RF7HAk",
+                "mega_menu_item_MUtPXR",
+                "mega_menu_item_zcmHMM",
+                "mega_menu_item_YTKETr",
+                "mega_menu_item_ePhnRN",
+                "mega_menu_item_KV3dGT",
+                "mega_menu_item_LiqTgy"
+              ]
+            },
+            "mega_menu_column_DDhgkU": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "",
+                "sub_columns": "1",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_img_mTdEae": {
+                  "type": "_mega-menu-img",
+                  "name": "image",
+                  "settings": {
+                    "image": "shopify://shop_images/Lab-grown_diamond_engagement_ring_banenr.webp",
+                    "title1": "Start with a Setting",
+                    "link1": "shopify://collections/start-with-a-setting",
+                    "title2": "Start with a Diamond",
+                    "link2": "shopify://collections/lab-grown-diamond"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_img_mTdEae"
+              ]
+            }
+          },
+          "block_order": [
+            "mega_menu_column_RptdhE",
+            "mega_menu_column_ReMKPN",
+            "mega_menu_column_pqJBiz",
+            "mega_menu_column_DDhgkU"
+          ]
+        },
+        "mega_menu_panel_F3iwC4": {
+          "type": "_mega-menu-panel",
+          "name": "WEDDING RINGS",
+          "settings": {
+            "menu_title": "WEDDING RINGS",
+            "menu_handle": "WEDDING RINGS",
+            "menu_item_index": 2,
+            "content_width": 1300,
+            "content_align": "center",
+            "layout": "columns",
+            "columns": 4,
+            "content_source": "blocks"
+          },
+          "blocks": {
+            "mega_menu_column_nbNF9T": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "WOMEN",
+                "sub_columns": "1",
+                "column_width": 150,
+                "icon_style": "square",
+                "btn_title": "View All",
+                "btn_link": "shopify://collections/womens-wedding-rings"
+              },
+              "blocks": {
+                "mega_menu_item_pBJdUU": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Wedding Rings",
+                    "link": "shopify://collections/womens-wedding-bands"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_NaFXxL": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Stackable Rings",
+                    "link": "shopify://collections/womens-stackable-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_Kx6HPP": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Anniversary",
+                    "link": "shopify://collections/womens-anniversary-rings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_8Q9Yrz": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Eternity",
+                    "link": "shopify://collections/womens-eternity-bands"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_DkGmTG": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Curve",
+                    "link": "shopify://collections/womens-curved-wedding-bands"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_8pLyqh": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Bezel",
+                    "link": "shopify://collections/womens-bezel-rings"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_pBJdUU",
+                "mega_menu_item_NaFXxL",
+                "mega_menu_item_Kx6HPP",
+                "mega_menu_item_8Q9Yrz",
+                "mega_menu_item_DkGmTG",
+                "mega_menu_item_8pLyqh"
+              ]
+            },
+            "mega_menu_column_7TD6Cj": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "MEN",
+                "sub_columns": "1",
+                "column_width": 150,
+                "icon_style": "square",
+                "btn_title": "View All",
+                "btn_link": "shopify://collections/mens-wedding-rings"
+              },
+              "blocks": {
+                "mega_menu_item_HrReKV": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Wedding Bands",
+                    "link": "shopify://collections/mens-wedding-bands"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_9gqtfX": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Plain Bands",
+                    "link": "shopify://collections/mens-plain-bands"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_PrK4JC": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Diamond Bands",
+                    "link": "shopify://collections/mens-diamond-wedding-bands"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_HrReKV",
+                "mega_menu_item_9gqtfX",
+                "mega_menu_item_PrK4JC"
+              ]
+            },
+            "mega_menu_column_XX7KKr": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "SHOP BY METAL",
+                "sub_columns": "1",
+                "column_width": 150,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_Ubhn7F": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "14K White Gold",
+                    "link": "shopify://collections/wedding-rings-in-14k-white-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_mhcckb": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color2.png",
+                    "title": "14K Yellow Gold",
+                    "link": "shopify://collections/wedding-rings-in-14k-yellow-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_7tAT7m": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color3.png",
+                    "title": "14K Rose Gold",
+                    "link": "shopify://collections/wedding-rings-in-14k-rose-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_gEPyNT": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "18K White Gold",
+                    "link": "shopify://collections/wedding-rings-in-18k-white-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_M3UVQp": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color2.png",
+                    "title": "18K Yellow Gold",
+                    "link": "shopify://collections/wedding-rings-in-18k-yellow-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_pgHW7p": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color3.png",
+                    "title": "18K Rose Gold",
+                    "link": "shopify://collections/wedding-rings-in-18k-rose-gold"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_zge873": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "Platinum",
+                    "link": "shopify://collections/wedding-rings-in-platinum"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_Ubhn7F",
+                "mega_menu_item_mhcckb",
+                "mega_menu_item_7tAT7m",
+                "mega_menu_item_gEPyNT",
+                "mega_menu_item_M3UVQp",
+                "mega_menu_item_pgHW7p",
+                "mega_menu_item_zge873"
+              ]
+            },
+            "mega_menu_column_8dKqCU": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "",
+                "sub_columns": "1",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_img_UkfD4z": {
+                  "type": "_mega-menu-img",
+                  "name": "image",
+                  "settings": {
+                    "image": "shopify://shop_images/factors-consider-choosing-wedding-bands.webp",
+                    "title1": "",
+                    "link1": "",
+                    "title2": "",
+                    "link2": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_img_UkfD4z"
+              ]
+            }
+          },
+          "block_order": [
+            "mega_menu_column_nbNF9T",
+            "mega_menu_column_7TD6Cj",
+            "mega_menu_column_XX7KKr",
+            "mega_menu_column_8dKqCU"
+          ]
+        },
+        "mega_menu_panel_T7JQiU": {
+          "type": "_mega-menu-panel",
+          "name": "Necklace",
+          "settings": {
+            "menu_title": "Necklace",
+            "menu_handle": "Necklace",
+            "menu_item_index": 3,
+            "content_width": 1300,
+            "content_align": "center",
+            "layout": "columns",
+            "columns": 4,
+            "content_source": "blocks"
+          },
+          "blocks": {
+            "mega_menu_column_C8riCa": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "SHOP BY STYLE",
+                "sub_columns": "2",
+                "column_width": 600,
+                "icon_style": "square",
+                "btn_title": "View All",
+                "btn_link": "shopify://collections/lab-grown-diamond-necklaces"
+              },
+              "blocks": {
+                "mega_menu_item_pWpEhU": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Pendant",
+                    "link": "shopify://collections/pendant-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_mGBHYF": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Tennis",
+                    "link": "shopify://collections/tennis-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_K6mKdm": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Solitaire",
+                    "link": "shopify://collections/solitaire-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_3Nm3cJ": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Cuban",
+                    "link": "shopify://collections/cuban-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_cBt3yG": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Fashion",
+                    "link": "shopify://collections/fashion-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_wFHDT7": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Religious & Symbolic",
+                    "link": "shopify://collections/religious-symbolic-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_x4VGJY": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Bezel",
+                    "link": "shopify://collections/bezel-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_ecz7AJ": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Chains",
+                    "link": "shopify://collections/chains-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_WeAeq3": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Halo",
+                    "link": "shopify://collections/halo-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_tNNA4n": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Unique",
+                    "link": "shopify://collections/unique-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_JAjxK8": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Toi et Moi",
+                    "link": "shopify://collections/toi-et-moi-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_iRBdKq": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Men's",
+                    "link": "shopify://collections/mens-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_dKketh": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "disabled": true,
+                  "settings": {
+                    "title": "Cross",
+                    "link": "shopify://collections/cross-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_474L6W": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "disabled": true,
+                  "settings": {
+                    "title": "Heart",
+                    "link": "shopify://collections/heart-necklaces"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_pWpEhU",
+                "mega_menu_item_mGBHYF",
+                "mega_menu_item_K6mKdm",
+                "mega_menu_item_3Nm3cJ",
+                "mega_menu_item_cBt3yG",
+                "mega_menu_item_wFHDT7",
+                "mega_menu_item_x4VGJY",
+                "mega_menu_item_ecz7AJ",
+                "mega_menu_item_WeAeq3",
+                "mega_menu_item_tNNA4n",
+                "mega_menu_item_JAjxK8",
+                "mega_menu_item_iRBdKq",
+                "mega_menu_item_dKketh",
+                "mega_menu_item_474L6W"
+              ]
+            },
+            "mega_menu_column_tHfwt7": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "SHOP BY SHAPE",
+                "sub_columns": "2",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_NcE4g7": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/round.webp",
+                    "title": "Round",
+                    "link": "shopify://collections/round-diamond-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_kEBdJa": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/oval.webp",
+                    "title": "Oval",
+                    "link": "shopify://collections/oval-diamond-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_dMmnXc": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/cushion.webp",
+                    "title": "Cushion",
+                    "link": "shopify://collections/cushion-diamond-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_kbFidB": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/pear.webp",
+                    "title": "Pear",
+                    "link": "shopify://collections/pear-diamond-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_kAhYWX": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/princess.webp",
+                    "title": "Princess",
+                    "link": "shopify://collections/princess-diamond-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_JCBxMQ": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/emerald.webp",
+                    "title": "Emerald",
+                    "link": "shopify://collections/emerald-diamond-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_eWxUze": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/marquise.webp",
+                    "title": "Marquise",
+                    "link": "shopify://collections/marquise-diamond-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_7rPa97": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/asscher.webp",
+                    "title": "Asscher",
+                    "link": "shopify://collections/asscher-diamond-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_rhpqdY": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/radiant.webp",
+                    "title": "Radiant",
+                    "link": "shopify://collections/radiant-diamond-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_9cxA64": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/heart.webp",
+                    "title": "Heart",
+                    "link": "shopify://collections/heart-diamond-necklaces"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_NcE4g7",
+                "mega_menu_item_kEBdJa",
+                "mega_menu_item_dMmnXc",
+                "mega_menu_item_kbFidB",
+                "mega_menu_item_kAhYWX",
+                "mega_menu_item_JCBxMQ",
+                "mega_menu_item_eWxUze",
+                "mega_menu_item_7rPa97",
+                "mega_menu_item_rhpqdY",
+                "mega_menu_item_9cxA64"
+              ]
+            },
+            "mega_menu_column_F9Gpxy": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "SHOP BY METAL",
+                "sub_columns": "1",
+                "column_width": 150,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_zxfGHm": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "14K White Gold",
+                    "link": "shopify://collections/14k-white-gold-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_rtFq84": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color2.png",
+                    "title": "14K Yellow Gold",
+                    "link": "shopify://collections/14k-yellow-gold-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_xTcJFb": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color3.png",
+                    "title": "14K Rose Gold",
+                    "link": "https://ecglosty.com/collections/14k-rose-gold-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_GGwcNc": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "18K White Gold",
+                    "link": "shopify://collections/18k-white-gold-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_dUXWja": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color2.png",
+                    "title": "18K Yellow Gold",
+                    "link": "shopify://collections/18k-yellow-gold-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_MYQmdG": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color3.png",
+                    "title": "18K Rose Gold",
+                    "link": "shopify://collections/18k-rose-gold-necklaces"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_GTiyHW": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "Platinum",
+                    "link": "shopify://collections/platinum-necklaces"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_zxfGHm",
+                "mega_menu_item_rtFq84",
+                "mega_menu_item_xTcJFb",
+                "mega_menu_item_GGwcNc",
+                "mega_menu_item_dUXWja",
+                "mega_menu_item_MYQmdG",
+                "mega_menu_item_GTiyHW"
+              ]
+            },
+            "mega_menu_column_MKLtJ4": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "",
+                "sub_columns": "1",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_img_BRhibt": {
+                  "type": "_mega-menu-img",
+                  "name": "image",
+                  "settings": {
+                    "image": "shopify://shop_images/A_woman_wearing_various_diamond_jewelry.webp",
+                    "title1": "",
+                    "link1": "",
+                    "title2": "",
+                    "link2": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_img_BRhibt"
+              ]
+            }
+          },
+          "block_order": [
+            "mega_menu_column_C8riCa",
+            "mega_menu_column_tHfwt7",
+            "mega_menu_column_F9Gpxy",
+            "mega_menu_column_MKLtJ4"
+          ]
+        },
+        "mega_menu_panel_Bzeqje": {
+          "type": "_mega-menu-panel",
+          "name": "Earrings",
+          "settings": {
+            "menu_title": "Earrings",
+            "menu_handle": "Earrings",
+            "menu_item_index": 4,
+            "content_width": 1300,
+            "content_align": "center",
+            "layout": "columns",
+            "columns": 4,
+            "content_source": "blocks"
+          },
+          "blocks": {
+            "mega_menu_column_GUnfnx": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "SHOP BY STYLE",
+                "sub_columns": "2",
+                "column_width": 600,
+                "icon_style": "square",
+                "btn_title": "View All",
+                "btn_link": "shopify://collections/lab-grown-diamond-earrings"
+              },
+              "blocks": {
+                "mega_menu_item_AimM4D": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Stud",
+                    "link": "shopify://collections/lab-grown-diamond-stud-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_9Q8cwH": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Fashion",
+                    "link": "shopify://collections/lab-grown-diamond-fashion-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_gWPVaH": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Drop",
+                    "link": "shopify://collections/lab-grown-diamond-drop-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_ammHwa": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Classic",
+                    "link": "shopify://collections/lab-grown-diamond-classic-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_wrB4c3": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Hoop",
+                    "link": "shopify://collections/lab-grown-diamond-hoop-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_nNE7q7": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Statement",
+                    "link": "shopify://collections/lab-grown-diamond-statement-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_B6B6aP": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Huggie",
+                    "link": "shopify://collections/lab-grown-diamond-huggie-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_dxy96n": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Men's Earrings",
+                    "link": "shopify://collections/lab-grown-diamond-mens-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_FHTP3c": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Bezel",
+                    "link": "shopify://collections/lab-grown-diamond-bezel-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_QQcH7X": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Halo",
+                    "link": "shopify://collections/lab-grown-diamond-halo-earrings"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_AimM4D",
+                "mega_menu_item_9Q8cwH",
+                "mega_menu_item_gWPVaH",
+                "mega_menu_item_ammHwa",
+                "mega_menu_item_wrB4c3",
+                "mega_menu_item_nNE7q7",
+                "mega_menu_item_B6B6aP",
+                "mega_menu_item_dxy96n",
+                "mega_menu_item_FHTP3c",
+                "mega_menu_item_QQcH7X"
+              ]
+            },
+            "mega_menu_column_BHDrc7": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "SHOP BY SHAPE",
+                "sub_columns": "2",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_QMk8Ji": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/round.webp",
+                    "title": "Round",
+                    "link": "shopify://collections/round-lab-grown-diamond-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_LXFXYb": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/oval.webp",
+                    "title": "Oval",
+                    "link": "shopify://collections/oval-lab-grown-diamond-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_CEVen6": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/cushion.webp",
+                    "title": "Cushion",
+                    "link": "shopify://collections/cushion-lab-grown-diamond-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_AqpbqR": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/pear.webp",
+                    "title": "Pear",
+                    "link": "shopify://collections/pear-lab-grown-diamond-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_zqDNFn": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/princess.webp",
+                    "title": "Princess",
+                    "link": "shopify://collections/princess-lab-grown-diamond-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_CpaAqi": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/emerald.webp",
+                    "title": "Emerald",
+                    "link": "shopify://collections/emerald-lab-grown-diamond-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_ijr9P7": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/marquise.webp",
+                    "title": "Marquise",
+                    "link": "shopify://collections/marquise-lab-grown-diamond-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_bxEtx7": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/asscher.webp",
+                    "title": "Asscher",
+                    "link": "shopify://collections/asscher-lab-grown-diamond-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_mXC6kd": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/radiant.webp",
+                    "title": "Radiant",
+                    "link": "shopify://collections/radiant-lab-grown-diamond-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_YUV6JT": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/heart.webp",
+                    "title": "Heart",
+                    "link": "shopify://collections/heart-lab-grown-diamond-earrings"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_QMk8Ji",
+                "mega_menu_item_LXFXYb",
+                "mega_menu_item_CEVen6",
+                "mega_menu_item_AqpbqR",
+                "mega_menu_item_zqDNFn",
+                "mega_menu_item_CpaAqi",
+                "mega_menu_item_ijr9P7",
+                "mega_menu_item_bxEtx7",
+                "mega_menu_item_mXC6kd",
+                "mega_menu_item_YUV6JT"
+              ]
+            },
+            "mega_menu_column_B3G9Gz": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "SHOP  BY METAL",
+                "sub_columns": "1",
+                "column_width": 150,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_kE3cnz": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "14K White Gold",
+                    "link": "shopify://collections/14k-white-gold-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_9Gydt6": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color2.png",
+                    "title": "14K Yellow Gold",
+                    "link": "shopify://collections/14k-yellow-gold-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_ziPhFL": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color3.png",
+                    "title": "14K Rose Gold",
+                    "link": "shopify://collections/14k-rose-gold-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_8P4Yqc": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "18K White Gold",
+                    "link": "shopify://collections/18k-white-gold-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_kqNP8B": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color2.png",
+                    "title": "18K Yellow Gold",
+                    "link": "shopify://collections/18k-yellow-gold-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_pKMqbm": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color3.png",
+                    "title": "18K Rose Gold",
+                    "link": "shopify://collections/18k-rose-gold-earrings"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_mAeXRg": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "Platinum",
+                    "link": "shopify://collections/platinum-earrings"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_kE3cnz",
+                "mega_menu_item_9Gydt6",
+                "mega_menu_item_ziPhFL",
+                "mega_menu_item_8P4Yqc",
+                "mega_menu_item_kqNP8B",
+                "mega_menu_item_pKMqbm",
+                "mega_menu_item_mAeXRg"
+              ]
+            },
+            "mega_menu_column_LcW8DT": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "",
+                "sub_columns": "2",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_img_bWx9Ri": {
+                  "type": "_mega-menu-img",
+                  "name": "image",
+                  "settings": {
+                    "image": "shopify://shop_images/A_side_view_of_a_woman_wearing_lab-grown_diamond_earrings.webp",
+                    "title1": "",
+                    "link1": "",
+                    "title2": "",
+                    "link2": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_img_bWx9Ri"
+              ]
+            }
+          },
+          "block_order": [
+            "mega_menu_column_GUnfnx",
+            "mega_menu_column_BHDrc7",
+            "mega_menu_column_B3G9Gz",
+            "mega_menu_column_LcW8DT"
+          ]
+        },
+        "mega_menu_panel_XV3w9V": {
+          "type": "_mega-menu-panel",
+          "name": "Bracelets",
+          "settings": {
+            "menu_title": "Bracelets",
+            "menu_handle": "Bracelets",
+            "menu_item_index": 5,
+            "content_width": 1300,
+            "content_align": "center",
+            "layout": "columns",
+            "columns": 4,
+            "content_source": "blocks"
+          },
+          "blocks": {
+            "mega_menu_column_YfnCHX": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "SHOP BY STYLE",
+                "sub_columns": "2",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "View All",
+                "btn_link": "shopify://collections/lab-grown-diamond-bracelets"
+              },
+              "blocks": {
+                "mega_menu_item_UrFH7m": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Tennis",
+                    "link": "shopify://collections/lab-grown-diamond-tennis-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_erEEwp": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Cuff",
+                    "link": "shopify://collections/lab-grown-diamond-cuff-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_jJdx79": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Stackable",
+                    "link": "shopify://collections/lab-grown-diamond-stackable-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_bn6XEd": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Magnetic Clasp",
+                    "link": "shopify://collections/lab-grown-diamond-magnetic-clasp-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_BtVrEr": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Fashion",
+                    "link": "shopify://collections/lab-grown-diamond-fashion-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_N4tCqi": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Plain bracelets",
+                    "link": "shopify://collections/lab-grown-diamond-plain-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_944HwR": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Chain",
+                    "link": "shopify://collections/lab-grown-diamond-chain-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_cAjAei": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Diamond Bracelets",
+                    "link": "shopify://collections/diamond-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_3tEywq": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Bezel",
+                    "link": "shopify://collections/lab-grown-diamond-bezel-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_Ay7cp7": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Men's Bracelets",
+                    "link": "shopify://collections/lab-grown-diamond-mens-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_M89Hik": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Bangle",
+                    "link": "shopify://collections/lab-grown-diamond-bangle-bracelets"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_UrFH7m",
+                "mega_menu_item_erEEwp",
+                "mega_menu_item_jJdx79",
+                "mega_menu_item_bn6XEd",
+                "mega_menu_item_BtVrEr",
+                "mega_menu_item_N4tCqi",
+                "mega_menu_item_944HwR",
+                "mega_menu_item_cAjAei",
+                "mega_menu_item_3tEywq",
+                "mega_menu_item_Ay7cp7",
+                "mega_menu_item_M89Hik"
+              ]
+            },
+            "mega_menu_column_J46pwU": {
+              "type": "_mega-menu-column",
+              "disabled": true,
+              "settings": {
+                "title": "SHOP BY SHAPE",
+                "sub_columns": "2",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_9eWxAh": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "导航项",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_jmcLef": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "导航项",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_eHUiny": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "导航项",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_rBr4dV": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Round",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_KMnq7C": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Princess",
+                    "link": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_9eWxAh",
+                "mega_menu_item_jmcLef",
+                "mega_menu_item_eHUiny",
+                "mega_menu_item_rBr4dV",
+                "mega_menu_item_KMnq7C"
+              ]
+            },
+            "mega_menu_column_mMDHAa": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "SHOP BY METAL",
+                "sub_columns": "1",
+                "column_width": 150,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_GfQnQd": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "14K White Gold",
+                    "link": "shopify://collections/14k-white-gold-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_VVbDgd": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color2.png",
+                    "title": "14K Yellow Gold",
+                    "link": "shopify://collections/14k-yellow-gold-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_ijUhjf": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color3.png",
+                    "title": "14K Rose Gold",
+                    "link": "shopify://collections/14k-rose-gold-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_7E4mkL": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "18K White Gold",
+                    "link": "shopify://collections/18k-white-gold-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_bm4TEK": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/color2.png",
+                    "title": "18K Yellow Gold",
+                    "link": "shopify://collections/18k-yellow-gold-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_wtthd4": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color3.png",
+                    "title": "18K Rose Gold",
+                    "link": "shopify://collections/18k-rose-gold-bracelets"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_frHcYQ": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/color1.png",
+                    "title": "Platinum",
+                    "link": "shopify://collections/platinum-bracelets"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_GfQnQd",
+                "mega_menu_item_VVbDgd",
+                "mega_menu_item_ijUhjf",
+                "mega_menu_item_7E4mkL",
+                "mega_menu_item_bm4TEK",
+                "mega_menu_item_wtthd4",
+                "mega_menu_item_frHcYQ"
+              ]
+            },
+            "mega_menu_column_kYyNHD": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "",
+                "sub_columns": "2",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_img_PjcqFh": {
+                  "type": "_mega-menu-img",
+                  "name": "image",
+                  "settings": {
+                    "image": "shopify://shop_images/A_woman_wearing_a_lab-grown_diamond_bracelet.webp",
+                    "title1": "",
+                    "link1": "",
+                    "title2": "",
+                    "link2": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_img_PjcqFh"
+              ]
+            }
+          },
+          "block_order": [
+            "mega_menu_column_YfnCHX",
+            "mega_menu_column_J46pwU",
+            "mega_menu_column_mMDHAa",
+            "mega_menu_column_kYyNHD"
+          ]
+        },
+        "mega_menu_panel_UYndkf": {
+          "type": "_mega-menu-panel",
+          "name": "钻石",
+          "settings": {
+            "menu_title": "Diamonds",
+            "menu_handle": "Diamonds",
+            "menu_item_index": 6,
+            "content_width": 1300,
+            "content_align": "center",
+            "layout": "columns",
+            "columns": 4,
+            "content_source": "blocks"
+          },
+          "blocks": {
+            "mega_menu_column_TFL3xT": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "SHOP BY SHAPE",
+                "sub_columns": "2",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_djepHr": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/round_0700100d-26ff-4193-8737-2d7000caba5c.webp",
+                    "title": "Round",
+                    "link": "https://ecglosty.com/collections/lab-grown-diamond?shape=round"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_8e6cnW": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/oval_f69c32c9-ffef-4951-8852-1be255a82033.webp",
+                    "title": "Oval",
+                    "link": "https://ecglosty.com/collections/lab-grown-diamond?shape=oval"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_epLdK8": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/cushion_bed75b22-de73-4c55-867a-48ad52f2b8c7.webp",
+                    "title": "Cushion",
+                    "link": "https://ecglosty.com/collections/lab-grown-diamond?shape=cushion"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_qirtnE": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/pear_d928d8cd-7296-4381-a6fc-5c61d084ef84.webp",
+                    "title": "Pear",
+                    "link": "https://ecglosty.com/collections/lab-grown-diamond?shape=pear"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_UhYDLT": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/princess_01a91118-6527-41e3-8d71-2440cabaa77f.webp",
+                    "title": "Princess",
+                    "link": "https://ecglosty.com/collections/lab-grown-diamond?shape=princess"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_A9nUP7": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/emerald_58ccb787-b7d4-41eb-895e-ab5274fcac20.webp",
+                    "title": "Emerald",
+                    "link": "https://ecglosty.com/collections/lab-grown-diamond?shape=emerald"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_ak9eme": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "image": "shopify://shop_images/marquise_608e1059-de3c-4846-bd88-ec1a3500caa7.webp",
+                    "title": "Marquise",
+                    "link": "https://ecglosty.com/collections/lab-grown-diamond?shape=marquise"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_py9gFM": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/asscher_13b92a80-5b0e-4959-ac66-669b0a94bdb4.webp",
+                    "title": "Asscher",
+                    "link": "https://ecglosty.com/collections/lab-grown-diamond?shape=asscher"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_a6fqMN": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/radiant_a6e656c6-31f8-4896-b903-e6521556c020.webp",
+                    "title": "Radiant",
+                    "link": "https://ecglosty.com/collections/lab-grown-diamond?shape=radiant"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_McHgRx": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "image": "shopify://shop_images/heart_afda3a2f-b4e1-4e11-8be0-403558db0a17.webp",
+                    "title": "Heart",
+                    "link": "https://ecglosty.com/collections/lab-grown-diamond?shape=heart"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_djepHr",
+                "mega_menu_item_8e6cnW",
+                "mega_menu_item_epLdK8",
+                "mega_menu_item_qirtnE",
+                "mega_menu_item_UhYDLT",
+                "mega_menu_item_A9nUP7",
+                "mega_menu_item_ak9eme",
+                "mega_menu_item_py9gFM",
+                "mega_menu_item_a6fqMN",
+                "mega_menu_item_McHgRx"
+              ]
+            },
+            "mega_menu_column_B8n6hG": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "DIAMOND EDUCATION",
+                "sub_columns": "1",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_PeCVMy": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Lab-Grown Diamond Education Center",
+                    "link": "shopify://pages/lab-grown-diamond-education-center"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_PFDLgr": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Diamond Certification Guide",
+                    "link": "shopify://pages/diamond-certification-guide"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_LT9nJT": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Diamond Shape Guide",
+                    "link": "shopify://pages/diamond-shape-guide"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_PeCVMy",
+                "mega_menu_item_PFDLgr",
+                "mega_menu_item_LT9nJT"
+              ]
+            },
+            "mega_menu_column_z8xxnc": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "",
+                "sub_columns": "1",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_img_QHGfWw": {
+                  "type": "_mega-menu-img",
+                  "name": "image",
+                  "settings": {
+                    "image": "shopify://shop_images/Getting_Ready_to_Order_a_Custom_Ring.webp",
+                    "title1": "Start Creating Your Ring",
+                    "link1": "https://ecglosty.com/collections/lab-grown-diamond",
+                    "title2": "",
+                    "link2": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_img_QHGfWw"
+              ]
+            }
+          },
+          "block_order": [
+            "mega_menu_column_TFL3xT",
+            "mega_menu_column_B8n6hG",
+            "mega_menu_column_z8xxnc"
+          ]
+        },
+        "mega_menu_panel_gwJx4w": {
+          "type": "_mega-menu-panel",
+          "name": "GIFTS",
+          "settings": {
+            "menu_title": "GIFTS",
+            "menu_handle": "GIFTS",
+            "menu_item_index": 7,
+            "content_width": 1300,
+            "content_align": "center",
+            "layout": "columns",
+            "columns": 4,
+            "content_source": "blocks"
+          },
+          "blocks": {
+            "mega_menu_column_zAF78p": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "TOP GIFTS",
+                "sub_columns": "1",
+                "column_width": 150,
+                "icon_style": "square",
+                "btn_title": "View All",
+                "btn_link": "shopify://collections/lab-grown-diamond-jewelry"
+              },
+              "blocks": {
+                "mega_menu_item_wjc7dk": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Best Selling Gifts",
+                    "link": "shopify://collections/best-selling-gifts"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_LHcP93": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Initials",
+                    "link": "shopify://collections/initial-jewelry"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_FTKzTm": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Gifts Under $500",
+                    "link": "shopify://collections/gifts-under-500"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_6fpbxx": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Gifts Under $1000",
+                    "link": "shopify://collections/gifts-under-1000"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_DGbbYQ": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "disabled": true,
+                  "settings": {
+                    "title": "Lab Grown Diamond Jewelry",
+                    "link": "shopify://collections/lab-grown-diamond-jewelry"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_wjc7dk",
+                "mega_menu_item_LHcP93",
+                "mega_menu_item_FTKzTm",
+                "mega_menu_item_6fpbxx",
+                "mega_menu_item_DGbbYQ"
+              ]
+            },
+            "mega_menu_column_Dt9AAR": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "GIFTS BY RECIPIENT",
+                "sub_columns": "1",
+                "column_width": 200,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_ibbbQm": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Gifts For Her",
+                    "link": "shopify://collections/jewelry-gifts-for-her"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_3rLqMK": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Gifts For Him",
+                    "link": "shopify://collections/jewelry-gifts-for-him"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_ibbbQm",
+                "mega_menu_item_3rLqMK"
+              ]
+            },
+            "mega_menu_column_aPYRiP": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "GIFTS BY OCCASION",
+                "sub_columns": "1",
+                "column_width": 200,
+                "icon_style": "circle",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_dm9W8A": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Mother's Day",
+                    "link": "shopify://collections/mothers-day-jewelry-gifts"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_xCRDCz": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Graduation",
+                    "link": "shopify://collections/graduation-jewelry-gifts"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_6XpCcF": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Anniversary",
+                    "link": "shopify://collections/anniversary-jewelry-gifts"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_QPjrcE": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Birthday",
+                    "link": "shopify://collections/birthday-jewelry-gifts"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_By8epH": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Milestone",
+                    "link": "shopify://collections/milestone-jewelry-gifts"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_KxehVJ": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Bridal Party",
+                    "link": "shopify://collections/bridal-party-jewelry-gifts"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_dm9W8A",
+                "mega_menu_item_xCRDCz",
+                "mega_menu_item_6XpCcF",
+                "mega_menu_item_QPjrcE",
+                "mega_menu_item_By8epH",
+                "mega_menu_item_KxehVJ"
+              ]
+            },
+            "mega_menu_column_9jcnAw": {
+              "type": "_mega-menu-column",
+              "name": "超级导航列",
+              "settings": {
+                "title": "",
+                "sub_columns": "2",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_img_6KMd9Q": {
+                  "type": "_mega-menu-img",
+                  "name": "image",
+                  "settings": {
+                    "image": "shopify://shop_images/The_man_holding_the_lab-grown_diamond_ring_as_a_gift.webp",
+                    "title1": "",
+                    "link1": "",
+                    "title2": "",
+                    "link2": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_img_6KMd9Q"
+              ]
+            }
+          },
+          "block_order": [
+            "mega_menu_column_zAF78p",
+            "mega_menu_column_Dt9AAR",
+            "mega_menu_column_aPYRiP",
+            "mega_menu_column_9jcnAw"
+          ]
+        },
+        "mega_menu_panel_Aj6A4c": {
+          "type": "_mega-menu-panel",
+          "name": "超级导航面板",
+          "settings": {
+            "menu_title": "help & education",
+            "menu_handle": "help & education",
+            "menu_item_index": 8,
+            "content_width": 1300,
+            "content_align": "center",
+            "layout": "columns",
+            "columns": 4,
+            "content_source": "blocks"
+          },
+          "blocks": {
+            "mega_menu_column_tXDwD4": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "DIAMOND EDUCATION",
+                "sub_columns": "1",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_g3Uwrw": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Lab-Grown Diamond Education Center",
+                    "link": "shopify://pages/lab-grown-diamond-education-center"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_p9cGcC": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Diamond Certification Guide",
+                    "link": "shopify://pages/diamond-certification-guide"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_g3Uwrw",
+                "mega_menu_item_p9cGcC"
+              ]
+            },
+            "mega_menu_column_NwEHqp": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "BUYING GUIDES",
+                "sub_columns": "1",
+                "column_width": 300,
+                "icon_style": "square",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_QyrpWt": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Engagement Ring Buying Guide",
+                    "link": "shopify://pages/engagement-ring-buying-guide"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_jdzgG6": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Ring Size Guide",
+                    "link": "shopify://pages/ring-size-guide"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_64VVfN": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Diamond Shape Guide",
+                    "link": "shopify://pages/diamond-shape-guide"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_QyrpWt",
+                "mega_menu_item_jdzgG6",
+                "mega_menu_item_64VVfN"
+              ]
+            },
+            "mega_menu_column_MLnNUW": {
+              "type": "_mega-menu-column",
+              "settings": {
+                "title": "CUSTOMER SUPPORT",
+                "sub_columns": "1",
+                "column_width": 300,
+                "icon_style": "circle",
+                "btn_title": "",
+                "btn_link": ""
+              },
+              "blocks": {
+                "mega_menu_item_jtFTMw": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "About Us",
+                    "link": "shopify://pages/brand-story"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_V6WkPG": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Contact Us",
+                    "link": "shopify://pages/contact-us"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_L6CxMz": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "FAQs",
+                    "link": "shopify://pages/faqs"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_gnMTVE": {
+                  "type": "_mega-menu-item",
+                  "name": "超级导航项",
+                  "settings": {
+                    "title": "Shipping Policy",
+                    "link": "shopify://pages/shipping-policy"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_ULKHhJ": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Warranty Policy",
+                    "link": "shopify://pages/warranty-policy"
+                  },
+                  "blocks": {}
+                },
+                "mega_menu_item_gVcpph": {
+                  "type": "_mega-menu-item",
+                  "settings": {
+                    "title": "Jewelry Care Guide",
+                    "link": "shopify://pages/jewelry-care-guide"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "mega_menu_item_jtFTMw",
+                "mega_menu_item_V6WkPG",
+                "mega_menu_item_L6CxMz",
+                "mega_menu_item_gnMTVE",
+                "mega_menu_item_ULKHhJ",
+                "mega_menu_item_gVcpph"
+              ]
+            }
+          },
+          "block_order": [
+            "mega_menu_column_tXDwD4",
+            "mega_menu_column_NwEHqp",
+            "mega_menu_column_MLnNUW"
+          ]
+        },
+        "header-logo": {
+          "type": "_header-logo",
+          "static": true,
+          "settings": {
+            "hide_logo_on_home_page": false,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
+        "header-menu": {
+          "type": "_header-menu",
+          "static": true,
+          "settings": {
+            "menu": "main-menu",
+            "color_scheme": "scheme-6a73e097-8aa8-4ee6-ba6d-bbf06ca81a13",
+            "type_font_primary_size": "1rem",
+            "menu_font_style": "inverse",
+            "type_font_primary_link": "subheading",
+            "type_case_primary_link": "none",
+            "menu_style": "featured_products",
+            "featured_products_aspect_ratio": "4 / 5",
+            "featured_collections_aspect_ratio": "16 / 9",
+            "image_border_radius": 0,
+            "navigation_bar": false,
+            "color_scheme_navigation_bar": "",
+            "drawer_accordion": false,
+            "drawer_accordion_expand_first": false,
+            "drawer_dividers": true
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "mega_menu_panel_LUHRRn",
+        "mega_menu_panel_F3iwC4",
+        "mega_menu_panel_T7JQiU",
+        "mega_menu_panel_Bzeqje",
+        "mega_menu_panel_XV3w9V",
+        "mega_menu_panel_UYndkf",
+        "mega_menu_panel_gwJx4w",
+        "mega_menu_panel_Aj6A4c"
+      ],
+      "settings": {
+        "logo_position": "center",
+        "menu_position": "center",
+        "menu_row": "bottom",
+        "customer_account_menu": "customer-account-main-menu",
+        "show_search": true,
+        "search_position": "right",
+        "search_row": "top",
+        "show_country": true,
+        "country_selector_style": true,
+        "show_language": false,
+        "localization_font": "heading",
+        "localization_font_size": "1rem",
+        "localization_position": "right",
+        "localization_row": "top",
+        "section_width": "page-width",
+        "section_height": "standard",
+        "enable_sticky_header": "scroll-up",
+        "divider_width": 0,
+        "divider_size": "page-width",
+        "border_width": 0,
+        "actions_display_style": "icon",
+        "actions_font_size": "0.875rem",
+        "actions_font": "body",
+        "actions_text_case": "none",
+        "color_scheme_top": "scheme-6a73e097-8aa8-4ee6-ba6d-bbf06ca81a13",
+        "color_scheme_bottom": "scheme-4df12b91-c5d4-406e-a832-2a7395c6df9e",
+        "color_scheme_transparent": "scheme-6",
+        "enable_transparent_header_home": false,
+        "home_color_scheme": "inverse",
+        "enable_transparent_header_product": false,
+        "product_color_scheme": "default",
+        "enable_transparent_header_collection": false,
+        "collection_color_scheme": "default"
+      }
+    }
+  },
+  "order": [
+    "header_announcements_9jGBFp",
+    "announce_y4gTrJ",
+    "header_section"
+  ]
+}

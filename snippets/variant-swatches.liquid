@@ -1,0 +1,672 @@
+{%- doc -%}
+  Renders a swatches variant picker, used within the product-swatches block.
+  A swatch will rendered in a pre-selected state if the context allows it.
+  Allowed contexts are search and filtered collections.
+  Only Color/Colour/Metal and Shape options are shown; other option names are hidden.
+
+  @param {object} product_resource - The product object, which contains variants and options.
+  @param {boolean} [has_option_selected] - Whether to render the swatches in a pre-selected state.
+
+  @example
+  {% render 'variant-swatches', product_resource: product %}
+{%- enddoc -%}
+
+{% stylesheet %}
+  swatches-variant-picker-component {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: var(--product-swatches-alignment-mobile);
+
+    @media screen and (min-width: 750px) {
+      justify-content: var(--product-swatches-alignment);
+    }
+
+    --overflow-list-padding-block: calc(
+        var(--product-swatches-padding-block-start) + var(--focus-outline-offset) + var(--focus-outline-width)
+      )
+      calc(var(--product-swatches-padding-block-end) + var(--focus-outline-offset) + var(--focus-outline-width));
+    --overflow-list-padding-inline: calc(
+        var(--product-swatches-padding-inline-start) + var(--focus-outline-offset) + (1.5 * var(--focus-outline-width))
+      )
+      calc(var(--product-swatches-padding-inline-end) + var(--focus-outline-offset) + var(--focus-outline-width));
+
+    overflow-list::part(list) {
+      /* gap: var(--gap-sm); */
+      /* gap: 10px; */
+      gap: clamp(6px, 0.735294vw, 10px);
+    }
+  }
+
+  swatches-variant-picker-component .variant-option__swatch-list {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: var(--overflow-list-alignment);
+    /* column-gap: var(--gap-sm); */
+    column-gap: 3px;
+    margin: 0;
+    /* padding-block: var(--overflow-list-padding-block, 0);
+    padding-inline: var(--overflow-list-padding-inline, 0); */
+    padding-block: 0;
+    padding-inline: 0;
+    list-style: none;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    @media screen and (max-width: 749px) {
+      justify-content: var(--overflow-list-alignment-mobile);
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  swatches-variant-picker-component form {
+    display: flex;
+    flex-direction: column;
+    /* gap: var(--gap-xs); */
+    gap: 8px;
+    width: 100%;
+  }
+
+  swatches-variant-picker-component .variant-option--metal-row {
+    --variant-picker-swatch-radius: 50%;
+  }
+
+  swatches-variant-picker-component .variant-option--metal-row .swatch {
+    --variant-picker-swatch-width: 22px;
+    --variant-picker-swatch-height: 22px;
+    border-radius: 50%;
+  }
+
+  /* Metal/Color karat label (14K / 18K): show inside swatch on hover & selected */
+  swatches-variant-picker-component .variant-option--metal-row .variant-option__button-label--has-swatch {
+    position: relative;
+  }
+
+  swatches-variant-picker-component .variant-option--metal-row .swatch-karat-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #1a1a1a;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.85);
+    pointer-events: none;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 1;
+  }
+
+  swatches-variant-picker-component .variant-option--metal-row .variant-option__button-label--has-swatch:hover .swatch-karat-label,
+  swatches-variant-picker-component .variant-option--metal-row .variant-option__button-label--has-swatch:has(:checked) .swatch-karat-label,
+  swatches-variant-picker-component .variant-option--metal-row .variant-option__button-label--has-swatch[data-swatch-previewing] .swatch-karat-label,
+  swatches-variant-picker-component .variant-option--metal-row .variant-option__button-label--has-swatch:has(:focus-visible) .swatch-karat-label {
+    opacity: 1;
+  }
+
+  swatches-variant-picker-component .variant-option--shape-row {
+    --shape-underline-selected: #06374C;
+    --shape-underline-hover: #B8B8B8;
+  }
+
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch {
+    border: 1px dashed rgb(var(--color-foreground-rgb) / var(--opacity-20-35));
+    /* border-bottom: 1px dashed rgb(var(--color-foreground-rgb) / var(--opacity-20-35)); */
+    border-bottom: 1px solid transparent;
+    border-radius: 0px;
+    padding-bottom: 1px;
+    outline: none;
+    box-shadow: none;
+  }
+
+  swatches-variant-picker-component .variant-option--shape-row .swatch {
+    --variant-picker-swatch-width: 22px;
+    --variant-picker-swatch-height: 22px;
+    --variant-picker-swatch-radius: 0;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
+  }
+
+  swatches-variant-picker-component .swatch.swatch--variant-image {
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* 选中：深蓝下划线 */
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:has(:checked) {
+    border-color: transparent;
+    border-bottom: 1px solid var(--shape-underline-selected);
+    outline: none;
+    box-shadow: none;
+  }
+
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:has(:checked):hover,
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:has(:checked)[data-swatch-previewing] {
+    border-color: transparent;
+    border-bottom: 1px solid var(--shape-underline-selected);
+  }
+
+  /* 未选中悬停/预览：灰色下划线 */
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:hover:not(:has(:checked)),
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch[data-swatch-previewing]:not(:has(:checked)) {
+    border-color: rgb(var(--color-foreground-rgb) / var(--opacity-20-35));
+    border-bottom: 1px solid var(--shape-underline-hover);
+    outline: none;
+    box-shadow: none;
+    background-color: transparent;
+    border-color: #06374C;
+    padding-bottom: 1px;
+  }
+
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:hover,
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:has(:focus-visible),
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch[data-swatch-previewing] {
+    outline: none;
+    box-shadow: none;
+  }
+
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch::after,
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:hover .swatch::after,
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:has(:focus-visible) .swatch::after,
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch[data-swatch-previewing] .swatch::after,
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:has(:checked) .swatch::after {
+    content: none;
+    display: none;
+    border: none;
+  }
+
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:hover .swatch,
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:has(:focus-visible) .swatch,
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch[data-swatch-previewing] .swatch,
+  swatches-variant-picker-component .variant-option--shape-row .variant-option__button-label--has-swatch:has(:checked) .swatch {
+    outline: none;
+    box-shadow: none;
+  }
+
+  swatches-variant-picker-component overflow-list[disabled='true'] {
+    --overflow-list-padding-block: 0px;
+    margin-block-start: calc(
+      var(--product-swatches-padding-block-start) + var(--focus-outline-offset) + var(--focus-outline-width)
+    );
+    margin-block-end: calc(
+      var(--product-swatches-padding-block-end) + var(--focus-outline-offset) + var(--focus-outline-width)
+    );
+  }
+
+  .hidden-swatches__count {
+    display: flex;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-40-60));
+    background-color: transparent;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+
+    &::before {
+      counter-reset: overflow-count var(--overflow-count);
+      content: '+' counter(overflow-count);
+      line-height: 1;
+      cursor: pointer;
+    }
+  }
+
+  .hidden-swatches__count:hover {
+    color: var(--color-foreground-rgb);
+  }
+{% endstylesheet %}
+
+{% liquid
+  assign allow_preselection = false
+
+  if product_resource.selected_variant or has_option_selected
+    assign allow_preselection = true
+  endif
+
+  assign use_currency = false
+  if settings.currency_code_enabled_product_cards
+    assign use_currency = true
+  endif
+
+  # Collection Metal/Shape strip filters (vm_color / vm_shape) — preselect matching card swatches.
+  assign preferred_metal = ''
+  assign preferred_shape = ''
+  if request.query_string != blank
+    assign qs_decoded = request.query_string | url_decode | replace: '+', ' '
+    assign qs_parts = qs_decoded | split: '&'
+    for part in qs_parts
+      assign kv = part | split: '='
+      assign qs_key = kv[0] | strip
+      assign qs_val = kv[1] | default: '' | strip
+      if qs_key == 'vm_color' and qs_val != blank
+        assign preferred_metal = qs_val
+      elsif qs_key == 'vm_shape' and qs_val != blank
+        assign preferred_shape = qs_val
+      endif
+    endfor
+  endif
+
+  capture swatches_product_url
+    render 'collection-product-url', url: product_resource.url, product: product_resource
+  endcapture
+  assign swatches_product_url = swatches_product_url | strip
+
+  # Find metal/color option by name so shape-only products do not inherit metal-row styles.
+  assign metal_option_ref = nil
+  for opt in product_resource.options_with_values
+    assign opt_name_down = opt.name | downcase | strip
+    if opt_name_down contains 'metal' or opt_name_down contains 'color' or opt_name_down contains 'colour' or opt_name_down contains '颜色' or opt_name_down contains '金属'
+      assign metal_option_ref = opt
+      break
+    endif
+  endfor
+%}
+
+<swatches-variant-picker-component
+  data-product-id="{{ product_resource.id }}"
+  data-product-url="{{ swatches_product_url }}"
+  ref="swatchesVariantPicker"
+>
+  <form>
+    {%- liquid
+      assign rendered_fieldset_index = 0
+    -%}
+    {%- for product_option in product_resource.options_with_values -%}
+      {%- liquid
+        assign swatch_count = product_option.values | map: 'swatch' | compact | size
+        assign option_name_down = product_option.name | downcase | strip
+        assign is_metal_row = false
+        assign is_shape_row = false
+
+        if option_name_down contains 'metal' or option_name_down contains 'color' or option_name_down contains 'colour' or option_name_down contains '颜色' or option_name_down contains '金属'
+          assign is_metal_row = true
+        elsif option_name_down contains 'shape' or option_name_down contains '形状'
+          assign is_shape_row = true
+        else
+          # Hide non Color/Shape options on collection cards
+          continue
+        endif
+
+        assign swatch_option_position = product_option.position
+        assign swatch_option_key = 'option' | append: swatch_option_position
+
+        if swatch_count == 0
+          assign option_has_swatch_images = false
+          assign metaobject_type_check = 'variant_color'
+          if is_shape_row
+            assign metaobject_type_check = 'variant_shape'
+          endif
+
+          if metaobject_type_check == 'variant_shape'
+            if shop.metaobjects.variant_shape != blank and shop.metaobjects.variant_shape.values.size > 0
+              assign option_has_swatch_images = true
+            elsif shop.metaobjects['variant_shape'] != blank and shop.metaobjects['variant_shape'].values.size > 0
+              assign option_has_swatch_images = true
+            elsif shop.metaobjects['variant-shape'] != blank and shop.metaobjects['variant-shape'].values.size > 0
+              assign option_has_swatch_images = true
+            endif
+          else
+            if shop.metaobjects.variant_color != blank and shop.metaobjects.variant_color.values.size > 0
+              assign option_has_swatch_images = true
+            elsif shop.metaobjects['variant_color'] != blank and shop.metaobjects['variant_color'].values.size > 0
+              assign option_has_swatch_images = true
+            elsif shop.metaobjects['variant-color'] != blank and shop.metaobjects['variant-color'].values.size > 0
+              assign option_has_swatch_images = true
+            endif
+          endif
+
+          if option_has_swatch_images == false
+            continue
+          endif
+        endif
+
+        assign fieldset_index = rendered_fieldset_index
+        assign row_class = 'variant-option--metal-row'
+        if is_shape_row
+          assign row_class = 'variant-option--shape-row'
+        endif
+
+        assign metal_context_key = nil
+        assign metal_context_value = nil
+        if is_shape_row and metal_option_ref != blank
+          assign metal_context_key = 'option' | append: metal_option_ref.position
+          if preferred_metal != blank
+            assign metal_context_value = preferred_metal
+          endif
+          if metal_context_value == blank and product_resource.selected_or_first_available_variant
+            assign metal_context_value = product_resource.selected_or_first_available_variant[metal_context_key]
+          endif
+          if metal_context_value == blank
+            assign metal_context_value = metal_option_ref.selected_value
+          endif
+          if metal_context_value == blank and metal_option_ref.values.size > 0
+            assign metal_context_value = metal_option_ref.values.first.name
+          endif
+        endif
+
+        # Index of swatch that matches active collection Metal/Shape filter (fallback: -1).
+        assign preferred_match_index = -1
+        if is_metal_row and preferred_metal != blank
+          assign preferred_metal_handle = preferred_metal | handleize
+          for pov in product_option.values
+            assign pov_name = pov.name | strip
+            assign pov_handle = pov_name | handleize
+            if pov_name == preferred_metal or pov_handle == preferred_metal_handle
+              assign preferred_match_index = forloop.index0
+              break
+            endif
+          endfor
+        elsif is_shape_row and preferred_shape != blank
+          assign preferred_shape_handle = preferred_shape | handleize
+          for pov in product_option.values
+            assign pov_name = pov.name | strip
+            assign pov_handle = pov_name | handleize
+            if pov_name == preferred_shape or pov_handle == preferred_shape_handle
+              assign preferred_match_index = forloop.index0
+              break
+            endif
+          endfor
+        endif
+      -%}
+
+      <fieldset
+        class="variant-option variant-option--buttons variant-option--swatches {{ row_class }}"
+        data-fieldset-index="{{ fieldset_index }}"
+        data-option-position="{{ swatch_option_position }}"
+        ref="fieldsets[]"
+      >
+        {% capture swatch_items %}
+          {%- for product_option_value in product_option.values -%}
+            {% liquid
+              assign first_available_variant = nil
+              assign preview_variant = nil
+              assign featured_media = nil
+              assign variant_image_source = nil
+              assign swatch_image_url = nil
+              assign metaobject_type = 'variant_color'
+              if is_shape_row
+                assign metaobject_type = 'variant_shape'
+              endif
+            %}
+
+            {% liquid
+              assign metaobject_image = nil
+              assign metaobject_swatch_url = nil
+              assign metaobject_entries = nil
+              assign option_value_handle = product_option_value.name | handleize
+
+              if metaobject_type == 'variant_shape'
+                if shop.metaobjects.variant_shape != blank
+                  assign metaobject_entries = shop.metaobjects.variant_shape.values
+                elsif shop.metaobjects['variant_shape'] != blank
+                  assign metaobject_entries = shop.metaobjects['variant_shape'].values
+                elsif shop.metaobjects['variant-shape'] != blank
+                  assign metaobject_entries = shop.metaobjects['variant-shape'].values
+                endif
+              else
+                if shop.metaobjects.variant_color != blank
+                  assign metaobject_entries = shop.metaobjects.variant_color.values
+                elsif shop.metaobjects['variant_color'] != blank
+                  assign metaobject_entries = shop.metaobjects['variant_color'].values
+                elsif shop.metaobjects['variant-color'] != blank
+                  assign metaobject_entries = shop.metaobjects['variant-color'].values
+                endif
+              endif
+
+              if metaobject_entries != blank
+                for mo in metaobject_entries
+                  if metaobject_type == 'variant_shape'
+                    assign mo_title = mo['variant_shape_title'].value | default: mo.variant_shape_title.value | default: mo.variant_shape_title | default: mo.title.value | default: mo.title
+                    assign mo_image = mo['variant_shape_image'].value | default: mo.variant_shape_image.value | default: mo.variant_shape_image | default: mo.image.value | default: mo.image
+                  else
+                    assign mo_title = mo['variant_color_title'].value | default: mo.variant_color_title.value | default: mo.variant_color_title | default: mo.title.value | default: mo.title
+                    assign mo_image = mo['variant_color_image'].value | default: mo.variant_color_image.value | default: mo.variant_color_image | default: mo.image.value | default: mo.image
+                  endif
+
+                  assign mo_title = mo_title | strip
+                  assign mo_title_handle = mo_title | handleize
+                  assign title_matches = false
+                  if mo_title == product_option_value.name or mo_title_handle == option_value_handle
+                    assign title_matches = true
+                  endif
+
+                  if title_matches and mo_image != blank
+                    if mo_image.preview_image != blank
+                      assign metaobject_image = mo_image.preview_image
+                    else
+                      assign metaobject_image = mo_image
+                    endif
+                    break
+                  endif
+                endfor
+              endif
+
+              if metaobject_image != blank
+                assign swatch_w = settings.variant_swatch_width | default: 20 | times: 2
+                assign metaobject_swatch_url = metaobject_image | image_url: width: swatch_w
+              endif
+
+              assign variant_image_source = metaobject_image
+              assign swatch_image_url = metaobject_swatch_url
+
+              for variant in product_resource.variants
+                if variant[swatch_option_key] != product_option_value.name
+                  continue
+                endif
+
+                if is_shape_row and metal_context_value != blank and metal_context_key != blank
+                  if variant[metal_context_key] != metal_context_value
+                    continue
+                  endif
+                endif
+
+                if preview_variant == blank
+                  assign preview_variant = variant
+                endif
+
+                if variant.featured_media != blank
+                  if featured_media == blank
+                    assign featured_media = variant.featured_media
+                    assign preview_variant = variant
+                  endif
+                  if variant.available and first_available_variant == blank
+                    assign first_available_variant = variant
+                    assign featured_media = variant.featured_media
+                    assign preview_variant = variant
+                  endif
+                elsif variant.available and first_available_variant == blank
+                  assign first_available_variant = variant
+                endif
+              endfor
+
+              if first_available_variant != blank
+                assign preview_variant = first_available_variant
+              elsif preview_variant == blank
+                assign preview_variant = product_option_value.variant
+              endif
+
+              if featured_media == blank and preview_variant != blank
+                if preview_variant.featured_media != blank
+                  assign featured_media = preview_variant.featured_media
+                elsif preview_variant.featured_image != blank
+                  assign featured_media = preview_variant.featured_image
+                endif
+              endif
+
+              if featured_media == blank and product_option_value.product_url
+                assign child_product = product_option_value.variant.product
+                if child_product and child_product.featured_media != blank
+                  assign featured_media = child_product.featured_media
+                endif
+              endif
+
+              if use_currency
+                assign preview_price = preview_variant.price | money_with_currency
+                assign preview_compare_price = preview_variant.compare_at_price | money_with_currency
+              else
+                assign preview_price = preview_variant.price | money
+                assign preview_compare_price = preview_variant.compare_at_price | money
+              endif
+
+              assign swatch_mode = 'unscaled'
+              if is_shape_row
+                assign swatch_mode = 'unscaled'
+              endif
+
+              # Extract karat label (e.g. 14K / 18K) or PT for Platinum
+              assign karat_label = ''
+              if is_metal_row
+                assign option_name_up = product_option_value.name | upcase
+                if option_name_up contains 'PLATINUM'
+                  assign karat_label = 'PT'
+                else
+                  assign option_words = product_option_value.name | split: ' '
+                  for word in option_words
+                    assign word_up = word | upcase
+                    if word_up contains 'K'
+                      assign karat_before = word_up | split: 'K' | first | strip
+                      if karat_before != blank
+                        assign karat_digits_only = karat_before | replace: '0', '' | replace: '1', '' | replace: '2', '' | replace: '3', '' | replace: '4', '' | replace: '5', '' | replace: '6', '' | replace: '7', '' | replace: '8', '' | replace: '9', ''
+                        if karat_digits_only == blank
+                          assign karat_label = karat_before | append: 'K'
+                          break
+                        endif
+                      endif
+                    endif
+                  endfor
+                endif
+              endif
+            %}
+
+            <li class="variant-option__swatch">
+              <label
+                data-media-id="{{ featured_media.id }}"
+                class="variant-option__button-label variant-option__button-label--has-swatch"
+                on:pointerenter="product-card/previewSwatchOption"
+                on:pointerleave="product-card/resetVariant"
+              >
+                <input
+                  type="radio"
+                  name="{{ product_option.name | escape }}-{{ product_resource.id }}-swatch"
+                  value="{{ product_option_value | escape }}"
+                  aria-label="{{ product_option_value.name }}"
+                  data-fieldset-index="{{ fieldset_index }}"
+                  data-input-index="{{ forloop.index0 }}"
+                  data-option-position="{{ swatch_option_position }}"
+                  data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                  data-option-media-id="{{ featured_media.id }}"
+                  data-option-value-id="{{ product_option_value.id }}"
+                  data-option-available="{{ product_option_value.available }}"
+                  data-connected-product-url="{{ product_option_value.product_url }}"
+                  data-option-value-name="{{ product_option_value.name | escape }}"
+                  {% if swatch_image_url != blank %}
+                    data-swatch-image-url="{{ swatch_image_url }}"
+                  {% endif %}
+                  {% if preview_variant %}
+                    data-variant-id="{{ preview_variant.id }}"
+                    data-preview-price="{{ preview_price }}"
+                    data-preview-compare-price="{{ preview_compare_price }}"
+                    {% assign preview_variant_title = preview_variant.metafields.custom.variant_title.value %}
+                    {% if preview_variant_title != blank %}
+                      data-preview-subtitle="{{ preview_variant_title | escape }}"
+                    {% endif %}
+                  {% endif %}
+                  data-first-available-or-first-variant-id="{{ first_available_variant.id | default: product_option_value.variant.id }}"
+                  {% liquid
+                    assign check_this_swatch = false
+                    if preferred_match_index >= 0
+                      if forloop.index0 == preferred_match_index
+                        assign check_this_swatch = true
+                      endif
+                    elsif allow_preselection and product_option_value.selected
+                      assign check_this_swatch = true
+                    elsif forloop.first
+                      assign check_this_swatch = true
+                    endif
+                  %}
+                  {% if check_this_swatch %}
+                    checked
+                    data-current-checked="true"
+                  {% else %}
+                    data-current-checked="false"
+                  {% endif %}
+                >
+                {% render 'swatch',
+                  swatch: product_option_value.swatch,
+                  variant_image: variant_image_source,
+                  swatch_image_url: swatch_image_url,
+                  prefer_variant_image: true,
+                  mode: swatch_mode,
+                  label: product_option_value.name
+                %}
+                {%- if karat_label != blank -%}
+                  <span class="swatch-karat-label" aria-hidden="true">{{ karat_label }}</span>
+                {%- endif -%}
+                {% render 'strikethrough-variant', product_option: product_option_value %}
+              </label>
+            </li>
+          {%- endfor -%}
+        {% endcapture %}
+
+        {% if is_shape_row %}
+          <ul class="variant-option__swatch-list">
+            {{ swatch_items }}
+          </ul>
+        {% else %}
+          {% capture children %}
+            {{ swatch_items }}
+            <li slot="more">
+              <button
+                class="hidden-swatches__count"
+                aria-label="{{ 'actions.show_all_options' | t }}"
+                on:click="/showAllSwatches"
+              ></button>
+            </li>
+          {% endcapture %}
+
+          {% render 'overflow-list', children: children, ref: 'overflowList' %}
+        {% endif %}
+      </fieldset>
+      {%- assign rendered_fieldset_index = rendered_fieldset_index | plus: 1 -%}
+    {%- endfor -%}
+
+    <script type="application/json" data-product-variants-json>
+      [
+        {%- for variant in product_resource.variants -%}
+          {
+            "id": {{ variant.id }},
+            "variant_title": {{ variant.metafields.custom.variant_title.value | json }},
+            "option1": {{ variant.option1 | json }},
+            "option2": {{ variant.option2 | json }},
+            "option3": {{ variant.option3 | json }},
+            "price": {{ variant.price }},
+            "compare_at_price": {{ variant.compare_at_price | default: 'null' }},
+            "featured_media_id": {% if variant.featured_media %}{{ variant.featured_media.id }}{% else %}null{% endif %},
+            "preview_image_url": {% if variant.featured_media %}{{ variant.featured_media | image_url: width: 800 | json }}{% else %}null{% endif %},
+            "price_formatted": {{ variant.price | money | json }},
+            "compare_at_price_formatted": {% if variant.compare_at_price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    </script>
+
+    <script type="application/json">
+      {{ product_resource.selected_or_first_available_variant | json }}
+    </script>
+  </form>
+</swatches-variant-picker-component>

@@ -1,0 +1,22 @@
+
+{%- liquid
+  assign blo_setts = block.settings
+-%}
+<a href="{{ blo_setts.title_url }}" class="gift-price-item">
+  {{ blo_setts.title }}
+</a>
+{% schema %}
+  {
+    "name": "gift-price",
+    "settings":[
+      {"type":"text","id":"title","label":"title","info": "title"},
+      {"type":"url","id":"title_url","label":"title url"},
+    ],
+    "presets":[
+      {
+        "name":"gift-price-item",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

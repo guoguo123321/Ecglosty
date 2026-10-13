@@ -1,0 +1,215 @@
+{% doc %}
+  @prompt
+    生成一条可以打开或者隐藏类目的面包屑，比如一级类目可以显示也可以隐藏，二级类目可以显示也可以隐藏，三级类目可以显示也可以隐藏。每个类目都会自动抓取对应的数据，文案颜色和字体大小都可以修改。, 首页这个类目可以修改文案
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-breadcrumb-{{ai_gen_id}} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+  }
+
+  .ai-breadcrumb-container-{{ai_gen_id}} {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 0;
+  }
+
+  .ai-breadcrumb-item-{{ai_gen_id}} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-breadcrumb-link-{{ai_gen_id}},
+  .ai-breadcrumb-text-{{ai_gen_id}} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.font_size }}px;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .ai-breadcrumb-link-{{ai_gen_id}}:hover {
+    opacity: 0.7;
+  }
+
+  .ai-breadcrumb-separator-{{ai_gen_id}} {
+    color: {{ block.settings.text_color }};
+    opacity: 0.5;
+    font-size: {{ block.settings.font_size }}px;
+  }
+
+  .ai-breadcrumb-current-{{ai_gen_id}} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.font_size }}px;
+    opacity: 0.7;
+  }
+{% endstyle %}
+
+<breadcrumb-component-{{ai_gen_id}} class="ai-breadcrumb-{{ai_gen_id}}" {{ block.shopify_attributes }}>
+  <nav aria-label="面包屑导航" class="ai-breadcrumb-container-{{ai_gen_id}}">
+    {% if block.settings.show_home %}
+      <div class="ai-breadcrumb-item-{{ai_gen_id}}">
+        <a href="/" class="ai-breadcrumb-link-{{ai_gen_id}}">{{ block.settings.home_text }}</a>
+        {% if block.settings.show_level_1 or block.settings.show_level_2 or block.settings.show_level_3 %}
+          <span class="ai-breadcrumb-separator-{{ai_gen_id}}">/</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if collection %}
+      {% if block.settings.show_level_1 %}
+        {% if collection.metafields.custom.parent_collection %}
+          {% assign parent_collection = collection.metafields.custom.parent_collection %}
+          <div class="ai-breadcrumb-item-{{ai_gen_id}}">
+            <a href="{{ parent_collection.url }}" class="ai-breadcrumb-link-{{ai_gen_id}}">
+              {{ parent_collection.title }}
+            </a>
+            {% if block.settings.show_level_2 or block.settings.show_level_3 %}
+              <span class="ai-breadcrumb-separator-{{ai_gen_id}}">/</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% if block.settings.show_level_2 %}
+        <div class="ai-breadcrumb-item-{{ai_gen_id}}">
+          <a href="{{ collection.url }}" class="ai-breadcrumb-link-{{ai_gen_id}}">
+            {{ collection.title }}
+          </a>
+          {% if product and block.settings.show_level_3 %}
+            <span class="ai-breadcrumb-separator-{{ai_gen_id}}">/</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if product and block.settings.show_level_3 %}
+        <div class="ai-breadcrumb-item-{{ai_gen_id}}">
+          <span class="ai-breadcrumb-current-{{ai_gen_id}}">{{ product.title }}</span>
+        </div>
+      {% endif %}
+    {% elsif product %}
+      {% if block.settings.show_level_1 and product.collections.size > 0 %}
+        {% assign first_collection = product.collections.first %}
+        <div class="ai-breadcrumb-item-{{ai_gen_id}}">
+          <a href="{{ first_collection.url }}" class="ai-breadcrumb-link-{{ai_gen_id}}">
+            {{ first_collection.title }}
+          </a>
+          {% if block.settings.show_level_3 %}
+            <span class="ai-breadcrumb-separator-{{ai_gen_id}}">/</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_level_3 %}
+        <div class="ai-breadcrumb-item-{{ai_gen_id}}">
+          <span class="ai-breadcrumb-current-{{ai_gen_id}}">{{ product.title }}</span>
+        </div>
+      {% endif %}
+    {% elsif page %}
+      {% if block.settings.show_level_3 %}
+        <div class="ai-breadcrumb-item-{{ai_gen_id}}">
+          <span class="ai-breadcrumb-current-{{ai_gen_id}}">{{ page.title }}</span>
+        </div>
+      {% endif %}
+    {% endif %}
+  </nav>
+</breadcrumb-component-{{ai_gen_id}}>
+
+<script>
+  (function() {
+    class BreadcrumbComponent{{ai_gen_id}} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.style.display = 'block';
+      }
+    }
+
+    customElements.define('breadcrumb-component-{{ai_gen_id}}', BreadcrumbComponent{{ai_gen_id}});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "面包屑导航",
+  "settings": [
+    {
+      "type": "header",
+      "content": "显示设置"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_home",
+      "label": "显示首页",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "home_text",
+      "label": "首页文案",
+      "default": "首页"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_level_1",
+      "label": "显示一级类目",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_level_2",
+      "label": "显示二级类目",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_level_3",
+      "label": "显示三级类目",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "样式设置"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "文字颜色",
+      "default": "#282828"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "字体大小",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "桌面端宽度",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "面包屑导航"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

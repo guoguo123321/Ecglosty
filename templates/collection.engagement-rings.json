@@ -1,0 +1,774 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "lg_section_NKNYVV": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_pAn7pt": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 40,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "20px,0px,20px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "20px,0px,20px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "20px,0px,20px,0px"
+          },
+          "blocks": {
+            "brc_nav_M3aBEq": {
+              "type": "_brc-nav",
+              "name": "breadcrumbs",
+              "settings": {},
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "brc_nav_M3aBEq"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_pAn7pt"
+      ],
+      "name": "Breadcrumbs",
+      "settings": {}
+    },
+    "section_CfJpFj": {
+      "type": "section",
+      "blocks": {
+        "text_r9VQnP": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<p>Engagement Rings</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h3",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_fzgGkV": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>Oval engagement rings are exquisitely cut into an elongated shape that lengthens&nbsp;the finger.</p>",
+            "width": "100%",
+            "max_width": "none",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_r9VQnP",
+        "text_fzgGkV"
+      ],
+      "name": "t:names.rich_text_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "full-width",
+        "custom_page_width": "1200px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 12
+      }
+    },
+    "collection_step_UQaxND": {
+      "type": "collection-step",
+      "name": "Collection Step",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "box_align": "lgs-text-center",
+        "color_scheme": "scheme-1",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 40,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "12px,0px,12px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "12px,0px,12px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "12px,0px,12px,0px",
+        "design_title": "Design Your Ring",
+        "step1_title": "Setting",
+        "step1_content": "Nadia - $1,290",
+        "step1_btn": "View",
+        "step1_url": "",
+        "step1_image": "shopify://shop_images/ring_setting.svg",
+        "step2_title": "Diamond",
+        "step2_content": "1.02 Carat Oval - $4,110",
+        "step2_btn": "View",
+        "step2_url": "",
+        "step2_btn2": "Change",
+        "step2_url2": "",
+        "step2_image": "shopify://shop_images/ring_diamond.svg",
+        "step3_title": "Complete Ring",
+        "step3_content": "Select Ring Size",
+        "step3_btn": "",
+        "step3_url": "",
+        "step3_image": "shopify://shop_images/ring_complete.svg"
+      }
+    },
+    "collection_category_X8gJPx": {
+      "type": "collection-category",
+      "blocks": {
+        "item_UhQMxC": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Solitaire_00a54ff6-469e-4635-80a8-67109408b03d.png",
+            "title": "Solitaire",
+            "link": ""
+          }
+        },
+        "item_WG3yPY": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Accents-1.png",
+            "title": "Accents",
+            "link": ""
+          }
+        },
+        "item_xtNkqN": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Three_Stone_d9f64dd2-d415-46c3-919c-62bd26aa45ee.png",
+            "title": "Three Stone",
+            "link": ""
+          }
+        },
+        "item_KTm6Ua": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Halo_6b6c3faa-3ff9-46ca-afaa-9de87976524c.png",
+            "title": "Halo",
+            "link": ""
+          }
+        },
+        "item_KJTp94": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Hidden_Halo_f5462355-d684-4e7d-80b0-e1fd60873b0d.png",
+            "title": "Hidden Halo",
+            "link": ""
+          }
+        },
+        "item_JYDqMc": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Toi_et_Moi.png",
+            "title": "Toi et Moi",
+            "link": ""
+          }
+        },
+        "item_y3ABhG": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Bezel_27403668-1480-498f-ad72-094549f7781c.png",
+            "title": "Bezel",
+            "link": ""
+          }
+        },
+        "item_MF7PWt": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Classic_e6372b03-35a2-440e-8fd9-379274faa20f.png",
+            "title": "Classic",
+            "link": ""
+          }
+        },
+        "item_ABA8Ha": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Bezel_27403668-1480-498f-ad72-094549f7781c.png",
+            "title": "Luxe",
+            "link": ""
+          }
+        },
+        "item_r99KyJ": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Classic_e6372b03-35a2-440e-8fd9-379274faa20f.png",
+            "title": "Classic",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_UhQMxC",
+        "item_WG3yPY",
+        "item_xtNkqN",
+        "item_KTm6Ua",
+        "item_KJTp94",
+        "item_JYDqMc",
+        "item_y3ABhG",
+        "item_MF7PWt",
+        "item_ABA8Ha",
+        "item_r99KyJ"
+      ],
+      "name": "collection-category",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "col_dk": "6.5",
+        "col_tb": "5.5",
+        "col_mb": "2.5",
+        "color_scheme": "scheme-2",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 30,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,12px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,12x,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,12px,0px"
+      }
+    },
+    "main": {
+      "type": "main-collection",
+      "blocks": {
+        "filters": {
+          "type": "filters",
+          "static": true,
+          "settings": {
+            "enable_filtering": true,
+            "filter_style": "horizontal",
+            "filter_width": "centered",
+            "text_label_case": "default",
+            "show_swatch_label": true,
+            "show_filter_label": true,
+            "enable_diamond_shape": true,
+            "enable_metal": true,
+            "enable_items": false,
+            "show_results_filters": true,
+            "enable_sorting": true,
+            "enable_grid_density": false,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "facets_margin_bottom": 16,
+            "facets_margin_bottom_mobile": 8,
+            "facets_margin_right": 20
+          },
+          "blocks": {}
+        },
+        "product-card": {
+          "type": "_product-card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 0,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "card-gallery": {
+              "type": "_product-card-gallery",
+              "settings": {
+                "image_ratio": "adapt",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "swatches_card": {
+              "type": "swatches",
+              "settings": {
+                "product_swatches_alignment": "center",
+                "product_swatches_alignment_mobile": "center",
+                "hide_padding": false,
+                "product_swatches_padding_top": 8,
+                "product_swatches_padding_bottom": 4,
+                "product_swatches_padding_left": 0,
+                "product_swatches_padding_right": 0
+              },
+              "blocks": {}
+            },
+            "product_title_4nY4eT": {
+              "type": "product-title",
+              "name": "t:names.product_title",
+              "settings": {
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "weight": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 4,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "price_EzJzMm": {
+              "type": "price",
+              "settings": {
+                "show_sale_price_first": true,
+                "show_installments": false,
+                "show_tax_info": false,
+                "show_igi_certified": false,
+                "type_preset": "h6",
+                "width": "100%",
+                "alignment": "left",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "color": "var(--color-foreground)",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "card-gallery",
+            "swatches_card",
+            "product_title_4nY4eT",
+            "price_EzJzMm"
+          ]
+        }
+      },
+      "settings": {
+        "layout_type": "grid",
+        "product_card_size": "medium",
+        "mobile_product_card_size": "small",
+        "enable_collection_grid_posters": true,
+        "grid_posters_all_pages": true,
+        "products_display_mode": "pagination",
+        "products_per_page": 32,
+        "product_grid_width": "custom-width",
+        "custom_page_width": "1400px",
+        "full_width_on_mobile": true,
+        "columns_gap_horizontal": 15,
+        "columns_gap_vertical": 0,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "color_scheme": "scheme-4df12b91-c5d4-406e-a832-2a7395c6df9e",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "lg_section_4GnnBA": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_WXDALq": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Oval Engagement Rings",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 40,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "90px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "50px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "30px,0px,30px,0px"
+          },
+          "blocks": {
+            "text_TdiK86": {
+              "type": "_text",
+              "name": "text",
+              "settings": {
+                "textarea_or_richtext": "textarea",
+                "text": "Oval cut engagement rings have become increasingly popular for their stunning beauty and unique style. The elongated shape of an oval diamond creates an elegant and sophisticated look that stands out from traditional round brilliant cuts. Oval engagement rings are perfect for those seeking a timeless yet distinctive design that will be cherished for a lifetime.",
+                "rich_text": "<p>Text</p>",
+                "text_url": "",
+                "open_link": "_blank",
+                "remove_br_tag": false,
+                "tag": "div",
+                "fontf": "inherit",
+                "text_cl": "#282828",
+                "text_fs": 16,
+                "text_lh": 22,
+                "text_fw": 400,
+                "text_mgb": 16,
+                "font_italic": false,
+                "text_shadow": false,
+                "hidden_mobile": false,
+                "text_fs_mb": 14,
+                "text_lh_mb": 20,
+                "text_mgb_mobile": 8
+              },
+              "blocks": {}
+            },
+            "text_A9aHTB": {
+              "type": "_text",
+              "name": "text",
+              "settings": {
+                "textarea_or_richtext": "textarea",
+                "text": "als the scintillation of a round diamond. This breathtaking display of light is achieved through the oval's 58 facets, which are precisely arranged to maximize the stone's radiance from every angle.",
+                "rich_text": "<p>Text</p>",
+                "text_url": "",
+                "open_link": "_blank",
+                "remove_br_tag": false,
+                "tag": "div",
+                "fontf": "inherit",
+                "text_cl": "#282828",
+                "text_fs": 16,
+                "text_lh": 22,
+                "text_fw": 400,
+                "text_mgb": 16,
+                "font_italic": false,
+                "text_shadow": false,
+                "hidden_mobile": false,
+                "text_fs_mb": 14,
+                "text_lh_mb": 20,
+                "text_mgb_mobile": 8
+              },
+              "blocks": {}
+            },
+            "text_zJVWrX": {
+              "type": "_text",
+              "name": "text",
+              "settings": {
+                "textarea_or_richtext": "textarea",
+                "text": "Another advantage of oval diamond engagement rings is their versatile style. The elongated shape of the oval cut is flattering on any finger, creating the illusion of length and slenderness. This makes oval engagement rings an excellent choice for those with shorter fingers or wider hands. Additionally, oval diamonds have a larger surface area than round diamonds of the same carat weight, giving the impression of a more substantial stone.",
+                "rich_text": "<p>Text</p>",
+                "text_url": "",
+                "open_link": "_blank",
+                "remove_br_tag": false,
+                "tag": "div",
+                "fontf": "inherit",
+                "text_cl": "#282828",
+                "text_fs": 16,
+                "text_lh": 22,
+                "text_fw": 400,
+                "text_mgb": 16,
+                "font_italic": false,
+                "text_shadow": false,
+                "hidden_mobile": false,
+                "text_fs_mb": 14,
+                "text_lh_mb": 20,
+                "text_mgb_mobile": 8
+              },
+              "blocks": {}
+            },
+            "text_TNtktE": {
+              "type": "_text",
+              "name": "text",
+              "settings": {
+                "textarea_or_richtext": "textarea",
+                "text": "Our exquisite collection of oval engagement rings features a wide array of designs to suit every taste and budget. From classic solitaire settings that showcase the oval diamond's beauty to intricate halo designs that enhance the stone's brilliance, our oval cut engagement rings are crafted with the utmost attention to detail and quality. Whether you prefer a vintage-inspired style or a sleek, modern aesthetic, you'll find the perfect oval engagement ring to symbolize your eternal love and commitment.",
+                "rich_text": "<p>Text</p>",
+                "text_url": "",
+                "open_link": "_blank",
+                "remove_br_tag": false,
+                "tag": "div",
+                "fontf": "inherit",
+                "text_cl": "#282828",
+                "text_fs": 16,
+                "text_lh": 22,
+                "text_fw": 400,
+                "text_mgb": 0,
+                "font_italic": false,
+                "text_shadow": false,
+                "hidden_mobile": false,
+                "text_fs_mb": 14,
+                "text_lh_mb": 20,
+                "text_mgb_mobile": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_TdiK86",
+            "text_A9aHTB",
+            "text_zJVWrX",
+            "text_TNtktE"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_WXDALq"
+      ],
+      "name": "Oval Engagement Rings",
+      "settings": {}
+    },
+    "lg_section_BemBX7": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_MTdTB9": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Oval Cut Engagement Rings FAQs",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "faqs_g6YPfW": {
+              "type": "_faqs",
+              "name": "Faqs",
+              "settings": {
+                "faqs": [
+                  "what-is-an-oval-cut-engagement-ring",
+                  "what-should-i-look-for-in-terms-of-length-to-width-ratio-for-oval-diamonds",
+                  "what-is-the-bow-tie-effect-in-oval-diamonds",
+                  "how-do-oval-diamonds-compare-to-other-shapes-in-terms-of-sparkle-and-perceived-size",
+                  "do-oval-diamonds-show-color-or-inclusions-more-easily",
+                  "are-oval-cut-diamonds-more-durable-than-other-shapes"
+                ]
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faqs_g6YPfW"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_MTdTB9"
+      ],
+      "name": "FAQs",
+      "settings": {}
+    },
+    "category_NRGbYt": {
+      "type": "category",
+      "blocks": {
+        "item_MnKYRJ": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/carats-1.jpg",
+            "title": "Exceptional Designers",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_i4hyPh": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/carats-2.jpg",
+            "title": "Flawless Lab Diamond",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_pRHkVK": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/carats-3.jpg",
+            "title": "Eco-Friendly Mission",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_dYFCjM": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/carats-4.jpg",
+            "title": "Recycled Brilliance",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_xG3wzB": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/carats-5.jpg",
+            "title": "Recycled Brilliance",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_MnKYRJ",
+        "item_i4hyPh",
+        "item_pRHkVK",
+        "item_dYFCjM",
+        "item_xG3wzB"
+      ],
+      "name": "Category",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "col_dk": "4",
+        "col_tb": "2",
+        "col_mb": "2",
+        "show_pagination_pc": false,
+        "show_navigation_pc": true,
+        "show_pagination_mb": false,
+        "show_navigation_mb": true,
+        "media_align_mb": "between",
+        "color_scheme": "",
+        "title_type_preset": "rte",
+        "title_font": "var(--font-body--family)",
+        "title_font_size": "1rem",
+        "title_weight": "",
+        "title_line_height": "normal",
+        "title_letter_spacing": "normal",
+        "title_case": "none",
+        "title_wrap": "pretty",
+        "title_color": "var(--color-foreground)",
+        "link_type_preset": "rte",
+        "link_font": "var(--font-body--family)",
+        "link_font_size": "0.75rem",
+        "link_weight": "",
+        "link_line_height": "normal",
+        "link_letter_spacing": "normal",
+        "link_case": "none",
+        "link_wrap": "pretty",
+        "link_color": "var(--color-primary)",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "More to Explore",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 60,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,30px,0px"
+      }
+    }
+  },
+  "order": [
+    "lg_section_NKNYVV",
+    "section_CfJpFj",
+    "collection_step_UQaxND",
+    "collection_category_X8gJPx",
+    "main",
+    "lg_section_4GnnBA",
+    "lg_section_BemBX7",
+    "category_NRGbYt"
+  ]
+}

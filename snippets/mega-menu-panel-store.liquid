@@ -1,0 +1,81 @@
+{%- doc -%}
+  Outputs hidden mega menu content for JS injection (used when section.blocks is not readable from Menu).
+
+  @param {object} panel - _mega-menu-panel block
+  @param {number} [image_border_radius] - Image radius in px
+{%- enddoc -%}
+
+{% liquid
+  assign panel_settings = panel.settings
+  assign store_handle = panel_settings.menu_handle | strip
+  assign store_title = panel_settings.menu_title | strip
+  assign store_item_index = panel_settings.menu_item_index | default: 0
+  assign columns = panel_settings.columns | default: 4
+  assign border_radius = image_border_radius | default: 0
+  assign content_width = panel_settings.content_width | default: 1220
+  assign content_align = panel_settings.content_align | default: 'center'
+  assign has_items = false
+
+  if content_align == 'left'
+    assign columns_justify = 'flex-start'
+    assign panel_margin_inline = '0 auto'
+  elsif content_align == 'right'
+    assign columns_justify = 'flex-end'
+    assign panel_margin_inline = 'auto 0'
+  else
+    assign content_align = 'center'
+    assign columns_justify = 'center'
+    assign panel_margin_inline = 'auto'
+  endif
+%}
+
+<div
+  class="mega-menu-panel-store"
+  hidden
+  data-panel-block-id="{{ panel.id }}"
+  data-menu-handle="{{ store_handle | escape }}"
+  data-menu-title="{{ store_title | escape }}"
+  data-menu-item-index="{{ store_item_index }}"
+  data-columns="{{ columns }}"
+  data-content-align="{{ content_align }}"
+  data-content-width="{{ content_width }}"
+  {{ panel.shopify_attributes }}
+>
+  <div
+    class="mega-menu-panel-content mega-menu-panel-content--align-{{ content_align }}"
+    data-content-align="{{ content_align }}"
+    style="--mega-menu-panel-content-width: {{ content_width }}px; --mega-menu-columns-justify: {{ columns_justify }}; --mega-menu-panel-margin-inline: {{ panel_margin_inline }};"
+  >
+    <div class="mega-menu section section--full-width-margin">
+      <div class="mega-menu__grid mega-menu__grid--custom">
+        <ul
+          class="mega-menu__list mega-menu-custom list-unstyled"
+          style="--menu-image-border-radius: {{ border_radius }}px; --mega-menu-custom-columns: {{ columns }};"
+        >
+          {% if panel.block_order.size > 0 %}
+            {% for item_id in panel.block_order %}
+              {% assign item_block = panel.blocks[item_id] %}
+              {% if item_block != blank and item_block.type == '_mega-menu-item' %}
+                {% assign has_items = true %}
+                {% render 'mega-menu-custom-item',
+                  settings: item_block.settings,
+                  shopify_attributes: item_block.shopify_attributes
+                %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% for item_block in panel.blocks %}
+              {% if item_block.type == '_mega-menu-item' %}
+                {% assign has_items = true %}
+                {% render 'mega-menu-custom-item',
+                  settings: item_block.settings,
+                  shopify_attributes: item_block.shopify_attributes
+                %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

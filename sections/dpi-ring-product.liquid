@@ -1,0 +1,4729 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign product_id = product.id
+  assign shop_domain = section.settings.shop_domain | default: shop.permanent_domain
+  assign api_endpoint = section.settings.api_endpoint
+  assign product_handle = product.handle
+  assign rp_title_font = section.settings.rp_title_font
+  assign rp_title_weight = section.settings.rp_title_weight
+  assign rp_title_variant = rp_title_font | font_modify: 'weight', rp_title_weight
+  assign rp_title_font = rp_title_variant | default: rp_title_font
+-%}
+<style>
+    {% unless section.settings.rp_title_use_original_font %}
+      {{ rp_title_font | font_face: font_display: 'swap' }}
+    {% endunless %}
+      :root {
+        --vertical_gap: {{ section.settings.option_vertical_gap | default: 15 }}px;
+        --horizontal_gap: {{ section.settings.option_horizontal_gap | default: 8 }}px;
+      }
+</style>
+ 
+<div
+  class="dpi-rp"
+  id="dpi-rp-{{ section.id }}"
+  data-product-id="{{ product_id }}"
+  data-handle="{{ product_handle }}"
+  data-shop-domain="{{ shop_domain }}"
+  data-api-endpoint="{{ api_endpoint }}"
+  data-section-id="{{ section.id }}"
+>
+  {%- comment -%} ── 左侧媒体区 ── {%- endcomment -%}
+  <div class="dpi-rp__media">
+    <div class="dpi-rp__media-grid" id="dpi-rp-media-grid-{{ section.id }}">
+      <div class="dpi-rp__media-placeholder">
+        {%- if product.featured_image -%}
+          <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" loading="eager">
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} Lightbox {%- endcomment -%}
+    <div class="dpi-rp__lightbox" id="dpi-rp-lightbox-{{ section.id }}">
+      <div class="dpi-rp__lightbox-overlay" id="dpi-rp-lightbox-overlay-{{ section.id }}"></div>
+      <div class="dpi-rp__lightbox-inner">
+        <button class="dpi-rp__lightbox-close" id="dpi-rp-lightbox-close-{{ section.id }}" aria-label="Close">&#x2715;</button>
+        <img src="" alt="" id="dpi-rp-lightbox-img-{{ section.id }}">
+      </div>
+    </div>
+
+    {%- comment -%} 3D Model Modal {%- endcomment -%}
+    <div class="dpi-rp__model-modal" id="dpi-rp-model-modal-{{ section.id }}">
+      <div class="dpi-rp__model-overlay" id="dpi-rp-model-overlay-{{ section.id }}"></div>
+      <div class="dpi-rp__model-inner">
+        <button class="dpi-rp__model-close" id="dpi-rp-model-close-{{ section.id }}" aria-label="Close">&#x2715;</button>
+        <model-viewer
+          id="dpi-rp-model-viewer-{{ section.id }}"
+          camera-controls
+          auto-rotate
+          ar
+          style="width:100%;height:100%;background:#f5f5f5;"
+        ></model-viewer>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ── 右侧信息区 ── {%- endcomment -%}
+  <div class="dpi-rp__info">
+    {%- comment -%} 顶部标签 {%- endcomment -%}
+    <div class="dpi-rp__info-top">
+      <span class="dpi-rp__collection-label">SIGNATURE COLLECTIONS</span>
+      
+    </div>
+    <div class="dpi-rp__header-row">
+      {%- comment -%} 商品标题 {%- endcomment -%}
+      <h1 class="dpi-rp__title">{{ product.title | escape }}</h1>
+
+      {%- comment -%} 价格区 {%- endcomment -%}
+      <div class="dpi-rp__price-row">
+        <span class="dpi-rp__price" id="dpi-rp-price-{{ section.id }}">
+          {{ current_variant.price | money }}
+        </span>
+        <span class="dpi-rp__price-label" id="dpi-rp__price-label" style="display:none;">(Setting Only)</span>
+        {%- if current_variant.compare_at_price > current_variant.price -%}
+          <span class="dpi-rp__compare-price" id="dpi-rp-compare-price-{{ section.id }}">
+            {{ current_variant.compare_at_price | money }}
+          </span>
+        {%- else -%}
+          <span class="dpi-rp__compare-price" id="dpi-rp-compare-price-{{ section.id }}" style="display:none;"></span>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} 评分 {%- endcomment -%}
+      <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}">{{ product.metafields.judgeme.badge }}</div>
+    </div>
+    <div class="dpi-rp__info_gap">
+      {%- comment -%} SKU 选择器（由 JS 动态渲染） {%- endcomment -%}
+      <div class="dpi-rp__specs" id="dpi-rp-specs-{{ section.id }}">
+        <div class="dpi-rp__specs-loading">Loading options…</div>
+      </div>
+
+      {%- comment -%} 隐藏 variant input {%- endcomment -%}
+      <input type="hidden" id="dpi-rp-variant-id-{{ section.id }}" value="{{ current_variant.id }}">
+
+      {%- comment -%} Shopify variants JSON {%- endcomment -%}
+      <script id="dpi-rp-variants-json-{{ section.id }}" type="application/json">
+        {{ product.variants | json }}
+      </script>
+      <script id="dpi-rp-options-json-{{ section.id }}" type="application/json">
+        {{ product.options_with_values | json }}
+      </script>
+      {%- comment -%} 操作按钮 {%- endcomment -%}
+      <div class="dpi-rp__actions">
+        {% comment %} 红框区域：默认显示 {% endcomment %}
+        <div class="dpi-rp__purchase-panel" id="dpi-rp-purchase-panel-{{ section.id }}">
+          {% comment %} Browse All Diamonds 按钮 {% endcomment %}
+          <button class="dpi-rp__btn-browse-diamonds" 
+                  id="dpi-rp-browse-btn-{{ section.id }}" 
+                  type="button">
+            Browse All Diamonds
+          </button> 
+          {%- comment -%} Browse All Diamonds 点击后显示的说明文案（默认隐藏，可在 section settings 配置） {%- endcomment -%}
+          <p class="dpi-rp__browse-desc" id="dpi-rp-browse-desc-{{ section.id }}" style="display:none;">
+            {% if section.settings.browse_diamonds_desc !=blank %}
+              {{ section.settings.browse_diamonds_desc }}
+            {% endif %}
+          </p>
+
+          {% comment %} Ring Size 选择器 {% endcomment %}
+          <div class="dpi-rp__ring-size-group" id="dpi-rp-ring-size-{{ section.id }}">
+            <div class="dpi-rp__ring-size-header">
+              <span class="dpi-rp__ring-size-label">Choose Your Ring Size</span>
+              <a href="#" class="dpi-rp__size-guide-link" id="dpi-rp-size-guide-{{ section.id }}">Size guide</a>
+            </div>
+            <div class="dpi-rp__ring-size-options" id="dpi-rp-ring-size-options-{{ section.id }}">
+              {% comment %} 由 JS 动态渲染 {% endcomment %}
+            </div>
+          </div>
+
+          {% comment %} Add-ons {% endcomment %}
+          <div class="dpi-rp__addons">
+            <div id="dpi-rp__addons-engraving-{{ section.id }}">
+              <label class="dpi-rp__addon-item">
+                <input type="checkbox" id="dpi-rp-engraving-{{ section.id }}">
+                <span>Add Engraving (Optional)</span>
+              </label>
+              <div class="input-wrapper" style="display:none">
+                <input type="text" class="field__input" name="properties-option-engraving" value="" placeholder="Enter your engraving text" autocomplete="off" style="width: 100%;">
+              </div>
+            </div>
+      
+            {% comment %}
+              <label class="dpi-rp__addon-item">
+                <input type="checkbox" id="dpi-rp-matching-band-{{ section.id }}">
+                <span>Add Matching Band</span>
+              </label>
+            </div> {% endcomment %}
+            {%- comment -%} 默认隐藏的 CHOOSE THIS SETTING 按钮  {%- endcomment -%}
+            <button class="dpi-rp__btn-primary dpi-rp__btn--choose-setting" 
+                    id="dpi-rp-choose-btn-{{ section.id }}" 
+                    type="button" 
+                    style="display:none;">
+              CHOOSE THIS SETTING
+            </button>
+            {% comment %} {{- comment -}} ADD TO BAG 按钮 {{- endcomment -}} {% endcomment %}
+            <button class="dpi-rp__btn-add-to-bag" 
+                    id="dpi-rp-add-to-bag-{{ section.id }}" 
+                    type="button">
+              ADD TO BAG
+            </button>
+          </div>
+
+          <button class="dpi-rp__btn-secondary" id="dpi-rp-wishlist-btn-{{ section.id }}" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            ADD TO WISHLIST
+          </button>
+        </div>
+        {%- comment -%} 发货日期 {%- endcomment -%}
+        {% comment %} <p class="dpi-rp__ship-date"
+          data-ship-days="{{ section.settings.ship_days | default: 10 }}">
+          {{ section.settings.ship_text | default: 'Order now and your order ships by' }}
+          <strong id="dpi-rp-ship-date-{{ section.id }}"></strong>
+        </p> {% endcomment %}
+
+        {%- comment -%} 物流保障 / 区块化子组件渲染 - 按 section.blocks 顺序遍历,block 拖到哪里就在 dpi-rp__info 内哪渲染 {%- endcomment -%}
+        <div class="dpi_acc_inner">
+        {%- assign dpi_acc_open = false -%}
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'product-order-details' -%}
+              {%- render 'product-order-details', block: block -%}
+            {%- when 'product-shipping' -%}
+              {%- render 'product-shipping', block: block -%}
+            {%- when 'fold' -%}
+              {%- render 'fold', block: block -%}
+            {%- when 'product-sharing' -%}
+              {%- render 'product-sharing', block: block -%}
+            {%- when 'block-service' -%}
+              {%- render 'block-service', block: block -%}
+            {%- when 'dpi-ring-accordion-item' -%}
+              {%- if dpi_acc_open == false -%}
+                <div class="dpi-rp__accordion-wrap">
+                  <div
+                    class="accordion accordion--{{ section.id }} accordion--plus accordion--dividers"
+                    style="
+                      --summary-font-family: var(--font-h6--family);
+                      --summary-font-style: var(--font-h6--style);
+                      --summary-font-weight: var(--font-h6--weight);
+                      --summary-font-size: var(--font-h6--size);
+                      --summary-font-line-height: var(--font-h6--line-height);
+                      --summary-font-case: var(--font-h6--case);
+                      --border-width: 1px;
+                      --border-style: solid;
+                      --color-border: rgba(var(--color-foreground-rgb), 0.15);
+                      --padding-block-start: 14px;
+                      --padding-block-end: 14px;
+                    "
+                  >
+                    {%- assign dpi_acc_open = true -%}
+              {%- endif -%}
+              {%- render 'dpi-ring-accordion-item', block: block -%}
+          {%- endcase -%}
+        {%- endfor -%}
+              {%- if dpi_acc_open == true -%}
+                      </div>
+                  </div>
+         {%- endif -%}
+        </div>
+      </div>
+    
+    {%- comment -%} Size Guide 弹窗 {%- endcomment -%}
+    <div class="dpi-rp__size-guide-modal" id="dpi-rp-size-guide-modal-{{ section.id }}">
+      <div class="dpi-rp__size-guide-overlay" id="dpi-rp-size-guide-overlay-{{ section.id }}"></div>
+        <div class="dpi-rp__size-guide-inner">
+          <div class="dpi-rp__size-guide-header">
+            <span class="dpi-rp__size-guide-title">Ring Size Guide</span>
+            <button class="dpi-rp__size-guide-close" 
+                    id="dpi-rp-size-guide-close-{{ section.id }}" 
+                    aria-label="Close">&#x2715;</button>
+          </div>
+          <div class="dpi-rp__size-guide-body">
+          {%- if section.settings.size_guide_page != blank -%}
+            {%- assign size_guide_page = pages[section.settings.size_guide_page] -%}
+            {{ size_guide_page.content }}
+          {%- else -%}
+            <p style="color:#aaa;text-align:center;padding:40px 0;">
+              Please select a page in theme settings to display size guide content.
+            </p>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+    {%- comment -%} end Size Guide 弹窗 {%- endcomment -%}
+
+  </div>{%- comment -%} /.dpi-rp__info {%- endcomment -%}
+    {%- for block in section.blocks -%}
+    {%- if block.type == 'skin-tone' -%}
+      <div
+        id="dpi-rp-skin-tone-data-{{ section.id }}"
+        style="display:none;"
+        data-img-dark="{{ block.settings.img_dark | image_url: width: 800 }}"
+        data-img-medium="{{ block.settings.img_medium | image_url: width: 800 }}"
+        data-img-light="{{ block.settings.img_light | image_url: width: 800 }}"
+        {{ block.shopify_attributes }}
+      ></div>
+    {%- endif -%}
+  {%- endfor -%}
+
+</div>
+
+{% stylesheet %}
+/* ── Root & Layout ── */
+.dpi-rp {
+  display: grid;
+  grid-template-columns: 1.54686fr 1fr;
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 0px;
+  font-family: var(--font-body-family, 'Helvetica Neue', sans-serif);
+  color: #1a1a1a;
+}
+@media(max-width:900px){
+  .dpi-rp{
+    grid-template-columns:1fr;
+    gap:24px;
+    padding:16px;
+    overflow:hidden; /* 防止子元素撑开整页 */
+    max-width:100vw;
+  }
+  .dpi-rp__media{
+    overflow:hidden;
+    width:100%;
+    max-width:100%;
+  }
+
+  /* 移动端轮播容器 */
+  .dpi-rp__media-grid{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+
+  /* 主图区 */
+  .dpi-rp__carousel-main{
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    background:#fff;
+  }
+  .dpi-rp__carousel-track{
+    display:flex;
+    transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    will-change:transform;
+  }
+  .dpi-rp__carousel-slide{
+    flex:0 0 100%;
+    width:100%;
+  }
+  .dpi-rp__carousel-slide img,
+  .dpi-rp__carousel-slide video,
+  .dpi-rp__carousel-slide canvas{
+    width:100%;
+    height:auto;
+    object-fit:contain;
+    display:block;
+  }
+
+  /* 左右箭头（可选，截图中未见，默认隐藏） */
+  .dpi-rp__carousel-prev,
+  .dpi-rp__carousel-next{
+    display:none;
+  }
+
+  /* 缩略图横排 */
+  .dpi-rp__carousel-thumbs{
+    display:flex;
+    flex-direction:row;
+    gap:6px;
+    overflow-x:hidden; /* 隐藏滚动条，由JS控制scrollLeft */
+    overflow-y:hidden;
+    padding:8px 0 4px;
+    scrollbar-width:none;
+    cursor:grab;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+  .dpi-rp__carousel-thumbs::-webkit-scrollbar{display:none}
+
+  .dpi-rp__carousel-thumb{
+    flex:0 0 60px;
+    width:60px;
+    height:60px;
+    min-width:60px;
+    border:2px solid transparent;
+    cursor:pointer;
+    overflow:hidden;
+    background:#f5f5f5;
+    box-sizing:border-box;
+    flex-shrink:0;
+  }
+
+  .dpi-rp__carousel-thumb.active{
+    border-bottom-color:#1a3a4a;
+  }
+  .dpi-rp__carousel-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+  }
+
+  /* 移动端隐藏原始 grid items，由轮播接管 */
+  .dpi-rp__media-grid > .dpi-rp__media-item,
+  .dpi-rp__media-placeholder{
+    display:none;
+  }
+}
+
+/* 移动端默认显示轮播（在 @media 外，作为基础样式） */
+.dpi-rp__carousel-main{ display:block; }
+.dpi-rp__carousel-thumbs{ display:flex; }
+
+
+/* 桌面端隐藏轮播 */
+@media(min-width:901px){
+  .dpi-rp__carousel-main,
+  .dpi-rp__carousel-thumbs{
+    display:none;
+  }
+  /* 桌面端恢复原始 grid items 显示 */
+  .dpi-rp__media-grid > .dpi-rp__media-item,
+  .dpi-rp__media-placeholder{
+    display:block;
+  }
+}
+
+
+/* ── Media Grid ── */
+.dpi-rp__media { position: relative; }
+.dpi-rp__media-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.dpi-rp__media-placeholder img {
+  width: 100%; height: 100%; object-fit: contain; display: block;
+}
+
+/* Media items */
+.dpi-rp__media-item {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+.dpi-rp__media-item--square {
+  aspect-ratio: unset;
+}
+.dpi-rp__media-item--portrait {
+  aspect-ratio: unset;
+}
+.dpi-rp__media-item img,
+.dpi-rp__media-item video,
+.dpi-rp__media-item canvas {
+  width: 100%; height: auto; object-fit: contain; display: block;
+}
+.dpi-rp__media-item--clickable { cursor: zoom-in; }
+.dpi-rp__media-label {
+  position: absolute;
+  bottom: 8px; left: 0; right: 0;
+  text-align: center;
+  font-size: 11px;
+  color: #111;
+  padding: 4px 8px;
+}
+.dpi-rp__media-badge-3d {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 2;
+}
+.dpi-rp__spin-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* background: rgba(248,248,248,0); */
+  font-size: 13px;
+  color: #555;
+  transition: opacity 0.3s;
+  z-index: 3;
+}
+.dpi-rp__drag-label {
+  position: absolute;
+  bottom: 12px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #888;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 2;
+}
+
+/* ── Lightbox ── */
+.dpi-rp__lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+.dpi-rp__lightbox.open { display: flex; }
+.dpi-rp__lightbox-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+}
+.dpi-rp__lightbox-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+.dpi-rp__lightbox-inner img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  display: block;
+}
+.dpi-rp__lightbox-close {
+  position: absolute;
+  top: -40px; right: 0;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* ── 3D Modal ── */
+.dpi-rp__model-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+.dpi-rp__model-modal.open { display: flex; }
+.dpi-rp__model-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+}
+.dpi-rp__model-inner {
+  position: relative;
+  z-index: 1;
+  width: min(700px, 90vw);
+  height: min(600px, 80vh);
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.dpi-rp__model-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Info Panel ── */
+.dpi-rp__info {
+ 
+}
+.dpi-rp__info .dpi-rp__info_gap{
+ display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dpi-rp__info-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dpi-rp__header-row{
+  margin-bottom:24px;
+}
+.dpi-rp__collection-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #888;
+  text-transform: uppercase;
+}
+.dpi-rp__igi-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a1a1a;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 4px 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+#dpi-rp-{{ section.id }} .dpi-rp__title {
+  {% unless section.settings.rp_title_use_original_font %}
+    font-family: {{ rp_title_font.family | json }},
+      {{ rp_title_font.fallback_families }};
+  {% endunless %}
+
+  {% if section.settings.rp_title_use_original_size %}
+    font-size: clamp(18px, 2.2vw, 26px);
+  {% else %}
+    font-size: {{ section.settings.rp_title_size }}px;
+  {% endif %}
+
+  font-weight: {{ section.settings.rp_title_weight }};
+  line-height: 1.3;
+  margin: 0;
+  color: #3f4a5c;
+}
+
+.dpi-rp__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.dpi-rp__price {
+  font-size: 0.875rem;
+
+  color: var(--color, var(--color-foreground));
+}
+.dpi-rp__price-label {
+  font-size: 13px;
+  color: #888;
+}
+.dpi-rp__compare-price {
+  font-size: 16px;
+  color: #aaa;
+  text-decoration: line-through;
+}
+
+
+/* ── Spec Selectors ── */
+.dpi-rp__specs { display: flex; flex-direction: column; gap: var(--vertical_gap); }
+.dpi-rp__specs-loading { color: #aaa; font-size: 14px; padding: 20px 0; }
+.dpi-rp__spec-group { display: flex; flex-direction: column; gap: 10px; }
+.dpi-rp__spec-label {
+  font-size: 13px;
+ 
+  color: rgb(40 40 40 / 1.0);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dpi-rp__spec-label span.dpi-rp__spec-selected-val {
+  font-weight: 400;
+  color: rgb(40 40 40 / 1.0);
+}
+.dpi-rp__spec-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--horizontal_gap);
+}
+
+/* Shape selector */
+.dpi-rp__opt-shape {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  cursor: pointer;
+  padding: 1px;
+  border: none;
+
+  background: #fff;
+  min-width: 36px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.dpi-rp__opt-shape img { width: 36px; height: 36px; object-fit: contain; border: 1px solid transparent;}
+.dpi-rp__opt-shape span { font-size: 11px; color: #555; white-space: nowrap; display: none;}
+.dpi-rp__opt-shape.selected img,
+.dpi-rp__opt-shape:hover img{
+  
+  border: 1px solid #1a3a4a;
+  
+}
+
+/* Metal swatch */
+.dpi-rp__opt-metal {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s;
+  position: relative;
+  padding: 0;          /* 清除 button 默认 padding */
+  flex-shrink: 0;
+  display: block;      /* 避免 inline 基线偏移 */
+  box-sizing: border-box;
+}
+.dpi-rp__opt-metal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;  /* 双重保险：图片自身也加圆角 */
+  pointer-events: none;
+}
+.dpi-rp__opt-metal.selected {
+  border-color: #1a3a4a;
+}
+.dpi-rp__opt-metal:hover {
+  border-color: #888;
+}
+
+
+/* Text pill */
+.dpi-rp__opt-pill {
+  padding: 7px 16px;
+  border: 1.5px solid transparent;
+
+  background: #f6f6f6;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.dpi-rp__opt-pill.selected {
+  border-color: #1a3a4a;
+  background: #fff;
+  
+}
+.dpi-rp__opt-pill:hover:not(.selected) {
+  border-color: #888;
+}
+
+/* Origin toggle */
+.dpi-rp__opt-origin {
+  padding: 7px 20px;
+  border: 1.5px solid #d0d0d0;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dpi-rp__opt-origin.selected {
+  border-color: #1a3a4a;
+  background: #1a3a4a;
+  color: #fff;
+}
+
+/* ── Ship Date ── */
+.dpi-rp__ship-date {
+  font-size: 13px;
+  color: #555;
+  margin: 0;
+}
+
+/* ── Action Buttons ── */
+.dpi-rp__actions { display: flex; flex-direction: column; gap: 10px; }
+.dpi-rp__btn-primary {
+  width: 100%;
+  padding: 16px;
+  background: #1a3a4a;
+  color: #fff;
+  border: none;
+  
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dpi-rp__btn-primary:hover { background: #0f2535; }
+.dpi-rp__btn-secondary {
+  width: 100%;
+  padding: 14px;
+  background: #fff;
+  color: var(--custom-font-color);
+  border: 1px solid #06374C;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: border-color 0.2s;
+}
+.dpi-rp__btn-secondary:hover { border-color: #1a3a4a; }
+
+/* ── Badges ── */
+.dpi-rp__badges {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #ebebeb;
+  border-radius: 6px;
+}
+.dpi-rp__badge-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #555;
+}
+.dpi-rp__badge-item svg { flex-shrink: 0; color: #1a3a4a; }
+
+/* ── Accordions ── */
+/* 使用 horizon 主题原生 .accordion / .details 全局样式；此处不再覆盖 */
+.dpi-rp__shipping-title { font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+
+.dpi-rp__btn-secondary.wishlisted {
+  background: var(--button-active-bg);
+    color: var(--button-active-color);
+    border-color: var(--button-active-bg);
+}
+.dpi-rp__btn-secondary.wishlisted svg {
+  fill: var(--button-active-color);
+  stroke: var(--button-active-color);
+}
+/* ── Skin Tone Slider ── */
+.dpi-rp__media-item--skin-tone {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.dpi-rp__skin-images {
+  position: absolute;
+  inset: 0;
+}
+
+.dpi-rp__skin-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #f5f5f5;
+  transition: opacity 0.15s ease;
+}
+
+.dpi-rp__skin-diamond {
+  object-fit: contain;
+  background: transparent;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* 右侧滑块 */
+.dpi-rp__skin-slider-wrap {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 66%;
+  max-height:150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 6px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  width: 44px;
+  z-index: 2;
+  border-radius: 22px 0 0 22px;
+}
+
+.dpi-rp__skin-label {
+  font-size: 10px;
+  color: #555;
+  letter-spacing: 0.03em;
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.dpi-rp__skin-track {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.dpi-rp__skin-range {
+  -webkit-appearance: slider-vertical;
+  appearance: slider-vertical;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 4px;
+  height: 100%;
+  max-height:150px;
+  flex: 1;
+  cursor: pointer;
+  accent-color: #1a6b5a;
+  background: transparent;
+}
+
+.dpi-rp__skin-track::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 3px;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, #2c2c2c 0%, #d4a574 50%, #f5e6d3 100%);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+
+/* ── Sold-out / Disabled States ── */
+.dpi-rp__opt-pill.sold-out,
+.dpi-rp__opt-shape.sold-out,
+.dpi-rp__opt-metal.sold-out,
+.dpi-rp__opt-origin.sold-out {
+  opacity: 0.38;
+  cursor: not-allowed;
+  position: relative;
+}
+/* 划线效果（pill / origin） */
+.dpi-rp__opt-pill.sold-out::after,
+.dpi-rp__opt-origin.sold-out::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 0.5px),
+    #aaa calc(50% - 0.5px),
+    #aaa calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+  pointer-events: none;
+}
+
+.dpi-rp__btn-primary:disabled,
+.dpi-rp__btn-primary.sold-out {
+  background: #9aacb5;
+  cursor: not-allowed;
+  letter-spacing: 0.08em;
+}
+
+
+/* ── Purchase Panel (添加购物车区域) ── */
+.dpi-rp__purchase-panel {
+ 
+ 
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Browse All Diamonds */
+.dpi-rp__btn-browse-diamonds {
+  width: 100%;
+  max-width: 200px;
+  padding: 12px 16px;
+  background: #f6f6f6;
+  color: #333;
+  border: 1.5px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s, color 0.2s;
+}
+.dpi-rp__btn-browse-diamonds:hover {
+  background: #f0f4f6;
+  border: 1.5px solid #1a3a4a;
+}
+/* Browse All Diamonds 点击后的选中状态 */
+.dpi-rp__btn-browse-diamonds.is-selected,
+.dpi-rp__btn-browse-diamonds.is-selected:hover,
+.dpi-rp__btn-browse-diamonds.is-selected:disabled {
+  border-color: #1a3a4a;
+  background: #fff;
+  opacity: 1;
+}
+
+
+/* Ring Size */
+.dpi-rp__ring-size-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.dpi-rp__ring-size-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+.dpi-rp__size-guide-link {
+  font-size: 12px;
+  color: #1a3a4a;
+  text-decoration: underline;
+}
+.dpi-rp__ring-size-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--horizontal_gap);
+  align-items: center;
+}
+.dpi-rp__ring-size-btn {
+  padding: 7px 14px;
+  border: 1.5px solid #d0d0d0;
+  background: #fff;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  min-width: 44px;
+  text-align: center;
+}
+.dpi-rp__ring-size-btn.selected {
+  border-color: #1a3a4a;
+  background: #fff;
+}
+.dpi-rp__ring-size-btn:hover:not(.selected) {
+  border-color: #888;
+}
+.dpi-rp__ring-size-btn--more {
+  border-color: #1a3a4a;
+  color: #1a3a4a;
+  font-weight: 500;
+  background: #fff;
+}
+.dpi-rp__ring-size-btn--more:hover {
+  background: #f0f4f6;
+}
+
+/* Add-ons */
+.dpi-rp__addons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dpi-rp__addon-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+}
+.dpi-rp__addon-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #ccc;
+  cursor: pointer;
+  accent-color: #1a3a4a;
+  flex-shrink: 0;
+}
+
+/* ADD TO BAG */
+.dpi-rp__btn-add-to-bag {
+  width: 100%;
+  padding: 16px;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dpi-rp__btn-add-to-bag:hover {
+  background: #333;
+}
+.dpi-rp__btn-add-to-bag:disabled {
+  background: #9aacb5;
+  cursor: not-allowed;
+}
+/* ── Browse All Diamonds 说明文案 ── */
+.dpi-rp__browse-desc {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #555;
+  margin: 0;
+  padding: 12px 0 4px;
+  border-top: 1px solid #ebebeb;
+}
+
+/* ── Size Guide Modal ── */
+.dpi-rp__size-guide-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+.dpi-rp__size-guide-modal.open {
+  display: flex;
+}
+.dpi-rp__size-guide-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+.dpi-rp__size-guide-inner {
+  position: relative;
+  z-index: 1;
+  width: min(720px, 92vw);
+  max-height: 80vh;
+  background: #fff;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+}
+.dpi-rp__size-guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid #ebebeb;
+  flex-shrink: 0;
+}
+.dpi-rp__size-guide-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: 0.04em;
+}
+.dpi-rp__size-guide-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #888;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.2s;
+}
+.dpi-rp__size-guide-close:hover {
+  color: #1a1a1a;
+}
+.dpi-rp__size-guide-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #444;
+}
+/* 弹窗内 page 内容样式兼容 */
+.dpi-rp__size-guide-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.dpi-rp__size-guide-body th,
+.dpi-rp__size-guide-body td {
+  border: 1px solid #e0e0e0;
+  padding: 8px 12px;
+  text-align: center;
+}
+.dpi-rp__size-guide-body th {
+  background: #f6f6f6;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+/* ── end Size Guide Modal ── */
+
+/* Diamond Shape 覆盖层 — 移动端主图底部 */
+.dpi-rp__shape-overlay{
+  position:absolute;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:8px;
+ 
+  white-space:nowrap;
+  z-index:10;
+  font-size:13px;
+  color:#1a1a1a;
+}
+.dpi-rp__shape-overlay-label{
+  font-size:12px;
+  color:#555;
+  white-space:nowrap;
+}
+.dpi-rp__shape-overlay-select{
+  display:flex;
+  align-items:center;
+  cursor:pointer;
+  position:relative;
+  border: 1px rgb(192, 192, 192) solid;
+  background: #ffffff;
+  padding: .65em .85em;
+  gap: 8px;
+}
+.dpi-rp__shape-overlay-img{
+  width:22px !important;
+  height:22px !important;
+  object-fit:contain;
+  flex-shrink:0;
+}
+.dpi-rp__shape-overlay-name{
+  font-size:13px;
+  font-weight:500;
+  color:#1a1a1a;
+}
+.dpi-rp__shape-overlay-arrow{
+  font-size:10px;
+  color:#555;
+  margin-left:2px;
+}
+/* 下拉面板 */
+/* 下拉面板 — 向下展开，单列 */
+.dpi-rp__shape-dropdown{
+  display:none;
+  background:#fff;
+  border:1px solid #e0e0e0;
+  border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.12);
+  padding:4px 0;
+  min-width:140px;
+  max-height:260px;
+  overflow-y:auto;
+}
+
+.dpi-rp__shape-dropdown.open{
+  display:flex;
+  flex-direction:column;  /* 单列 */
+  flex-wrap:nowrap;
+}
+
+/* 每一项：横排，图标+文字左对齐 */
+.dpi-rp__shape-dropdown-item{
+  display:flex;
+  flex-direction:row;      /* 改为横排 */
+  align-items:center;
+  gap:10px;
+  padding:8px 16px;
+  border-radius:0;
+  cursor:pointer;
+  width:100%;
+  box-sizing:border-box;
+  transition:background 0.15s;
+}
+.dpi-rp__shape-dropdown-item:hover{
+  background:#f5f5f5;
+}
+.dpi-rp__shape-dropdown-item.active{
+  background:#f0f4f6;
+  outline:none;            /* 去掉之前的outline */
+}
+.dpi-rp__shape-dropdown-item img{
+  width:24px;
+  height:24px;
+  object-fit:contain;
+  flex-shrink:0;
+  border-radius:50%;
+ 
+  background:#f5f5f5;
+  padding:2px;
+  box-sizing:border-box;
+}
+.dpi-rp__shape-dropdown-item span{
+  font-size:13px;
+  color:#1a1a1a;
+  text-align:left;
+  font-weight:400;
+}
+.dpi-rp__shape-dropdown-item.active span{
+  font-weight:500;
+}
+
+/* end Diamond Shape 覆盖层 — 移动端主图底部 */
+
+/* ============== horizon 原生 accordion 配套样式 ============== */
+.dpi-rp__accordion-wrap {
+  width: 100%;
+ 
+}
+.dpi-rp__accordion-wrap .accordion {
+  flex: 1;
+  width: 100%;
+}
+/* horizon 主题的 dividers 变量是 --style-border-width-dividers(原写法里写成 --style-border-width 是错的,整条失效导致边框看不见)。这里做兜底:任意一个别名能用就行 */
+.dpi-rp__accordion-wrap .accordion--dividers {
+  --show-fallback-borders: 0;
+  --style-border-width: var(--style-border-width-dividers, var(--border-width, 1px));
+}
+.dpi-rp__accordion-wrap .accordion--dividers:not([class*='color-'])[style*='--border-width: 0'],
+.dpi-rp__accordion-wrap .accordion--dividers:not([class*='color-'])[style*='--border-style: none'] {
+  --show-fallback-borders: 1;
+}
+/* 非首项加上边框 */
+.dpi-rp__accordion-wrap .accordion--dividers accordion-custom .details {
+  border-top: 1px solid #000000;
+}
+/* 最后一项加下边框 */
+.dpi-rp__accordion-wrap .accordion--dividers accordion-custom:last-child .details {
+  border-bottom: 1px solid #000000;
+}
+.dpi-rp__accordion-wrap .accordion--dividers .details-content {
+  padding-bottom: var(--padding-sm);
+}
+.dpi-rp__accordion-wrap .accordion--caret .icon-plus,
+.dpi-rp__accordion-wrap .accordion--plus .icon-caret {
+  display: none;
+}
+.dpi-rp__accordion-wrap .accordion .details__header {
+  font-family: var(--summary-font-family);
+  font-style: var(--summary-font-style);
+  font-weight: var(--summary-font-weight);
+  font-size: 14px;
+  line-height: var(--summary-font-line-height);
+  text-transform: var(--summary-font-case);
+  min-height: var(--minimum-touch-target);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-block: 11.2px;
+  padding-block-end: 11.2px;
+  list-style: none;
+}
+.dpi-rp__accordion-wrap .accordion .details__header::-webkit-details-marker {
+  display: none;
+}
+.dpi-rp__accordion-wrap .accordion .details__header::marker {
+  display: none;
+  content: '';
+}
+.dpi-rp__accordion-wrap .accordion .details__header > span.svg-wrapper {
+  margin-inline-start: auto;
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+}
+.dpi-rp__accordion-wrap .accordion .details__header > span.svg-wrapper svg {
+  width: 100%;
+  height: 100%;
+}
+.accordion--plus .dpi-rp__accordion-header {
+  display: flex;
+  align-items: center;
+}
+.dpi-rp__accordion-wrap .accordion .details__header .dpi-rp__accordion-icon-img {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+.dpi-rp__accordion-wrap .accordion .details__header .dpi-rp__accordion-icon-img svg,
+.dpi-rp__accordion-wrap .accordion .details__header .dpi-rp__accordion-icon-img img {
+  width: 32px !important;
+  height: 32px !important;
+  max-width: none;
+  object-fit: contain;
+  fill: currentColor;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+.dpi-rp__accordion-wrap .accordion .details {
+  border: 0;
+  width: 100%;
+}
+.dpi-rp__accordion-wrap .accordion .details-content {
+  padding-block-end: var(--padding-md, 16px);
+}
+.dpi-rp__accordion-wrap .accordion .details-content > * {
+  margin: 0 0 var(--padding-xs) 0;
+}
+.dpi-rp__accordion-wrap .accordion .details-content > *:last-child {
+  margin-bottom: 0;
+}
+
+/* 画廊 */
+/* mediaType 6: Popular Pairings */
+.dpi-rp .dpi-rp__pairings {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fafafa;
+}
+
+.dpi-rp .dpi-rp__pairings-title {
+  margin: 0 0 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.dpi-rp .dpi-rp__pairings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  
+  margin: 0 auto;
+}
+
+.dpi-rp .dpi-rp__pairings-card {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: #eee;
+  cursor: pointer;
+}
+
+.dpi-rp .dpi-rp__pairings-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dpi-rp .dpi-rp__pairings-more {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / 45%);
+  color: #fff;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+/* Independent album dialog */
+.dpi-rp .dpi-rp__album {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 24px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+}
+
+.dpi-rp .dpi-rp__album[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dpi-rp .dpi-rp__album::backdrop {
+  background: rgb(0 0 0 / 78%);
+}
+
+.dpi-rp .dpi-rp__album-panel {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 1000px);
+  height: min(85dvh, 850px);
+  padding: 48px 16px 16px;
+  background: #181818;
+  border-radius: 4px;
+}
+
+.dpi-rp .dpi-rp__album-close,
+.dpi-rp .dpi-rp__album-arrow {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 65%);
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+}
+.dpi-rp .dpi-rp__album-arrow span{
+  display: block;
+  margin-top: -5px;
+}
+
+.dpi-rp .dpi-rp__album-close {
+  top: 6px;
+  right: 10px;
+}
+
+.dpi-rp .dpi-rp__album-arrow {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dpi-rp .dpi-rp__album-prev { left: 8px; }
+.dpi-rp .dpi-rp__album-next { right: 8px; }
+
+.dpi-rp .dpi-rp__album-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dpi-rp .dpi-rp__album-stage img,
+.dpi-rp .dpi-rp__album-stage video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+}
+
+.dpi-rp .dpi-rp__album-caption {
+  min-height: 20px;
+  margin: 10px 0;
+  text-align: center;
+  font-size: 13px;
+}
+
+.dpi-rp .dpi-rp__album-thumbs {
+  flex-shrink: 0;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px;
+}
+
+.dpi-rp .dpi-rp__album-thumb {
+  position: relative;
+  box-sizing: border-box;
+  flex: 0 0 68px;
+  height: 68px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: #333;
+  cursor: pointer;
+}
+
+.dpi-rp .dpi-rp__album-thumb.active {
+  border-color: #fff;
+}
+
+.dpi-rp .dpi-rp__album-thumb img,
+.dpi-rp .dpi-rp__album-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.dpi-rp .dpi-rp__album-video-badge {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgb(0 0 0 / 20%);
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .dpi-rp .dpi-rp__pairings { padding: 12px; }
+  .dpi-rp .dpi-rp__pairings-grid { gap: 10px; }
+  .dpi-rp .dpi-rp__album { padding: 12px; }
+  .dpi-rp .dpi-rp__album-panel { height: 85dvh; }
+}
+.dpi-rp .dpi-rp__pairings-card video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* end画廊 */
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  'use strict';
+
+  // ── 找到当前 section 根元素 ──
+  // 用 data-section-id 定位，支持页面多个 section 实例
+  const roots = document.querySelectorAll('.dpi-rp[data-section-id]');
+  roots.forEach(initSection);
+
+  function initSection(section) {
+    let currentSortedMedias=[];
+    const sid        = section.dataset.sectionId;
+    const PRODUCT_ID = section.dataset.productId;
+    const PRODUCT_HANDLE = section.dataset.handle;
+    const SHOP_DOMAIN= "https://"+section.dataset.shopDomain;
+    const API_BASE   = (section.dataset.apiEndpoint || '').replace(/\/$/, '');
+
+    // DOM refs
+    const mediaGrid     = section.querySelector(`#dpi-rp-media-grid-${sid}`);
+    const specsEl       = section.querySelector(`#dpi-rp-specs-${sid}`);
+    const priceEl       = section.querySelector(`#dpi-rp-price-${sid}`);
+    const comparePriceEl= section.querySelector(`#dpi-rp-compare-price-${sid}`);
+    const variantIdEl   = section.querySelector(`#dpi-rp-variant-id-${sid}`);
+    const shipDateEl    = section.querySelector(`#dpi-rp-ship-date-${sid}`);
+    const chooseBtn     = section.querySelector(`#dpi-rp-choose-btn-${sid}`);
+  
+
+    // Lightbox
+    const lightbox        = section.querySelector(`#dpi-rp-lightbox-${sid}`);
+    const lightboxImg     = section.querySelector(`#dpi-rp-lightbox-img-${sid}`);
+    const lightboxClose   = section.querySelector(`#dpi-rp-lightbox-close-${sid}`);
+    const lightboxOverlay = section.querySelector(`#dpi-rp-lightbox-overlay-${sid}`);
+
+    // 3D Modal
+    const modelModal   = section.querySelector(`#dpi-rp-model-modal-${sid}`);
+    const modelViewer  = section.querySelector(`#dpi-rp-model-viewer-${sid}`);
+    const modelClose   = section.querySelector(`#dpi-rp-model-close-${sid}`);
+    const modelOverlay = section.querySelector(`#dpi-rp-model-overlay-${sid}`);
+
+    // Shopify variants & options
+    const variantsJson = JSON.parse(
+      section.querySelector(`#dpi-rp-variants-json-${sid}`).textContent
+    );
+    const optionsJson  = JSON.parse(
+      section.querySelector(`#dpi-rp-options-json-${sid}`).textContent
+    );
+    // 找 attrs option 的 position（1-based）
+    const attrsOption  = optionsJson.find(o => o.name.toLowerCase() === 'attrs');
+    const attrsPos     = attrsOption ? attrsOption.position : null; // 1-based
+    //3D旋转重构
+        // 当前媒体区域的旋转实例
+    const spinCleanups = new Set();
+    let mediaMode = null;
+    let mediaResizeTimer = null;
+
+    function destroySpins() {
+      for (const cleanup of [...spinCleanups]) cleanup();
+      spinCleanups.clear();
+    }
+
+    function removeMobileCarousel() {
+      section.querySelector('.dpi-rp__carousel-main')?.remove();
+      section.querySelector('.dpi-rp__carousel-thumbs')?.remove();
+      // 当前代码的 shape dropdown 挂在 section 外
+      document.querySelector('.dpi-rp__shape-dropdown')?.remove();
+    }
+
+    function mountSpin(host, media, settings) {
+      const {
+        sensitivity,
+        autoPlaySpeed,
+        friction,
+        speedBoost,
+        maxInertia,
+        mobile = false
+      } = settings;
+
+      const totalFrames = Math.max(
+        1,
+        Math.floor(Number(media.imageNumber) || 1)
+      );
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 800;
+      canvas.style.cssText = mobile
+        ? 'width:100%;height:auto;object-fit:contain;cursor:grab;display:block;transform:translateZ(0);touch-action:none;'
+        : 'width:100%;height:100%;object-fit:contain;cursor:grab;display:block;transform:translateZ(0);touch-action:none;';
+
+      const loader = document.createElement('div');
+      loader.className = 'dpi-rp__spin-loader';
+      loader.innerHTML = `
+        <span class="dpi-rp__spin-progress-text">Loading…</span>
+        <div style="width:160px;height:5px;background:#e0e0e0;border-radius:3px;margin-top:10px;overflow:hidden;">
+          <div class="dpi-rp__spin-progress-bar"
+            style="width:0%;height:100%;background:#1a3a4a;transition:width 0.1s;"></div>
+        </div>
+      `;
+
+      const dragLabel = document.createElement('div');
+      dragLabel.className = 'dpi-rp__drag-label';
+      dragLabel.textContent = 'Drag to Spin';
+
+      host.style.position = 'relative';
+      host.append(canvas, loader, dragLabel);
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        loader.style.display = 'none';
+        return;
+      }
+
+      // 在当前实例内查找，不依赖重复 ID 或 DOM 是否已插入页面
+      const progressText = loader.querySelector('.dpi-rp__spin-progress-text');
+      const progressBar = loader.querySelector('.dpi-rp__spin-progress-bar');
+      const controller = new AbortController();
+      const imgs = new Array(totalFrames);
+
+      let disposed = false;
+      let rafId = null;
+      let loaderTimer = null;
+      let loadedCount = 0;
+      let isReady = false;
+      let firstFrameShown = false;
+      let currentFrameFloat = 0;
+      let lastRenderedFrame = -1;
+      let lastAnimationTime = 0;
+      let isDragging = false;
+      let isMouseOver = false;
+      let startX = 0;
+      let startFrameFloat = 0;
+      let trackX = 0;
+      let trackTime = 0;
+      let finalVelocity = 0;
+      let inertiaSpeed = 0;
+
+      function listen(target, type, handler, options = {}) {
+        target.addEventListener(type, handler, {
+          ...options,
+          signal: controller.signal
+        });
+      }
+
+      function cleanup() {
+        if (disposed) return;
+        disposed = true;
+        isReady = false;
+        isDragging = false;
+
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        if (loaderTimer !== null) clearTimeout(loaderTimer);
+
+        controller.abort();
+
+        for (const img of imgs) {
+          if (!img) continue;
+          img.onload = null;
+          img.onerror = null;
+          // 不承诺取消已经发出的网络请求，但不再保留旧回调
+          img.removeAttribute('src');
+        }
+        imgs.length = 0;
+
+        // 释放旧 Canvas 的绘图缓冲
+        canvas.width = 1;
+        canvas.height = 1;
+
+        spinCleanups.delete(cleanup);
+      }
+
+      spinCleanups.add(cleanup);
+
+      function clampFrame(value) {
+        return (value % totalFrames + totalFrames) % totalFrames;
+      }
+
+      function renderFrame(value) {
+        if (disposed) return;
+
+        // 取整后再取模，避免末帧四舍五入到 totalFrames
+        const frame = Math.round(clampFrame(value)) % totalFrames;
+        if (frame === lastRenderedFrame) return;
+
+        const img = imgs[frame];
+        if (!img || !img.complete || img.naturalWidth <= 0) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        lastRenderedFrame = frame;
+      }
+
+      function showInitialFrame(index) {
+        const img = imgs[index];
+        if (!img || img.naturalWidth <= 0) return;
+
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        currentFrameFloat = index;
+        lastRenderedFrame = -1;
+        renderFrame(index);
+        firstFrameShown = true;
+      }
+
+      function onFrameSettled() {
+        if (disposed) return;
+
+        loadedCount++;
+        const percentage = Math.floor(loadedCount / totalFrames * 100);
+        progressText.textContent = percentage + '%';
+        progressBar.style.width = percentage + '%';
+
+        if (loadedCount !== totalFrames) return;
+
+        if (!firstFrameShown) {
+          const fallbackIndex = imgs.findIndex(
+            img => img && img.complete && img.naturalWidth > 0
+          );
+          if (fallbackIndex >= 0) showInitialFrame(fallbackIndex);
+        }
+
+        isReady = imgs.some(
+          img => img && img.complete && img.naturalWidth > 0
+        );
+
+        if (!isReady) {
+          progressText.textContent = 'Unable to load spin';
+          dragLabel.style.display = 'none';
+          return;
+        }
+
+        loader.style.opacity = '0';
+        loaderTimer = setTimeout(() => {
+          if (!disposed) loader.style.display = 'none';
+        }, 300);
+
+        rafId = requestAnimationFrame(animate);
+      }
+
+      function animate(now) {
+        if (disposed) return;
+
+        // 额外兜底：节点被其他逻辑移除时也停止实例
+        if (!section.isConnected || !canvas.isConnected) {
+          cleanup();
+          return;
+        }
+
+        if (!lastAnimationTime) lastAnimationTime = now;
+        const deltaTime = Math.min(
+          Math.max((now - lastAnimationTime) / 16.667, 0),
+          2
+        );
+        lastAnimationTime = now;
+
+        if (!document.hidden && !isDragging && isReady) {
+          if (inertiaSpeed !== 0) {
+            currentFrameFloat -= inertiaSpeed * deltaTime;
+            inertiaSpeed *= Math.pow(friction, deltaTime);
+
+            if (mobile) {
+              if (
+                (inertiaSpeed < 0 && -inertiaSpeed <= autoPlaySpeed) ||
+                (inertiaSpeed >= 0 && inertiaSpeed <= 0.15)
+              ) inertiaSpeed = 0;
+            } else if (Math.abs(inertiaSpeed) < 0.02) {
+              inertiaSpeed = 0;
+            }
+          }
+
+          if (inertiaSpeed === 0 && !isMouseOver) {
+            currentFrameFloat += autoPlaySpeed * deltaTime;
+          }
+
+          currentFrameFloat = clampFrame(currentFrameFloat);
+          renderFrame(currentFrameFloat);
+        }
+
+        rafId = requestAnimationFrame(animate);
+      }
+
+      function handleStart(event) {
+        if (disposed || !isReady) return;
+
+        isDragging = true;
+        inertiaSpeed = 0;
+        finalVelocity = 0;
+        dragLabel.style.opacity = '0';
+        canvas.style.cursor = 'grabbing';
+
+        const clientX = event.clientX ?? event.touches?.[0]?.clientX ?? 0;
+        startX = clientX;
+        startFrameFloat = currentFrameFloat;
+        trackX = clientX;
+        trackTime = performance.now();
+      }
+
+      function handleMove(event) {
+        if (disposed || !isDragging) return;
+        if (event.cancelable) event.preventDefault();
+
+        const clientX = event.clientX ?? event.touches?.[0]?.clientX ?? 0;
+        const now = performance.now();
+
+        currentFrameFloat = clampFrame(
+          startFrameFloat - (clientX - startX) / sensitivity
+        );
+        renderFrame(currentFrameFloat);
+
+        const dt = now - trackTime;
+        if (dt > 0) {
+          const velocity = (clientX - trackX) / dt;
+          finalVelocity = mobile
+            ? velocity
+            : finalVelocity * 0.75 + velocity * 0.25;
+          trackX = clientX;
+          trackTime = now;
+        }
+      }
+
+      function handleEnd() {
+        if (disposed || !isDragging) return;
+
+        isDragging = false;
+        canvas.style.cursor = 'grab';
+        inertiaSpeed = Math.max(
+          -maxInertia,
+          Math.min(maxInertia, finalVelocity * speedBoost)
+        );
+        finalVelocity = 0;
+      }
+
+      listen(canvas, 'mousedown', handleStart);
+      listen(window, 'mousemove', handleMove);
+      listen(window, 'mouseup', handleEnd);
+
+      listen(host, 'mouseenter', () => {
+        isMouseOver = true;
+      });
+      listen(host, 'mouseleave', () => {
+        isMouseOver = false;
+        dragLabel.style.opacity = '1';
+        handleEnd();
+      });
+
+      listen(canvas, 'touchstart', event => {
+        isMouseOver = true;
+        handleStart(event);
+        if (mobile) event.stopPropagation();
+      }, { passive: false });
+
+      listen(canvas, 'touchmove', event => {
+        handleMove(event);
+        if (mobile) event.stopPropagation();
+      }, { passive: false });
+
+      function handleTouchEnd(event) {
+        isMouseOver = false;
+        handleEnd();
+        if (mobile) event.stopPropagation();
+      }
+
+      listen(canvas, 'touchend', handleTouchEnd, { passive: false });
+      listen(canvas, 'touchcancel', handleTouchEnd, { passive: false });
+      listen(window, 'touchend', handleTouchEnd);
+      listen(window, 'touchcancel', handleTouchEnd);
+
+      for (let index = 0; index < totalFrames; index++) {
+        const img = new Image();
+        imgs[index] = img;
+
+        img.onload = () => {
+          if (disposed) return;
+          if (index === 0 && !firstFrameShown) showInitialFrame(0);
+          onFrameSettled();
+        };
+        img.onerror = () => {
+          if (!disposed) onFrameSettled();
+        };
+
+        img.src = media.url + media.imageName +
+          (index + 1) + '.' + media.imageSuffix;
+      }
+    }
+
+    //end3D旋转重构
+    // 状态
+    let apiData          = null;   // 完整 API 响应 product 对象
+    let productSkuList   = [];
+    let specTrees        = [];
+    let defaultMedias    = [];
+    let selectedSpecs    = {};     // { specId: specValueId }
+    let currentProductData = null;
+  /** 移动端轮播***/
+    function initMobileCarousel(medias){
+      const oldMain=section.querySelector('.dpi-rp__carousel-main');
+      const oldThumbs=section.querySelector('.dpi-rp__carousel-thumbs');
+      if(oldMain)oldMain.remove();
+      if(oldThumbs)oldThumbs.remove();
+      const oldDropdown=document.querySelector('.dpi-rp__shape-dropdown');
+      if(oldDropdown)oldDropdown.remove();
+
+
+      const mediaEl=section.querySelector('.dpi-rp__media');
+      const grid=section.querySelector('.dpi-rp__media-grid');
+
+      const main=document.createElement('div');
+      main.className='dpi-rp__carousel-main';
+      const track=document.createElement('div');
+      track.className='dpi-rp__carousel-track';
+      main.appendChild(track);
+
+      const thumbsBar=document.createElement('div');
+      thumbsBar.className='dpi-rp__carousel-thumbs';
+
+      let currentIndex=0;
+
+      medias.forEach((media,i)=>{
+        const slide=document.createElement('div');
+        slide.className='dpi-rp__carousel-slide';
+
+        // ── 主图 slide 按 mediaType ──
+        switch(media.mediaType){
+          case 2:{ // 视频
+            const video=document.createElement('video');
+            video.src=media.url;
+            video.poster=media.previewImage||'';
+            video.muted=true;video.loop=true;video.playsInline=true;video.autoplay=true;
+            slide.appendChild(video);
+            break;
+          }
+          case 3:{ // 3D 模型
+            const img=document.createElement('img');
+            img.src=media.previewImage||'';
+            img.alt='3D Model';
+            img.loading='lazy';
+            const badge=document.createElement('div');
+            badge.className='dpi-rp__media-badge-3d';
+            badge.textContent='3D';
+            slide.style.position='relative';
+            slide.appendChild(img);
+            slide.appendChild(badge);
+            slide.addEventListener('click',()=>openModelModal(media.url));
+            break;
+          }
+          case 4: {
+            mountSpin(slide, media, {
+              sensitivity: 8.0,
+              autoPlaySpeed: 0.3,
+              friction: 0.985,
+              speedBoost: 15.0,
+              maxInertia: 5.0,
+              mobile: true
+            });
+            break;
+          }
+
+          case 5:{ // Skin Tone
+            const dataEl=section.querySelector(`#dpi-rp-skin-tone-data-${sid}`);
+            const imgMediumSrc=dataEl?.dataset.imgMedium||'';
+            const img=document.createElement('img');
+            img.src=imgMediumSrc;
+            img.alt='Skin tone';
+            img.loading='lazy';
+            slide.appendChild(img);
+            break;
+          }
+          case 6: {
+            const pairings = buildPairings(media);
+            if (pairings) slide.appendChild(pairings);
+            break;
+          }
+          default:{ // 普通图片 (mediaType===1)
+            const img=document.createElement('img');
+            img.src=media.url;
+            img.alt='';
+            img.loading=i===0?'eager':'lazy';
+            slide.addEventListener('click',()=>openLightbox(media.url));
+            slide.appendChild(img);
+          }
+        }
+        track.appendChild(slide);
+
+        // ── 缩略图 按 mediaType 取预览图 ──
+        const thumb=document.createElement('div');
+        thumb.className='dpi-rp__carousel-thumb'+(i===0?' active':'');
+
+        const tImg=document.createElement('img');
+        tImg.alt='';
+        tImg.loading='lazy';
+
+        switch(media.mediaType){
+          case 2: // 视频：用 poster
+            tImg.src=media.previewImage||'';
+            break;
+          case 3: // 3D 模型：用 previewImage
+            tImg.src=media.previewImage||'';
+            break;
+          case 4: // Spin：用第一帧
+            tImg.src=(media.url||'')+(media.imageName||'')+'1.'+(media.imageSuffix||'jpg');
+            break;
+          case 5: // Skin tone：用 medium 图
+            const dataEl=section.querySelector(`#dpi-rp-skin-tone-data-${sid}`);
+            tImg.src=dataEl?.dataset.imgMedium||'';
+            break;
+          case 6: {
+              const firstImage = getPairingResources(media)
+                .find(resource => !resource.isVideo);
+              tImg.src = firstImage?.url || '';
+              tImg.alt = 'Popular Pairings';
+              break;
+            }
+
+          default: // 图片
+            tImg.src=media.url||'';
+        }
+
+        thumb.appendChild(tImg);
+        thumb.addEventListener('click',()=>goTo(i));
+        thumbsBar.appendChild(thumb);
+      });
+
+      function goTo(idx){
+        currentIndex=idx;
+        track.style.transform=`translateX(-${idx*100}%)`;
+        thumbsBar.querySelectorAll('.dpi-rp__carousel-thumb').forEach((t,i)=>{
+          t.classList.toggle('active',i===idx);
+        });
+        const activeThumb=thumbsBar.children[idx];
+        if(activeThumb)activeThumb.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+      }
+
+      // 触摸滑动
+      let touchStartX=0,touchDeltaX=0;
+      main.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;touchDeltaX=0},{passive:true});
+      main.addEventListener('touchmove',e=>{touchDeltaX=e.touches[0].clientX-touchStartX},{passive:true});
+      main.addEventListener('touchend',()=>{
+        if(Math.abs(touchDeltaX)>40){
+          const dir=touchDeltaX<0?1:-1;
+          const next=Math.max(0,Math.min(medias.length-1,currentIndex+dir));
+          goTo(next);
+        }
+      });
+
+      // 缩略图横向触摸滑动
+      let thumbTouchStartX=0;
+      let thumbScrollStart=0;
+      let thumbIsDragging=false;
+
+      thumbsBar.addEventListener('touchstart',e=>{
+        thumbTouchStartX=e.touches[0].clientX;
+        thumbScrollStart=thumbsBar.scrollLeft;
+        thumbIsDragging=true;
+      },{passive:true});
+
+      thumbsBar.addEventListener('touchmove',e=>{
+        if(!thumbIsDragging)return;
+        const dx=thumbTouchStartX-e.touches[0].clientX;
+        thumbsBar.scrollLeft=thumbScrollStart+dx;
+      },{passive:true});
+
+      thumbsBar.addEventListener('touchend',()=>{
+        thumbIsDragging=false;
+      },{passive:true});
+
+      // 鼠标拖拽（桌面调试用）
+      let mouseDown=false;
+      let mouseStartX=0;
+      let mouseScrollStart=0;
+
+      thumbsBar.addEventListener('mousedown',e=>{
+        mouseDown=true;
+        mouseStartX=e.clientX;
+        mouseScrollStart=thumbsBar.scrollLeft;
+        thumbsBar.style.cursor='grabbing';
+        e.preventDefault();
+      });
+      thumbsBar.addEventListener('mousemove',e=>{
+        if(!mouseDown)return;
+        const dx=mouseStartX-e.clientX;
+        thumbsBar.scrollLeft=mouseScrollStart+dx;
+      });
+      thumbsBar.addEventListener('mouseup',()=>{
+        mouseDown=false;
+        thumbsBar.style.cursor='';
+      });
+      thumbsBar.addEventListener('mouseleave',()=>{
+        mouseDown=false;
+        thumbsBar.style.cursor='';
+      });
+    // end缩略图横向触摸滑动
+      // ── Diamond Shape 覆盖层 ──
+      const shapeSpec = specTrees.find(spec =>
+        spec.specName && spec.specName.toLowerCase().includes('diamond shape')
+      );
+
+      if(shapeSpec && shapeSpec.specValues && shapeSpec.specValues.length > 0){
+
+        // 找到主图 slide（第一张）
+        const firstSlide = track.children[0];
+        if(firstSlide){
+          firstSlide.style.position = 'relative';
+
+          // 当前选中值
+          let currentShapeId = selectedSpecs[shapeSpec.specId] || shapeSpec.specValues[0].specValueId;
+          let currentShapeVal = shapeSpec.specValues.find(v => v.specValueId === currentShapeId) || shapeSpec.specValues[0];
+
+          // 构建覆盖层
+          const overlay = document.createElement('div');
+          overlay.className = 'dpi-rp__shape-overlay';
+
+          const label = document.createElement('span');
+          label.className = 'dpi-rp__shape-overlay-label';
+          label.textContent = 'Shown with 1 ct';
+
+          const selectWrap = document.createElement('div');
+          selectWrap.className = 'dpi-rp__shape-overlay-select';
+
+          const shapeImg = document.createElement('img');
+          shapeImg.className = 'dpi-rp__shape-overlay-img';
+          shapeImg.src = currentShapeVal.optionImage || '';
+          shapeImg.alt = currentShapeVal.specValue;
+
+          const shapeName = document.createElement('span');
+          shapeName.className = 'dpi-rp__shape-overlay-name';
+          shapeName.textContent = currentShapeVal.specValue;
+
+          const arrow = document.createElement('span');
+          arrow.className = 'dpi-rp__shape-overlay-arrow';
+          arrow.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" class="icon" style="max-width: inherit;"> <path d="M20 8.5 12.5 16 5 8.5" stroke="currentColor" stroke-width="1.5" fill="none"></path></svg>';
+
+          // 下拉面板
+          const dropdown=document.createElement('div');
+          dropdown.className='dpi-rp__shape-dropdown';
+          document.body.appendChild(dropdown);  // ← 改挂到 body
+
+
+          shapeSpec.specValues.forEach(val => {
+            const item = document.createElement('div');
+            item.className = 'dpi-rp__shape-dropdown-item' + (val.specValueId === currentShapeId ? ' active' : '');
+            item.dataset.specValueId = val.specValueId;
+
+            if(val.optionImage){
+              const img = document.createElement('img');
+              img.src = val.optionImage;
+              img.alt = val.specValue;
+              item.appendChild(img);
+            }
+            const lbl = document.createElement('span');
+            lbl.textContent = val.specValue;
+            item.appendChild(lbl);
+
+            item.addEventListener('click', e => {
+              e.stopPropagation();
+
+              // 更新当前选中
+              currentShapeId = val.specValueId;
+              currentShapeVal = val;
+
+              // 更新覆盖层显示
+              shapeImg.src = val.optionImage || '';
+              shapeImg.alt = val.specValue;
+              shapeName.textContent = val.specValue;
+
+              // 同步 selectedSpecs
+              selectedSpecs[shapeSpec.specId] = val.specValueId;
+
+              // 同步桌面端 spec-selected-val
+              const specGroups = specsEl.querySelectorAll('.dpi-rp__spec-group');
+              specGroups.forEach(group => {
+                const btns = group.querySelectorAll(`[data-spec-id="${shapeSpec.specId}"]`);
+                if(btns.length > 0){
+                  btns.forEach(b => b.classList.remove('selected'));
+                  const targetBtn = group.querySelector(`[data-spec-id="${shapeSpec.specId}"][data-spec-value-id="${val.specValueId}"]`);
+                  if(targetBtn) targetBtn.classList.add('selected');
+                  const selectedValEl = group.querySelector('.dpi-rp__spec-selected-val');
+                  if(selectedValEl) selectedValEl.textContent = val.specValue;
+                }
+              });
+
+              // 触发 onSpecChange 更新价格/媒体
+              onSpecChange();
+
+              // 更新下拉 active 状态
+              dropdown.querySelectorAll('.dpi-rp__shape-dropdown-item').forEach(it => {
+                it.classList.toggle('active', it.dataset.specValueId === String(val.specValueId));
+              });
+
+              // 关闭下拉
+              dropdown.classList.remove('open');
+            });
+
+            dropdown.appendChild(item);
+          });
+
+          function positionDropdown(){
+            const rect=selectWrap.getBoundingClientRect();
+            dropdown.style.position='fixed';
+            dropdown.style.top=(rect.bottom+8)+'px';
+            dropdown.style.left=(rect.left+rect.width/2)+'px';
+            dropdown.style.transform='translateX(-50%)';
+            dropdown.style.zIndex='99999';
+          }
+          // 滚动时实时更新位置
+            function onScroll(){
+              if(dropdown.classList.contains('open')){
+                positionDropdown();
+              }
+            }
+
+            // 监听所有可能的滚动容器
+            window.addEventListener('scroll',onScroll,true);  // true = capture，捕获所有层级的滚动
+
+            // 下拉关闭时移除监听，防止内存泄漏
+            function closeDropdown(){
+              dropdown.classList.remove('open');
+            }
+
+            selectWrap.addEventListener('click',e=>{
+              e.stopPropagation();
+              if(dropdown.classList.contains('open')){
+                closeDropdown();
+              }else{
+                positionDropdown();
+                dropdown.classList.add('open');
+              }
+            });
+
+            document.addEventListener('click',closeDropdown);
+
+          selectWrap.appendChild(shapeImg);
+          selectWrap.appendChild(shapeName);
+          selectWrap.appendChild(arrow);
+          //selectWrap.appendChild(dropdown);
+          overlay.appendChild(label);
+          overlay.appendChild(selectWrap);
+          firstSlide.appendChild(overlay);
+        }
+      }
+// ── end Diamond Shape 覆盖层 ──
+
+      mediaEl.insertBefore(main,grid);
+      mediaEl.insertBefore(thumbsBar,grid);
+    }
+
+/** end 移动端轮播***/
+
+
+    const shipDays = parseInt(section.querySelector('.dpi-rp__ship-date')?.dataset.shipDays || '10',10);
+
+    // 计算发货日期
+    function renderShipDate() {
+      if (!shipDateEl) return;
+      const d = new Date();
+      d.setDate(d.getDate() + shipDays);
+      shipDateEl.textContent = d.toLocaleDateString('en-US', {
+        month: 'long', day: 'numeric', year: 'numeric'
+      });
+    }
+    renderShipDate();
+
+    // 刻字 checkbox 显示/隐藏
+      const engravingCheckbox=section.querySelector(`#dpi-rp-engraving-${sid}`);
+      const engravingWrapper=engravingCheckbox?.closest('.dpi-rp__addon-item')?.parentElement?.querySelector('.input-wrapper');
+
+      if(engravingCheckbox&&engravingWrapper){
+        engravingCheckbox.addEventListener('change',()=>{
+          engravingWrapper.style.display=engravingCheckbox.checked?'block':'none';
+          if(!engravingCheckbox.checked){
+            // 取消勾选时清空输入
+            const input=engravingWrapper.querySelector('input[name="properties-option-engraving"]');
+            if(input)input.value='';
+          }
+        });
+      }
+
+
+    // ── Lightbox ──
+    function openLightbox(src) {
+      lightboxImg.src = src;
+      lightbox.classList.add('open');
+    }
+    lightboxClose.addEventListener('click', () => lightbox.classList.remove('open'));
+    lightboxOverlay.addEventListener('click', () => lightbox.classList.remove('open'));
+
+    // ── 3D Modal ──
+    function openModelModal(src) {
+      modelViewer.setAttribute('src', src);
+      modelModal.classList.add('open');
+    }
+    modelClose.addEventListener('click', () => {
+      modelModal.classList.remove('open');
+      modelViewer.removeAttribute('src');
+    });
+    modelOverlay.addEventListener('click', () => {
+      modelModal.classList.remove('open');
+      modelViewer.removeAttribute('src');
+    });
+
+    // ── 渲染媒体 ──
+        // 根据屏幕模式，仅创建当前需要的媒体
+    function renderCurrentMedia() {
+      if (!mediaGrid) return;
+
+      // 先停止旧动画、解绑旧监听，再删除 DOM
+      destroySpins();
+
+      // 停止旧媒体区域里的视频
+      section.querySelectorAll(
+        '.dpi-rp__media-grid video, .dpi-rp__carousel-main video'
+      ).forEach(video => {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      });
+
+      removeMobileCarousel();
+      mediaGrid.innerHTML = '';
+
+      mediaMode = window.innerWidth <= 900 ? 'mobile' : 'desktop';
+
+      if (!currentSortedMedias.length) {
+        mediaGrid.style.display = '';
+        mediaGrid.innerHTML =
+          '<div style="padding:40px;color:#aaa;text-align:center;grid-column:1/-1;">No media available</div>';
+        return;
+      }
+
+      if (mediaMode === 'mobile') {
+        mediaGrid.style.display = 'none';
+        initMobileCarousel(currentSortedMedias);
+      } else {
+        mediaGrid.style.display = '';
+
+        currentSortedMedias.forEach((media, index) => {
+          switch (media.mediaType) {
+            case 1: renderImage(media, index);    break;
+            case 2: renderVideo(media, index);    break;
+            case 3: renderModel(media, index);    break;
+            case 4: renderSpin(media, index);     break;
+            case 5: renderSkinTone(media, index); break;
+            case 6: renderPairings(media, index); break;
+            default: renderImage(media, index);
+          }
+        });
+      }
+
+      const diamondMedia = currentSortedMedias.find(
+        media => media.mediaType === 5
+      );
+      if (diamondMedia) injectDiamondImage(diamondMedia.url);
+    }
+
+    function populateMedia(medias) {
+      currentSortedMedias = (Array.isArray(medias) ? [...medias] : [])
+        .filter(media =>
+          media.mediaType !== 6 ||
+          getPairingResources(media).length > 0
+        )
+        .sort((a, b) => a.sortOrder - b.sortOrder);
+
+      renderCurrentMedia();
+    }
+
+    // 每个 section 只注册一次，不再随变体切换重复注册
+    function handleMediaResize() {
+      clearTimeout(mediaResizeTimer);
+
+      mediaResizeTimer = setTimeout(() => {
+        if (!section.isConnected) {
+          destroyMediaLifecycle();
+          return;
+        }
+
+        const nextMode = window.innerWidth <= 900
+          ? 'mobile'
+          : 'desktop';
+
+        // 同一屏幕模式内的尺寸变化不重建轮播和旋转
+        if (mediaMode !== null && nextMode !== mediaMode) {
+          renderCurrentMedia();
+        }
+      }, 200);
+    }
+
+    function destroyMediaLifecycle() {
+      clearTimeout(mediaResizeTimer);
+      destroySpins();
+      window.removeEventListener('resize', handleMediaResize);
+      document.removeEventListener(
+        'shopify:section:unload',
+        handleMediaSectionUnload
+      );
+    }
+
+    function handleMediaSectionUnload(event) {
+      if (
+        event.target === section ||
+        event.target?.contains(section) ||
+        String(event.detail?.sectionId || '') === String(sid)
+      ) {
+        destroyMediaLifecycle();
+      }
+    }
+
+    window.addEventListener('resize', handleMediaResize);
+    document.addEventListener(
+      'shopify:section:unload',
+      handleMediaSectionUnload
+    );
+
+
+    // 画廊── mediaType 6: Pairings + image/video album ──
+    function isPairingVideo(url) {
+      try {
+        const pathname = new URL(url, window.location.href).pathname;
+        return /\.(mp4|webm|ogg|ogv|mov|m4v)$/i.test(pathname);
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function getPairingResources(media) {
+      if (!Array.isArray(media?.extraInfo)) return [];
+
+      return media.extraInfo
+        .filter(resource =>
+          resource &&
+          typeof resource.url === 'string' &&
+          resource.url.trim()
+        )
+        .map(resource => ({
+          url: resource.url.trim(),
+          alt: typeof resource.alt === 'string' ? resource.alt : '',
+          isVideo: isPairingVideo(resource.url.trim())
+        }));
+    }
+
+    let pairingAlbum = null;
+
+    function ensurePairingAlbum() {
+      if (pairingAlbum) return pairingAlbum;
+
+      const dialog = document.createElement('dialog');
+      dialog.className = 'dpi-rp__album';
+      dialog.id = `dpi-rp-album-${sid}`;
+      dialog.setAttribute('aria-label', 'Popular Pairings gallery');
+
+      dialog.innerHTML = `
+        <div class="dpi-rp__album-panel">
+          <button type="button" class="dpi-rp__album-close"
+            aria-label="Close gallery">×</button>
+          <div class="dpi-rp__album-stage"></div>
+          <button type="button"
+            class="dpi-rp__album-arrow dpi-rp__album-prev"
+            aria-label="Previous media"><span>‹</span></button>
+          <button type="button"
+            class="dpi-rp__album-arrow dpi-rp__album-next"
+            aria-label="Next media"><span>›</span></button>
+          <div class="dpi-rp__album-caption" aria-live="polite"></div>
+          <div class="dpi-rp__album-thumbs"
+            aria-label="Gallery previews"></div>
+        </div>
+      `;
+
+      section.appendChild(dialog);
+
+      const stage = dialog.querySelector('.dpi-rp__album-stage');
+      const caption = dialog.querySelector('.dpi-rp__album-caption');
+      const thumbs = dialog.querySelector('.dpi-rp__album-thumbs');
+      const previous = dialog.querySelector('.dpi-rp__album-prev');
+      const next = dialog.querySelector('.dpi-rp__album-next');
+
+      let resources = [];
+      let activeIndex = 0;
+      let returnFocus = null;
+      let previousOverflow = '';
+
+      function clearStage() {
+        stage.querySelectorAll('video').forEach(video => {
+          video.pause();
+          video.removeAttribute('src');
+          video.load();
+        });
+        stage.replaceChildren();
+      }
+
+      function show(index) {
+        if (!resources.length) return;
+
+        activeIndex = (index + resources.length) % resources.length;
+        const resource = resources[activeIndex];
+
+        // Pause/unload the previous video before switching.
+        clearStage();
+
+        const element = document.createElement(
+          resource.isVideo ? 'video' : 'img'
+        );
+
+        if (resource.isVideo) {
+          element.controls = true;
+          element.playsInline = true;
+          element.preload = 'metadata';
+          element.setAttribute(
+            'aria-label',
+            resource.alt || `Video ${activeIndex + 1}`
+          );
+          // No forced autoplay: user controls playback.
+        } else {
+          element.alt = resource.alt || `Pairing ${activeIndex + 1}`;
+        }
+
+        element.src = resource.url;
+        stage.appendChild(element);
+
+        caption.textContent =
+          `${activeIndex + 1} / ${resources.length}` +
+          (resource.alt ? ` · ${resource.alt}` : '');
+
+        Array.from(thumbs.children).forEach((button, index) => {
+          const active = index === activeIndex;
+          button.classList.toggle('active', active);
+          button.setAttribute('aria-pressed', String(active));
+        });
+
+        thumbs.children[activeIndex]?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center'
+        });
+      }
+
+      function open(items, index, trigger) {
+        resources = items;
+        if (!resources.length) return;
+
+        returnFocus = trigger || document.activeElement;
+        thumbs.replaceChildren();
+
+        resources.forEach((resource, resourceIndex) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'dpi-rp__album-thumb';
+          button.setAttribute(
+            'aria-label',
+            `Show ${resource.isVideo ? 'video' : 'image'} ${resourceIndex + 1}`
+          );
+
+          const preview = document.createElement(
+            resource.isVideo ? 'video' : 'img'
+          );
+
+          if (resource.isVideo) {
+            preview.muted = true;
+            preview.playsInline = true;
+            preview.preload = 'metadata';
+            preview.setAttribute('aria-hidden', 'true');
+          } else {
+            preview.alt = '';
+            preview.loading = 'lazy';
+          }
+
+          preview.src = resource.url;
+          button.appendChild(preview);
+
+          if (resource.isVideo) {
+            const badge = document.createElement('span');
+            badge.className = 'dpi-rp__album-video-badge';
+            badge.textContent = '▶';
+            button.appendChild(badge);
+          }
+
+          button.addEventListener('click', () => show(resourceIndex));
+          thumbs.appendChild(button);
+        });
+
+        previous.hidden = resources.length < 2;
+        next.hidden = resources.length < 2;
+
+        if (!dialog.open) {
+          previousOverflow = document.documentElement.style.overflow;
+          dialog.showModal();
+          document.documentElement.style.overflow = 'hidden';
+        }
+
+        show(index);
+      }
+
+      dialog.querySelector('.dpi-rp__album-close')
+        .addEventListener('click', () => dialog.close());
+
+      // The transparent area outside the panel closes the dialog.
+      dialog.addEventListener('click', event => {
+        if (event.target === dialog) dialog.close();
+      });
+
+      previous.addEventListener('click', () => show(activeIndex - 1));
+      next.addEventListener('click', () => show(activeIndex + 1));
+
+      dialog.addEventListener('keydown', event => {
+        // Keep video-control keyboard interactions intact.
+        if (event.target.closest('video')) return;
+
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          show(activeIndex - 1);
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          show(activeIndex + 1);
+        }
+      });
+
+      // Native dialog also supports Escape and traps modal focus.
+      dialog.addEventListener('close', () => {
+        clearStage();
+        thumbs.querySelectorAll('video').forEach(video => {
+          video.pause();
+          video.removeAttribute('src');
+          video.load();
+        });
+        thumbs.replaceChildren();
+        resources = [];
+        document.documentElement.style.overflow = previousOverflow;
+
+        if (returnFocus?.isConnected) returnFocus.focus();
+      });
+
+      pairingAlbum = { open };
+      return pairingAlbum;
+    }
+
+    function buildPairings(media) {
+      const resources = getPairingResources(media);
+      const pictures = resources
+        .map((resource, index) => ({ resource, index }))
+        // .filter(entry => !entry.resource.isVideo)
+        .slice(0, 4);
+
+      if (!pictures.length) return null;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'dpi-rp__pairings';
+
+      const title = document.createElement('div');
+      title.className = 'dpi-rp__pairings-title';
+      title.textContent = 'Popular Pairings';
+
+      const grid = document.createElement('div');
+      grid.className = 'dpi-rp__pairings-grid';
+
+      pictures.forEach(({ resource, index }, pictureIndex) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'dpi-rp__pairings-card';
+        button.setAttribute(
+          'aria-label',
+          resource.alt || `Open pairing ${pictureIndex + 1}`
+        );
+        button.setAttribute('aria-haspopup', 'dialog');
+
+        const preview = document.createElement(
+          resource.isVideo ? 'video' : 'img'
+        );
+
+        if (resource.isVideo) {
+          preview.muted = true;
+          preview.playsInline = true;
+          preview.preload = 'metadata';
+          preview.setAttribute('aria-hidden', 'true');
+        } else {
+          preview.alt = resource.alt || '';
+          preview.loading = 'lazy';
+        }
+
+        preview.src = resource.url;
+        preview.style.cssText =
+          'display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;';
+        button.appendChild(preview);
+
+        if (resource.isVideo) {
+          const badge = document.createElement('span');
+          badge.textContent = '▶';
+          badge.setAttribute('aria-hidden', 'true');
+          badge.style.cssText =
+            'position:absolute;right:8px;bottom:8px;z-index:1;' +
+            'display:grid;place-items:center;width:28px;height:28px;line-height:28px;' +
+            'border-radius:50%;background:rgba(0,0,0,.55);color:#fff;' +
+            'font-size:13px;pointer-events:none;';
+          button.appendChild(badge);
+        }
+
+
+        // Fourth image gets the reference screenshot overlay.
+        if (pictureIndex === 3) {
+          const more = document.createElement('span');
+          more.className = 'dpi-rp__pairings-more';
+          more.textContent = 'View More';
+          button.appendChild(more);
+        }
+
+        button.addEventListener('click', () => {
+          ensurePairingAlbum().open(resources, index, button);
+        });
+
+        grid.appendChild(button);
+      });
+
+      wrapper.append(title, grid);
+      return wrapper;
+    }
+
+    function renderPairings(media, index) {
+      const pairings = buildPairings(media);
+      if (!pairings) return;
+
+      const item = createItem(index, 'dpi-rp__media-item--pairings');
+      item.appendChild(pairings);
+      mediaGrid.appendChild(item);
+    }
+    // end 画廊
+    function isPortrait(index) { return index >= 4; }
+
+    function createItem(index, extra) {
+      const el = document.createElement('div');
+      el.className = 'dpi-rp__media-item ' + (isPortrait(index) ? 'dpi-rp__media-item--portrait' : 'dpi-rp__media-item--square') + (extra ? ' ' + extra : '');
+      return el;
+    }
+    // ──（透明底PNG叠加在肤色图之上）──
+    function injectDiamondImage(url) {
+      const diamondImg = section.querySelector('.dpi-rp__skin-diamond');
+      if (!diamondImg || !url) return;
+      diamondImg.src = url;
+      diamondImg.style.opacity = '1';
+    }
+
+    function renderImage(media, index) {
+      const item = createItem(index, 'dpi-rp__media-item--clickable');
+      const img  = document.createElement('img');
+      img.src    = media.url;
+      img.alt    = '';
+      img.loading= 'lazy';
+      img.addEventListener('click', () => openLightbox(media.url));
+      item.appendChild(img);
+      if (media.extraInfo) {
+        const lbl = document.createElement('div');
+        lbl.className   = 'dpi-rp__media-label';
+        lbl.textContent = media.extraInfo;
+        item.appendChild(lbl);
+      }
+      mediaGrid.appendChild(item);
+    }
+
+    function renderVideo(media, index) {
+      const item  = createItem(index);
+      const video = document.createElement('video');
+      video.src       = media.url;
+      video.poster    = media.previewImage || '';
+      video.muted     = true;
+      video.loop      = true;
+      video.playsInline = true;
+      video.addEventListener('mouseenter', () => video.play());
+      video.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+      item.appendChild(video);
+      mediaGrid.appendChild(item);
+    }
+
+    function renderModel(media, index) {
+      const item    = createItem(index);
+      const preview = document.createElement('img');
+      preview.src   = media.previewImage || '';
+      preview.alt   = '3D Model';
+      preview.loading = 'lazy';
+      const badge   = document.createElement('div');
+      badge.className   = 'dpi-rp__media-badge-3d';
+      badge.textContent = '3D';
+      badge.addEventListener('click', () => openModelModal(media.url));
+      preview.addEventListener('click', () => openModelModal(media.url));
+      item.style.cursor = 'pointer';
+      item.appendChild(preview);
+      item.appendChild(badge);
+      mediaGrid.appendChild(item);
+    }
+
+    function renderSpin(media, index) {
+      const item = createItem(index);
+      mediaGrid.appendChild(item);
+
+      mountSpin(item, media, {
+        sensitivity: 1.0,
+        autoPlaySpeed: 0.5,
+        friction: 0.90,
+        speedBoost: 2.5,
+        maxInertia: 0.8,
+        mobile: false
+      });
+    }
+
+    // ── mediaType 5 — Skin Tone Slider ──
+    function renderSkinTone(media, index) {
+      const item = createItem(index, 'dpi-rp__media-item--skin-tone');
+
+      // 从数据桥接节点读取3张皮肤图
+      const dataEl       = section.querySelector(`#dpi-rp-skin-tone-data-${sid}`);
+      const imgDarkSrc   = dataEl?.dataset.imgDark   || '';
+      const imgMediumSrc = dataEl?.dataset.imgMedium || '';
+      const imgLightSrc  = dataEl?.dataset.imgLight  || '';
+
+      item.innerHTML = `
+        <div class="dpi-rp__skin-images">
+          <img class="dpi-rp__skin-img dpi-rp__skin-img--dark"
+              src="${imgDarkSrc}" alt="Dark skin tone" loading="lazy"
+              style="opacity:0;">
+          <img class="dpi-rp__skin-img dpi-rp__skin-img--medium"
+              src="${imgMediumSrc}" alt="Medium skin tone" loading="lazy"
+              style="opacity:1;">
+          <img class="dpi-rp__skin-img dpi-rp__skin-img--light"
+              src="${imgLightSrc}" alt="Light skin tone" loading="lazy"
+              style="opacity:0;">
+          <img class="dpi-rp__skin-img dpi-rp__skin-diamond"
+              src="" alt="Diamond"
+              style="opacity:0;z-index:1;pointer-events:none;object-fit:contain;background:transparent;">
+        </div>
+        <div class="dpi-rp__skin-slider-wrap">
+          <span class="dpi-rp__skin-label">Darker</span>
+          <div class="dpi-rp__skin-track">
+            <input class="dpi-rp__skin-range"
+                  type="range" min="0" max="100" value="50" step="1"
+                  orient="vertical">
+          </div>
+          <span class="dpi-rp__skin-label">Lighter</span>
+        </div>
+      `;
+
+      mediaGrid.appendChild(item);
+
+      // 绑定滑块
+      const range     = item.querySelector('.dpi-rp__skin-range');
+      const imgDark   = item.querySelector('.dpi-rp__skin-img--dark');
+      const imgMedium = item.querySelector('.dpi-rp__skin-img--medium');
+      const imgLight  = item.querySelector('.dpi-rp__skin-img--light');
+
+      function updateOpacity(val) {
+        const v = Number(val);
+        let oDark, oMedium, oLight;
+        if (v <= 50) {
+          const t = v / 50;
+          oDark = 1 - t; oMedium = t; oLight = 0;
+        } else {
+          const t = (v - 50) / 50;
+          oDark = 0; oMedium = 1 - t; oLight = t;
+        }
+        if (imgDark)   imgDark.style.opacity   = oDark;
+        if (imgMedium) imgMedium.style.opacity = oMedium;
+        if (imgLight)  imgLight.style.opacity  = oLight;
+      }
+
+      updateOpacity(range.value);
+      range.addEventListener('input', e => updateOpacity(e.target.value));
+    }
+
+
+    // ── 渲染 Spec 选择器 ──
+    function renderSpecs(trees) {
+      specsEl.innerHTML = '';
+      const hasDiamond = !!localStorage.getItem('current_diamond'); 
+      trees.forEach((spec, specIndex) => {
+        const isCenterstone = spec.specName && spec.specName.toLowerCase().includes('centerstone'); 
+        // ── 有 current_diamond 且是 centerstone：跳过渲染，但默认选中第一个值 ──
+        if (hasDiamond && isCenterstone) {
+          if (spec.specValues && spec.specValues.length > 0) {
+            selectedSpecs[spec.specId] = spec.specValues[0].specValueId;
+          }
+         
+          return; // 跳过 DOM 渲染
+        }
+
+        const group = document.createElement('div');
+        group.className = 'dpi-rp__spec-group';
+
+        const labelRow = document.createElement('div');
+        labelRow.className = 'dpi-rp__spec-label';
+
+        const specNameEl = document.createElement('span');
+        specNameEl.textContent = spec.specName + ': ';
+
+        const selectedValEl = document.createElement('span');
+        selectedValEl.className = 'dpi-rp__spec-selected-val';
+        const firstSelected = isCenterstone
+          ? spec.specValues.find(
+              val => String(val.specValue || '').trim().toLowerCase() !== 'browse all diamonds'
+            ) || spec.specValues[0]
+          : spec.specValues[0];
+
+        if (firstSelected) {
+          selectedSpecs[spec.specId] = firstSelected.specValueId;
+          selectedValEl.textContent = firstSelected.specValue;
+        }
+
+        labelRow.appendChild(specNameEl);
+        labelRow.appendChild(selectedValEl);
+
+        // 原来的 Carat Size 特殊标签改为：
+        /**if (spec.specName && spec.specName.toLowerCase().includes('centerstone')) {
+          const browseLink = document.createElement('a');
+          browseLink.href = 'javascript:void(0)';
+          browseLink.textContent = 'Browse All Diamonds';
+          browseLink.style.cssText = 'font-size:12px;color:#1a3a4a;margin-left:auto;text-decoration:underline;font-weight:400;cursor:pointer;';
+          browseLink.addEventListener('click', () => switchToBrowseMode());
+          labelRow.appendChild(browseLink);
+        }**/
+
+        group.appendChild(labelRow);
+
+        const optionsRow = document.createElement('div');
+        optionsRow.className = 'dpi-rp__spec-options';
+
+        spec.specValues.forEach((val, valIndex) => {
+          let btn;
+          const isBrowseAllDiamonds = isCenterstone && String(val.specValue || '').trim().toLowerCase() === 'browse all diamonds';
+          const isFirst = firstSelected && val.specValueId === firstSelected.specValueId;
+
+
+          if (val.optionImage) {
+            // ── 有图标：根据 specName 决定图标展示形态 ──
+            if (spec.specName === 'Metal') {
+              // 圆形色块
+              btn = document.createElement('button');
+              btn.className = 'dpi-rp__opt-metal' + (isFirst ? ' selected' : '');
+              btn.type = 'button';
+              btn.title = val.specValue;
+              const img = document.createElement('img');
+              img.src = val.optionImage;
+              img.alt = val.specValue;
+              btn.appendChild(img);
+
+            } else {
+              // 其他有图标的选项（Diamond Shape、Style 等）：图标 + 可选文字
+              btn = document.createElement('button');
+              btn.className = 'dpi-rp__opt-shape' + (isFirst ? ' selected' : '');
+              btn.type = 'button';
+              btn.title = val.specValue;
+              const img = document.createElement('img');
+              img.src = val.optionImage;
+              img.alt = val.specValue;
+              const lbl = document.createElement('span');
+              lbl.textContent = val.specValue;
+              btn.appendChild(img);
+              btn.appendChild(lbl);
+            }
+
+          } else {
+            // ── 无图标：统一显示文字 pill ──
+            btn = document.createElement('button');
+            btn.type = 'button';
+
+            // Centerstone：截取 ct 之前的字符
+            let displayText = val.specValue;
+            if (spec.specName && spec.specName.toLowerCase().includes('centerstone')) {
+              const ctIdx = displayText.toLowerCase().indexOf('ct');
+              if (ctIdx > -1) displayText = displayText.substring(0, ctIdx).trim();
+            }
+
+            btn.className = 'dpi-rp__opt-pill' + (isFirst ? ' selected' : '');
+            btn.textContent = displayText;
+          }
+
+          btn.dataset.specId      = spec.specId;
+          btn.dataset.specValueId = val.specValueId;
+          btn.dataset.specValue   = val.specValue;
+
+          if (isBrowseAllDiamonds) {
+            btn.dataset.browseAllDiamonds = 'true';
+            btn.hidden = true;
+            btn.style.setProperty('display', 'none', 'important');
+          }
+
+          btn.addEventListener('click', () => {
+            optionsRow.querySelectorAll('[data-spec-id]').forEach(b => {
+              b.classList.remove('selected');
+            });
+
+            btn.classList.add('selected');
+            selectedSpecs[spec.specId] = val.specValueId;
+            selectedValEl.textContent = val.specValue;
+
+            if (isBrowseAllDiamonds) {
+              // 隐藏选项选中后，进入挑选钻石状态
+              switchToBrowseMode();
+            } else {
+              // 点击任何普通 specValue，清除 Browse 按钮的选中样式
+              if (browseDiamondsBtn) {
+                browseDiamondsBtn.classList.remove('is-selected');
+                browseDiamondsBtn.setAttribute('aria-pressed', 'false');
+              }
+
+              // 只有普通 Centerstone 选项恢复默认购买状态
+              if (isCenterstone) {
+                switchToDefaultMode();
+              }
+            }
+
+            onSpecChange();
+          });
+
+          optionsRow.appendChild(btn);
+
+        });
+
+
+        group.appendChild(optionsRow);
+        specsEl.appendChild(group);
+      });
+    }
+
+    // ── SKU 匹配 ──
+    function findMatchedSku() {
+      if (!productSkuList.length || !specTrees.length) return null;
+      // 按 specTrees 顺序拼接 selectedSpecs 的 specValue
+      const selectedValues = specTrees.map(spec => {
+        const selectedId = selectedSpecs[spec.specId];
+        const found = spec.specValues.find(v => v.specValueId === selectedId);
+        return found ? found.specValue : null;
+      });
+      if (selectedValues.some(v => v === null)) return null;
+      const targetSkuValue = selectedValues.join('::');
+      return productSkuList.find(sku => sku.specSkuValue === targetSkuValue) || null;
+    }
+
+    // ── Shopify Variant 匹配 ──
+    async function findShopifyVariant(specSkuValue) {
+      
+      if (!attrsPos) return null;
+      // const optionKey = `option${attrsPos}`;
+      // return variantsJson.find(v => v[optionKey] === specSkuValue) || null;
+      const res = await fetch(`${API_BASE}/store/product/variant/lookup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            shopDomain: `${SHOP_DOMAIN}`,
+            optionField: `option${attrsPos}`,
+            specSkuValue: specSkuValue
+          })
+        });
+
+        const repose = await res.json();
+        const node = repose.data?.result?.productVariants?.edges?.[0]?.node;
+        
+        if (node) {
+          // GID 转纯数字 ID
+          node.numericId = node.id.split('/').pop();
+        }
+        
+        return node || null;
+    }
+
+    // ── 格式化价格 ──
+    function formatMoney(amount) {
+      // amount 是数字（元），直接格式化
+      return '$' + Number(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    // ── 更新 CHOOSE THIS SETTING 按钮状态 ──
+    function updateChooseBtn(available) {
+      // ── CHOOSE THIS SETTING 按钮 ──
+      if (chooseBtn) {
+        if (available) {
+          chooseBtn.disabled = false;
+          chooseBtn.classList.remove('sold-out');
+          chooseBtn.textContent = 'CHOOSE THIS SETTING';
+        } else {
+          chooseBtn.disabled = true;
+          chooseBtn.classList.add('sold-out');
+          chooseBtn.textContent = 'SOLD OUT';
+        }
+      }
+
+      // ── ADD TO BAG 按钮同步库存状态 ──
+      // ── ADD TO BAG 按钮同步库存状态（仅在有 Centerstone 时管理显示） ──
+      if (addToBagBtn) {
+        const hasCenterstoneNow = specTrees.some(
+          spec => spec.specName && spec.specName.toLowerCase().includes('centerstone')
+        );
+        if (hasCenterstoneNow) {
+          // 有 Centerstone 时才控制 display
+          if (available) {
+            addToBagBtn.disabled = false;
+            addToBagBtn.classList.remove('sold-out');
+            addToBagBtn.textContent = 'ADD TO BAG';
+          } else {
+            addToBagBtn.disabled = true;
+            addToBagBtn.classList.add('sold-out');
+            addToBagBtn.textContent = 'SOLD OUT';
+          }
+        } else {
+          // 无 Centerstone：只更新库存状态，不改 display
+          addToBagBtn.disabled = !available;
+          addToBagBtn.classList.toggle('sold-out', !available);
+        }
+      }
+
+    }
+
+    // ── 标记各选项是否售完 ──
+    // 逻辑：固定其他维度的当前选中值，遍历该维度每个选项，
+    // 看是否能找到至少一个有库存的 SKU（纯本地判断，不发请求）
+    function updateSoldOutOptions() {
+      if (!productSkuList.length || !specTrees.length) return;
+
+      specTrees.forEach(spec => {
+        const specId = spec.specId;
+        spec.specValues.forEach(val => {
+          // 构造假设选中该值时的完整 selectedSpecs
+          const hypothetical = { ...selectedSpecs, [specId]: val.specValueId };
+
+          // 拼接 specSkuValue
+          const values = specTrees.map(s => {
+            const selId = hypothetical[s.specId];
+            const found = s.specValues.find(v => v.specValueId === selId);
+            return found ? found.specValue : null;
+          });
+
+          let hasSku = false;
+          if (!values.some(v => v === null)) {
+            const targetKey = values.join('::');
+            // 本地 SKU 列表判断（有 SKU 记录即视为有货，精确库存依赖 Shopify）
+            hasSku = productSkuList.some(sku => sku.specSkuValue === targetKey);
+          }
+
+          // 找到对应按钮并标记
+          const btn = specsEl.querySelector(
+            `[data-spec-id="${specId}"][data-spec-value-id="${val.specValueId}"]`
+          );
+          if (btn) {
+            btn.classList.toggle('sold-out', !hasSku);
+            // 已售完的选项仍可点击（让用户看到反馈），但可选择禁用：
+            // btn.disabled = !hasSku;
+          }
+        });
+      });
+    }
+
+
+
+    // ── Spec 变化处理 ──
+    function onSpecChange() {
+      const sku = findMatchedSku();
+      if (!sku) return;
+
+      // 更新价格
+      if (priceEl) priceEl.textContent = formatMoney(sku.productPrice);
+      if (comparePriceEl) {
+        if (sku.linePrice && sku.linePrice > sku.productPrice) {
+          comparePriceEl.textContent = formatMoney(sku.linePrice);
+          comparePriceEl.style.display = '';
+        } else {
+          comparePriceEl.style.display = 'none';
+        }
+      }
+
+      // 更新媒体
+      const medias = (sku.medias && sku.medias.length > 0) ? sku.medias : defaultMedias;
+      populateMedia(medias);
+
+      // 更新 Shopify variant + 库存判断
+      findShopifyVariant(sku.specSkuValue).then(function(shopifyVariant) {
+        if (shopifyVariant && variantIdEl) {
+          variantIdEl.value = shopifyVariant.numericId;
+        }
+        // 判断库存
+        const available = shopifyVariant
+          ? (shopifyVariant.inventoryPolicy === 'CONTINUE' || (shopifyVariant.inventoryQuantity != null && shopifyVariant.inventoryQuantity > 0))
+          : false;
+        updateChooseBtn(available);
+        updateSoldOutOptions();
+      });
+    }
+
+
+    // ── Choose This Setting 按钮 ──
+    if (chooseBtn) {
+      chooseBtn.addEventListener('click', () => {
+        if (!currentProductData) return;
+        const sku = findMatchedSku();
+        const medias = (sku.medias && sku.medias.length > 0) ? sku.medias : defaultMedias;
+        
+        //const shopifyVariant = sku ? findShopifyVariant(sku.specSkuValue) : null;
+        findShopifyVariant(sku.specSkuValue).then(function(shopifyVariant) {
+        
+          let selectedSku = sku;
+            selectedSku.medias = medias;
+            const saveData = {
+              ...currentProductData,
+              selectedSku: selectedSku,
+              selectedVariantId: shopifyVariant ? shopifyVariant.numericId : null,
+            };
+            localStorage.setItem('current_ringsetting', JSON.stringify(saveData));
+            const diamond = localStorage.getItem('current_diamond');
+            if (diamond) {
+              window.location.href = '/pages/purchase-review';
+            } else {
+              localStorage.setItem('select_purchase_number','ringsetting');
+              let current_collections_diamond=localStorage.getItem('current_collections_diamond');
+              if(!current_collections_diamond){
+                current_collections_diamond='/collections/lab-grown-diamond';
+              }
+
+              // 查找 Diamond Shape 已选值
+              const shapeSpecForBtn=specTrees.find(spec=>
+                spec.specName&&spec.specName.toLowerCase().includes('diamond shape')
+              );
+              let shapeParam='';
+              if(shapeSpecForBtn){
+                const selectedShapeId=selectedSpecs[shapeSpecForBtn.specId];
+                const selectedShapeVal=shapeSpecForBtn.specValues.find(v=>v.specValueId===selectedShapeId);
+                if(selectedShapeVal&&selectedShapeVal.specValue){
+                  shapeParam=selectedShapeVal.specValue.toLowerCase().replace(/\s+/g,'-');
+                }
+              }
+
+              // 拼接 shape 参数
+              if(shapeParam){
+                const separator=current_collections_diamond.includes('?')?'&':'?';
+                current_collections_diamond=current_collections_diamond+separator+'shape='+encodeURIComponent(shapeParam);
+              }
+
+              // 存入 localStorage（含 shape 参数）
+              localStorage.setItem('current_collections_diamond',current_collections_diamond);
+
+              window.location.href=current_collections_diamond;
+
+            }
+        });
+       
+        
+      });
+    }
+
+    // ── Wishlist 按钮 ──
+    
+      // ===== WISHLIST (others) =====
+      const WISHLIST_KEY = 'ecglosty_wishlist';
+
+      function ringGetWishlist() {
+        try {
+          const raw = localStorage.getItem(WISHLIST_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && Array.isArray(parsed.others)) return parsed;
+          }
+        } catch(e) {}
+        return { diamonds: [], others: [] };
+      }
+
+      function ringSaveWishlist(wl) {
+        localStorage.setItem(WISHLIST_KEY, JSON.stringify(wl));
+      }
+
+      function ringGetKey(d) {
+        return d.productId || d.id || d.urlHandle;
+      }
+
+      function ringIsWishlisted(d) {
+        const wl = ringGetWishlist();
+        const key = ringGetKey(d);
+        return wl.others.some(item => ringGetKey(item) === key);
+      }
+
+      function ringToggleWishlist() {
+        if (!currentProductData) return;
+        const wl = ringGetWishlist();
+        const key = ringGetKey(currentProductData);
+        const existingIdx = wl.others.findIndex(item => ringGetKey(item) === key);
+        if (existingIdx >= 0) {
+          wl.others.splice(existingIdx, 1);
+        } else {
+          wl.others.push(currentProductData);
+        }
+        ringSaveWishlist(wl);
+        ringSyncWishlistBtn();
+      }
+
+      function ringSyncWishlistBtn() {
+        const btn = document.getElementById(`dpi-rp-wishlist-btn-${sid}`);
+        if (!btn) return;
+        const wishlisted = currentProductData && ringIsWishlisted(currentProductData);
+        btn.classList.toggle('wishlisted', !!wishlisted);
+        const textNode = btn.childNodes[btn.childNodes.length - 1];
+        if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+          textNode.textContent = wishlisted ? ' WISHLISTED' : ' ADD TO WISHLIST';
+        }
+      }
+
+      // 绑定点击事件
+      document.getElementById(`dpi-rp-wishlist-btn-${sid}`)?.addEventListener('click', ringToggleWishlist);
+
+    
+    //end愿望清单
+    // ── Fallback：使用 Shopify 图片 ──
+    function populateMediaFallback() {
+      const images = window.__dpi_images || [];
+      const medias = images.map((src, i) => ({ mediaType: 1, url: src, sortOrder: i + 1 }));
+      if (medias.length === 0) {
+        // 用 Shopify featured image
+        const featuredImg = section.querySelector('.dpi-rp__media-placeholder img');
+        if (featuredImg) return; // 保留占位图
+      }
+      populateMedia(medias);
+    }
+    // ── Browse All Diamonds / ADD TO BAG 切换 ──
+    const purchasePanel     = section.querySelector(`#dpi-rp-purchase-panel-${sid}`);
+    const addToBagBtn       = section.querySelector(`#dpi-rp-add-to-bag-${sid}`);
+    const browseDiamondsBtn = section.querySelector(`#dpi-rp-browse-btn-${sid}`);
+    const browseDescEl      = section.querySelector(`#dpi-rp-browse-desc-${sid}`);
+    const ringSizeGroup     = section.querySelector(`#dpi-rp-ring-size-${sid}`);
+    const dpiRpPriceLabel     = section.querySelector(`#dpi-rp__price-label`);
+
+    const addonsEngraving     = section.querySelector(`#dpi-rp__addons-engraving-${sid}`);
+    
+    function switchToDefaultMode() {
+      // 1. 隐藏 CHOOSE THIS SETTING，显示 ADD TO BAG
+      if (chooseBtn)   chooseBtn.style.display = 'none';
+      if (addToBagBtn) addToBagBtn.style.display = '';
+      if (addonsEngraving) addonsEngraving.style.display = '';
+      // 2. 显示 Ring Size 选择器块
+      if (ringSizeGroup) ringSizeGroup.style.display = '';
+
+      // 3. 隐藏说明文案
+      if (browseDescEl) browseDescEl.style.display = 'none';
+
+      if (dpiRpPriceLabel) dpiRpPriceLabel.style.display = 'none';
+
+      // 4. 恢复 Browse All Diamonds 按钮可点击
+      if (browseDiamondsBtn) {
+        browseDiamondsBtn.disabled = false;
+        browseDiamondsBtn.classList.remove('is-selected');
+        browseDiamondsBtn.setAttribute('aria-pressed', 'false');
+      }
+
+    }
+
+    function switchToBrowseMode() {
+      // 1. 隐藏 ADD TO BAG，显示 CHOOSE THIS SETTING
+      if (addToBagBtn) addToBagBtn.style.display = 'none';
+      if (addonsEngraving) addonsEngraving.style.display = 'none';
+      if (chooseBtn)   chooseBtn.style.display = '';
+
+      // 2. 隐藏 Ring Size 选择器块
+      if (ringSizeGroup) ringSizeGroup.style.display = 'none';
+
+      // 3. 显示说明文案
+      if (browseDescEl) browseDescEl.style.display = '';
+
+      if (dpiRpPriceLabel) dpiRpPriceLabel.style.display = '';
+      // 4. Browse All Diamonds 按钮变为不可再点击（防止重复触发）
+      if (browseDiamondsBtn) {
+        browseDiamondsBtn.disabled = true;
+        browseDiamondsBtn.classList.add('is-selected');
+        browseDiamondsBtn.setAttribute('aria-pressed', 'true');
+      }
+
+    }
+
+    if (browseDiamondsBtn) {
+      browseDiamondsBtn.setAttribute('aria-pressed', 'false');
+
+      browseDiamondsBtn.addEventListener('click', () => {
+        const browseOption = specsEl.querySelector(
+          '[data-browse-all-diamonds="true"]'
+        );
+
+        if (browseOption) {
+          // 复用选项事件，更新 selectedSpecs、标签及 SKU
+          browseOption.click();
+        } else {
+          // 保留没有渲染该选项时的原有行为
+          switchToBrowseMode();
+        }
+      });
+    }
+
+    
+        // ── Ring Size 渲染 ──
+    function renderRingSize(ringSizeList) {
+      const container = section.querySelector(`#dpi-rp-ring-size-options-${sid}`);
+      if (!container || !ringSizeList || ringSizeList.length === 0) return;
+
+      let selectedSize = null;
+      let showAll = false;
+
+      function getDisplaySizes(sizes) {
+        if (sizes.length <= 5) return { displayed: sizes, hasMore: false };
+
+        // 判断范围：最小值 < 4 且 最大值 > 8
+        const numericSizes = sizes.map(s => parseFloat(s));
+        const minVal = Math.min(...numericSizes);
+        const maxVal = Math.max(...numericSizes);
+
+        if (minVal < 4 && maxVal > 8) {
+          // 固定显示 4.5、5、6、7、8
+          const preferred = ['4.5', '5', '6', '7', '8'];
+          const displayed = preferred
+            .map(p => sizes.find(s => parseFloat(s) === parseFloat(p)))
+            .filter(Boolean);
+
+          // 如果 preferred 里有的值在 sizes 中不存在，用原始顺序补足到5个
+          if (displayed.length < 5) {
+            sizes.forEach(s => {
+              if (displayed.length >= 5) return;
+              if (!displayed.includes(s)) displayed.push(s);
+            });
+          }
+
+          return { displayed, hasMore: true };
+        }
+
+        // 原规则：取中间，间隔1个，取5个
+        const mid = Math.floor(sizes.length / 2);
+        let startIdx = Math.max(0, mid - 4);
+        const picked = [];
+        let i = startIdx;
+        while (picked.length < 5 && i < sizes.length) {
+          picked.push(sizes[i]);
+          i += 2;
+        }
+        // 不足5个则从头补
+        if (picked.length < 5) {
+          let j = 0;
+          while (picked.length < 5 && j < sizes.length) {
+            if (!picked.includes(sizes[j])) picked.push(sizes[j]);
+            j++;
+          }
+        }
+        return { displayed: picked, hasMore: true };
+      }
+
+
+      function renderSizeButtons(sizes) {
+        container.innerHTML = '';
+        const { displayed, hasMore } = showAll
+          ? { displayed: sizes, hasMore: false }
+          : getDisplaySizes(sizes);
+
+        displayed.forEach((size, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'dpi-rp__ring-size-btn' + (idx === 0 && !selectedSize ? ' selected' : '');
+          btn.type = 'button';
+          btn.textContent = size;
+          btn.dataset.size = size;
+
+          if (selectedSize === size) btn.classList.add('selected');
+
+          btn.addEventListener('click', () => {
+            container.querySelectorAll('.dpi-rp__ring-size-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedSize = size;
+          });
+
+          container.appendChild(btn);
+        });
+
+        if (hasMore && !showAll) {
+          const moreBtn = document.createElement('button');
+          moreBtn.className = 'dpi-rp__ring-size-btn dpi-rp__ring-size-btn--more';
+          moreBtn.type = 'button';
+          moreBtn.textContent = 'View More Sizes';
+          moreBtn.addEventListener('click', () => {
+            showAll = true;
+            renderSizeButtons(sizes);
+          });
+          container.appendChild(moreBtn);
+        }
+      }
+
+      renderSizeButtons(ringSizeList);
+    }
+
+    // ── Size Guide 弹窗 ──
+    const sizeGuideModal   = section.querySelector(`#dpi-rp-size-guide-modal-${sid}`);
+    const sizeGuideOverlay = section.querySelector(`#dpi-rp-size-guide-overlay-${sid}`);
+    const sizeGuideClose   = section.querySelector(`#dpi-rp-size-guide-close-${sid}`);
+    const sizeGuideLink    = section.querySelector(`#dpi-rp-size-guide-${sid}`);
+
+    function openSizeGuide(e) {
+      e.preventDefault();
+      if (sizeGuideModal) sizeGuideModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSizeGuide() {
+      if (sizeGuideModal) sizeGuideModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    if (sizeGuideLink)    sizeGuideLink.addEventListener('click', openSizeGuide);
+    if (sizeGuideClose)   sizeGuideClose.addEventListener('click', closeSizeGuide);
+    if (sizeGuideOverlay) sizeGuideOverlay.addEventListener('click', closeSizeGuide);
+
+    // ESC 键关闭
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeSizeGuide();
+    });
+  // ── end Size Guide 弹窗 ──
+
+    // ── ADD TO BAG 加购逻辑 ──
+    if (addToBagBtn) {
+      addToBagBtn.addEventListener('click', async () => {
+        const variantId = variantIdEl ? variantIdEl.value : null;
+        if (!variantId) {
+          alert('Please select a valid option first.');
+          return;
+        }
+        // ── 库存校验：复用 findShopifyVariant 的结果 ──
+        // addToBagBtn 与 chooseBtn 共享同一套库存状态，
+        // updateChooseBtn(available) 调用时同步更新 addToBagBtn
+        if (addToBagBtn.disabled || addToBagBtn.classList.contains('sold-out')) {
+          return; // 已售完，静默拦截（按钮样式已提示用户）
+        }
+
+        // 获取当前选中的 Ring Size
+        const selectedSizeBtn = section.querySelector(
+          `#dpi-rp-ring-size-options-${sid} .dpi-rp__ring-size-btn.selected`
+        );
+        const selectedSize = selectedSizeBtn ? selectedSizeBtn.dataset.size : null;
+
+        // 构建加购 payload
+        const properties = {};
+
+        // 1. Ring Size
+        if (selectedSize) {
+          properties['Ring Size'] = selectedSize;
+        }
+
+        // 2. 当前所有已选 spec 变体选项（Metal、Diamond Shape、Centerstone 等）
+        specTrees.forEach(spec => {
+          const selectedId = selectedSpecs[spec.specId];
+          const selectedVal = spec.specValues.find(v => v.specValueId === selectedId);
+          if (selectedVal) {
+            properties[spec.specName] = selectedVal.specValue;
+          }
+        });
+        // 刻字内容
+      const engravingCheckbox=section.querySelector(`#dpi-rp-engraving-${sid}`);
+      const engravingInput=section.querySelector('input[name="properties-option-engraving"]');
+      if(engravingCheckbox && engravingCheckbox.checked && engravingInput && engravingInput.value.trim()){
+        properties['Engraving']=engravingInput.value.trim();
+      }
+
+
+
+        const payload = {
+          items: [
+            {
+              id: Number(variantId),
+              quantity: 1,
+              properties: properties
+            }
+          ]
+        };
+
+        // 禁用按钮防止重复点击
+        addToBagBtn.disabled = true;
+        const originalText = addToBagBtn.textContent;
+        addToBagBtn.textContent = 'Adding…';
+
+        try {
+          // ── 1. 先获取 cart drawer 的 section id ──
+          const cartItemsComponent = document.querySelector('cart-items-component[data-drawer]');
+          const sectionId = cartItemsComponent?.dataset?.sectionId;
+
+          // ── 2. 构建请求，附带 sections 参数让 Shopify 一并渲染最新 HTML ──
+          const sectionsParam = sectionId ? `&sections=${sectionId}` : '';
+          
+          const res = await fetch(`/cart/add.js`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...payload,
+              sections: sectionId ? [sectionId] : undefined
+            })
+          });
+
+          if (!res.ok) throw new Error('Cart error ' + res.status);
+
+          const data = await res.json();
+
+          // 成功反馈
+          addToBagBtn.textContent = 'Added!';
+          addToBagBtn.style.background = '#2a6a3a';
+
+          // ── 3. dispatch CartAddEvent，携带 sections HTML 和 item_count ──
+          document.dispatchEvent(new CustomEvent('cart:update', {
+            bubbles: true,
+            detail: {
+              resource: {
+                item_count: data.item_count ?? data.items_count
+              },
+              data: {
+                sections: data.sections ?? {}   // Shopify 返回的最新 section HTML
+              }
+            }
+          }));
+
+          setTimeout(() => {
+            addToBagBtn.textContent = originalText;
+            addToBagBtn.style.background = '';
+            addToBagBtn.disabled = false;
+          }, 2000);
+
+        } catch (err) {
+          console.error('[DPI] Add to cart failed:', err);
+          addToBagBtn.textContent = 'Failed, retry';
+          addToBagBtn.style.background = '#c0392b';
+          setTimeout(() => {
+            addToBagBtn.textContent = originalText;
+            addToBagBtn.style.background = '';
+            addToBagBtn.disabled = false;
+          }, 2000);
+        }
+
+      });
+    }
+
+
+
+    // ── 主入口：拉取 API ──
+    async function fetchProductData() {
+    //   if (!API_BASE || !PRODUCT_ID) {
+    //     populateMediaFallback();
+    //     return;
+    //   }
+      try {
+        const url = `${API_BASE}/store/product/details/${PRODUCT_ID}?shopDomain=${SHOP_DOMAIN}`;
+        const res  = await fetch(url);
+        if (!res.ok) throw new Error('API error ' + res.status);
+        const json = await res.json();
+        if (json.code === 'ok' && json.data && json.data.product) {
+          const product = json.data.product;
+          currentProductData = product;
+          ringSyncWishlistBtn(); 
+          // 解析数据
+          const combo = product.skuCombination || {};
+          productSkuList = combo.productSkuList || [];
+          specTrees      = combo.productSpecTrees || [];
+          defaultMedias  = product.attribute?.medias || [];
+
+          // 如果 defaultMedias 为空，用 pictures 字段
+          if (defaultMedias.length === 0 && product.pictures) {
+            defaultMedias = product.pictures.split(',').map((url, i) => ({
+              mediaType: 1, url: url.trim(), sortOrder: i + 1
+            }));
+          }
+          
+        
+          // 初始化选中第一个 spec value
+          specTrees.forEach(spec => {
+            if (spec.specValues && spec.specValues.length > 0) {
+              selectedSpecs[spec.specId] = spec.specValues[0].specValueId;
+            }
+          });
+
+          // 渲染
+          renderSpecs(specTrees);
+
+          // ── Diamond Shape 预填充逻辑 ──
+          const currentDiamondRaw=localStorage.getItem('current_diamond');
+          if(currentDiamondRaw){
+            try{
+              const currentDiamond=JSON.parse(currentDiamondRaw);
+              const targetShape=currentDiamond.shape;
+
+              if(targetShape){
+                specTrees.forEach(spec=>{
+                  if(spec.specName&&spec.specName.toLowerCase().includes('diamond shape')){
+                    // 查找匹配的 specValue
+                    const matchedVal=spec.specValues.find(v=>
+                      v.specValue&&v.specValue.toLowerCase()===targetShape.toLowerCase()
+                    );
+
+                    if(matchedVal){
+                      // 填充 selectedSpecs
+                      selectedSpecs[spec.specId]=matchedVal.specValueId;
+
+                      // 同步桌面端按钮 selected 状态
+                      const specGroups=specsEl.querySelectorAll('.dpi-rp__spec-group');
+                      specGroups.forEach(group=>{
+                        const btns=group.querySelectorAll(`[data-spec-id="${spec.specId}"]`);
+                        if(btns.length>0){
+                          btns.forEach(b=>b.classList.remove('selected'));
+                          const targetBtn=group.querySelector(
+                            `[data-spec-id="${spec.specId}"][data-spec-value-id="${matchedVal.specValueId}"]`
+                          );
+                          if(targetBtn)targetBtn.classList.add('selected');
+                          // 同步 spec-selected-val 文字
+                          const selectedValEl=group.querySelector('.dpi-rp__spec-selected-val');
+                          if(selectedValEl)selectedValEl.textContent=matchedVal.specValue;
+
+                          // 隐藏整个 spec-group
+                          group.style.display='none';
+                        }
+                      });
+                    }
+                  }
+                });
+              }
+            }catch(e){
+              console.warn('[DPI] Failed to parse current_diamond:',e);
+            }
+          }
+          // ── 判断是否存在 Centerstone 选项 ──
+          const hasCenterstone = specTrees.some(
+            spec => spec.specName && spec.specName.toLowerCase().includes('centerstone')
+          );
+          const hasDiamond = !!localStorage.getItem('current_diamond'); 
+          if (!hasCenterstone || hasDiamond) {
+            // 无 Centerstone：显示 CHOOSE THIS SETTING + browse_diamonds_desc，隐藏 ADD TO BAG + Ring Size
+            if (chooseBtn)     chooseBtn.style.display = '';
+            if (addToBagBtn)   addToBagBtn.style.display = 'none';
+            if (addonsEngraving) addonsEngraving.style.display = 'none';
+            if (browseDescEl)  browseDescEl.style.display = '';
+            if (ringSizeGroup) ringSizeGroup.style.display = 'none';
+          } else {
+            // 有 Centerstone：显示 ADD TO BAG + Ring Size，隐藏 CHOOSE THIS SETTING + browse_diamonds_desc
+            if (chooseBtn)     chooseBtn.style.display = 'none';
+            if (addToBagBtn)   addToBagBtn.style.display = '';
+            if (addonsEngraving) addonsEngraving.style.display = '';
+            if (browseDescEl)  browseDescEl.style.display = 'none';
+            if (ringSizeGroup) ringSizeGroup.style.display = '';
+          }
+
+          onSpecChange(); // 用初始选中的 SKU 渲染媒体和价格
+          // 渲染 Ring Size
+          const ringSizeList = product.ringSize?product.ringSize.split(','):[];
+          renderRingSize(ringSizeList);
+
+        } else {
+          throw new Error('Unexpected response');
+        }
+      } catch (err) {
+        console.warn('[DPI] API fetch failed, using fallback.', err);
+        populateMediaFallback();
+      }
+    }
+
+    fetchProductData();
+  }
+
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Diamond Ring Product",
+  "tag": "section",
+  "class": "dpi-ring-product-section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "api_endpoint",
+      "label": "API Endpoint",
+      "placeholder": "https://api.yourdomain.com",
+      "info": "接口域名，不含末尾斜杠。例：https://api.example.com"
+    },
+    {
+      "type": "text",
+      "id": "shop_domain",
+      "label": "Shop Domain",
+      "placeholder": "yourstore.myshopify.com",
+      "info": "留空则自动使用当前店铺域名"
+    },
+    {
+      "type": "textarea",
+      "id": "browse_diamonds_desc",
+      "label": "Browse All Diamonds 说明文案",
+      "default": "Explore our diverse lab-grown diamond collection! Find the perfect diamond that our expert jewelers will then transform into a ring that's perfectly made for you."
+    },
+        {
+      "type": "page",
+      "id": "size_guide_page",
+      "label": "Ring Size Guide 页面"
+    },
+    {
+      "type": "header",
+      "content": "商品标题字体样式"
+    },
+    {
+      "type": "checkbox",
+      "id": "rp_title_use_original_font",
+      "label": "沿用原有字体",
+      "default": true
+    },
+    {
+      "type": "font_picker",
+      "id": "rp_title_font",
+      "label": "商品标题字体",
+      "default": "assistant_n4",
+      "info": "关闭沿用原有字体后生效"
+    },
+    {
+      "type": "checkbox",
+      "id": "rp_title_use_original_size",
+      "label": "保留原有响应式字号",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "rp_title_size",
+      "label": "商品标题字号",
+      "min": 12,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 26,
+      "info": "关闭保留原有响应式字号后生效，电脑和手机使用相同字号"
+    },
+    {
+      "type": "select",
+      "id": "rp_title_weight",
+      "label": "商品标题字重",
+      "options": [
+        { "value": "400", "label": "常规" },
+        { "value": "500", "label": "中等" },
+        { "value": "600", "label": "半粗" },
+        { "value": "700", "label": "加粗" }
+      ],
+      "default": "600"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product-order-details",
+      "name": "Product Order Details",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "range",
+          "id": "option_vertical_gap",
+          "label": "t:settings.vertical_gap",
+          "min": 0,
+          "max": 60,
+          "step": 1,
+          "unit": "px",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "option_horizontal_gap",
+          "label": "t:settings.horizontal_gap",
+          "min": 0,
+          "max": 60,
+          "step": 1,
+          "unit": "px",
+          "default": 8
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Order Details"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "delivery_text",
+          "label": "Delivery text",
+          "default": "Delivery by"
+        },
+        {
+          "type": "number",
+          "id": "ship_days",
+          "label": "发货时效（天）",
+          "default": 10,
+          "info": "当前日期 + 此天数 = 显示的发货日期"
+        },
+        {
+          "type": "select",
+          "id": "date_format",
+          "label": "Date format",
+          "options": [
+            {
+              "value": "%b %d, %Y",
+              "label": "Month Day, Year"
+            },
+            {
+              "value": "%d %B %Y",
+              "label": "Day Month Year"
+            },
+            {
+              "value": "%m/%d/%Y",
+              "label": "MM/DD/YYYY"
+            },
+            {
+              "value": "%d/%m/%Y",
+              "label": "DD/MM/YYYY"
+            }
+          ],
+          "default": "%b %d, %Y"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "shipping_text",
+          "label": "Shipping text",
+          "default": "Free Express Shipping"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "returns_text",
+          "label": "Returns text",
+          "default": "Free 60-Day Returns"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "warranty_text",
+          "label": "Warranty text",
+          "default": "Free Lifetime Warranty"
+        },
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "image_border_radius",
+          "label": "Image border radius",
+          "min": 0,
+          "max": 32,
+          "step": 2,
+          "unit": "px",
+          "default": 8
+        },
+        {
+          "type": "header",
+          "content": "Style"
+        },
+        {
+          "type": "range",
+          "id": "desktop_width_percent",
+          "label": "Desktop width",
+          "min": 50,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 100
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background",
+          "default": "#fafafa"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text",
+          "default": "#282828"
+        },
+        {
+          "type": "range",
+          "id": "padding",
+          "label": "Padding",
+          "min": 12,
+          "max": 64,
+          "step": 4,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "header",
+          "content": "Typography"
+        },
+        {
+          "type": "range",
+          "id": "heading_size",
+          "label": "Heading size",
+          "min": 16,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "text_size",
+          "label": "Text size",
+          "min": 12,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 14
+        }
+      ]
+    },
+    {
+      "type": "product-shipping",
+      "name": "Product Shipping",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "header",
+          "label": "Header"
+        },
+        {
+          "type": "header",
+          "content": "One"
+        },
+        {
+          "type": "image_picker",
+          "id": "image1",
+          "label": "Image 1"
+        },
+        {
+          "type": "text",
+          "id": "title1",
+          "label": "Title 1"
+        },
+        {
+          "type": "header",
+          "content": "Two"
+        },
+        {
+          "type": "image_picker",
+          "id": "image2",
+          "label": "Image 2"
+        },
+        {
+          "type": "text",
+          "id": "title2",
+          "label": "Title 2"
+        },
+        {
+          "type": "header",
+          "content": "Three"
+        },
+        {
+          "type": "image_picker",
+          "id": "image3",
+          "label": "Image 3"
+        },
+        {
+          "type": "text",
+          "id": "title3",
+          "label": "Title 3"
+        },
+        {
+          "type": "header",
+          "content": "Four"
+        },
+        {
+          "type": "image_picker",
+          "id": "image4",
+          "label": "Image 4"
+        },
+        {
+          "type": "text",
+          "id": "title4",
+          "label": "Title 4"
+        }
+      ]
+    },
+    {
+      "type": "fold",
+      "name": "Fold",
+      "settings": [
+        {
+          "type": "select",
+          "id": "content_or_recommended",
+          "label": "Content or Recommended",
+          "default": "content",
+          "options": [
+            {
+              "value": "content",
+              "label": "content"
+            },
+            {
+              "value": "recommended",
+              "label": "recommended"
+            },
+            {
+              "value": "variant",
+              "label": "variant"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "type",
+          "label": "type",
+          "default": "shape",
+          "options": [
+            {
+              "value": "shape",
+              "label": "shape"
+            },
+            {
+              "value": "centerstone",
+              "label": "centerstone"
+            },
+            {
+              "value": "diamond-origin",
+              "label": "diamond-origin"
+            }
+          ],
+          "visible_if": "{{ block.settings.content_or_recommended == 'variant' }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "show",
+          "label": "show fold",
+          "default": false
+        },
+        {
+          "type": "html",
+          "id": "header",
+          "label": "header"
+        },
+        {
+          "type": "liquid",
+          "id": "content",
+          "label": "content"
+        },
+        {
+          "type": "header",
+          "content": "icon"
+        },
+        {
+          "type": "checkbox",
+          "id": "icon",
+          "label": "icon",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "header_icon",
+          "label": "header icon"
+        },
+        {
+          "type": "url",
+          "id": "header_icon_url",
+          "label": "header icon url"
+        },
+        {
+          "type": "header",
+          "content": "Margin"
+        },
+        {
+          "type": "text",
+          "id": "pc_margin",
+          "label": "pc margin",
+          "default": "0"
+        },
+        {
+          "type": "text",
+          "id": "mb_margin",
+          "label": "mb margin",
+          "default": "0"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "text",
+          "id": "pc_padding",
+          "label": "pc padding",
+          "default": "0"
+        },
+        {
+          "type": "text",
+          "id": "mb_padding",
+          "label": "mb padding",
+          "default": "0"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_line",
+          "label": "use line",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "product-sharing",
+      "name": "Product Sharing",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Sharing:"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding-block-start",
+          "label": "Top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "padding-block-end",
+          "label": "Bottom",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding-inline-start",
+          "label": "Left",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding-inline-end",
+          "label": "Right",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "block-service",
+      "name": "Block Service",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "t:settings.color_scheme",
+          "default": "scheme-1"
+        },
+        {
+          "type": "header",
+          "content": "Items"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_drop_hint",
+          "label": "Show Drop a Hint",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_email_us",
+          "label": "Show Email Us",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_phone",
+          "label": "Show Phone",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_live_chat",
+          "label": "Show Live Chat",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Drop a Hint"
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_label",
+          "label": "Label",
+          "default": "Drop a Hint"
+        },
+        {
+          "type": "select",
+          "id": "drop_hint_icon_type",
+          "label": "Icon type",
+          "default": "svg",
+          "options": [
+            {
+              "value": "svg",
+              "label": "SVG"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "drop_hint_svg",
+          "label": "SVG",
+          "info": "Leave blank to use the default SVG",
+          "visible_if": "{{ block.settings.drop_hint_icon_type == 'svg' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "drop_hint_image",
+          "label": "Image",
+          "visible_if": "{{ block.settings.drop_hint_icon_type == 'image' }}"
+        },
+        {
+          "type": "header",
+          "content": "Email Us"
+        },
+        {
+          "type": "text",
+          "id": "email_us_label",
+          "label": "Label",
+          "default": "Email Us"
+        },
+        {
+          "type": "select",
+          "id": "email_us_icon_type",
+          "label": "Icon type",
+          "default": "svg",
+          "options": [
+            {
+              "value": "svg",
+              "label": "SVG"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "email_us_svg",
+          "label": "SVG",
+          "info": "Leave blank to use the default SVG",
+          "visible_if": "{{ block.settings.email_us_icon_type == 'svg' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "email_us_image",
+          "label": "Image",
+          "visible_if": "{{ block.settings.email_us_icon_type == 'image' }}"
+        },
+        {
+          "type": "header",
+          "content": "Phone"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone number",
+          "default": "+1.818.666.6081"
+        },
+        {
+          "type": "select",
+          "id": "phone_icon_type",
+          "label": "Icon type",
+          "default": "svg",
+          "options": [
+            {
+              "value": "svg",
+              "label": "SVG"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "phone_svg",
+          "label": "SVG",
+          "info": "Leave blank to use the default SVG",
+          "visible_if": "{{ block.settings.phone_icon_type == 'svg' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "phone_image",
+          "label": "Image",
+          "visible_if": "{{ block.settings.phone_icon_type == 'image' }}"
+        },
+        {
+          "type": "header",
+          "content": "Live Chat"
+        },
+        {
+          "type": "text",
+          "id": "live_chat_label",
+          "label": "Label",
+          "default": "Live Chat"
+        },
+        {
+          "type": "select",
+          "id": "live_chat_icon_type",
+          "label": "Icon type",
+          "default": "svg",
+          "options": [
+            {
+              "value": "svg",
+              "label": "SVG"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "live_chat_svg",
+          "label": "SVG",
+          "info": "Leave blank to use the default SVG",
+          "visible_if": "{{ block.settings.live_chat_icon_type == 'svg' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "live_chat_image",
+          "label": "Image",
+          "visible_if": "{{ block.settings.live_chat_icon_type == 'image' }}"
+        },
+        {
+          "type": "url",
+          "id": "live_chat_url",
+          "label": "Live Chat fallback URL"
+        },
+        {
+          "type": "text",
+          "id": "submit_label",
+          "label": "Submit button",
+          "default": "Submit"
+        },
+        {
+          "type": "header",
+          "content": "Drop a Hint form"
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_title",
+          "label": "Title",
+          "default": "Drop a Hint"
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_desc",
+          "label": "Description",
+          "default": "Enter the email address where you would like this to be sent."
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_subject",
+          "label": "Email subject",
+          "default": "Drop a Hint"
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_newsletter",
+          "label": "Newsletter text",
+          "default": "Sign me up for updates."
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_success",
+          "label": "Success message",
+          "default": "Your hint has been successfully sent!"
+        },
+        {
+          "type": "header",
+          "content": "Email Us form"
+        },
+        {
+          "type": "text",
+          "id": "email_us_title",
+          "label": "Title",
+          "default": "Need Help?"
+        },
+        {
+          "type": "text",
+          "id": "email_us_desc",
+          "label": "Description",
+          "default": "Get expert answers! Our jewelry specialists can help with all your inquiries."
+        },
+        {
+          "type": "text",
+          "id": "email_us_subject",
+          "label": "Email subject",
+          "default": "Need Help"
+        },
+        {
+          "type": "text",
+          "id": "email_us_newsletter",
+          "label": "Newsletter text",
+          "default": "Send me updates on new styles and special offers."
+        },
+        {
+          "type": "text",
+          "id": "email_us_success",
+          "label": "Success message",
+          "default": "Thank you for reaching out! Our team has received your inquiry and will be in touch shortly."
+        }
+      ]
+    },
+    {
+      "type": "skin-tone",
+      "name": "Skin Tone Slider",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Darker"
+        },
+        {
+          "type": "image_picker",
+          "id": "img_dark",
+          "label": "Dark Skin Image"
+        },
+        {
+          "type": "header",
+          "content": "Medium"
+        },
+        {
+          "type": "image_picker",
+          "id": "img_medium",
+          "label": "Medium Skin Image"
+        },
+        {
+          "type": "header",
+          "content": "Lighter"
+        },
+        {
+          "type": "image_picker",
+          "id": "img_light",
+          "label": "Light Skin Image"
+        }
+      ]
+    },
+    {
+      "type": "dpi-ring-accordion-item",
+      "name": "Accordion Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Accordion Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image",
+          "info": "Optional image displayed before the heading (32x32px). Takes precedence over inline SVG."
+        },
+        {
+          "type": "richtext",
+          "id": "icon_svg",
+          "label": "Icon (inline SVG)",
+          "info": "Paste raw SVG markup here (e.g. <svg viewBox=\"0 0 24 24\">...</svg>). Used if no Icon Image is uploaded."
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "content_type",
+          "label": "Content type",
+          "default": "text",
+          "options": [
+            {
+              "value": "text",
+              "label": "Plain text"
+            },
+            {
+              "value": "richtext",
+              "label": "Rich text / HTML"
+            },
+            {
+              "value": "page",
+              "label": "Page content"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "text_content",
+          "label": "Text content",
+          "info": "Used when content type is 'Plain text'."
+        },
+        {
+          "type": "richtext",
+          "id": "richtext_content",
+          "label": "Rich text content",
+          "info": "Used when content type is 'Rich text / HTML'."
+        },
+        {
+          "type": "page",
+          "id": "page_content",
+          "label": "Page",
+          "info": "Used when content type is 'Page content'."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Diamond Ring Product"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,98 @@
+{% liquid
+  assign blo_setts = block.settings
+  assign days = blo_setts.ship_days | default: 10
+  assign seconds_in_day = 86400
+  assign extra_seconds = days | times: seconds_in_day
+  assign delivery_date = 'now' | date: '%s' | plus: extra_seconds | date: blo_setts.date_format
+%}
+
+<div
+  class="order-details-box color-{{ blo_setts.color_scheme }}"
+  {{ block.shopify_attributes }}
+  style="
+    --order-details-padding: {{ blo_setts.padding }}px;
+    --order-details-heading-size: {{ blo_setts.heading_size }}px;
+    --order-details-text-size: {{ blo_setts.text_size }}px;
+  "
+>
+  {% comment %} left {% endcomment %}
+  <div class="order-details-left">
+    {% if blo_setts.heading != blank %}
+      <h3 class="order-details-header">{{ blo_setts.heading }}</h3>
+    {% endif %}
+
+    {% if blo_setts.delivery_text != blank %}
+      <p class="order-details-line">
+        {{ blo_setts.delivery_text }}
+        <span class="order-details-date">{{ delivery_date }}</span>
+      </p>
+    {% endif %}
+
+    {% if blo_setts.shipping_text != blank %}
+      <p class="order-details-line">{{ blo_setts.shipping_text }}</p>
+    {% endif %}
+
+    {% if blo_setts.returns_text != blank %}
+      <p class="order-details-line">{{ blo_setts.returns_text }}</p>
+    {% endif %}
+
+    {% if blo_setts.warranty_text != blank %}
+      <p class="order-details-line">{{ blo_setts.warranty_text }}</p>
+    {% endif %}
+  </div>
+
+  {% comment %} right {% endcomment %}
+  <div class="order-details-right">
+    {% if blo_setts.image != blank %}
+      <img
+        class="order-details-image"
+        src="{{ blo_setts.image | image_url: width: 800 }}"
+        alt="{{ blo_setts.image.alt | default: blo_setts.heading | escape }}"
+        width="{{ blo_setts.image.width }}"
+        height="{{ blo_setts.image.height }}"
+        loading="lazy"
+      >
+    {% else %}
+      <div class="order-details-image-placeholder">
+        {{ 'product-1' | placeholder_svg_tag }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Order Details",
+  "tag": null,
+  "settings": [
+    {"type": "color_scheme","id": "color_scheme","label": "t:settings.color_scheme","default": "scheme-1"},
+    {"type": "header","content": "Content"},
+    {"type": "inline_richtext","id": "heading","label": "Heading","default": "Order Details"},
+    {"type": "inline_richtext","id": "delivery_text","label": "Delivery text","default": "Delivery by:"},
+    {"type": "number","id": "ship_days","label": "发货时效（天）","default": 10,"info": "当前日期 + 此天数 = 显示的发货日期"},
+    {"type": "select","id": "date_format","label": "Date format","default": "%b %d, %Y",
+      "options": [
+        {"value": "%b %d, %Y","label": "Month Day, Year"},
+        {"value": "%d %B %Y","label": "Day Month Year"},
+        {"value": "%m/%d/%Y","label": "MM/DD/YYYY"},
+        {"value": "%d/%m/%Y","label": "DD/MM/YYYY"}
+      ]
+    },
+    {"type": "inline_richtext","id": "shipping_text","label": "Shipping text","default": "Free Express Shipping"},
+    {"type": "inline_richtext","id": "returns_text","label": "Returns text","default": "Free 60-Day Returns"},
+    {"type": "inline_richtext","id": "warranty_text","label": "Warranty text","default": "Free Lifetime Warranty"},
+    {"type": "header","content": "+ Right"},
+    {"type": "image_picker","id": "image","label": "image"},
+    {"type": "header","content": "Style"},
+    {"type": "range","id": "padding","label": "Padding","min": 12,"max": 48,"step": 2,"unit": "px","default": 16},
+    {"type": "range","id": "heading_size","label": "Heading size","min": 14,"max": 32,"step": 1,"unit": "px","default": 16},
+    {"type": "range","id": "text_size","label": "Text size","min": 12,"max": 20,"step": 1,"unit": "px","default": 14}
+  ],
+  "presets": [
+    {
+      "name": "Order Details",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

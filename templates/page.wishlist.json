@@ -1,0 +1,42 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "wishlist-page",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "box_align": "lgs-text-start",
+        "color_scheme": "scheme-9a2a32ef-923a-4ffa-8d8d-3146144a7282",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Wishlist",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 30,
+        "empty_text": "Your wishlist is empty.",
+        "empty_cta": "Continue Shopping",
+        "empty_link": "/collections/all",
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "60px,0px,80px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "40px,0px,60px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,50px,0px"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

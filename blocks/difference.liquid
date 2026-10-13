@@ -1,0 +1,136 @@
+{%- liquid
+  assign blo_setts = block.settings
+-%}
+{% render 'swiper-assets' %}
+<div class="swiper difference-swiper difference-item-{{ block.id }}">
+  <div class="swiper-wrapper">
+      {% content_for 'blocks' %}
+  </div>
+  <div class="swiper-button-prev difference-prev">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="34px" height="34px" viewBox="0 0 34 34" version="1.1">
+        <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="首页" transform="translate(-26.000000, -5449.000000)">
+                <g id="编组-28" transform="translate(10.000000, 5207.000000)">
+                    <g id="编组-14备份" transform="translate(33.000000, 259.000000) scale(-1, 1) translate(-33.000000, -259.000000) translate(16.000000, 242.000000)">
+                        <rect id="矩形" stroke="#FFFFFF" fill-opacity="0.2" fill="#000000" transform="translate(17.000000, 17.000000) scale(-1, 1) translate(-17.000000, -17.000000) " x="0.5" y="0.5" width="33" height="33" rx="16.5"/>
+                        <g id="编组备份-4" transform="translate(17.485714, 17.220779) rotate(-90.000000) translate(-17.485714, -17.220779) translate(12.628571, 14.571429)" fill="#FFFFFF" fill-rule="nonzero">
+                            <polygon id="路径" points="0 0.79479895 0.857134934 0 4.85714286 3.7091034 8.85715078 5.5462231e-16 9.71428571 0.79479895 4.85714286 5.2987013 0 0.79467406"/>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </svg>
+  </div>
+  <div class="swiper-button-next difference-next">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="34px" height="34px" viewBox="0 0 34 34" version="1.1">
+        <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="首页" transform="translate(-1860.000000, -5449.000000)">
+                <g id="编组-28" transform="translate(10.000000, 5207.000000)">
+                    <g id="编组-14" transform="translate(1850.000000, 242.000000)">
+                        <rect id="矩形" stroke="#FFFFFF" fill-opacity="0.2" fill="#000000" transform="translate(17.000000, 17.000000) scale(-1, 1) translate(-17.000000, -17.000000) " x="0.5" y="0.5" width="33" height="33" rx="16.5"/>
+                        <g id="编组备份-4" transform="translate(17.485714, 17.220779) rotate(-90.000000) translate(-17.485714, -17.220779) translate(12.628571, 14.571429)" fill="#FFFFFF" fill-rule="nonzero">
+                            <polygon id="路径" points="0 0.79479895 0.857134934 0 4.85714286 3.7091034 8.85715078 5.5462231e-16 9.71428571 0.79479895 4.85714286 5.2987013 0 0.79467406"/>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </svg>
+  </div>
+</div>
+
+<script>
+themeSwiperReady(function () {
+
+    {% comment %} document
+    .querySelectorAll('.difference-item-{{ block.id }} .shopify-block')
+    .forEach(el => {
+      el.classList.add('swiper-slide');
+    }); {% endcomment %}
+    new Swiper('.difference-item-{{ block.id }}.difference-swiper', {
+      slideClass: 'shopify-block',
+      //autoplay: true,//可选选项，自动滑动
+       slidesPerView : 2,  
+      // spaceBetween: 0,
+      //autoplay: {
+      //  delay:5000,
+      //  pauseOnMouseEnter:true,
+      //  disableOnInteraction:false,
+      //},
+      //loop: true, // 循环模式选项
+      
+      // 如果需要分页器
+      //pagination: {
+      //  el: '.difference-item-pagination',
+      //  clickable: true
+      //},
+      on: {
+        init() {
+          this.slides.forEach(slide => {
+            slide.classList.add('swiper-slide');
+          });
+        }
+      },
+      // 如果需要前进后退按钮
+      navigation: {
+        nextEl: '.difference-next',
+        prevEl: '.difference-prev',
+      },
+       breakpointsBase: 'container',
+       breakpoints: { 
+         0: {  //当屏幕宽度大于等于320
+           slidesPerView: 1,
+           spaceBetween: 8
+         },
+         320: {  //当屏幕宽度大于等于320
+           slidesPerView: 1,
+           spaceBetween: 8
+         },
+         360: {  //当屏幕宽度大于等于320
+           slidesPerView: 1,
+           spaceBetween: 8
+         },
+         768: {  //当屏幕宽度大于等于768 
+           slidesPerView: 3,
+           spaceBetween: 8
+         },
+         1024: {  //当屏幕宽度大于等于768 
+           slidesPerView: 3,
+           spaceBetween: 12
+         },
+         1025: {  //当屏幕宽度大于等于1280
+           slidesPerView: 3,
+           spaceBetween: 16
+         }
+       },
+    });
+   {% comment %} document
+  .querySelectorAll('.difference-item-{{ block.id }} .shopify-block')
+  .forEach(item => {
+    item.classList.add('swiper-slide');
+  }); {% endcomment %}
+});
+</script>
+{% schema %}
+  {
+    "name": "Difference",
+    "settings":[
+
+    ],
+    "blocks": [
+      {
+        "type": "@theme"
+      },
+      {
+        "type": "difference-item"
+      },
+    ],
+    "presets":[
+      {
+        "name":"Difference",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

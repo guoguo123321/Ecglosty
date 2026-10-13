@@ -1,0 +1,33 @@
+{%- doc -%}
+  Build typography class list (same pattern as Product card title).
+
+  @param {object} settings - section/block settings
+  @param {string} [prefix] - setting id prefix, e.g. "title_" / "link_" / "price_"
+  @param {string} base_class - base CSS class always included
+{%- enddoc -%}
+{%- liquid
+  assign prefix = prefix | default: ''
+  assign preset_key = prefix | append: 'type_preset'
+  assign font_size_key = prefix | append: 'font_size'
+  assign weight_key = prefix | append: 'weight'
+  assign color_key = prefix | append: 'color'
+  assign title_preset = settings[preset_key] | default: 'rte'
+  echo base_class
+  case title_preset
+    when 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+      echo ' ' | append: title_preset | append: ' ' | append: title_preset
+    when 'paragraph'
+      echo ' paragraph'
+    when 'custom'
+      echo ' custom-typography'
+      if settings[font_size_key] != blank
+        echo ' custom-font-size'
+      endif
+      if settings[weight_key] != blank
+        echo ' custom-font-weight'
+      endif
+  endcase
+  if settings[color_key] != blank and title_preset != 'rte'
+    echo ' custom-color'
+  endif
+-%}

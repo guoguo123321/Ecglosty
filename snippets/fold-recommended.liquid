@@ -1,0 +1,107 @@
+{% render 'swiper-assets' %}
+<div class="fold-recommended-swiper">
+  <div class="swiper fold-recommended">
+    <div class="swiper-wrapper">
+      {% assign recommended_products = product.metafields.custom.recommended.value %}
+      {% if recommended_products %}
+        {% for rec_product in recommended_products %}
+          <div class="swiper-slide">
+            <a class="fold-recommended-item" href="{{ rec_product.url }}">
+                {% comment %} 图片 {% endcomment %}
+                 {% comment %} {% assign image = rec_product.media | where: 'media_type', 'image' %} {% endcomment %}
+                 {% assign image = rec_product.featured_image %}
+                  {% if image != blank %}
+                  <img alt="{{ image.alt }}" src="{{ image | image_url }}" width="{{ image.width }}" height="{{ image.height }}">
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff' }}
+                {% endif %}
+                <div class="fold-recommended-info">
+                  <div class="fold-recommended-title">{{ rec_product.title }}</div>
+                  <div class="fold-recommended-price" translate="no">{{ rec_product.price | money }}</div>
+                </div>
+              </a>
+          </div>
+          {% endfor %}
+        {% endif %}
+    </div>
+    <div class="fold-recommended-media common-swiper-media">
+      <!-- 如果需要分页器 -->
+      {% comment %} <div class="swiper-pagination fold-recommended-pagination common-swiper-pagination"></div> {% endcomment %}
+      
+      <div class="common-swiper-direction">
+        <!-- 如果需要导航按钮 -->
+        <div class="common-prev swiper-button-prev fold-recommended-prev custom-prev">
+          <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+            <rect x="0.5" y="0.5" width="33" height="33" rx="16.5" fill="none" stroke="#000"/>
+            <path fill="#000" d="M20 21.257 19.248 22 14 17l5.248-5 .752.743L15.587 17z"/>
+          </svg>
+        </div>
+        <div class="common-next swiper-button-next fold-recommended-next custom-next">
+          <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+            <rect x="0.5" y="0.5" width="33" height="33" rx="16.5" fill="none" stroke="#000"/>
+            <path fill="#000" d="M14 12.743 14.752 12 20 17l-5.248 5-.752-.743L18.413 17z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 如果需要滚动条 -->
+    <!-- <div class="swiper-scrollbar"></div> -->
+  </div>  
+</div>
+
+<script>
+themeSwiperReady(function () {
+
+    new Swiper('.fold-recommended-swiper .fold-recommended', {
+      //autoplay: true,//可选选项，自动滑动
+       slidesPerView : 3,  
+       spaceBetween: 6,
+      //autoplay: {
+      //  delay:5000,
+      //  pauseOnMouseEnter:true,
+      //  disableOnInteraction:false,
+      //},
+      //loop: true, // 循环模式选项
+      
+      // 如果需要分页器
+      //pagination: {
+      //  el: '.fold-recommended-pagination',
+      //  clickable: true
+      //},
+      
+      // 如果需要前进后退按钮
+      navigation: {
+        nextEl: '.fold-recommended-next',
+        prevEl: '.fold-recommended-prev',
+      },
+       breakpointsBase: 'container',
+       breakpoints: { 
+         0: {  //当屏幕宽度大于等于320
+           slidesPerView: 2,
+           spaceBetween: 4
+         },
+         320: {  //当屏幕宽度大于等于320
+           slidesPerView: 3,
+           spaceBetween: 6
+         },
+         360: {  //当屏幕宽度大于等于320
+           slidesPerView: 3,
+           spaceBetween: 6
+         },
+         768: {  //当屏幕宽度大于等于768 
+           slidesPerView: 3,
+           spaceBetween: 6
+         },
+         1024: {  //当屏幕宽度大于等于768 
+           slidesPerView: 3,
+           spaceBetween: 6
+         },
+         1025: {  //当屏幕宽度大于等于1280
+           slidesPerView: 3,
+           spaceBetween: 6
+         }
+       },
+    })
+});
+</script>

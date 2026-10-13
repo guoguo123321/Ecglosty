@@ -1,0 +1,2062 @@
+
+<div class="jc-section lgs-container" id="jewelry-collection-{{ section.id }}">
+  <!-- Mobile bottom Filters button -->
+  <div class="jc-mobile-filters-bar">
+    <button
+      type="button"
+      class="jc-mobile-filters-btn"
+      onclick="document.getElementById('jc-drawer-btn-{{ section.id }}')?.click()"
+      aria-controls="jc-drawer-{{ section.id }}"
+      aria-label="Open filters"
+    >
+      <span>Filters</span>
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1"
+        aria-hidden="true"
+      >
+        <path d="M3 7h10m4 0h4M3 17h4m4 0h10"/>
+        <circle cx="15" cy="7" r="2"/>
+        <circle cx="9" cy="17" r="2"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Filter Bar -->
+<div class="jc-filter-bar">
+  <div class="jc-filter-main-row">
+
+    <!-- Diamond Shape -->
+    <div class="jc-filter-col">
+      <div class="jc-filter-col-header">
+        <span class="jc-filter-label">Diamond Shape</span>
+        <span class="jc-filter-selected-label" id="jc-shape-selected-{{ section.id }}">All</span>
+      </div>
+      <div class="jc-filter-options" id="jc-shapes-{{ section.id }}">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'diamond_shape' -%}
+            <div class="jc-shape-inner">
+              <button class="jc-shape-btn"
+              data-value="{{ block.settings.api_value }}"
+              data-label="{{ block.settings.label }}"
+              data-filter="shape"
+              title="{{ block.settings.label }}">
+              {%- if block.settings.icon != blank -%}
+                <img src="{{ block.settings.icon | image_url: width: 200 }}" alt="{{ block.settings.label }}">
+              {%- endif -%}
+            </button>
+            </div>
+            
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <!-- Metal -->
+    <div class="jc-filter-col jc-filter-col-metal">
+      <div class="jc-filter-col-header">
+        <span class="jc-filter-label">Metal</span>
+        <span class="jc-filter-selected-label" id="jc-metal-selected-{{ section.id }}">All</span>
+      </div>
+      <div class="jc-filter-options jc-filter-options-metal" id="jc-metals-{{ section.id }}">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'metal' -%}
+            <button class="jc-metal-btn"
+              data-value="{{ block.settings.api_value }}"
+              data-label="{{ block.settings.label }}"
+              data-filter="metal"
+              title="{{ block.settings.label }}">
+              {%- if block.settings.swatch_image != blank -%}
+                <img src="{{ block.settings.swatch_image | image_url: width: 200 }}" alt="{{ block.settings.label }}" class="jc-metal-swatch-img">
+              {%- endif -%}
+              <span class="jc-metal-label-text">{{ block.settings.label }}</span>
+            </button>
+
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="jc-filter-controls">
+        <button class="jc-filters-btn" id="jc-drawer-btn-{{ section.id }}">
+          Filters
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14px" height="14px" viewBox="0 0 14 14" version="1.1">
+                <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="1.-选戒托-戒托列表页" transform="translate(-1406.000000, -744.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                        <g id="编组-14" transform="translate(1324.000000, 732.000000)">
+                            <g id="编组-4" transform="translate(32.000000, 12.000000)">
+                                <g id="编组" transform="translate(50.000000, 0.000000)">
+                                    <path d="M7.77777778,11.6666667 C7.77777778,12.9553311 8.8224467,14 10.1111111,14 C11.3997755,14 12.4444445,12.9553311 12.4444445,11.6666667 C12.4444445,10.3780023 11.3997755,9.33333333 10.1111111,9.33333333 C8.8224467,9.33333333 7.77777778,10.3780023 7.77777778,11.6666667 Z M11.2777778,11.6666667 C11.2777778,12.3109989 10.7554433,12.8333333 10.1111111,12.8333333 C9.46677891,12.8333333 8.94444445,12.3109989 8.94444445,11.6666667 C8.94444445,11.0223345 9.46677891,10.5 10.1111111,10.5 C10.7554433,10.5 11.2777778,11.0223345 11.2777778,11.6666667 Z M7.77777778,2.33333333 C7.77777778,3.62199775 8.8224467,4.66666667 10.1111111,4.66666667 C11.3997755,4.66666667 12.4444445,3.62199775 12.4444445,2.33333333 C12.4444445,1.04466892 11.3997755,0 10.1111111,0 C8.8224467,0 7.77777778,1.04466892 7.77777778,2.33333333 Z M11.2777778,2.33333333 C11.2777778,2.97766554 10.7554433,3.5 10.1111111,3.5 C9.46677891,3.5 8.94444445,2.97766554 8.94444445,2.33333333 C8.94444445,1.68900113 9.46677891,1.16666667 10.1111111,1.16666667 C10.7554433,1.16666667 11.2777778,1.68900113 11.2777778,2.33333333 Z" id="形状"></path>
+                                    <path d="M7.97222222,12.25 L0,12.25 L0,11.6666667 L0,11.0833333 L7.97222222,11.0833333 C8.36111111,11.0833333 8.55555555,11.2777778 8.55555555,11.6666667 C8.55555555,12.0555556 8.36111111,12.25 7.97222222,12.25 Z" id="路径"></path>
+                                    <path d="M1.75,7.58333333 L0,7.58333333 L0,7 L0,6.41666667 L1.75,6.41666667 C2.13888889,6.41666667 2.33333333,6.61111111 2.33333333,7 C2.33333333,7.38888889 2.13888889,7.58333333 1.75,7.58333333 Z" id="路径"></path>
+                                    <polygon id="路径" points="14 7.58333333 7 7.58333333 7 7 7 6.41666667 14 6.41666667 14 7"></polygon>
+                                    <path d="M14,12.25 L12.25,12.25 C11.8611111,12.25 11.6666667,12.0555556 11.6666667,11.6666667 C11.6666667,11.2777778 11.8611111,11.0833333 12.25,11.0833333 L14,11.0833333 L14,11.6666667 L14,12.25 Z" id="路径"></path>
+                                    <path d="M7.97222222,2.91666667 L0,2.91666667 L0,2.33333333 L0,1.75 L7.97222222,1.75 C8.36111111,1.75 8.55555555,1.94444444 8.55555555,2.33333333 C8.55555555,2.72222222 8.36111111,2.91666667 7.97222222,2.91666667 Z" id="路径"></path>
+                                    <path d="M14,2.91666667 L12.25,2.91666667 C11.8611111,2.91666667 11.6666667,2.72222222 11.6666667,2.33333333 C11.6666667,1.94444444 11.8611111,1.75 12.25,1.75 L14,1.75 L14,2.33333333 L14,2.91666667 Z" id="路径"></path>
+                                    <path d="M3.88888888,9.33333333 C5.1775533,9.33333333 6.22222222,8.28866442 6.22222222,7 C6.22222222,5.71133558 5.1775533,4.66666667 3.88888888,4.66666667 C2.60022447,4.66666667 1.55555555,5.71133558 1.55555555,7 C1.55555555,8.28866442 2.60022447,9.33333333 3.88888888,9.33333333 Z M3.88888888,8.16666667 C3.24455667,8.16666667 2.72222222,7.64433221 2.72222222,7 C2.72222222,6.35566779 3.24455667,5.83333333 3.88888888,5.83333333 C4.53322109,5.83333333 5.05555555,6.35566779 5.05555555,7 C5.05555555,7.64433221 4.53322109,8.16666667 3.88888888,8.16666667 Z" id="形状"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </button>
+      <button
+        type="button"
+        class="jc-clear-all-btn"
+        id="jc-clear-all-{{ section.id }}"
+        onclick="jcClearAll_{{ section.id | replace: '-', '_' }}()"
+      >
+        Clear All
+      </button>
+
+      <select class="jc-sort-select" id="jc-sort-{{ section.id }}">
+        <option value="bestSellers">Sort By: Best Sellers</option>
+        <option value="priceAsc">Price: Low to High</option>
+        <option value="priceDesc">Price: High to Low</option>
+        <option value="newest">Newest</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- Row 2: Results + Active Pills -->
+  <div class="jc-filter-row2">
+    <div class="jc-filter-left">
+      <span class="jc-result-count" id="jc-count-{{ section.id }}">0 Results</span>
+      <div class="jc-active-pills" id="jc-pills-{{ section.id }}"></div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Drawer Overlay -->
+  <div class="jc-drawer-overlay" id="jc-overlay-{{ section.id }}"></div>
+
+  <!-- Filters Drawer -->
+<div class="jc-drawer-overlay" id="jc-overlay-{{ section.id }}"></div>
+<div class="jc-drawer" id="jc-drawer-{{ section.id }}">
+
+  <!-- 抽屉顶部 -->
+  <div class="jc-drawer-header">
+    <span>Filters</span>
+    <button class="jc-drawer-close" id="jc-drawer-close-{{ section.id }}">✕</button>
+  </div>
+
+  <!-- 已选 pills + 结果数 -->
+  <div class="jc-drawer-pills-bar" id="jc-drawer-pills-{{ section.id }}"></div>
+
+  <!-- 抽屉内容（可滚动） -->
+  <div class="jc-drawer-body">
+
+    <!-- Setting Style -->
+    {%- assign style_blocks = section.blocks | where: 'type', 'setting_style' -%}
+    {%- if style_blocks.size > 0 -%}
+    <div class="jc-drawer-group" data-group="styles">
+      <div class="jc-drawer-group-header" onclick="jcToggleGroup(this)">
+        <span>Setting Style</span><span class="jc-group-arrow"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242">
+        <path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path>
+      </svg></span>
+      </div>
+      <div class="jc-drawer-group-body">
+        <div class="jc-icon-grid">
+          {%- for block in style_blocks -%}
+            <button
+              type="button"
+              class="jc-drawer-icon-btn jc-drawer-style-btn"
+              data-filter="styles"
+              data-value="{{ block.settings.api_value | escape }}"
+              data-label="{{ block.settings.label | escape }}"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.icon != blank -%}
+                <img
+                  src="{{ block.settings.icon | image_url: width: 96 }}"
+                  alt="{{ block.settings.label | escape }}"
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                >
+              {%- endif -%}
+              <span>{{ block.settings.label | escape }}</span>
+            </button>
+          {%- endfor -%}
+
+        </div>
+        <!-- Bridal Sets Only -->
+        {% comment %} <label class="jc-checkbox-label" style="margin-top:10px">
+          <input type="checkbox" class="jc-drawer-check" data-filter="bridalOnly" value="true">
+          Bridal Sets Only
+        </label> {% endcomment %}
+      </div>
+    </div>
+    {%- endif -%}
+
+    <!-- Diamond Shape（与外部联动） -->
+    <div class="jc-drawer-group" data-group="shapes">
+      <div class="jc-drawer-group-header" onclick="jcToggleGroup(this)">
+        <span>Diamond Shape</span><span class="jc-group-arrow"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242">
+        <path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path>
+      </svg></span>
+      </div>
+      <div class="jc-drawer-group-body">
+        <div class="jc-icon-grid">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'diamond_shape' -%}
+              <button class="jc-drawer-icon-btn jc-drawer-shape-btn" data-filter="shapes" data-value="{{ block.settings.api_value }}" data-label="{{ block.settings.label }}">
+                {%- if block.settings.icon != blank -%}
+                  <img src="{{ block.settings.icon | image_url: width: 80 }}" alt="{{ block.settings.label }}">
+                {%- endif -%}
+                <span>{{ block.settings.label }}</span>
+              </button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <!-- Metal（与外部联动） -->
+    <div class="jc-drawer-group" data-group="metals">
+      <div class="jc-drawer-group-header" onclick="jcToggleGroup(this)">
+        <span>Metal</span><span class="jc-group-arrow"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242">
+        <path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path>
+      </svg></span>
+      </div>
+      <div class="jc-drawer-group-body">
+        <div class="jc-icon-grid">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'metal' -%}
+              <button class="jc-drawer-icon-btn jc-drawer-metal-btn" data-filter="metals" data-value="{{ block.settings.api_value }}" data-label="{{ block.settings.label }}">
+                  {%- if block.settings.swatch_image != blank -%}
+                    <img src="{{ block.settings.swatch_image | image_url: width: 80 }}" alt="{{ block.settings.label }}" class="jc-metal-swatch-img">
+                  {%- endif -%}
+                  <span>{{ block.settings.label }}</span>
+                </button>
+
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <!-- Width -->
+    {%- assign width_blocks = section.blocks | where: 'type', 'width' -%}
+    {%- if width_blocks.size > 0 -%}
+    <div class="jc-drawer-group" data-group="widths">
+      <div class="jc-drawer-group-header jc-group-collapsed" onclick="jcToggleGroup(this)">
+        <span>Width</span><span class="jc-group-arrow"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242">
+        <path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path>
+      </svg></span>
+      </div>
+      <div class="jc-drawer-group-body" style="display:none">
+        {%- for block in width_blocks -%}
+          <label class="jc-checkbox-label">
+            <input type="checkbox" class="jc-drawer-check" data-filter="widths" value="{{ block.settings.api_value }}">
+            {{ block.settings.label }}
+          </label>
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- endif -%}
+
+    <!-- Prong Type -->
+    {%- assign prong_blocks = section.blocks | where: 'type', 'prong_type' -%}
+    {%- if prong_blocks.size > 0 -%}
+    <div class="jc-drawer-group" data-group="prongType">
+      <div class="jc-drawer-group-header jc-group-collapsed" onclick="jcToggleGroup(this)">
+        <span>Prong Type</span><span class="jc-group-arrow"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242">
+        <path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path>
+      </svg></span>
+      </div>
+      <div class="jc-drawer-group-body" style="display:none">
+        {%- for block in prong_blocks -%}
+          <label class="jc-checkbox-label">
+            <input type="checkbox" class="jc-drawer-check" data-filter="prongType" value="{{ block.settings.api_value }}">
+            {{ block.settings.label }}
+          </label>
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- endif -%}
+
+    <!-- Setting Price -->
+    <div class="jc-drawer-group" data-group="price">
+      <div class="jc-drawer-group-header" onclick="jcToggleGroup(this)">
+        <span>Setting Price</span><span class="jc-group-arrow"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242">
+        <path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path>
+      </svg></span>
+      </div>
+      <div class=jc-drawer-group-body>
+          <div class=jc-price-slider-wrap>
+            <input type=range class=jc-range id="jc-range-min-{{ section.id }}" min=0 max=10000 step=50 value=0>
+            <input type=range class=jc-range id="jc-range-max-{{ section.id }}" min=0 max=10000 step=50 value=10000>
+          </div>
+          <div class=jc-price-display>
+            <input type=text class=jc-price-input id="jc-price-min-display-{{ section.id }}" value="$0">
+            <input type=text class=jc-price-input id="jc-price-max-display-{{ section.id }}" value="$10,000">
+          </div>
+        </div>
+
+    </div>
+
+  </div><!-- end drawer-body -->
+
+  <!-- 底部固定按钮 -->
+  {% comment %} <div class="jc-drawer-footer">
+    <button class="jc-view-results-btn" id="jc-apply-{{ section.id }}">VIEW RESULTS</button>
+  </div> {% endcomment %}
+  <div class="jc-drawer-footer">
+    <button
+      type="button"
+      class="jc-drawer-clear-all-btn"
+      onclick="jcClearAll_{{ section.id | replace: '-', '_' }}()"
+    >
+      Clear All
+    </button>
+
+    <button
+      type="button"
+      class="jc-view-results-btn"
+      id="jc-apply-{{ section.id }}"
+    >
+      VIEW RESULTS
+    </button>
+  </div>
+
+
+</div>
+
+
+  <!-- Product Grid -->
+  <div class="jc-grid" id="jc-grid-{{ section.id }}">
+    {%- for i in (1..10) -%}
+      <div class="jc-skeleton"></div>
+    {%- endfor -%}
+  </div>
+
+  <!-- Empty State -->
+  <div class="jc-empty" id="jc-empty-{{ section.id }}" style="display:none">
+    <p>No results found</p>
+    <button class="jc-clear-btn-sm" onclick="jcClearAll_{{ section.id | replace: '-', '_' }}()">Clear Filters</button>
+  </div>
+
+  <!-- Error State -->
+  <div class="jc-error" id="jc-error-{{ section.id }}" style="display:none">
+    <p>Failed to load products.</p>
+    <button onclick="jcFetch_{{ section.id | replace: '-', '_' }}(true)">Retry</button>
+  </div>
+
+  <!-- Load More -->
+  <div class="jc-load-more-wrap" id="jc-loadmore-wrap-{{ section.id }}" style="display:none">
+    <button class="jc-load-more-btn" id="jc-loadmore-{{ section.id }}">Load More</button>
+  </div>
+
+</div>
+{% liquid
+  assign card_name_font = section.settings.card_name_font
+  assign card_name_weight = section.settings.card_name_weight
+  assign card_name_variant = card_name_font | font_modify: 'weight', card_name_weight
+  assign card_name_font = card_name_variant | default: card_name_font
+
+  assign card_price_font = section.settings.card_price_font
+  assign card_price_weight = section.settings.card_price_weight
+  assign card_price_variant = card_price_font | font_modify: 'weight', card_price_weight
+  assign card_price_font = card_price_variant | default: card_price_font
+
+ 
+%}
+
+
+<style>
+{{ card_name_font | font_face: font_display: 'swap' }}
+{{ card_price_font | font_face: font_display: 'swap' }}
+#jewelry-collection-{{ section.id }} {
+  --gold: #C9A84C;
+  --border: #e0e0e0;
+  --bg-pill: #f5f5f5;
+  --text: #333;
+  font-family: inherit;
+  padding: 40px 20px;
+  background: #fff;
+}
+
+
+/* Filter Bar */
+.jc-filter-bar {
+  
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: calc(var(--layer-heightened) - 1);
+}
+@media (max-width: 1025px) {
+ 
+
+  .jc-filter-bar {
+   display: none;
+  }
+}
+
+/* 主行：Shape | Metal | Controls 左右对齐 */
+.jc-filter-main-row {
+  display: flex;
+  align-items: unset;
+  gap: 18px;
+  padding: 12px 0 8px;
+  flex-wrap: wrap;
+}
+
+/* 每个筛选列：上下两行 */
+.jc-filter-col {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px,1.1029411vw,15px);
+}
+.jc-filter-col.jc-filter-col-metal{
+    border-left: 1px solid #e9e9e9;
+    padding-left: 18px;
+}
+
+/* 标题行：label + 选中值 */
+.jc-filter-col-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.jc-filter-label {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.25;
+    color: #868686;
+    white-space: nowrap;
+}
+.jc-filter-selected-label {
+  color:#0A0A0A;min-width:2em;display:inline-block;
+}
+
+/* 图标列表行 */
+.jc-filter-options {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.jc-filter-options-metal{
+ gap: 10px;
+}
+
+/* Shape 按钮：只显示图标，无文字 */
+.jc-shape-inner{
+  position:relative;
+}
+.jc-shape-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0px;
+  {% comment %} border: 1px solid transparent;
+  border-radius: 50%; {% endcomment %}
+  background: transparent;
+  border:0px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.jc-shape-btn img {
+  {% comment %} width: 24px;
+  height: 24px;
+  object-fit: contain; {% endcomment %}
+}
+.jc-shape-btn:hover:after,.jc-shape-btn.active:after{
+  content:"";width:calc(100% - 10px);bottom:0;position:absolute;left:5px;right:5px;height:1px;background:transparent;
+  background: #06374c;
+}
+{% comment %} .jc-shape-btn:hover { border-color: #ccc; } {% endcomment %}
+{% comment %} .jc-shape-btn.active {
+  border-color: #06374C;
+  box-shadow: 0 0 0 1px #06374C;
+} {% endcomment %}
+
+/* Metal 按钮：显示文字标签（如 14K、18K、PT），带背景色 */
+.jc-metal-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 1px;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.jc-metal-btn .jc-metal-swatch-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.jc-metal-btn .jc-metal-label-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  {% comment %} font-weight: 700; {% endcomment %}
+  color: #1a1a1a;
+  letter-spacing: -.02em;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+
+/* 抽屉内 Metal 图片 */
+.jc-drawer-metal-btn .jc-metal-swatch-img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.jc-metal-btn:hover { border-color: #06374C; }
+.jc-metal-btn.active {
+  border-color: #06374C;
+  box-shadow: 0 0 0 1px #06374C;
+}
+.jc-metal-label-text { pointer-events: none; }
+
+
+/* 右侧控制区：垂直居中对齐 */
+.jc-filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Row 2 */
+.jc-filter-row2 {
+  display: flex;
+  align-items: center;
+  padding: 6px 0 0;
+  border-top: 1px solid #f0f0f0;
+}
+.jc-filter-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.jc-result-count { font-size: 13px; color: #000; white-space: nowrap; display: none;}
+.jc-active-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.jc-pill-remove{ cursor: pointer; }
+.jc-filters-btn {
+ 
+  background:#06374C;padding: clamp(8px, .955882vw, 12px) clamp(15px, 2.2794117vw, 32px);font-weight: 500;font-size: 12px;color:#FFFFFF;line-height: 1;cursor: pointer;display:flex;justify-content:center;align-items:center;gap:clamp(8px,0.882352vw,12px);border:1px solid var(--color-primary-button-border,transparent);transition:color .3s ease-in-out,background-color .3s ease-in-out,border-color .3s ease-in-out;
+}
+.jc-filters-btn:hover {background:rgb(18 91 110 / 1.0);color:#FFFFFF;border-color:var(--color-primary-button-hover-border);}
+.jc-filters-btn svg { stroke: #fff; }
+
+.jc-sort-select {
+  padding: 10px 36px 10px 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: 0px;
+  font-size: 13px;
+  color: #333;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  min-width: 160px;
+}
+.jc-sort-select:focus { outline: none; border-color: #999; }
+
+/* Clear All：移动端隐藏，PC 端替换 Filters 按钮 */
+#jewelry-collection-{{ section.id }} .jc-clear-all-btn {
+  display: none;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: 1px solid #D9D9D9;
+  border-radius: 0;
+  background: #FFFFFF;
+  color: #000000;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: nowrap;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+#jewelry-collection-{{ section.id }} .jc-clear-all-btn:hover {
+  background: #FFFFFF;
+  color: #000000;
+  border-color: #D9D9D9;
+}
+
+#jewelry-collection-{{ section.id }} .jc-clear-all-btn:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 3px;
+}
+
+@media (min-width: 1025px) {
+  #jewelry-collection-{{ section.id }} .jc-filters-btn {
+    display: none;
+  }
+
+  #jewelry-collection-{{ section.id }} .jc-clear-all-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+/* end Clear All：移动端隐藏，PC 端替换 Filters 按钮 */
+
+/* Drawer */
+.jc-drawer-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.3); z-index: 100;
+}
+.jc-drawer-overlay.open { display: block; }
+
+.jc-drawer {
+  position: fixed; top: 0; left: -400px; width: 320px; height: 100vh;
+  background: #fff; z-index: 101; transition: left 0.3s ease;
+  display: flex; flex-direction: column;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+}
+.jc-drawer.open { left: 0; }
+
+.jc-drawer-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; border-bottom: 1px solid #f0f0f0;
+  font-weight: 600; font-size: 15px; flex-shrink: 0;
+}
+.jc-drawer-close {
+  background: none; border: none; cursor: pointer;
+  font-size: 18px; color: #666; line-height: 1;
+}
+
+/* Pills bar */
+.jc-drawer-pills-bar {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 10px 16px; border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0; min-height: 0;
+}
+.jc-drawer-pills-bar:empty { display: none; }
+
+/* Scrollable body */
+.jc-drawer-body {
+  flex: 1; overflow-y: auto; padding: 0;
+}
+
+/* Group */
+.jc-drawer-group {
+  border-bottom: 1px solid #f0f0f0;
+}
+.jc-drawer-group-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px; cursor: pointer; font-size: 14px; font-weight: 500;
+  user-select: none;
+}
+.jc-drawer-group-header:hover { background: #fafafa; }
+.jc-group-arrow{font-size:12px;color:#666;display:inline-block;transition:transform .25s ease}
+
+.jc-drawer-group-body { padding: 8px 16px 16px; }
+
+/* Icon grid: 4 columns */
+.jc-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.jc-drawer-icon-btn {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; padding: 8px 4px; border: 1px solid transparent;
+  border-radius: 8px; background: #fafafa; cursor: pointer;
+  font-size: 11px; color: #333; text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+  line-height: 1.3;
+}
+.jc-drawer-icon-btn img {
+  width: 48px; height: 48px; object-fit: contain;
+}
+.jc-drawer-icon-btn:hover { background: #f0f0f0; }
+.jc-drawer-icon-btn.active {
+  border-color: var(--gold);
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--gold);
+}
+
+/* Metal swatch in drawer */
+.jc-drawer-metal-swatch {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--swatch-color, #ccc);
+  display: block; border: 1px solid rgba(0,0,0,0.08);
+}
+
+/* Checkbox */
+.jc-checkbox-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; margin-bottom: 8px; cursor: pointer; color: #333;
+}
+
+/* Price slider */
+.jc-price-slider-wrap{position:relative;height:20px;margin:8px 0}
+
+.jc-range{position:absolute;width:100%;pointer-events:none;-webkit-appearance:none;appearance:none;height:2px;background:0 0;outline:0;top:5px;left: -2px;}
+.jc-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:#073746;cursor:pointer;pointer-events:all;border:none;box-shadow:none}
+.jc-range::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#073746;cursor:pointer;pointer-events:all;border:none;box-shadow:none}
+.jc-range-track{position:absolute;top:8px;left:0;right:0;height:2px;background:#073746;border-radius:0;z-index:0}
+.jc-range-fill{position:absolute;top:8px;height:2px;background:#073746;border-radius:0;z-index:1}
+.jc-price-display{display:flex;justify-content:space-between;font-size:13px;color:#333;margin-top:12px}
+.jc-price-input{width:80px;padding:6px 8px;border:1px solid#d0d0d0;border-radius:4px;font-size:13px;color:#333;text-align:center;background:#fff}
+.jc-price-input:focus{outline:none;border-color:#999}
+
+.jc-price-slider-wrap input:not([type=checkbox],[type=radio]){
+      background-color: transparent;
+    border-color: transparent;
+}
+
+/* Footer */
+.jc-drawer-footer {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+
+.jc-drawer-footer .jc-drawer-clear-all-btn,
+.jc-drawer-footer .jc-view-results-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 6px;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.jc-drawer-footer .jc-drawer-clear-all-btn {
+  background: #FFFFFF;
+  color: #000000;
+  border: 1px solid #D9D9D9;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.jc-drawer-footer .jc-drawer-clear-all-btn:hover {
+  background: #FFFFFF;
+  color: #000000;
+  border-color: #D9D9D9;
+}
+
+.jc-drawer-footer .jc-view-results-btn {
+  background: #073746;
+  color: #FFFFFF;
+  border: 1px solid #073746;
+  letter-spacing: 0.08em;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.jc-drawer-footer .jc-view-results-btn:hover {
+  background: #000000;
+  border-color: #000000;
+}
+
+.jc-drawer-footer button:focus-visible {
+  outline: 2px solid #073746;
+  outline-offset: 3px;
+}
+
+
+/* Grid */
+.jc-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+@media (max-width: 1024px) { .jc-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px)  { .jc-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* Skeleton */
+.jc-skeleton {
+  aspect-ratio: 1; border-radius: 8px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: jc-shimmer 1.5s infinite;
+}
+@keyframes jc-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Product Card */
+.jc-card { cursor: pointer; position: relative; transition: box-shadow 0.2s; }
+.jc-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jc-card-img-wrap {
+  aspect-ratio: 1; background: #fff; overflow: hidden;
+  border-radius: 4px; position: relative; margin-bottom: 10px;
+}
+.jc-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: opacity 0.2s ease;
+}
+
+.jc-card-img--main {
+  opacity: 1;
+}
+
+.jc-card-img--hover {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 仅支持鼠标悬停的设备切换图片 */
+@media (hover: hover) and (pointer: fine) {
+  .jc-card:hover .jc-card-img-wrap--has-hover .jc-card-img--main {
+    opacity: 0;
+  }
+
+  .jc-card:hover .jc-card-img-wrap--has-hover .jc-card-img--hover {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jc-card-img {
+    transition: none;
+  }
+}
+
+.jc-personalize-badge {
+  position: absolute; top: 8px; left: 8px;
+  background: var(--gold); color: #fff;
+  font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; z-index: 2;
+}
+.jc-heart-btn {
+  position: absolute; top: 8px; right: 8px;
+  {% comment %} background: rgba(255,255,255,0.85); border: none; border-radius: 50%; {% endcomment %}
+  background: transparent;
+  border:transparent;
+  width: 32px; height: 32px; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; z-index: 2; font-size: 16px;
+  transition: transform 0.2s;
+}
+.jc-heart-btn:hover { transform: scale(1.1); }
+.jc-swatches { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; justify-content: center;}
+.jc-swatch-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+.jc-shape-icons { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; justify-content: center;}
+.jc-shape-icon { width: 20px; height: 20px; object-fit: contain; }
+#jewelry-collection-{{ section.id }} .jc-card-name {
+  {% unless section.settings.card_name_use_theme_font %}
+    font-family: {{ card_name_font.family | json }},
+      {{ card_name_font.fallback_families }};
+  {% endunless %}
+  font-size: {{ section.settings.card_name_size }}px;
+  font-weight: {{ section.settings.card_name_weight }};
+  color: var(--text);
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: center;
+}
+
+#jewelry-collection-{{ section.id }} .jc-card-price {
+  {% unless section.settings.card_price_use_theme_font %}
+    font-family: {{ card_price_font.family | json }},
+      {{ card_price_font.fallback_families }};
+  {% endunless %}
+  font-size: {{ section.settings.card_price_size }}px;
+  font-weight: {{ section.settings.card_price_weight }};
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+
+/* Load More */
+.jc-load-more-wrap { text-align: center; margin-top: 40px; }
+.jc-load-more-btn {
+  padding: 12px 40px; border: 1px solid #333;
+  background: #fff; color: #333; font-size: 14px;
+  cursor: pointer; border-radius: 4px; transition: all 0.2s;
+}
+.jc-load-more-btn:hover { background: #333; color: #fff; }
+.jc-load-more-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Empty / Error */
+.jc-empty, .jc-error {
+  text-align: center; padding: 60px 20px; font-size: 15px; color: #666;
+}
+.jc-error button {
+  margin-top: 10px; padding: 8px 20px;
+  border: 1px solid var(--border); border-radius: 4px; background: #fff; cursor: pointer;
+}
+
+.jc-price-input{
+  width:80px;
+  padding:6px 8px;
+  border:1px solid #d0d0d0;
+  border-radius:4px;
+  font-size:13px;
+  color:#333;
+  text-align:center;
+  background:#fff;
+}
+.jc-price-input:focus{
+  outline:none;
+  border-color:#999;
+}
+/* 产品卡片 Metal swatch 图片 */
+.jc-swatch-img {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #e0e0e0;
+  display: inline-block;
+}
+/* 卡片 swatch 选中状态 */
+.jc-card-swatch { cursor: pointer;  }
+/* Metal swatch 选中：圆形描边 */
+.jc-swatch-img.jc-card-swatch-active,
+.jc-swatch-dot.jc-card-swatch-active {
+  outline: 1px solid #06374C;
+  outline-offset: 1px;
+  border-radius: 50%;
+}
+
+/* Shape icon 选中：下划线 */
+.jc-shape-icon.jc-card-swatch-active {
+  outline: none;
+  border-bottom: 1px solid #06374C;
+  padding-bottom: 1px;
+}
+/* Metal swatch hover */
+.jc-swatch-img.jc-card-swatch:hover,
+.jc-swatch-dot.jc-card-swatch:hover {
+  outline: 1px solid #06374C;
+  outline-offset: 1px;
+  border-radius: 50%;
+}
+
+/* Shape icon hover：下划线淡显 */
+.jc-shape-icon.jc-card-swatch:hover {
+  border-bottom: 1px solid #06374C;
+  padding-bottom: 1px;
+}
+
+
+
+/* 选中选项标签 */
+.jc-card-selected-opts {
+  {% comment %} display: flex;  {% endcomment %}
+  gap: 4px; 
+  justify-content: center;
+  flex-wrap: wrap; margin-top: 4px; min-height: 18px;
+  display:none;
+}
+.jc-opt-tag {
+  
+  font-size: 11px; color: #555;
+  background: #f5f5f5; border-radius: 3px; padding: 1px 6px;
+}
+
+/* Mobile bottom Filters button */
+#jewelry-collection-{{ section.id }} .jc-mobile-filters-bar {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  #jewelry-collection-{{ section.id }} {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #jewelry-collection-{{ section.id }} .jc-mobile-filters-bar {
+    display: block;
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    z-index: 99;
+    margin: 0;
+    width: auto;
+  }
+
+  #jewelry-collection-{{ section.id }} .jc-mobile-filters-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 15px;
+    background: #073746;
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    line-height: 1;
+    min-height: 44px;
+    height: auto;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  #jewelry-collection-{{ section.id }} .jc-mobile-filters-btn svg {
+    display: block;
+    flex-shrink: 0;
+    width: 15px;
+    height: 15px;
+    color: #FFFFFF;
+  }
+
+  #jewelry-collection-{{ section.id }} .jc-mobile-filters-btn:focus-visible {
+    outline: 2px solid #073746;
+    outline-offset: 3px;
+  }
+}
+/* end Mobile bottom Filters button */
+
+/* Metal swatch：图片中心显示 label */
+#jewelry-collection-{{ section.id }} .jc-metal-swatch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: visible;
+  cursor: pointer;
+}
+
+#jewelry-collection-{{ section.id }} .jc-metal-swatch .jc-swatch-img {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+#jewelry-collection-{{ section.id }} .jc-swatch-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  padding: 2px 4px;
+  letter-spacing: -.02em;
+  color: #1a1a1a;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .15s ease;
+}
+
+#jewelry-collection-{{ section.id }} .jc-metal-swatch:hover,
+#jewelry-collection-{{ section.id }} .jc-metal-swatch.jc-card-swatch-active,
+#jewelry-collection-{{ section.id }} .jc-metal-swatch:focus-visible {
+  outline: 1px solid #06374C;
+  outline-offset: 1px;
+}
+
+#jewelry-collection-{{ section.id }} .jc-metal-swatch.jc-card-swatch-active,
+#jewelry-collection-{{ section.id }} .jc-metal-swatch:focus-visible {
+  z-index: 2;
+}
+
+#jewelry-collection-{{ section.id }} .jc-metal-swatch:hover {
+  z-index: 3;
+}
+
+#jewelry-collection-{{ section.id }} .jc-metal-swatch:hover .jc-swatch-label,
+#jewelry-collection-{{ section.id }} .jc-metal-swatch.jc-card-swatch-active .jc-swatch-label,
+#jewelry-collection-{{ section.id }} .jc-metal-swatch:focus-visible .jc-swatch-label {
+  opacity: 1;
+  visibility: visible;
+}
+/* end Metal swatch：图片中心显示 label */
+</style>
+
+<script>
+(function() {
+  const sid = '{{ section.id }}';
+  const fnSuffix = sid.replace(/-/g, '_');
+  const API_URL = {{ section.settings.api_endpoint | json }};
+  const SHOP_DOMAIN = {{ section.settings.shop_domain | json }};
+  const PAGE_SIZE = {{ section.settings.page_size | default: 20 }};
+
+  const METAL_BLOCKS = [
+  {%- assign metal_blocks = section.blocks | where: 'type', 'metal' -%}
+  {%- for block in metal_blocks -%}
+    {%- if block.settings.swatch_image != blank -%}
+      { value: {{ block.settings.api_value | json }}, label: {{ block.settings.label | json }}, image: {{ block.settings.swatch_image | image_url: width: 40 | json }} }{% unless forloop.last %},{% endunless %}
+    {%- else -%}
+      { value: {{ block.settings.api_value | json }}, label: {{ block.settings.label | json }}, image: '' }{% unless forloop.last %},{% endunless %}
+    {%- endif -%}
+  {%- endfor -%}
+];
+
+ const SHAPE_BLOCKS = [
+  {%- assign shape_blocks = section.blocks | where: 'type', 'diamond_shape' -%}
+  {%- for block in shape_blocks -%}
+    {
+      value: {{ block.settings.api_value | json }},
+      label: {{ block.settings.label | json }},
+      icon:
+        {%- if block.settings.icon != blank -%}
+          {{ block.settings.icon | image_url: width: 40 | json }}
+        {%- else -%}
+          ''
+        {%- endif -%}
+    }{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+];
+
+  let state = {
+    shapes: [], metals: [], widths: [], prongType: [], styles: [],
+    minPrice: null, maxPrice: null,
+    page: 0, sortBy: 'bestSellers',
+    totalPages: 0, loading: false
+  };
+
+  const $id = id => document.getElementById(id);
+  const grid        = $id(`jc-grid-${sid}`);
+  const countEl     = $id(`jc-count-${sid}`);
+  const pillsEl     = $id(`jc-pills-${sid}`);
+  const emptyEl     = $id(`jc-empty-${sid}`);
+  const errorEl     = $id(`jc-error-${sid}`);
+  const loadMoreWrap = $id(`jc-loadmore-wrap-${sid}`);
+  const loadMoreBtn  = $id(`jc-loadmore-${sid}`);
+  const drawer      = $id(`jc-drawer-${sid}`);
+  const overlay     = $id(`jc-overlay-${sid}`);
+
+  // Wishlist
+  const WL_KEY = 'ecglosty_wishlist';
+  function getWishlist() {
+    try {
+      const raw = localStorage.getItem(WL_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.others)) return parsed;
+      }
+    } catch(e) {}
+    return { diamonds: [], others: [] };
+  }
+
+  function saveWishlist(wl) {
+    localStorage.setItem(WL_KEY, JSON.stringify(wl));
+  }
+
+  function getWishlistKey(p) {
+    return p.productId || p.id || p.urlHandle;
+  }
+
+  function isWishlisted(p) {
+    const wl = getWishlist();
+    const key = getWishlistKey(p);
+    return wl.others.some(item => getWishlistKey(item) === key);
+  }
+
+  function toggleWishlist(p) {
+    const wl = getWishlist();
+    const key = getWishlistKey(p);
+    const idx = wl.others.findIndex(item => getWishlistKey(item) === key);
+    if (idx >= 0) {
+      wl.others.splice(idx, 1);
+    } else {
+      wl.others.push(p);  // 存整个产品对象，与详情页一致
+    }
+    saveWishlist(wl);
+    return idx < 0; // true = 已加入
+  }
+// end Wishlist
+
+  // Fetch
+  async function fetchProducts(append = false) {
+    if (state.loading) return;
+    state.loading = true;
+
+    if (!append) {
+      showSkeleton();
+      emptyEl.style.display = 'none';
+      errorEl.style.display = 'none';
+      loadMoreWrap.style.display = 'none';
+    } else {
+      loadMoreBtn.disabled = true;
+      loadMoreBtn.textContent = 'Loading...';
+    }
+
+    try {
+        let shopDomain = SHOP_DOMAIN?SHOP_DOMAIN:(window.Shopify?.shop || location.hostname);
+        shopDomain= "https://"+shopDomain
+        const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          shopDomain: shopDomain,
+          metals:    state.metals,
+          ringWidths:    state.widths,
+          ringProngTypes: state.prongType,
+          styles:    state.styles,
+          shapes:    state.shapes,
+          minPrice:  state.minPrice,
+          maxPrice:  state.maxPrice,
+          page:      state.page,
+          size:      PAGE_SIZE,
+          sortBy:    state.sortBy
+        })
+      });
+      if (!res.ok) throw new Error('API error'); 
+      const data = await res.json();
+      state.totalPages = data.totalPages || 0;
+      countEl.textContent = `${data.totalElements || 0} Results`;
+
+      if (!append) grid.innerHTML = '';
+
+      if (!data.content || data.content.length === 0) {
+        if (!append) emptyEl.style.display = 'block';
+      } else {
+        const fragment = document.createDocumentFragment();
+        data.content.forEach(p => fragment.appendChild(buildCard(p)));
+        grid.appendChild(fragment);
+      }
+
+
+      loadMoreWrap.style.display = state.page < state.totalPages - 1 ? 'block' : 'none';
+      loadMoreBtn.disabled = false;
+      loadMoreBtn.textContent = 'Load More';
+
+    } catch (e) {
+      if (!append) { grid.innerHTML = ''; errorEl.style.display = 'block'; }
+    } finally {
+      state.loading = false;
+    }
+  }
+
+  window[`jcFetch_${fnSuffix}`]   = (reset) => { if (reset) state.page = 0; fetchProducts(false); };
+  window[`jcClearAll_${fnSuffix}`] = clearAll;
+
+  function showSkeleton() {
+    grid.innerHTML = '';
+    for (let i = 0; i < 10; i++) {
+      const sk = document.createElement('div');
+      sk.className = 'jc-skeleton';
+      grid.appendChild(sk);
+    }
+  }
+
+  function buildCard(p) {
+    const isWished = isWishlisted(p);
+
+    // Main image
+    // Images: 优先取 pictures，空时从 SKU 图片媒体取
+    let cardImages = String(p.pictures || '')
+      .split(',')
+      .map(url => url.trim())
+      .filter(Boolean)
+      .slice(0, 2);
+
+    if (cardImages.length === 0) {
+      const skus = p.skuCombination?.productSkuList || [];
+
+      for (const sku of skus) {
+        const imageMedias = (Array.isArray(sku.medias) ? sku.medias : [])
+          .filter(m => m && m.mediaType === 1)
+          .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+
+        for (const media of imageMedias) {
+          const urls = String(media.url || '')
+            .split(',')
+            .map(url => url.trim())
+            .filter(Boolean);
+
+          for (const url of urls) {
+            cardImages.push(url);
+            if (cardImages.length === 2) break;
+          }
+
+          if (cardImages.length === 2) break;
+        }
+
+        if (cardImages.length === 2) break;
+      }
+    }
+
+    const imgSrc = cardImages[0] || '';
+    const hoverImgSrc = cardImages[1] || '';
+
+
+    // Spec trees
+    const trees      = p.skuCombination?.productSpecTrees || [];
+    const metalTree  = trees.find(t => t.specName?.toLowerCase() === 'metal');
+    const shapeTree  = trees.find(t => ['view with diamond shape','diamond shape','shape'].includes(t.specName?.toLowerCase()));
+    const metalVals  = (metalTree?.specValues  || []).map(v => v.specValue);
+    const shapeVals  = (shapeTree?.specValues  || []).map(v => v.specValue);
+    // 默认选中：优先匹配筛选状态，否则取第一个
+    const defaultMetal = state.metals.length > 0
+      ? (metalVals.find(v => state.metals.includes(v)) || metalVals[0] || '')
+      : (metalVals[0] || '');
+    const defaultShape = state.shapes.length > 0
+      ? (shapeVals.find(v => state.shapes.includes(v)) || shapeVals[0] || '')
+      : (shapeVals[0] || '');
+
+    // Price
+    const price = p.minPrice != null
+      ? (p.minPrice !== p.maxPrice
+          ? `$${Number(p.minPrice).toFixed(2)} – $${Number(p.maxPrice).toFixed(2)}`
+          : `$${Number(p.minPrice).toFixed(2)}`)
+      : '';
+
+    const card = document.createElement('div');
+    card.className = 'jc-card';
+    card.innerHTML = `
+            <div class="jc-card-img-wrap${hoverImgSrc ? ' jc-card-img-wrap--has-hover' : ''}">
+        ${imgSrc ? `<img class="jc-card-img jc-card-img--main" src="${imgSrc}" alt="${p.name || ''}" loading="lazy">` : ''}
+        ${hoverImgSrc ? `<img class="jc-card-img jc-card-img--hover" src="${hoverImgSrc}" alt="" aria-hidden="true" loading="lazy">` : ''}
+        ${p.ringBadge ? `<span class="jc-personalize-badge">${p.ringBadge}</span>` : ''}
+        <button class="jc-heart-btn" data-id="${p.id}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="${isWished ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+
+      </div>
+      <div class="jc-swatches">
+          ${METAL_BLOCKS.filter(b => metalVals.includes(b.value))
+            .map(b => b.image
+              ? `<img class="jc-swatch-img jc-card-swatch${b.value === defaultMetal ? ' jc-card-swatch-active' : ''}" src="${b.image}" alt="${b.label}" title="${b.label}" data-type="metal" data-value="${b.value}">`
+              : `<span class="jc-swatch-dot jc-card-swatch${b.value === defaultMetal ? ' jc-card-swatch-active' : ''}" title="${b.label}" data-type="metal" data-value="${b.value}"></span>`)
+            .join('')}
+      </div>
+      <div class="jc-shape-icons">
+        ${SHAPE_BLOCKS.filter(b => shapeVals.includes(b.value))
+          .map(b => b.icon ? `<img class="jc-shape-icon jc-card-swatch${b.value === defaultShape ? ' jc-card-swatch-active' : ''}" src="${b.icon}" alt="${b.label}" title="${b.label}" data-type="shape" data-value="${b.value}">` : '')
+          .join('')}
+      </div>
+
+      <div class="jc-card-name">${p.name || ''}</div>
+      <div class="jc-card-selected-opts">
+        ${defaultShape ? `<span class="jc-opt-tag">${defaultShape}</span>` : ''}
+        ${defaultMetal ? `<span class="jc-opt-tag">${defaultMetal}</span>` : ''}
+      </div>
+      <div class="jc-card-price">${price}</div>
+
+    `;
+
+    // Swatch 点击切换选中状态
+    // Metal 图片：增加居中的 label，并将点击/选中状态移到容器
+    card.querySelectorAll('.jc-swatches .jc-swatch-img').forEach(img => {
+      const wrapper = document.createElement('span');
+      wrapper.className = 'jc-metal-swatch jc-card-swatch';
+
+      if (img.classList.contains('jc-card-swatch-active')) {
+        wrapper.classList.add('jc-card-swatch-active');
+      }
+
+      wrapper.dataset.type = img.dataset.type;
+      wrapper.dataset.value = img.dataset.value;
+
+      const labelText = img.alt || '';
+      wrapper.setAttribute('aria-label', labelText);
+      wrapper.setAttribute('role', 'button');
+      wrapper.tabIndex = 0;
+
+      const label = document.createElement('span');
+      label.className = 'jc-swatch-label';
+      label.textContent = labelText;
+      label.setAttribute('aria-hidden', 'true');
+
+      // 避免原生 title 提示与居中 label 同时出现
+      img.removeAttribute('title');
+      img.classList.remove('jc-card-swatch', 'jc-card-swatch-active');
+      img.removeAttribute('data-type');
+      img.removeAttribute('data-value');
+
+      img.replaceWith(wrapper);
+      wrapper.append(img, label);
+
+      wrapper.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          wrapper.click();
+        }
+      });
+    });
+
+        // 更新卡片的默认图和悬停图，保留徽章与收藏按钮
+    function updateCardImages(images) {
+      const wrap = card.querySelector('.jc-card-img-wrap');
+      if (!wrap || !images.length) return;
+
+      let mainImg = wrap.querySelector('.jc-card-img--main')
+        || wrap.querySelector('.jc-card-img:not(.jc-card-img--hover)');
+
+      if (!mainImg) {
+        mainImg = document.createElement('img');
+        mainImg.className = 'jc-card-img jc-card-img--main';
+        mainImg.loading = 'lazy';
+        wrap.prepend(mainImg);
+      }
+
+      mainImg.classList.add('jc-card-img--main');
+      mainImg.src = images[0];
+      mainImg.alt = p.name || '';
+
+      let hoverImg = wrap.querySelector('.jc-card-img--hover');
+
+      if (images[1]) {
+        if (!hoverImg) {
+          hoverImg = document.createElement('img');
+          hoverImg.className = 'jc-card-img jc-card-img--hover';
+          hoverImg.loading = 'lazy';
+          hoverImg.alt = '';
+          hoverImg.setAttribute('aria-hidden', 'true');
+          mainImg.after(hoverImg);
+        }
+
+        hoverImg.src = images[1];
+        wrap.classList.add('jc-card-img-wrap--has-hover');
+      } else {
+        // SKU 只有一张图片时，移除上一组悬停图
+        if (hoverImg) hoverImg.remove();
+        wrap.classList.remove('jc-card-img-wrap--has-hover');
+      }
+    }
+
+    // Swatch 点击切换选中状态，并切换对应 SKU 图片
+    card.querySelectorAll('.jc-card-swatch').forEach(el => {
+      el.addEventListener('click', e => {
+        e.stopPropagation();
+
+        const type = el.dataset.type;
+
+        card.querySelectorAll(`.jc-card-swatch[data-type="${type}"]`)
+          .forEach(s => s.classList.remove('jc-card-swatch-active'));
+
+        el.classList.add('jc-card-swatch-active');
+
+        const selMetal = card.querySelector(
+          '.jc-card-swatch[data-type="metal"].jc-card-swatch-active'
+        )?.dataset.value || '';
+
+        const selShape = card.querySelector(
+          '.jc-card-swatch[data-type="shape"].jc-card-swatch-active'
+        )?.dataset.value || '';
+
+        // 更新已选属性文字
+        const optsEl = card.querySelector('.jc-card-selected-opts');
+
+        if (optsEl) {
+          optsEl.replaceChildren();
+
+          [selShape, selMetal].filter(Boolean).forEach(value => {
+            const tag = document.createElement('span');
+            tag.className = 'jc-opt-tag';
+            tag.textContent = value;
+            optsEl.appendChild(tag);
+          });
+        }
+
+        if (!selMetal || !selShape) return;
+
+        // 不限定属性顺序，匹配两种拼接方式
+        const specKeys = [
+          `${selMetal}::${selShape}`,
+          `${selShape}::${selMetal}`
+        ];
+        const skus = p.skuCombination?.productSkuList || [];
+        const matchedSku = skus.find(sku => {
+          const specSkuValue = String(sku.specSkuValue || '');
+          return specKeys.some(key => specSkuValue.includes(key));
+        });
+        // 没有匹配到 SKU 时，保留当前图片
+        if (!matchedSku) return;
+
+        const images = (
+          Array.isArray(matchedSku.medias) ? matchedSku.medias : []
+        )
+          .filter(media => media && media.mediaType === 1)
+          .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+          .flatMap(media =>
+            String(media.url || '')
+              .split(',')
+              .map(url => url.trim())
+              .filter(Boolean)
+          )
+          .slice(0, 2);
+
+        updateCardImages(images);
+      });
+    });
+
+
+    // 卡片跳转，携带选中参数
+    card.addEventListener('click', e => {
+      if (e.target.closest('.jc-heart-btn') || e.target.closest('.jc-card-swatch')) return;
+
+      const path = window.location.pathname;
+      const search = window.location.search;
+      const fullPathAndQuery = path + search;
+      localStorage.setItem('current_collections_ringsetting',fullPathAndQuery);
+
+      if (p.urlHandle) {
+        const selMetal = card.querySelector('.jc-card-swatch[data-type="metal"].jc-card-swatch-active')?.dataset.value || '';
+        const selShape = card.querySelector('.jc-card-swatch[data-type="shape"].jc-card-swatch-active')?.dataset.value || '';
+        const params = new URLSearchParams();
+        if (selMetal) params.set('metal', selMetal);
+        if (selShape) params.set('shape', selShape);
+        const qs = params.toString();
+        window.location.href = `/products/${p.urlHandle}${qs ? '?' + qs : ''}`;
+      }
+    });
+
+
+    card.querySelector('.jc-heart-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      const wished = toggleWishlist(p);  // 传整个 p 对象
+      e.currentTarget.querySelector('svg').setAttribute('fill', wished ? 'currentColor' : 'none');
+    });
+
+
+    return card;
+  }
+
+  // Filter buttons
+  document.querySelectorAll(`#jewelry-collection-${sid} .jc-shape-btn, #jewelry-collection-${sid} .jc-metal-btn`)
+    .forEach(btn => btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+      state.shapes = getActiveVals('shape');
+      state.metals = getActiveVals('metal');
+      updateSelectedLabels();
+      updatePills();
+      resetAndFetch();
+    }));
+  
+  function getActiveVals(filter) {
+    return [...document.querySelectorAll(`#jewelry-collection-${sid} [data-filter="${filter}"].active`)]
+      .map(el => el.dataset.value);
+  }
+
+  // Sort
+  $id(`jc-sort-${sid}`).addEventListener('change', e => {
+    state.sortBy = e.target.value;
+    resetAndFetch();
+  });
+
+    // Drawer open/close
+  $id(`jc-drawer-btn-${sid}`).addEventListener('click', () => {
+    syncDrawerFromState();
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+  });
+  const closeDrawer = () => {
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+  };
+  $id(`jc-drawer-close-${sid}`).addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+
+  // 抽屉内图标按钮点击（Setting Style / Diamond Shape / Metal）
+  document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-icon-btn`).forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+      const filter = btn.dataset.filter;
+      const val = btn.dataset.value;
+
+      if (filter === 'shapes') {
+        // 同步外部 shape 按钮
+        state.shapes = getDrawerActiveVals('shapes');
+        syncOuterButtons('shape', state.shapes);
+        updateSelectedLabels();
+      } else if (filter === 'metals') {
+        // 同步外部 metal 按钮
+        state.metals = getDrawerActiveVals('metals');
+        syncOuterButtons('metal', state.metals);
+        updateSelectedLabels();
+      } else if (filter === 'styles') {
+        state.styles = getDrawerActiveVals('styles');
+      }
+      updateDrawerPills();
+    });
+  });
+
+  // 抽屉内复选框
+  document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-check`).forEach(c => {
+    c.addEventListener('change', () => updateDrawerPills());
+  });
+
+  // Apply（VIEW RESULTS）
+  $id(`jc-apply-${sid}`).addEventListener('click', () => {
+    state.widths = getDrawerCheckedVals('widths');
+    state.prongType = getDrawerCheckedVals('prongType');
+    // shapes/metals 已实时同步
+    updatePills();
+    closeDrawer();
+    resetAndFetch();
+  });
+
+  // 价格滑块
+  const rangeMin = $id(`jc-range-min-${sid}`);
+  const rangeMax = $id(`jc-range-max-${sid}`);
+  const priceMinDisplay = $id(`jc-price-min-display-${sid}`);
+  const priceMaxDisplay = $id(`jc-price-max-display-${sid}`);
+
+  function updateRangeTrack() {
+    const min = parseInt(rangeMin.value);
+    const max = parseInt(rangeMax.value);
+    const total = parseInt(rangeMin.max);
+    const fill = $id(`jc-range-fill-${sid}`);
+    if (fill) {
+      fill.style.left  = (min / total * 100) + '%';
+      fill.style.width = ((max - min) / total * 100) + '%';
+    }
+    priceMinDisplay.value = `$${min.toLocaleString()}`;
+    priceMaxDisplay.value = `$${max.toLocaleString()}`;
+
+    state.minPrice = min > 0 ? min : null;
+    state.maxPrice = max < parseInt(rangeMin.max) ? max : null;
+  }
+
+  priceMinDisplay.addEventListener('change', () => {
+    const val = parseInt(priceMinDisplay.value.replace(/[^0-9]/g, '')) || 0;
+    rangeMin.value = Math.min(val, parseInt(rangeMax.value));
+    updateRangeTrack();
+  });
+  priceMaxDisplay.addEventListener('change', () => {
+    const val = parseInt(priceMaxDisplay.value.replace(/[^0-9]/g, '')) || parseInt(rangeMax.max);
+    rangeMax.value = Math.max(val, parseInt(rangeMin.value));
+    updateRangeTrack();
+  });
+
+  rangeMin.addEventListener('input', () => {
+    if (parseInt(rangeMin.value) > parseInt(rangeMax.value)) rangeMin.value = rangeMax.value;
+    updateRangeTrack();
+  });
+  rangeMax.addEventListener('input', () => {
+    if (parseInt(rangeMax.value) < parseInt(rangeMin.value)) rangeMax.value = rangeMin.value;
+    updateRangeTrack();
+  });
+
+  // 在 price slider wrap 后插入 track/fill DOM
+  const sliderWrap = document.querySelector(`#jc-drawer-${sid} .jc-price-slider-wrap`);
+  if (sliderWrap) {
+    const track = document.createElement('div'); track.className = 'jc-range-track';
+    const fill  = document.createElement('div'); fill.className  = 'jc-range-fill'; fill.id = `jc-range-fill-${sid}`;
+    sliderWrap.insertBefore(track, sliderWrap.firstChild);
+    sliderWrap.insertBefore(fill,  sliderWrap.firstChild);
+    updateRangeTrack();
+  }
+
+  // 抽屉 pills
+  function updateDrawerPills() {
+    const bar = $id(`jc-drawer-pills-${sid}`);
+    if (!bar) return;
+    bar.innerHTML = '';
+    const allActive = [...document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-icon-btn.active, #jc-drawer-${sid} .jc-drawer-check:checked`)];
+    allActive.forEach(el => {
+      const label = el.dataset.label || el.closest('label')?.textContent.trim() || el.value;
+      const pill = document.createElement('span');
+      pill.className = 'jc-pill';
+      pill.innerHTML = `${label} <span class="jc-pill-remove">×</span>`;
+      pill.querySelector('.jc-pill-remove').addEventListener('click', () => {
+        el.classList.remove('active');
+        if (el.type === 'checkbox') el.checked = false;
+        updateDrawerPills();
+      });
+      bar.appendChild(pill);
+    });
+  }
+
+  // 从抽屉获取选中值
+  function getDrawerActiveVals(filter) {
+    return [...document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-icon-btn[data-filter="${filter}"].active`)]
+      .map(el => el.dataset.value);
+  }
+  function getDrawerCheckedVals(filter) {
+    return [...document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-check[data-filter="${filter}"]:checked`)]
+      .map(el => el.value);
+  }
+
+  // 同步外部筛选按钮状态
+  function syncOuterButtons(filter, activeVals) {
+    document.querySelectorAll(`#jewelry-collection-${sid} [data-filter="${filter}"]`).forEach(btn => {
+      btn.classList.toggle('active', activeVals.includes(btn.dataset.value));
+    });
+  }
+
+  // 打开抽屉时同步 state → 抽屉按钮状态
+  function syncDrawerFromState() {
+    // Shape
+    document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-icon-btn[data-filter="shapes"]`).forEach(btn => {
+      btn.classList.toggle('active', state.shapes.includes(btn.dataset.value));
+    });
+    // Metal
+    document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-icon-btn[data-filter="metals"]`).forEach(btn => {
+      btn.classList.toggle('active', state.metals.includes(btn.dataset.value));
+    });
+    // Styles
+    document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-icon-btn[data-filter="styles"]`).forEach(btn => {
+      btn.classList.toggle('active', state.styles.includes(btn.dataset.value));
+    });
+    // Widths
+    document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-check[data-filter="widths"]`).forEach(c => {
+      if(state.widths.length>0){
+         c.checked = state.widths.includes(c.value);
+      }
+     
+    });
+    // ProngType
+    document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-check[data-filter="prongType"]`).forEach(c => {
+      if(state.prongType.length>0){
+         c.checked = state.prongType.includes(c.value);
+      }
+      
+    });
+    updateDrawerPills();
+  }
+
+  // 折叠/展开 group
+  window.jcToggleGroup = function(header) {
+    const body = header.nextElementSibling;
+    const arrow = header.querySelector('.jc-group-arrow');
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'block';
+    arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    header.classList.toggle('jc-group-collapsed', isOpen);
+  };
+
+
+  // Clear all
+  function clearAll() {
+    state.shapes = []; state.metals = []; state.widths = [];
+    state.prongType = []; state.styles = [];
+    state.minPrice = null; state.maxPrice = null;
+    // 外部按钮
+    document.querySelectorAll(`#jewelry-collection-${sid} .active`).forEach(el => el.classList.remove('active'));
+    // 抽屉按钮
+    document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-icon-btn`).forEach(el => el.classList.remove('active'));
+    document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-check`).forEach(c => c.checked = false);
+    // 价格重置
+    if (rangeMin) { rangeMin.value = rangeMin.min; updateRangeTrack(); }
+    if (rangeMax) { rangeMax.value = rangeMax.max; updateRangeTrack(); }
+    updateSelectedLabels();
+    updateDrawerPills();
+    updatePills();
+    resetAndFetch();
+  }
+
+
+  // Pills
+  function updatePills() {
+    pillsEl.innerHTML = '';
+    const all = [
+      ...state.shapes.map(v    => ({ label: SHAPE_BLOCKS.find(b => b.value===v)?.label||v, type:'shape',     value:v })),
+      ...state.metals.map(v    => ({ label: METAL_BLOCKS.find(b => b.value===v)?.value||v, type:'metal',     value:v })),
+      ...state.widths.map(v    => ({ label: v, type:'width',     value:v })),
+      ...state.prongType.map(v => ({ label: v, type:'prongType', value:v })),
+      ...state.styles.map(v    => ({ label: v, type:'styles',    value:v })),
+      ...(state.minPrice||state.maxPrice ? [{ label:`$${state.minPrice||0}–$${state.maxPrice||'∞'}`, type:'price', value:'price' }] : [])
+    ];
+    all.forEach(f => {
+      const pill = document.createElement('span');
+      pill.className = 'jc-pill';
+      pill.innerHTML = `${f.label} <span class="jc-pill-remove" data-type="${f.type}" data-value="${f.value}">×</span>`;
+      pill.querySelector('.jc-pill-remove').addEventListener('click', () => removePill(f.type, f.value));
+      pillsEl.appendChild(pill);
+    });
+  }
+
+  function removePill(type, value) {
+    const uncheck = (filter, val) => {
+      const el = document.querySelector(`#jc-drawer-${sid} [data-filter="${filter}"][value="${val}"]`);
+      if (el) el.checked = false;
+    };
+    if (type === 'shape')     { state.shapes    = state.shapes.filter(v=>v!==value);    document.querySelector(`#jewelry-collection-${sid} [data-filter="shape"][data-value="${value}"]`)?.classList.remove('active'); }
+    if (type === 'metal')     { state.metals    = state.metals.filter(v=>v!==value);    document.querySelector(`#jewelry-collection-${sid} [data-filter="metal"][data-value="${value}"]`)?.classList.remove('active'); }
+    if (type === 'width')     { state.widths    = state.widths.filter(v=>v!==value);    uncheck('width',     value); }
+    if (type === 'prongType') { state.prongType = state.prongType.filter(v=>v!==value); uncheck('prongType', value); }
+    if (type === 'styles')    { state.styles    = state.styles.filter(v=>v!==value);    uncheck('styles',    value); }
+    if (type === 'price')     { state.minPrice = null; state.maxPrice = null; $id(`jc-min-price-${sid}`).value=''; $id(`jc-max-price-${sid}`).value=''; }
+    updateSelectedLabels();
+    updatePills();
+    resetAndFetch();
+  }
+
+  // Load More
+  loadMoreBtn.addEventListener('click', () => { state.page++; fetchProducts(true); });
+
+  function resetAndFetch() { state.page = 0; fetchProducts(false); }
+  // 在 filter toggle 按钮的 click 事件里，更新标题旁的选中值显示
+function updateSelectedLabels() {
+  const shapeSelected = state.shapes.length === 0
+    ? 'All'
+    : SHAPE_BLOCKS.filter(b => state.shapes.includes(b.value)).map(b => b.label).join(', ');
+  const metalSelected = state.metals.length === 0
+    ? 'All'
+    : METAL_BLOCKS.filter(b => state.metals.includes(b.value)).map(b => b.value).join(', ');
+
+  const shapeEl = document.getElementById(`jc-shape-selected-${sid}`);
+  const metalEl = document.getElementById(`jc-metal-selected-${sid}`);
+  if (shapeEl) shapeEl.textContent = shapeSelected;
+  if (metalEl) metalEl.textContent = metalSelected;
+}
+  //params筛选
+  // ── URL 参数初始化筛选 ──────────────────────────────────────
+  function initFromURL() {
+    const params = new URLSearchParams(window.location.search);
+
+    // shape（单值）
+    const shape = params.get('shape');
+    if (shape) state.shapes = [shape];
+
+    // metal（单值）
+    const metal = params.get('metal');
+    if (metal) state.metals = [metal];
+
+    // widths（逗号分隔多值）
+    const widths = params.get('widths');
+    if (widths) state.widths = widths.split(',').map(v => v.trim()).filter(Boolean);
+
+    // prongType（逗号分隔多值）
+    const prongType = params.get('prongType');
+    if (prongType) state.prongType = prongType.split(',').map(v => v.trim()).filter(Boolean);
+
+    // styles（逗号分隔多值）
+    const styles = params.get('styles');
+    if (styles) state.styles = styles.split(',').map(v => v.trim()).filter(Boolean);
+
+    // 价格区间
+    const minPrice = params.get('minPrice');
+    const maxPrice = params.get('maxPrice');
+    if (minPrice) state.minPrice = parseInt(minPrice) || null;
+    if (maxPrice) state.maxPrice = parseInt(maxPrice) || null;
+
+    // 排序
+    const sort = params.get('sort');
+    const validSorts = ['bestSellers', 'priceAsc', 'priceDesc', 'newest'];
+    if (sort && validSorts.includes(sort)) state.sortBy = sort;
+
+    // 同步 UI 状态
+    // 外部 shape 按钮
+    document.querySelectorAll(`#jewelry-collection-${sid} [data-filter="shape"]`).forEach(btn => {
+      btn.classList.toggle('active', state.shapes.includes(btn.dataset.value));
+    });
+    // 外部 metal 按钮
+    document.querySelectorAll(`#jewelry-collection-${sid} [data-filter="metal"]`).forEach(btn => {
+      btn.classList.toggle('active', state.metals.includes(btn.dataset.value));
+    });
+    // 排序下拉
+    const sortEl = $id(`jc-sort-${sid}`);
+    if (sortEl) sortEl.value = state.sortBy;
+    // 价格 slider
+    if (minPrice && rangeMin) {
+      rangeMin.value = state.minPrice;
+      updateRangeTrack();
+    }
+    if (maxPrice && rangeMax) {
+      rangeMax.value = state.maxPrice;
+      updateRangeTrack();
+    }
+
+    updateSelectedLabels();
+    updatePills();
+  }
+
+  initFromURL();
+  // ── END URL 参数初始化 ──────────────────────────────────────
+
+  //end params筛选
+  // Init
+  fetchProducts(false);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Ring Setting List",
+  "settings": [
+    { "type": "text",  "id": "api_endpoint", "label": "API Endpoint URL", "placeholder": "https://your-api.com/products/list" },
+    { "type": "text",  "id": "shop_domain",  "label": "Shop Domain",      "placeholder": "your-store.myshopify.com" },
+    { "type": "range", "id": "page_size", "label": "Items Per Page", "min": 10, "max": 50, "step": 5, "default": 20 },
+    {
+      "type": "header",
+      "content": "商品名称字体样式"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_name_use_theme_font",
+      "label": "沿用主题字体",
+      "default": true
+    },
+    {
+      "type": "font_picker",
+      "id": "card_name_font",
+      "label": "商品名称字体",
+      "default": "assistant_n4",
+      "info": "关闭沿用主题字体后生效"
+    },
+    {
+      "type": "range",
+      "id": "card_name_size",
+      "label": "商品名称字号",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "card_name_weight",
+      "label": "商品名称字重",
+      "options": [
+        { "value": "400", "label": "常规" },
+        { "value": "500", "label": "中等" },
+        { "value": "600", "label": "半粗" },
+        { "value": "700", "label": "加粗" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "header",
+      "content": "商品价格字体样式"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_price_use_theme_font",
+      "label": "沿用主题字体",
+      "default": true
+    },
+    {
+      "type": "font_picker",
+      "id": "card_price_font",
+      "label": "商品价格字体",
+      "default": "assistant_n4",
+      "info": "关闭沿用主题字体后生效"
+    },
+    {
+      "type": "range",
+      "id": "card_price_size",
+      "label": "商品价格字号",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "card_price_weight",
+      "label": "商品价格字重",
+      "options": [
+        { "value": "400", "label": "常规" },
+        { "value": "500", "label": "中等" },
+        { "value": "600", "label": "半粗" },
+        { "value": "700", "label": "加粗" }
+      ],
+      "default": "400"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "diamond_shape", "name": "Diamond Shape",
+      "settings": [
+        { "type": "text",         "id": "label",     "label": "Label",      "placeholder": "Round" },
+        { "type": "text",         "id": "api_value", "label": "API Value",  "placeholder": "Round" },
+        { "type": "image_picker", "id": "icon",      "label": "Shape Icon" }
+      ]
+    },
+    {
+      "type": "metal", "name": "Metal",
+      "settings": [
+        { "type": "text",  "id": "label",     "label": "Label",        "placeholder": "18K White Gold" },
+        { "type": "text",  "id": "api_value", "label": "API Value",    "placeholder": "18K White Gold" },
+        { "type": "image_picker", "id": "swatch_image", "label": "Swatch Image" }
+      ]
+    },
+    {
+      "type": "width", "name": "Width",
+      "settings": [
+        { "type": "text", "id": "label",     "label": "Label" },
+        { "type": "text", "id": "api_value", "label": "API Value" }
+      ]
+    },
+    {
+      "type": "prong_type", "name": "Prong Type",
+      "settings": [
+        { "type": "text", "id": "label",     "label": "Label" },
+        { "type": "text", "id": "api_value", "label": "API Value" }
+      ]
+    },
+    {
+      "type": "setting_style",
+      "name": "Setting Style",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "text",
+          "id": "api_value",
+          "label": "API Value"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Style Icon"
+        }
+      ]
+    }
+
+  ],
+  "presets": [{ "name": "Ring Setting List" }]
+}
+{% endschema %}

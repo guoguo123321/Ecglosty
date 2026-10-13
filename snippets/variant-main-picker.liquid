@@ -1,0 +1,917 @@
+{%- doc -%}
+  Renders a default variant picker, used to display the variant picker in the variants block.
+  Color / Colour / Metal options use circular swatches from Variant Color metaobjects;
+  Shape options use square swatches from Variant Shape metaobjects.
+  All other option names use the theme default (buttons or dropdowns).
+
+  @param {object} product_resource - The product object.
+  @param {object} [block] - The block object
+  @param {object} section - The section object.
+  @param {object} product - The current product object (used to determine selected variant state).
+{%- enddoc -%}
+
+{% assign block_settings = block.settings %}
+
+{% liquid
+  assign browse_diamonds_enabled = false
+  assign browse_diamonds_label = block_settings.browse_diamonds_label | default: 'Browse All Diamonds' | strip
+  assign browse_diamonds_link = block_settings.browse_diamonds_link | strip
+  if browse_diamonds_link == blank
+    assign browse_diamonds_link = routes.collections_url | append: '/lab-grown-diamond'
+  endif
+  if block_settings.show_browse_diamonds
+    assign browse_diamonds_enabled = true
+  endif
+  if browse_diamonds_label == blank
+    assign browse_diamonds_label = 'Browse All Diamonds'
+  endif
+%}
+
+{% unless product_resource.has_only_default_variant %}
+  {% liquid
+    assign button_background_brightness = section.settings.color_scheme.settings.foreground | color_brightness
+    if button_background_brightness < 105
+      assign strikethrough_color_mix = '#000'
+    else
+      assign strikethrough_color_mix = '#fff'
+    endif
+  %}
+  <variant-picker
+    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}"
+    style="--color-strikethrough-mix: {{ strikethrough_color_mix }}; --variant-option-gap: {{ block_settings.option_vertical_gap | default: 15 }}px; --variant-option-horizontal-gap: {{ block_settings.option_horizontal_gap | default: 8 }}px; {% render 'spacing-style', settings: block_settings %}"
+    data-section-id="{{ section.id }}"
+    data-product-id="{{ product_resource.id }}"
+    data-block-id="{{ block.id }}"
+    data-product-url="{{ product_resource.url }}"
+    ref="mainVariantPicker"
+    {% if product.id == product_resource.id %}
+      data-template-product-match="true"
+    {% endif %}
+    {{ block.shopify_attributes }}
+    {% if request.visual_preview_mode %}
+      data-shopify-visual-preview
+    {% endif %}
+  >
+    <form class="variant-picker__form">
+      {%- for product_option in product_resource.options_with_values -%}
+        {%- liquid
+          assign swatch_count = product_option.values | map: 'swatch' | compact | size
+          assign variant_style = block_settings.variant_style
+          assign option_id_attribute = nil
+          assign longest_value = 0
+          assign row_class = ''
+          assign metaobject_type = nil
+          assign is_color_option = false
+          assign is_shape_option = false
+          assign is_ring_size_option = false
+          assign is_stone_size_option = false
+          assign ring_size_needs_more = false
+          assign ring_size_preferred_hits = 0
+          assign option_has_metaobject_images = false
+          assign option_name_down = product_option.name | downcase
+
+          if option_name_down contains 'color' or option_name_down contains 'colour' or option_name_down contains 'metal' or option_name_down contains '颜色' or option_name_down contains '金属'
+            assign is_color_option = true
+            assign metaobject_type = 'variant_color'
+            assign row_class = 'variant-option--metal-row'
+          elsif option_name_down contains 'shape'
+            assign is_shape_option = true
+            assign metaobject_type = 'variant_shape'
+            assign row_class = 'variant-option--shape-row'
+          endif
+
+          # 主石大小 / center stone / carat：显示 Browse All Diamonds（需组件已配置链接）
+          if browse_diamonds_enabled
+            if option_name_down contains '主石' or option_name_down contains 'centerstone' or option_name_down contains 'center stone' or option_name_down contains 'stone size' or option_name_down contains 'diamond size' or option_name_down contains 'carat'
+              assign is_stone_size_option = true
+              if row_class != blank
+                assign row_class = row_class | append: ' variant-option--stone-size'
+              else
+                assign row_class = 'variant-option--stone-size'
+              endif
+            endif
+          endif
+
+          # RING SIZE: prefer 4.5/5/6/7/8; else use product order (first 5)
+          if option_name_down contains 'ring size'
+            assign is_ring_size_option = true
+            if row_class != blank
+              assign row_class = row_class | append: ' variant-option--ring-size'
+            else
+              assign row_class = 'variant-option--ring-size'
+            endif
+            if product_option.values.size > 5
+              assign ring_size_needs_more = true
+            endif
+
+            assign ring_size_preferred = '4.5,5,6,7,8' | split: ','
+            assign ring_size_preferred_hits = 0
+            for ring_size_value in product_option.values
+              assign ring_size_value_str = ring_size_value | append: '' | strip
+              for preferred_size in ring_size_preferred
+                if ring_size_value_str == preferred_size
+                  assign ring_size_preferred_hits = ring_size_preferred_hits | plus: 1
+                  break
+                endif
+              endfor
+            endfor
+          endif
+
+          if metaobject_type == 'variant_shape'
+            if shop.metaobjects.variant_shape != blank and shop.metaobjects.variant_shape.values.size > 0
+              assign option_has_metaobject_images = true
+            elsif shop.metaobjects['variant_shape'] != blank and shop.metaobjects['variant_shape'].values.size > 0
+              assign option_has_metaobject_images = true
+            elsif shop.metaobjects['variant-shape'] != blank and shop.metaobjects['variant-shape'].values.size > 0
+              assign option_has_metaobject_images = true
+            endif
+          elsif metaobject_type == 'variant_color'
+            if shop.metaobjects.variant_color != blank and shop.metaobjects.variant_color.values.size > 0
+              assign option_has_metaobject_images = true
+            elsif shop.metaobjects['variant_color'] != blank and shop.metaobjects['variant_color'].values.size > 0
+              assign option_has_metaobject_images = true
+            elsif shop.metaobjects['variant-color'] != blank and shop.metaobjects['variant-color'].values.size > 0
+              assign option_has_metaobject_images = true
+            endif
+          endif
+
+          # Only Color/Shape use metaobject swatches; other options keep theme default style.
+          # Native Shopify swatches still apply when show_swatches is on.
+          if block_settings.show_swatches
+            if is_color_option or is_shape_option
+              if option_has_metaobject_images or swatch_count > 0
+                if block_settings.variant_style == 'dropdown'
+                  assign variant_style = 'swatch_dropdown'
+                else
+                  assign variant_style = 'swatch'
+                endif
+              endif
+            elsif swatch_count > 0
+              if block_settings.variant_style == 'dropdown'
+                assign variant_style = 'swatch_dropdown'
+              else
+                assign variant_style = 'swatch'
+              endif
+            endif
+          endif
+
+          if variant_style == 'buttons' and settings.variant_button_width == 'equal-width-buttons' and is_ring_size_option == false
+            assign fieldset_id = section.id | append: '-' | append: product_resource.id | append: '-' | append: product_option.name | handleize
+            assign option_id_attribute = 'data-option-id="' | append: fieldset_id | append: '"'
+            assign longest_value = 0
+          endif
+
+          # 隐藏颜色 UI，但仍渲染全部 option radios，避免 option_values 缺失时回落到第一个颜色
+          assign hide_color_option_ui = false
+          if is_color_option and block_settings.show_color_option == false
+            assign hide_color_option_ui = true
+            if row_class != blank
+              assign row_class = row_class | append: ' variant-option--color-hidden'
+            else
+              assign row_class = 'variant-option--color-hidden'
+            endif
+          endif
+        -%}
+
+        {%- if product_option.values.size == 1 and variant_style != 'swatch' and hide_color_option_ui == false -%}
+          <div
+            class="variant-option{% if is_stone_size_option %} variant-option--stone-size{% endif %}"
+            data-testid="variant-option-single"
+          >
+            {{- product_option.name | escape -}}
+            <span
+              class="variant-option__swatch-value"
+              data-testid="variant-option-single-value"
+            >
+              {{- product_option.selected_value -}}
+            </span>
+            {%- if is_stone_size_option -%}
+              <a
+                href="{{ browse_diamonds_link }}"
+                class="variant-option__browse-diamonds"
+              >
+                {{ browse_diamonds_label | escape }}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- elsif variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
+          {%- liquid
+            assign fieldset_index = forloop.index0
+            assign width_class = ''
+            if variant_style == 'swatch'
+              assign width_class = 'variant-option--swatches'
+            elsif is_ring_size_option == false
+              assign width_class = 'variant-option--' | append: settings.variant_button_width
+            endif
+          -%}
+          <fieldset
+            class="variant-option variant-option--buttons{% if width_class != blank %} {{ width_class }}{% endif %}{% if row_class != blank %} {{ row_class }}{% endif %}"
+            data-fieldset-index="{{ fieldset_index }}"
+            ref="fieldsets[]"
+            {% if hide_color_option_ui %}
+              aria-hidden="true"
+            {% endif %}
+            {{ option_id_attribute }}
+          >
+            <legend>
+              {{ product_option.name | escape -}}
+              {%- if variant_style == 'swatch' -%}
+                <span class="variant-option__swatch-value">{{ product_option.selected_value }}</span>
+              {%- endif %}
+            </legend>
+            {%- for product_option_value in product_option.values -%}
+              {% if product_option_value.size > longest_value and option_id_attribute %}
+                {% assign longest_value = product_option_value.size %}
+              {% endif %}
+              {% liquid
+                assign metaobject_image = nil
+                assign metaobject_swatch_url = nil
+                assign metaobject_entries = nil
+                assign option_value_handle = product_option_value.name | handleize
+                assign ring_size_overflow_class = ''
+                if is_ring_size_option and product_option.values.size > 5
+                  assign ring_size_value_str = product_option_value | append: '' | strip
+                  assign ring_size_is_displayed = false
+                  if ring_size_preferred_hits > 0
+                    for preferred_size in ring_size_preferred
+                      if ring_size_value_str == preferred_size
+                        assign ring_size_is_displayed = true
+                        break
+                      endif
+                    endfor
+                  elsif forloop.index <= 5
+                    assign ring_size_is_displayed = true
+                  endif
+                  unless ring_size_is_displayed
+                    assign ring_size_overflow_class = ' variant-option__button-label--ring-size-overflow'
+                  endunless
+                endif
+
+                if option_has_metaobject_images and metaobject_type != blank
+                  if metaobject_type == 'variant_shape'
+                    if shop.metaobjects.variant_shape != blank
+                      assign metaobject_entries = shop.metaobjects.variant_shape.values
+                    elsif shop.metaobjects['variant_shape'] != blank
+                      assign metaobject_entries = shop.metaobjects['variant_shape'].values
+                    elsif shop.metaobjects['variant-shape'] != blank
+                      assign metaobject_entries = shop.metaobjects['variant-shape'].values
+                    endif
+                  else
+                    if shop.metaobjects.variant_color != blank
+                      assign metaobject_entries = shop.metaobjects.variant_color.values
+                    elsif shop.metaobjects['variant_color'] != blank
+                      assign metaobject_entries = shop.metaobjects['variant_color'].values
+                    elsif shop.metaobjects['variant-color'] != blank
+                      assign metaobject_entries = shop.metaobjects['variant-color'].values
+                    endif
+                  endif
+
+                  if metaobject_entries != blank
+                    for mo in metaobject_entries
+                      if metaobject_type == 'variant_shape'
+                        assign mo_title = mo['variant_shape_title'].value | default: mo.variant_shape_title.value | default: mo.variant_shape_title | default: mo.title.value | default: mo.title
+                        assign mo_image = mo['variant_shape_image'].value | default: mo.variant_shape_image.value | default: mo.variant_shape_image | default: mo.image.value | default: mo.image
+                      else
+                        assign mo_title = mo['variant_color_title'].value | default: mo.variant_color_title.value | default: mo.variant_color_title | default: mo.title.value | default: mo.title
+                        assign mo_image = mo['variant_color_image'].value | default: mo.variant_color_image.value | default: mo.variant_color_image | default: mo.image.value | default: mo.image
+                      endif
+
+                      assign mo_title = mo_title | strip
+                      assign mo_title_handle = mo_title | handleize
+                      assign title_matches = false
+                      if mo_title == product_option_value.name or mo_title_handle == option_value_handle
+                        assign title_matches = true
+                      endif
+
+                      if title_matches and mo_image != blank
+                        if mo_image.preview_image != blank
+                          assign metaobject_image = mo_image.preview_image
+                        else
+                          assign metaobject_image = mo_image
+                        endif
+                        break
+                      endif
+                    endfor
+                  endif
+
+                  if metaobject_image != blank
+                    assign swatch_w = settings.variant_swatch_width | default: 32 | times: 2
+                    assign metaobject_swatch_url = metaobject_image | image_url: width: swatch_w
+                  endif
+                endif
+              %}
+              <label
+                class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}{{ ring_size_overflow_class }}"
+              >
+                <input
+                  type="radio"
+                  name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
+                  value="{{ product_option_value | escape }}"
+                  aria-label="{{ product_option_value.name | escape }}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
+                  {% if product_option_value.available == false %}
+                    aria-disabled="true"
+                  {% endif %}
+                  data-previous-checked="false"
+                  data-fieldset-index="{{ fieldset_index }}"
+                  data-input-index="{{ forloop.index0 }}"
+                  data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                  data-option-value-id="{{ product_option_value.id }}"
+                  data-option-available="{{ product_option_value.available }}"
+                  data-connected-product-url="{{ product_option_value.product_url }}"
+                  {% if metaobject_swatch_url != blank %}
+                    data-swatch-image-url="{{ metaobject_swatch_url }}"
+                  {% endif %}
+                  {% if product_option_value.variant.id %}
+                    data-variant-id="{{ product_option_value.variant.id }}"
+                  {% endif %}
+                  {% if product_option_value.selected %}
+                    data-current-checked="true"
+                    checked
+                  {% else %}
+                    data-current-checked="false"
+                  {% endif %}
+                >
+                {% if variant_style == 'swatch' %}
+                  {% liquid
+                    assign featured_media = metaobject_image
+
+                    if featured_media == blank
+                      assign featured_media = product_option_value.variant.featured_media
+                    endif
+
+                    # If the variant has no featured media, and we have a combined listing product, then fall back to
+                    # using the featured media of the child product that is linked to this option value.
+                    if featured_media == blank and product_option_value.product_url
+                      assign featured_media = product_option_value.variant.product.featured_media
+                    endif
+                  %}
+
+                  {% render 'swatch',
+                    swatch: product_option_value.swatch,
+                    variant_image: featured_media,
+                    swatch_image_url: metaobject_swatch_url,
+                    prefer_variant_image: true,
+                    mode: 'unscaled',
+                    label: product_option_value.name
+                  %}
+                {% else %}
+                  {% if product_option_value.available == true %}
+                    <span
+                      class="variant-option__button-label__pill"
+                      data-key="variant-option-pill"
+                    ></span>
+                  {% endif %}
+                  <span
+                    class="variant-option__button-label__text"
+                    data-key="variant-option-text"
+                  >
+                    {{- product_option_value | escape -}}
+                  </span>
+                {% endif %}
+                {% render 'strikethrough-variant', product_option: product_option_value %}
+              </label>
+            {%- endfor -%}
+            {%- if ring_size_needs_more -%}
+              <button
+                type="button"
+                class="variant-option__ring-size-more"
+                data-ring-size-more
+              >
+                View More Sizes
+              </button>
+            {%- endif -%}
+            {%- if is_stone_size_option -%}
+              <a
+                href="{{ browse_diamonds_link }}"
+                class="variant-option__browse-diamonds"
+              >
+                {{ browse_diamonds_label | escape }}
+              </a>
+            {%- endif -%}
+            {% if option_id_attribute %}
+              {% style %}
+                [data-option-id="{{ fieldset_id }}"] {
+                  --variant-ch: {{ longest_value | times: 0.65 }}em;
+                }
+              {% endstyle %}
+            {% endif %}
+          </fieldset>
+        {%- elsif block_settings.variant_style == 'dropdowns' -%}
+          {%
+            # There is an opportunity to build a custom select component that will allow us to style the select element further (animation for dropdown, swatches shown in the dropdown options, etc)
+            # It's too bad as it mean rebuilding baked in behaviours but I think we've already done that for the locale selectors
+            # in dawn. So it might mean more time spent in setting it up but worth it for future updates/styling.
+          %}
+          {% liquid
+            assign property_being_updated = false
+            if settings.variant_swatch_width != settings.variant_swatch_height
+              assign property_being_updated = true
+              # (original width / original height) x new height (20px at the moment) = new width
+              assign new_width = settings.variant_swatch_width | times: 1.0 | divided_by: settings.variant_swatch_height | times: 20
+            endif
+          %}
+
+          <div
+            class="variant-option variant-option--dropdowns{% if row_class != blank %} {{ row_class }}{% endif %}"
+            {% if hide_color_option_ui %}
+              aria-hidden="true"
+            {% endif %}
+          >
+            <label for="Option-{{ block.id }}-{{ forloop.index0 }}">{{ product_option.name | escape }}</label>
+            <div
+              class="variant-option__select-wrapper"
+              style="
+                {%- if property_being_updated  -%}
+                  --variant-picker-swatch-width: clamp(10px,{{ new_width }}px, 50px);
+                {%- endif -%}
+              "
+            >
+              <select
+                id="Option-{{ block.id }}-{{ forloop.index0 }}"
+                name="options[{{ product_option.name | escape }}]"
+                class="variant-option__select"
+              >
+                {%- for product_option_value in product_option.values -%}
+                  <option
+                    value="{{ product_option_value | escape }}"
+                    data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                    data-option-value-id="{{ product_option_value.id }}"
+                    data-variant-id="{{ product_option_value.variant.id }}"
+                    data-connected-product-url="{{ product_option_value.product_url }}"
+                    {% if product_option_value.selected %}
+                      selected="selected"
+                    {% endif %}
+                  >
+                    {% if product_option_value.available == false %}
+                      {{ product_option_value | escape }} - {{ 'content.unavailable' | t }}
+                    {% else %}
+                      {{ product_option_value | escape }}
+                    {% endif %}
+                  </option>
+                {%- endfor -%}
+              </select>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="icon icon-caret"
+                viewBox="0 0 10 6"
+              >
+                {%- render 'icon', icon: 'caret' -%}
+              </svg>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      <script type="application/json">
+        {{ product_resource.selected_or_first_available_variant | json }}
+      </script>
+    </form>
+  </variant-picker>
+{% endunless %}
+
+{% stylesheet %}
+  /* Variant picker container styles - unique to main variant picker */
+  .variant-picker {
+    width: 100%;
+  }
+
+  .variant-picker__form {
+    width: 100%;
+  }
+
+  .variant-picker .variant-option--color-hidden,
+  .variant-picker .variant-option--buttons.variant-option--color-hidden,
+  .variant-picker .variant-option--buttons.variant-option--equal-width-buttons.variant-option--color-hidden,
+  .variant-picker .variant-option--dropdowns.variant-option--color-hidden {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* Space below each visible option that has another visible option after it */
+  .variant-picker .variant-option:not(.variant-option--color-hidden):has(~ .variant-option:not(.variant-option--color-hidden)) {
+    margin-bottom: var(--variant-option-gap, 15px);
+  }
+
+  .variant-picker[data-shopify-visual-preview] {
+    min-width: 300px;
+    padding-inline-start: max(4px, var(--padding-inline-start));
+  }
+
+  /* Dropdown variant option styles */
+  .variant-option__select-wrapper {
+    display: flex;
+    position: relative;
+    border: var(--style-border-width-inputs) solid var(--color-border);
+    border-radius: var(--style-border-radius-inputs);
+    align-items: center;
+    margin-top: var(--margin-2xs);
+    overflow: clip;
+  }
+
+  .variant-option__select-wrapper:has(.swatch) {
+    --variant-picker-swatch-width: 20px;
+    --variant-picker-swatch-height: 20px;
+  }
+
+  .variant-option__select-wrapper:hover {
+    border-color: var(--color-variant-hover-border);
+  }
+
+  .variant-option__select:focus-visible {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  .variant-option__select {
+    padding-block: var(--padding-md);
+    padding-inline: var(--padding-lg) calc(var(--padding-lg) + var(--icon-size-2xs));
+    appearance: none;
+    border: 0;
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .variant-option__select-wrapper .icon {
+    position: absolute;
+    right: var(--padding-md);
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--icon-size-2xs);
+    height: var(--icon-size-2xs);
+    pointer-events: none;
+  }
+
+  .variant-option__select--has-swatch {
+    padding-inline-start: calc((2 * var(--padding-sm)) + var(--variant-picker-swatch-width));
+  }
+
+  .variant-option__select-wrapper .swatch {
+    position: absolute;
+    top: 50%;
+    left: var(--padding-md);
+    transform: translateY(-50%);
+  }
+
+  /* Variant picker alignment modifiers */
+  .variant-picker--center,
+  .variant-picker--center .variant-option {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .variant-picker--right,
+  .variant-picker--right .variant-option {
+    text-align: right;
+    justify-content: right;
+  }
+
+  /* All button-style variants (not swatches): square boxes */
+  .variant-picker .variant-option--buttons:not(.variant-option--color-hidden),
+  .variant-picker .variant-option--buttons.variant-option--equal-width-buttons:not(.variant-option--color-hidden) {
+    --options-border-radius: 2px;
+    --options-border-width: 1px;
+    --variant-min-width: 48px;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    grid-template-columns: unset !important;
+    gap: var(--variant-option-horizontal-gap, 8px);
+    align-items: center;
+  }
+
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch) {
+    box-sizing: border-box !important;
+    flex: 0 0 auto !important;
+    width: max-content !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 0 8px !important;
+    aspect-ratio: auto;
+    border: 1px solid #d0d0d0 !important;
+    border-radius: 2px !important;
+    background: #fff !important;
+    background-color: #fff !important;
+    color: #1a1a1a !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    line-height: 1 !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    box-shadow: none !important;
+    outline: none !important;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s !important;
+    justify-content: center !important;
+    align-items: center !important;
+    justify-self: start !important;
+    align-self: center !important;
+  }
+
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch):hover,
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch):hover:has([aria-disabled='true']):has([data-option-available='false']) {
+    background: #fff !important;
+    background-color: #fff !important;
+    border-color: #1a1a1a !important;
+    color: #1a1a1a !important;
+  }
+
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked),
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked):hover,
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch):has([data-current-checked='true']) {
+    background: #1a3646 !important;
+    background-color: #1a3646 !important;
+    border-color: #1a1a1a !important;
+    color: #fff !important;
+  }
+
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:focus-visible) {
+    outline: 1px solid #1a3646 !important;
+    outline-offset: 2px !important;
+    border-color: #1a1a1a !important;
+  }
+
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch):has([data-option-available='false']) {
+    color: #999 !important;
+    border: 1px solid #c8c8c8 !important;
+  }
+
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch):has([data-option-available='false']):has(:checked) {
+    background: #1a3646 !important;
+    background-color: #1a3646 !important;
+    border-color: #1a1a1a !important;
+    color: #fff !important;
+    opacity: 0.7;
+  }
+
+  /* Kill Horizon pill / fake-border / strikethrough on text buttons */
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch) .variant-option__button-label__pill,
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch)::before,
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch)::after,
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch) svg {
+    display: none !important;
+    content: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .variant-picker .variant-option--buttons .variant-option__button-label:not(.variant-option__button-label--has-swatch) .variant-option__button-label__text {
+    text-align: center !important;
+    color: inherit !important;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  /* RING SIZE: overflow / more-button only (visuals inherit square styles above) */
+  .variant-option--ring-size:not(.is-expanded) .variant-option__button-label--ring-size-overflow {
+    display: none !important;
+  }
+
+  .variant-option__ring-size-more {
+    flex: 0 0 auto !important;
+    box-sizing: border-box !important;
+    width: max-content !important;
+    min-width: unset;
+    max-width: none;
+    min-height: 32px;
+    height: 32px;
+    padding: 0 10px !important;
+    border: 1px solid #1a1a1a !important;
+    border-radius: 2px !important;
+    background: #fff !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #1a1a1a !important;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    text-align: center;
+    font-family: inherit;
+    line-height: 1;
+    box-shadow: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .variant-option__ring-size-more:hover {
+    background: #f5f5f5 !important;
+  }
+
+  .variant-option--ring-size.is-expanded .variant-option__ring-size-more,
+  .variant-option__ring-size-more[hidden] {
+    display: none !important;
+  }
+
+  /* 主石大小：Browse All Diamonds */
+  .variant-option--stone-size[data-testid='variant-option-single'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .variant-option__browse-diamonds {
+    flex: 0 0 auto !important;
+    box-sizing: border-box !important;
+    width: max-content !important;
+    min-width: unset;
+    max-width: none;
+    min-height: 32px;
+    height: 32px;
+    padding: 0 12px !important;
+    border: 1px solid #1a1a1a !important;
+    border-radius: 2px !important;
+    background: #fff !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #1a1a1a !important;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    text-align: center;
+    font-family: inherit;
+    line-height: 1;
+    box-shadow: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    white-space: nowrap;
+  }
+
+  .variant-option__browse-diamonds:hover {
+    background: #f5f5f5 !important;
+    color: #1a1a1a !important;
+  }
+{% endstylesheet %}
+
+<script>
+  (function () {
+    if (window.__ringSizeMoreBound) return;
+    window.__ringSizeMoreBound = true;
+
+    var expandedMap = (window.__ringSizeExpandedMap = window.__ringSizeExpandedMap || {});
+    var syncedMap = (window.__ringSizeSyncedMap = window.__ringSizeSyncedMap || {});
+    var PREFERRED_SIZES = [4.5, 5, 6, 7, 8];
+
+    function getProductId(el) {
+      var picker = el && el.closest('variant-picker');
+      return picker && picker.dataset.productId ? String(picker.dataset.productId) : 'default';
+    }
+
+    function getLabelSize(label) {
+      var input = label.querySelector('input');
+      return input ? String(input.value).trim() : '';
+    }
+
+    function sizesMatch(a, b) {
+      var na = parseFloat(a);
+      var nb = parseFloat(b);
+      if (!isNaN(na) && !isNaN(nb)) return Math.abs(na - nb) < 0.001;
+      return String(a).trim() === String(b).trim();
+    }
+
+    function getDisplayLabels(labels) {
+      var preferred = [];
+      PREFERRED_SIZES.forEach(function (preferredSize) {
+        for (var i = 0; i < labels.length; i++) {
+          if (sizesMatch(getLabelSize(labels[i]), preferredSize)) {
+            preferred.push(labels[i]);
+            break;
+          }
+        }
+      });
+
+      // Product has none of 4.5/5/6/7/8 → follow product option order (first 5)
+      if (preferred.length === 0) {
+        return labels.slice(0, 5);
+      }
+
+      return preferred;
+    }
+
+    function findNearestLabel(displayed, currentValue) {
+      var cur = parseFloat(currentValue);
+      if (isNaN(cur) || !displayed.length) return displayed[0] || null;
+
+      var best = displayed[0];
+      var bestDist = Infinity;
+      displayed.forEach(function (label) {
+        var size = parseFloat(getLabelSize(label));
+        if (isNaN(size)) return;
+        var dist = Math.abs(size - cur);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = label;
+        }
+      });
+      return best;
+    }
+
+    function applyRingSizeDisplay(root) {
+      (root || document).querySelectorAll('.variant-option--ring-size').forEach(function (fieldset) {
+        var labels = Array.prototype.slice.call(
+          fieldset.querySelectorAll('.variant-option__button-label')
+        );
+        var moreBtn = fieldset.querySelector('[data-ring-size-more]');
+        var productId = getProductId(fieldset);
+        var expanded = !!expandedMap[productId];
+
+        labels.forEach(function (label) {
+          label.classList.remove('variant-option__button-label--ring-size-overflow');
+        });
+
+        if (expanded) {
+          fieldset.classList.add('is-expanded');
+          if (moreBtn) moreBtn.hidden = true;
+          return;
+        }
+
+        fieldset.classList.remove('is-expanded');
+
+        if (labels.length <= 5) {
+          if (moreBtn) moreBtn.hidden = true;
+          return;
+        }
+
+        var displayed = getDisplayLabels(labels);
+        labels.forEach(function (label) {
+          if (displayed.indexOf(label) === -1) {
+            label.classList.add('variant-option__button-label--ring-size-overflow');
+          }
+        });
+
+        if (moreBtn) moreBtn.hidden = false;
+
+        // Keep collapsed row as preferred sizes (4.5/5/6/7/8).
+        // - No ?variant= : once switch to nearest preferred (clean default row)
+        // - Has ?variant= : also show the currently selected size if it is outside preferred
+        var checkedInput = fieldset.querySelector('input:checked');
+        var checkedLabel = checkedInput && checkedInput.closest('.variant-option__button-label');
+        if (
+          checkedLabel &&
+          checkedLabel.classList.contains('variant-option__button-label--ring-size-overflow')
+        ) {
+          var hasVariantParam = false;
+          try {
+            hasVariantParam = new URL(window.location.href).searchParams.has('variant');
+          } catch (e) {}
+
+          if (!hasVariantParam && !syncedMap[productId]) {
+            var nearest = findNearestLabel(displayed, getLabelSize(checkedLabel));
+            var nearestInput = nearest && nearest.querySelector('input');
+            if (nearestInput && nearestInput !== checkedInput) {
+              syncedMap[productId] = true;
+              nearestInput.click();
+            }
+          } else {
+            checkedLabel.classList.remove('variant-option__button-label--ring-size-overflow');
+          }
+        }
+      });
+    }
+
+    function scheduleApply() {
+      requestAnimationFrame(function () {
+        applyRingSizeDisplay(document);
+      });
+    }
+
+    document.addEventListener('click', function (event) {
+      var btn = event.target.closest('[data-ring-size-more]');
+      if (!btn) return;
+      event.preventDefault();
+      event.stopPropagation();
+      var fieldset = btn.closest('.variant-option--ring-size');
+      if (!fieldset) return;
+      expandedMap[getProductId(fieldset)] = true;
+      fieldset.classList.add('is-expanded');
+      fieldset.querySelectorAll('.variant-option__button-label--ring-size-overflow').forEach(function (label) {
+        label.classList.remove('variant-option__button-label--ring-size-overflow');
+      });
+      btn.hidden = true;
+    });
+
+    document.addEventListener('variant:update', scheduleApply);
+    document.addEventListener('variant:selected', scheduleApply);
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', scheduleApply);
+    } else {
+      scheduleApply();
+    }
+  })();
+</script>

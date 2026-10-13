@@ -1,0 +1,112 @@
+{%- doc -%}
+  Renders one mega menu column for Liquid menu path.
+
+  @param {object} block - _mega-menu-column block
+  @param {object} section - Header section (for nested item lookup)
+{%- enddoc -%}
+
+{% liquid
+  assign column_settings = block.settings
+  assign sub_columns = column_settings.sub_columns | default: '2'
+  assign icon_style = column_settings.icon_style | default: 'square'
+  assign column_width = column_settings.column_width | default: column_settings.max_width | default: 320
+  assign column_id = block.id
+  assign items_rendered = false
+%}
+
+<div
+  class="mega-menu-column{% if sub_columns == '1' %} mega-menu-column--single{% endif %}"
+  style="--mega-menu-column-sub-cols: {{ sub_columns }}; --mega-menu-column-width: {{ column_width }}px;"
+  {{ block.shopify_attributes }}
+>
+  {%- if column_settings.title != blank -%}
+    <h3 class="mega-menu-column__heading">{{ column_settings.title }}</h3>
+  {%- endif -%}
+  <ul
+    class="mega-menu-column__list list-unstyled mega-menu-column__list--icon-{{ icon_style }}"
+    data-sub-columns="{{ sub_columns }}"
+  >
+    {%- comment -%} 从 section.blocks 读取嵌套子项（Menu 静态块内 block.blocks 常为空） {%- endcomment -%}
+    {%- for panel_block in section.blocks -%}
+      {%- if panel_block.type != '_mega-menu-panel' -%}
+        {%- continue -%}
+      {%- endif -%}
+      {%- assign column_from_section = blank -%}
+      {%- if panel_block.block_order.size > 0 -%}
+        {%- for col_id in panel_block.block_order -%}
+          {%- assign col_candidate = panel_block.blocks[col_id] -%}
+          {%- if col_candidate != blank and col_candidate.type == '_mega-menu-column' -%}
+            {%- if col_candidate.id == column_id or col_id == column_id -%}
+              {%- assign column_from_section = col_candidate -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for col_candidate in panel_block.blocks -%}
+          {%- if col_candidate.type == '_mega-menu-column' and col_candidate.id == column_id -%}
+            {%- assign column_from_section = col_candidate -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- if column_from_section == blank -%}
+        {%- continue -%}
+      {%- endif -%}
+      {%- if column_from_section.block_order.size > 0 -%}
+        {%- for item_id in column_from_section.block_order -%}
+          {%- assign item_block = column_from_section.blocks[item_id] -%}
+          {%- if item_block != blank and item_block.type == '_mega-menu-item' -%}
+            {%- assign items_rendered = true -%}
+            {%- render 'mega-menu-custom-item',
+              settings: item_block.settings,
+              shopify_attributes: item_block.shopify_attributes,
+              layout: 'row',
+              icon_style: icon_style
+            -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for item_block in column_from_section.blocks -%}
+          {%- if item_block.type == '_mega-menu-item' -%}
+            {%- assign items_rendered = true -%}
+            {%- render 'mega-menu-custom-item',
+              settings: item_block.settings,
+              shopify_attributes: item_block.shopify_attributes,
+              layout: 'row',
+              icon_style: icon_style
+            -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- break -%}
+    {%- endfor -%}
+
+    {%- unless items_rendered -%}
+      {%- if block.block_order.size > 0 -%}
+        {%- for item_id in block.block_order -%}
+          {%- assign item_block = block.blocks[item_id] -%}
+          {%- if item_block != blank and item_block.type == '_mega-menu-item' -%}
+            {%- render 'mega-menu-custom-item',
+              settings: item_block.settings,
+              shopify_attributes: item_block.shopify_attributes,
+              layout: 'row',
+              icon_style: icon_style
+            -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for item_block in block.blocks -%}
+          {%- if item_block.type == '_mega-menu-item' -%}
+            {%- render 'mega-menu-custom-item',
+              settings: item_block.settings,
+              shopify_attributes: item_block.shopify_attributes,
+              layout: 'row',
+              icon_style: icon_style
+            -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endunless -%}
+  </ul>
+</div>

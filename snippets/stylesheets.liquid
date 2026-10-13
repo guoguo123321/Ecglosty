@@ -1,0 +1,14 @@
+{{ 'base.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'general-block.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'kacysk.css' | asset_url | stylesheet_tag }}
+{{ 'customMe.css' | asset_url | stylesheet_tag: preload: true }}
+{% comment %} Non-critical CSS — async so it does not delay LCP {% endcomment %}
+<link rel="stylesheet" href="{{ 'button-style.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'section.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'overflow-list.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>
+  {{ 'button-style.css' | asset_url | stylesheet_tag }}
+  {{ 'section.css' | asset_url | stylesheet_tag }}
+  {{ 'overflow-list.css' | asset_url | stylesheet_tag }}
+</noscript>
+

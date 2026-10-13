@@ -1,0 +1,33 @@
+{%- liquid
+  assign blo_setts = block.settings
+-%}
+{% comment %} <div class="swiper-slide"> {% endcomment %}
+<div class="difference-item">
+    {% comment %} 图片 {% endcomment %}
+      {% if blo_setts.image != blank %}
+      <img src="{{ blo_setts.image | image_url }}" width="{{ blo_setts.image.width }}" height="{{ blo_setts.image.height }}">
+    {%- else -%}
+      {{ 'collection-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff' }}
+    {% endif %}
+    <div class="difference-item-info">
+      <div class="difference-item-title">{{ blo_setts.title }}</div>
+      {% if blo_setts.content != blank %}<div class="difference-item-content">{{ blo_setts.content }}</div>{% endif %}
+    </div>
+  </div>
+{% comment %} </div> {% endcomment %}
+{% schema %}
+  {
+    "name": "difference item",
+    "settings":[
+      {"type": "image_picker","id": "image","label": "image"},
+      {"type": "html","id": "title","label": "title"},
+      {"type": "text","id": "content","label": "content"},
+    ],
+    "presets":[
+      {
+        "name":"Difference Item",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

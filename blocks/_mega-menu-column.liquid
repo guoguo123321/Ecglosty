@@ -1,0 +1,126 @@
+{% liquid
+  assign column_settings = block.settings
+  assign sub_columns = column_settings.sub_columns | default: '2'
+  assign icon_style = column_settings.icon_style | default: 'square'
+  assign column_width = column_settings.column_width | default: column_settings.max_width | default: 320
+%}
+
+<div
+  class="mega-menu-column{% if sub_columns == '1' %} mega-menu-column--single{% endif %}"
+  style="--mega-menu-column-sub-cols: {{ sub_columns }}; --mega-menu-column-width: {{ column_width }}px;"
+  {{ block.shopify_attributes }}
+>
+  {%- if column_settings.title != blank -%}
+    <h3 class="mega-menu-column__heading">{{ column_settings.title }}</h3>
+  {%- endif -%}
+  <ul
+    class="mega-menu-column__list list-unstyled mega-menu-column__list--icon-{{ icon_style }}"
+    data-sub-columns="{{ sub_columns }}"
+  >
+    {% content_for 'blocks' %}
+  </ul>
+  {%- if column_settings.btn_title != blank -%}
+    <footer class="mega-menu-column-footer">
+      <a class="mega-menu-column-more" href="{{ column_settings.btn_link }}">
+        <span>{{ column_settings.btn_title }}</span>
+        <span class="mega-menu-column-more__chevron" aria-hidden="true"><svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="13" height="13" aria-hidden="true"><path d="M384 819.2c-12.8 0-25.6-6.4-32-12.8-19.2-19.2-19.2-51.2 0-70.4L569.6 512 352 288c-19.2-19.2-19.2-51.2 0-70.4s44.8-19.2 64 0l256 256c19.2 19.2 19.2 51.2 0 70.4l-256 256c-6.4 12.8-19.2 19.2-32 19.2z" fill="currentColor"></path></svg></span>
+      </a>
+    </footer>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "超级导航列",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_mega-menu-item"
+    },
+    {
+      "type": "_mega-menu-img"
+    },
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "列标题",
+      "default": "Shop By Style"
+    },
+    {
+      "type": "select",
+      "id": "sub_columns",
+      "label": "本列链接分栏",
+      "options": [
+        {
+          "value": "1",
+          "label": "单列"
+        },
+        {
+          "value": "2",
+          "label": "双列"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "column_width",
+      "label": "宽度",
+      "min": 100,
+      "max": 600,
+      "step": 5,
+      "unit": "px",
+      "default": 320
+    },
+    {
+      "type": "select",
+      "id": "icon_style",
+      "label": "图标样式",
+      "options": [
+        {
+          "value": "square",
+          "label": "方框图标（款式/形状）"
+        },
+        {
+          "value": "circle",
+          "label": "圆形色块（金属）"
+        }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "header",
+      "content": "底部链接"
+    },
+    {
+      "type": "text",
+      "id": "btn_title",
+      "label": "链接文字",
+      "default": "Shop All Engagement Rings"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "链接地址"
+    }
+  ],
+  "presets": [
+    {
+      "name": "超级导航列",
+      "blocks": [
+        {
+          "type": "_mega-menu-item"
+        },
+        {
+          "type": "_mega-menu-item"
+        },
+        {
+          "type": "_mega-menu-item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

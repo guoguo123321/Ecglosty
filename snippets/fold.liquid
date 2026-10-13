@@ -1,0 +1,41 @@
+{% liquid
+  assign blo_setts = block.settings
+%}
+<section class="fold-box {{ block.id }} color-{{ blo_setts.color_scheme }}" {{ block.shopify_attributes }}>
+  <div class="fold-content">
+    <div class="fold-item" style="--pc-margin:{{ blo_setts.pc_margin }};--mb-margin:{{ blo_setts.mb_margin }};--pc-padding:{{ blo_setts.pc_padding }};--mb-padding:{{ blo_setts.mb_padding }};{% if blo_setts.use_line %}border-bottom: 1px solid var(--color-border);{% endif %}">
+      <div class="fold-item-title unfold-title" data-deg="180" {% if blo_setts.show %}data-index-open="true"{% endif %}>
+        <div class="fold-item-title-content">
+          <span>{{ blo_setts.header }}</span>
+          {% if blo_setts.icon %}<a href="{{ blo_setts.header_icon_url }}"><img src="{{ blo_setts.header_icon | image_url }}" width="12px" height="12px"></a>{% endif %}
+        </div>
+        <div class="fold-item-title-arrow unfold-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="6" viewBox="0 0 11 6" aria-hidden="true" focusable="false">
+            <path d="M5.5 6 0 .9.97 0 5.5 4.2 10.03 0 11 .9z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="fold-item-content unfold-content">
+        <div class="fold-item-content-inner">
+          {% if blo_setts.content_or_recommended == "content" %}
+            <div class="fold-item-content-content">{{ blo_setts.content }}</div>
+          {% elsif blo_setts.content_or_recommended == "recommended" %}
+            {% render 'fold-recommended', blo_setts: block.settings %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% style %}
+  .{{ block.id }} .fold-item { margin: var(--pc-margin); padding: var(--pc-padding); }
+  @media(max-width:767px) {
+    .{{ block.id }} .fold-item { margin: var(--mb-margin); padding: var(--mb-padding); }
+  }
+{% endstyle %}
+<script type="module">
+  import { unfoldArrow } from "{{ 'unit.js' | asset_url }}"
+  document.addEventListener("DOMContentLoaded", function() {
+    unfoldArrow(document.querySelectorAll(".{{ block.id }} .fold-item-title"));
+  })
+</script>

@@ -1,0 +1,37 @@
+{% render 'pro-img-text',
+  settings: block.settings,
+  shopify_attributes: block.shopify_attributes,
+%}
+{% schema %}
+  {
+    "name": "Product Image Text",
+    "settings":[
+      {"type": "header","content": "+ Left"},
+      {"type": "text","id": "header","label": "header"},
+      {"type": "image_picker","id": "icon1","label": "icon1"},
+      {"type": "text","id": "title1","label": "title1"},
+      {"type": "richtext","id": "content1","label": "content1","info": "选中文字添加超链接，链接地址填 #popup1 / #popup2 / #popup3"},
+      {"type": "image_picker","id": "icon2","label": "icon2"},
+      {"type": "text","id": "title2","label": "title2"},
+      {"type": "richtext","id": "content2","label": "content2","info": "选中文字添加超链接，链接地址填 #popup1 / #popup2 / #popup3"},
+
+      {"type": "header","content": "+ Right"},
+      {"type": "image_picker","id": "image","label": "image"},
+
+      {"type": "header","content": "Popup links"},
+      {"type": "paragraph","content": "文案超链接填 #popup1 / #popup2 / #popup3，下方配置对应弹窗内容"},
+      {"type": "text","id": "popup1_title","label": "Popup 1 title"},
+      {"type": "richtext","id": "popup1_content","label": "Popup 1 content"},
+      {"type": "text","id": "popup2_title","label": "Popup 2 title"},
+      {"type": "richtext","id": "popup2_content","label": "Popup 2 content"},
+      {"type": "text","id": "popup3_title","label": "Popup 3 title"},
+      {"type": "richtext","id": "popup3_content","label": "Popup 3 content"},
+    ],
+    "presets":[
+      {
+        "name":"Product Image Text",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

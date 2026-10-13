@@ -1,0 +1,288 @@
+{%- liquid
+  assign bk_stts = block.settings
+-%}
+<div class="img-with-col-box lgs-row lgs-gx-lg-{{ bk_stts.space_h_item }} lgs-gy-lg-{{ bk_stts.space_v_item }} lgs-gx-md-{{ bk_stts.space_h_item_tb }} lgs-gy-md-{{ bk_stts.space_v_item_tb }} lgs-gx-{{ bk_stts.space_h_item_mb }} lgs-gy-{{ bk_stts.space_v_item_mb }}">
+  {% content_for 'blocks' %}
+</div>
+{% schema %}
+  {
+    "name": "image with col",
+    "settings":[
+      {
+        "type": "select",
+        "id": "space_h_item",
+        "options": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "2",
+            "label": "2px"
+          },
+          {
+            "value": "4",
+            "label": "4px"
+          },
+          {
+            "value": "6",
+            "label": "6px"
+          },
+          {
+            "value": "8",
+            "label": "8px"
+          },
+          {
+            "value": "10",
+            "label": "10px"
+          },
+          {
+            "value": "15",
+            "label": "15px"
+          },
+          {
+            "value": "20",
+            "label": "20px"
+          },
+          {
+            "value": "30",
+            "label": "30px"
+          }
+        ],
+        "label": "Space horizontal items",
+        "default": "30"
+      },
+      {
+        "type": "select",
+        "id": "space_v_item",
+        "options": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "2",
+            "label": "2px"
+          },
+          {
+            "value": "4",
+            "label": "4px"
+          },
+          {
+            "value": "6",
+            "label": "6px"
+          },
+          {
+            "value": "8",
+            "label": "8px"
+          },
+          {
+            "value": "10",
+            "label": "10px"
+          },
+          {
+            "value": "15",
+            "label": "15px"
+          },
+          {
+            "value": "20",
+            "label": "20px"
+          },
+          {
+            "value": "30",
+            "label": "30px"
+          }
+        ],
+        "label": "Space vertical items",
+        "default": "30"
+      },
+      {
+        "type": "select",
+        "id": "space_h_item_tb",
+        "options": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "2",
+            "label": "2px"
+          },
+          {
+            "value": "4",
+            "label": "4px"
+          },
+          {
+            "value": "6",
+            "label": "6px"
+          },
+          {
+            "value": "8",
+            "label": "8px"
+          },
+          {
+            "value": "10",
+            "label": "10px"
+          },
+          {
+            "value": "15",
+            "label": "15px"
+          },
+          {
+            "value": "20",
+            "label": "20px"
+          },
+          {
+            "value": "30",
+            "label": "30px"
+          }
+        ],
+        "label": "Space horizontal items",
+        "default": "15"
+      },
+      {
+        "type": "select",
+        "id": "space_v_item_tb",
+        "options": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "2",
+            "label": "2px"
+          },
+          {
+            "value": "4",
+            "label": "4px"
+          },
+          {
+            "value": "6",
+            "label": "6px"
+          },
+          {
+            "value": "8",
+            "label": "8px"
+          },
+          {
+            "value": "10",
+            "label": "10px"
+          },
+          {
+            "value": "15",
+            "label": "15px"
+          },
+          {
+            "value": "20",
+            "label": "20px"
+          },
+          {
+            "value": "30",
+            "label": "30px"
+          }
+        ],
+        "label": "Space vertical items",
+        "default": "30"
+      },
+      {
+        "type": "select",
+        "id": "space_h_item_mb",
+        "options": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "2",
+            "label": "2px"
+          },
+          {
+            "value": "4",
+            "label": "4px"
+          },
+          {
+            "value": "6",
+            "label": "6px"
+          },
+          {
+            "value": "8",
+            "label": "8px"
+          },
+          {
+            "value": "10",
+            "label": "10px"
+          },
+          {
+            "value": "15",
+            "label": "15px"
+          },
+          {
+            "value": "20",
+            "label": "20px"
+          },
+          {
+            "value": "30",
+            "label": "30px"
+          }
+        ],
+        "label": "Space horizontal items (Mobile)",
+        "default": "10"
+      },
+      {
+        "type": "select",
+        "id": "space_v_item_mb",
+        "options": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "2",
+            "label": "2px"
+          },
+          {
+            "value": "4",
+            "label": "4px"
+          },
+          {
+            "value": "6",
+            "label": "6px"
+          },
+          {
+            "value": "8",
+            "label": "8px"
+          },
+          {
+            "value": "10",
+            "label": "10px"
+          },
+          {
+            "value": "15",
+            "label": "15px"
+          },
+          {
+            "value": "20",
+            "label": "20px"
+          },
+          {
+            "value": "30",
+            "label": "30px"
+          }
+        ],
+        "label": "Space vertical items (Mobile)",
+        "default": "10"
+      },
+    ],
+    "blocks": [
+      {
+        "type": "img-with-item"
+      },
+    ],
+    "presets":[
+      {
+        "name":"image with col",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

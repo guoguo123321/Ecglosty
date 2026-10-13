@@ -1,0 +1,94 @@
+{%- doc -%}
+  Collection / product-card wishlist heart (top-right), styled like jc-heart-btn.
+  Stores into localStorage key `ecglosty_wishlist`.others
+
+  @param {object} product - Shopify product
+{%- enddoc -%}
+
+{%- if product != blank and product.id != empty -%}
+  {%- liquid
+    assign wishlist_uid = 'card-' | append: product.id
+    assign wishlist_variant = product.selected_or_first_available_variant
+    assign wishlist_image = ''
+    if product.featured_image
+      assign wishlist_image = product.featured_image | image_url: width: 800
+    elsif wishlist_variant.image
+      assign wishlist_image = wishlist_variant.image | image_url: width: 800
+    endif
+    assign wishlist_price = wishlist_variant.price | times: 1.0 | divided_by: 100
+  -%}
+
+  <script
+    src="{{ 'product-wishlist.js' | asset_url }}"
+    defer
+  ></script>
+
+  <button
+    class="jc-heart-btn product-card-wishlist"
+    type="button"
+    data-product-wishlist
+    data-wishlist-uid="{{ wishlist_uid }}"
+    aria-label="Add to wishlist"
+    aria-pressed="false"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+  </button>
+
+  <script type="application/json" id="product-wishlist-data-{{ wishlist_uid }}">
+    {
+      "productId": {{ product.id | json }},
+      "id": {{ product.id | json }},
+      "urlHandle": {{ product.handle | json }},
+      "name": {{ product.title | json }},
+      "pictures": {{ wishlist_image | json }},
+      "minPrice": {{ wishlist_price | json }},
+      "maxPrice": {{ wishlist_price | json }},
+      "price": {{ wishlist_price | json }}
+    }
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  .card-gallery {
+    position: relative;
+  }
+
+  .product-card-wishlist.jc-heart-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: var(--layer-raised, 4);
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #073746;
+    padding: 0;
+    pointer-events: auto;
+    transition: transform 0.2s;
+  }
+
+  .product-card-wishlist.jc-heart-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .product-card-wishlist.jc-heart-btn.wishlisted svg {
+    fill: currentColor;
+  }
+
+  .product-card-wishlist.jc-heart-btn:not(.wishlisted) svg {
+    fill: none;
+  }
+
+  /* Keep sale/sold-out badge clear of the wishlist heart */
+  .card-gallery:has(.product-card-wishlist) .product-badges--top-right {
+    right: calc(var(--badge-inset) + var(--padding-inline-start, 0px) + 40px);
+  }
+{% endstylesheet %}

@@ -1,0 +1,127 @@
+{% liquid
+  assign blo_setts = block.settings
+%}
+<{{ blo_setts.tag }} {% if blo_setts.tag=='a' %}href="{{ blo_setts.text_url }}" target="{{ blo_setts.open_link }}"{% endif %} hdt-reveal="slide-in" data-lh="{{ blo_setts.text_lh_mb }}" data-lh-md="{{ blo_setts.text_lh }}" data-lh-lg="{{ blo_setts.text_lh }}" class="lgs-animation-{{ blo_setts.animation }} lgs-text-bl lgs-fnt-fm-{{ blo_setts.fontf }} lgs-font-italic-{{ blo_setts.font_italic }} lgs-hidden-mobile-{{ blo_setts.hidden_mobile }} lgs-br-mb-{{ blo_setts.remove_br_tag }} lgs-text-shadow-{{ blo_setts.text_shadow }}" id="b_{{ block.id }}" {%- render 'bk_cus_style', type: 'custom_text', bk_stts: blo_setts, ani_delay: ani_delay -%}>
+  {% if blo_setts.textarea_or_richtext == 'textarea' %}{{ blo_setts.text }}{% else %}{{ blo_setts.rich_text }}{% endif %}
+</{{ blo_setts.tag }}>
+
+{% schema %}
+  {
+    "name": "text",
+    "settings": [
+      {
+        "type": "select",
+        "id": "textarea_or_richtext",
+        "label": "textarea or richtext",
+        "default": "textarea",
+        "options": [
+          {"value": "textarea","label": "textarea"},
+          {"value": "richtext","label": "richtext"}
+        ]
+      },
+
+
+      {"type": "textarea","id": "text","label": "Input text","default": "Text",
+        "info": "If you want to line break, please add a <br> tag in the text",
+        "visible_if": "{{ block.settings.textarea_or_richtext == 'textarea' }}"
+      },
+
+      {"type": "richtext","id": "rich_text","label": "Input text","default": "<p>Text</p>",
+        "info": "If you want to line break, please add a <br> tag in the text",
+        "visible_if": "{{ block.settings.textarea_or_richtext == 'richtext' }}"
+      },
+      {"type": "url","id": "text_url","label": "Text Url",
+        "visible_if": "{{ block.settings.tag == 'a' }}"
+      },
+      {"type": "select","id": "open_link","label": "Open link in","default": "_blank",
+        "options": [
+          {"value": "_self","label": "Current window"},
+          {"value": "_blank","label": "New window"}
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "remove_br_tag",
+        "label": "Remove <br> tag on mobile",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "tag",
+        "label": "Html tag",
+        "default": "div",
+        "options": [
+          {
+            "value": "h2",
+            "label": "H2"
+          },
+          {
+            "value": "h3",
+            "label": "H3"
+          },
+          {
+            "value": "h4",
+            "label": "H4"
+          },
+          {
+            "value": "h5",
+            "label": "H5"
+          }, {
+            "value": "h6",
+            "label": "H6"
+          }, {
+            "value": "p",
+            "label": "P"
+          },{
+            "value": "a",
+            "label": "a"
+          },  {
+            "value": "div",
+            "label": "DIV"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "fontf",
+        "default": "inherit",
+        "label": "Font family",
+        "options": [
+          {
+            "label": "Inherit",
+            "value": "inherit"
+          }, {
+            "label": "Font Family #1",
+            "value": "1"
+          }, {
+            "label": "Font Family #2",
+            "value": "2"
+          }, {
+            "label": "Font Family #3",
+            "value": "3"
+          }
+        ]
+      },
+      {"type": "color","id": "text_cl","label": "Color text","default": "#fff"}, 
+      {"type": "range","id": "text_fs","label": "Font size","max": 100,"min": 10,"step": 1,"unit": "px","default": 16},
+      {"type": "range","id": "text_lh","label": "Line height","max": 100,"min": 0,"step": 1,"default": 0,"unit": "px","info": "Set is '0' use to default"},
+      {"type": "range","id": "text_fw","label": "Font weight","min": 100,"max": 900,"step": 100,"default": 400},
+      {"type": "number","id": "text_ls","label": "Letter spacing (in pixel)"},
+      {"type": "number","id": "text_mgb","label": "Margin bottom","default": 15},
+      {"type": "checkbox","id": "font_italic","label": "Enable font style italic","default": false},
+      {"type": "checkbox","id": "text_shadow","label": "Enable text shadow","default": false},
+      {"type": "header","content": "===== Option mobile ====="},
+      {"type": "checkbox","id": "hidden_mobile","label": "Hidden on mobile","default": false},
+      {"type": "range","id": "text_fs_mb","label": "Font size (Mobile)","max": 60,"min": 10,"step": 1,"unit": "px","default": 16},
+      {"type": "range","id": "text_lh_mb","label": "Line height (Mobile)","max": 70,"min": 0,"step": 1,"default": 0,"unit": "px","info": "Set is '0' use to default"},
+      {"type": "number","id": "text_ls_mb","label": "Letter spacing (Mobile)"},
+      {"type": "number","id": "text_mgb_mobile","label": "Margin bottom (Mobile)","default": 10},
+    ],
+    "presets":[
+      {
+        "name":"text",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

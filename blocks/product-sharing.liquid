@@ -1,0 +1,247 @@
+{% liquid
+  assign block_settings = block.settings
+  assign product = closest.product
+  assign share_url = canonical_url | default: request.origin | append: product.url
+  assign share_url_encoded = share_url | url_param_escape
+  assign share_title_encoded = product.title | url_param_escape
+
+  assign facebook_share_url = 'https://www.facebook.com/sharer/sharer.php?u=' | append: share_url_encoded
+  assign twitter_share_url = 'https://twitter.com/intent/tweet?url=' | append: share_url_encoded | append: '&text=' | append: share_title_encoded
+%}
+
+<product-sharing
+  class="product-sharing spacing-style"
+  style="{% render 'spacing-style', settings: block_settings %}"
+  data-share-url="{{ share_url | escape }}"
+  {{ block.shopify_attributes }}
+>
+  {% if block_settings.title != blank %}
+    <p class="product-sharing__title">{{ block_settings.title }}</p>
+  {% endif %}
+
+  <div class="product-sharing__icons">
+    <a
+      class="product-sharing__icon"
+      href="{{ facebook_share_url }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Facebook"
+    >
+      {%- render 'social-icon', icon: 'facebook' -%}
+    </a>
+
+    <button
+      type="button"
+      class="product-sharing__icon product-sharing__icon--copy"
+      data-platform="instagram"
+      aria-label="Instagram"
+    >
+      {%- render 'social-icon', icon: 'instagram' -%}
+    </button>
+
+    <button
+      type="button"
+      class="product-sharing__icon product-sharing__icon--copy"
+      data-platform="youtube"
+      aria-label="YouTube"
+    >
+      {%- render 'social-icon', icon: 'youtube' -%}
+    </button>
+
+    <button
+      type="button"
+      class="product-sharing__icon product-sharing__icon--copy"
+      data-platform="tiktok"
+      aria-label="TikTok"
+    >
+      {%- render 'social-icon', icon: 'tiktok' -%}
+    </button>
+
+    <a
+      class="product-sharing__icon"
+      href="{{ twitter_share_url }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Twitter"
+    >
+      {%- render 'social-icon', icon: 'twitter' -%}
+    </a>
+
+    <button
+      type="button"
+      class="product-sharing__icon product-sharing__icon--copy"
+      data-platform="link"
+      aria-label="Link"
+    >
+      {%- render 'social-icon', icon: 'link' -%}
+    </button>
+  </div>
+
+  <span class="product-sharing__feedback visually-hidden" role="status" aria-live="polite"></span>
+</product-sharing>
+
+<script>
+  (() => {
+    if (customElements.get('product-sharing')) return;
+
+    class ProductSharing extends HTMLElement {
+      connectedCallback() {
+        this.feedbackEl = this.querySelector('.product-sharing__feedback');
+        this.shareUrl = this.dataset.shareUrl;
+        this.feedbackTimeout = null;
+
+        this.querySelectorAll('.product-sharing__icon--copy').forEach((button) => {
+          button.addEventListener('click', () => this.copyLink(button.dataset.platform));
+        });
+      }
+
+      copyLink(platform) {
+        if (!this.shareUrl) return;
+
+        navigator.clipboard.writeText(this.shareUrl).then(() => {
+          if (!(this.feedbackEl instanceof Element)) return;
+
+          const labels = {
+            instagram: 'Instagram',
+            youtube: 'YouTube',
+            tiktok: 'TikTok',
+            link: 'Link',
+          };
+
+          this.feedbackEl.textContent = `${labels[platform] || 'Link'} copied`;
+          this.feedbackEl.classList.remove('visually-hidden');
+
+          window.clearTimeout(this.feedbackTimeout);
+          this.feedbackTimeout = window.setTimeout(() => {
+            this.feedbackEl.classList.add('visually-hidden');
+            this.feedbackEl.textContent = '';
+          }, 2000);
+        });
+      }
+    }
+
+    customElements.define('product-sharing', ProductSharing);
+  })();
+</script>
+
+{% stylesheet %}
+  .product-sharing {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+    width: 100%;
+  }
+
+  .product-sharing__title {
+    margin: 0;
+    font-size: var(--font-paragraph--size);
+    line-height: var(--font-paragraph--line-height);
+    font-weight: var(--font-paragraph--weight);
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .product-sharing__icons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-sm);
+  }
+
+  .product-sharing__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: opacity var(--animation-speed) var(--animation-easing);
+  }
+
+  .product-sharing__icon:hover {
+    opacity: 0.75;
+  }
+
+  .product-sharing__icon img,
+  .product-sharing__icon svg {
+    display: block;
+    width: 36px;
+    height: 36px;
+  }
+
+  .product-sharing__feedback {
+    font-size: 0.875rem;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text, 0.7));
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.product_sharing",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.resource_reference_product_sharing"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:settings.title",
+      "default": "Sharing:"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.product_sharing",
+      "category": "t:categories.lg"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,271 @@
+{% liquid
+  assign se_stts = section.settings
+  assign set_blo = section.blocks
+  assign stt_layout = se_stts.layout
+  if stt_layout == 'lgs-container'
+    assign html_layout = '<div class="lgs-container">__</div>' | split: '__'
+  elsif stt_layout == 'custom-container'
+    assign html_layout = '<div class="custom-container">__</div>' | split: '__'
+  else
+    assign html_layout = '__' | split: '__'
+  endif
+  assign image = set_blo | where:"type","image"
+  assign text = set_blo | where:"type","text"
+%}
+{%- if se_stts.layout == 'custom-container' %}
+<style>
+  .{{ section.id }} .custom-container{
+    max-width:{{ se_stts.custom_container }};
+    margin: 0 auto;
+  }
+</style>
+{%- endif -%}
+{% render 'swiper-assets', critical: true %}
+<div class="{{ section.id }} announce-box lgs-section-inner" {% render 'section_style', se_stts: se_stts -%}>
+  {{-html_layout[0]-}}
+    {%- render 'section_tophead', se_stts: se_stts -%}
+    <div class="announce-swiper-container">
+      <div class="announce-player">
+        <svg t="1779358772581" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1282" width="20" height="20"><path d="M423.687947 757.47897a100.195631 100.195631 0 0 1-100.195631-101.197587V366.716009a100.195631 100.195631 0 0 1 153.299316-85.166286l232.453863 145.283665a100.195631 100.195631 0 0 1 0 170.332573L476.791632 741.447669a100.195631 100.195631 0 0 1-52.101729 15.029345z m0-410.802087a21.041083 21.041083 0 0 0-10.019563 3.005869 20.039126 20.039126 0 0 0-10.019563 17.033257v289.565374a20.039126 20.039126 0 0 0 31.060646 17.033257l232.453863-145.283665a20.039126 20.039126 0 0 0 0-34.066514L433.70751 349.682752a19.03717 19.03717 0 0 0-10.019563-4.007825z" fill="#ffffff" p-id="1283"></path><path d="M512.862059 1023.999349A511.999674 511.999674 0 0 1 313.472753 40.078252a511.999674 511.999674 0 0 1 398.778611 942.840888 508.993805 508.993805 0 0 1-199.389305 41.080209z m0-943.842844C274.396457 80.156505 81.018889 273.534073 81.018889 511.999674s193.377568 431.84317 431.84317 431.84317 431.84317-194.379524 431.843169-431.84317S750.325704 80.156505 512.862059 80.156505z" fill="#ffffff" p-id="1284"></path></svg>
+        <svg t="1779358703690" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8108" width="20" height="20"><path d="M512.862059 1023.999349A511.999674 511.999674 0 0 1 313.472753 40.078252a511.999674 511.999674 0 0 1 398.778611 942.840888 508.993805 508.993805 0 0 1-199.389305 41.080209z m0-943.842844C274.396457 80.156505 81.018889 273.534073 81.018889 511.999674s193.377568 431.84317 431.84317 431.84317 431.84317-194.379524 431.843169-431.84317S750.325704 80.156505 512.862059 80.156505z" fill="#ffffff" p-id="8109"></path><path d="M395.63317 754.473101a40.078252 40.078252 0 0 1-40.078252-40.078252V332.649495a40.078252 40.078252 0 0 1 80.156505 0v381.745354a40.078252 40.078252 0 0 1-40.078253 40.078252zM634.098772 754.473101a40.078252 40.078252 0 0 1-40.078252-40.078252V332.649495a40.078252 40.078252 0 0 1 80.156505 0v381.745354a40.078252 40.078252 0 0 1-40.078253 40.078252z" fill="#ffffff" p-id="8110"></path></svg>
+      </div>
+      <div class="announce-swiper">
+        <div class="swiper announce">
+          <div class="swiper-wrapper">
+            {% for block in set_blo %}
+              {%- assign blo_setts = block.settings -%}
+              <div class="swiper-slide">
+                <div class="announce-item {{ se_stts.box_align }}">
+                  <{{ blo_setts.tag }} hdt-reveal="slide-in" data-lh="{{ blo_setts.text_lh_mb }}" data-lh-md="{{ blo_setts.text_lh }}" data-lh-lg="{{ blo_setts.text_lh }}" class="lgs-animation-{{ blo_setts.animation }} lgs-text-bl lgs-fnt-fm-{{ blo_setts.fontf }} lgs-font-italic-{{ blo_setts.font_italic }} lgs-hidden-mobile-{{ blo_setts.hidden_mobile }} lgs-br-mb-{{ blo_setts.remove_br_tag }} lgs-text-shadow-{{ blo_setts.text_shadow }}" id="b_{{ block.id }}" {%- render 'bk_cus_style', type: 'custom_text', bk_stts: blo_setts, ani_delay: ani_delay -%}>{{ blo_setts.text }}</{{ blo_setts.tag }}>
+                </div>
+              </div>
+              {% endfor %}
+          </div>
+          
+          <!-- 如果需要滚动条 -->
+          <!-- <div class="swiper-scrollbar"></div> -->
+            <!-- 如果需要导航按钮 -->
+            <div class="swiper-button-prev announce-prev"></div>
+            {% comment %} <div class="swiper-button-next announce-next"></div> {% endcomment %}
+        </div>  
+      </div>
+    </div>
+  {{-html_layout[1]-}}
+</div>
+
+<script>
+themeSwiperReady(function () {
+
+    const announceSwiper = new Swiper('.{{ section.id }} .announce', {
+      //autoplay: true,//可选选项，自动滑动
+       slidesPerView : 1,  
+      // effect: 'cube',
+      // spaceBetween: 0,
+      autoplay: {
+        delay:6000,
+        pauseOnMouseEnter:true,
+        disableOnInteraction:false,
+      },
+      loop: true, // 循环模式选项
+      
+      // 如果需要分页器
+      //pagination: {
+      //  el: '.announce-pagination',
+      //  clickable: true
+      //},
+      
+      // 如果需要前进后退按钮
+      navigation: {
+        nextEl: '.announce-prev',
+      //  prevEl: '.announce-prev',
+      },
+       breakpointsBase: 'container',
+       breakpoints: { 
+         0: {  //当屏幕宽度大于等于320
+           slidesPerView: 1,
+           spaceBetween: 0
+         }
+       },
+    });
+    const btn = document.querySelector('.{{ section.id }} .announce-player');
+    btn.addEventListener('click', () => {
+      if(announceSwiper.autoplay.running){
+        announceSwiper.autoplay.stop();
+        btn.children[0].style.display='block';
+        btn.children[1].style.display='none';
+      }else{
+        announceSwiper.autoplay.start();
+        btn.children[0].style.display='none';
+        btn.children[1].style.display='block';
+      }
+    });
+});
+</script>
+{% schema %}
+  {
+    "name": "announce",
+    "class": "shopify-announce",
+    "tag": "section",
+    "settings": [
+      {"type": "select","id": "layout","label": "layout","default":"lgs-container",
+        "options": [
+          {"label":"lgs-container","value": "lgs-container"},
+          {"label":"wrapped container","value": "wrapped-container"},
+          {"label":"custom container","value": "custom-container"},
+        ]
+      },
+      {"type": "text","id": "custom_container","label": "custom container","default": "1200px"},
+
+      {"type": "header","content": "1. Heading options"},
+      {"type": "select","id": "design_heading","label": "+ Design heading","default": "1",
+          "options": [
+              {"value": "1","label": "Design 01"},
+              {"value": "2","label": "Design 02"},
+              {"value": "3","label": "Design 03"},
+              {"value": "4","label": "Design 04"},
+              {"value": "5","label": "Design 05"},
+              {"value": "6","label": "Design 06 (width line-awesome)"},
+              {"value": "7","label": "Design 07"},
+              {"value": "8","label": "Design 08"},
+              {"value": "9","label": "Design 09"},
+              {"value": "10","label": "Design 10"},
+              {"value": "11","label": "Design 11"},
+              {"value": "12","label": "Design 12"},
+              {"value": "13","label": "Design 13"},
+              {"value": "14","label": "Design 14"},
+              {"value": "15","label": "Design 15"},
+              {"value": "16","label": "Design 16"}
+          ]
+      },
+      {"type": "select","id": "box_align","label": "+ box align","default": "lgs-text-center",
+        "options": [
+            {"value": "lgs-text-start","label": "Left"},
+            {"value": "lgs-text-center","label": "Center"},
+            {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+      {"type": "select","id": "heading_align","label": "+ Heading align","default": "lgs-text-center",
+        "options": [
+            {"value": "lgs-text-start","label": "Left"},
+            {"value": "lgs-text-center","label": "Center"},
+            {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+      {"type": "html","id": "top_heading","label": "+ Heading","default": "announce heading"},
+      {"type": "text","id": "icon_heading","label": "Enter a icon name on heading","info": "Only used for design 6 [LineAwesome]()","default": "las la-gem"},
+      {"type": "textarea","id": "top_subheading","label": "+ Subheading"},
+      {"type": "number","id": "tophead_mb","label": "+ Space bottom (px)","info": "The vertical spacing between heading and content","default": 30},
+
+
+      {"type":"color","id":"cl_bg","label":"bg_color","default":"#ffffff"},
+      {"type": "color_background","id": "cl_bg_gradient","label": "Background gradient"},
+
+      {"type": "header","content": "+ Design pc options"},
+      {"type": "text","id": "mg","label": "Margin","info":"Margin top, margin right, margin bottom, margin left. If you not use to blank","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd","label": "Padding","info":"Padding top, padding right, padding bottom, padding left. If you not use to blank","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design Tablet Options"},
+      {"type": "text","id": "mg_tb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_tb","label": "Padding","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design mobile options"},
+      {"type": "text","id": "mg_mb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_mb","label": "Padding","default": "0px,0px,0px,0px"},
+    ],
+    "enabled_on": {
+      "groups": ["header"]
+    },
+    "blocks":[
+      {
+        "type": "custom_text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "textarea",
+            "id": "text",
+            "label": "Input text",
+            "default": "Text",
+            "info": "If you want to line break, please add a <br> tag in the text"
+          },
+          {
+            "type": "checkbox",
+            "id": "remove_br_tag",
+            "label": "Remove <br> tag on mobile",
+            "default": false
+          },
+          {
+            "type": "select",
+            "id": "tag",
+            "label": "Html tag",
+            "default": "p",
+            "options": [
+              {
+                "value": "h2",
+                "label": "H2"
+              },
+              {
+                "value": "h3",
+                "label": "H3"
+              },
+              {
+                "value": "h4",
+                "label": "H4"
+              },
+              {
+                "value": "h5",
+                "label": "H5"
+              }, {
+                "value": "h6",
+                "label": "H6"
+              }, {
+                "value": "p",
+                "label": "P"
+              }, {
+                "value": "div",
+                "label": "DIV"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "fontf",
+            "default": "inherit",
+            "label": "Font family",
+            "options": [
+              {
+                "label": "Inherit",
+                "value": "inherit"
+              }, {
+                "label": "Font family #1(EB_Garamond)",
+                "value": "1"
+              }, {
+                "label": "Font family #2(Montserrat thin)",
+                "value": "2"
+              }
+            ]
+          },
+          {"type": "color","id": "text_cl","label": "Color text","default": "#fff"}, 
+          {"type": "range","id": "text_fs","label": "Font size","max": 100,"min": 10,"step": 1,"unit": "px","default": 16},
+          {"type": "range","id": "text_lh","label": "Line height","max": 100,"min": 0,"step": 1,"default": 0,"unit": "px","info": "Set is '0' use to default"},
+          {"type": "range","id": "text_fw","label": "Font weight","min": 100,"max": 900,"step": 100,"default": 400},
+          {"type": "number","id": "text_ls","label": "Letter spacing (in pixel)"},
+          {"type": "number","id": "text_mgb","label": "Margin bottom","default": 15},
+          {"type": "checkbox","id": "font_italic","label": "Enable font style italic","default": false},
+          {"type": "checkbox","id": "text_shadow","label": "Enable text shadow","default": false},
+          {"type": "header","content": "===== Option mobile ====="},
+          {"type": "checkbox","id": "hidden_mobile","label": "Hidden on mobile","default": false},
+          {"type": "range","id": "text_fs_mb","label": "Font size (Mobile)","max": 60,"min": 10,"step": 1,"unit": "px","default": 16},
+          {"type": "range","id": "text_lh_mb","label": "Line height (Mobile)","max": 70,"min": 0,"step": 1,"default": 0,"unit": "px","info": "Set is '0' use to default"},
+          {"type": "number","id": "text_ls_mb","label": "Letter spacing (Mobile)"},
+          {"type": "number","id": "text_mgb_mobile","label": "Margin bottom (Mobile)","default": 10},
+        ]
+      },
+    ],
+    "presets":[
+      {
+        "name":"Announce",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

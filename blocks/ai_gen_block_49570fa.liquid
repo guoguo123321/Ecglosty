@@ -1,0 +1,835 @@
+{% doc %}
+  @prompt
+    生成一个手风琴功能，可以自定义页宽，可以自定义配色，可以插入链接, 桌面宽度为1200px, 手风琴里面还可以继续增加手风琴功能，比如增加一个FAQ功能
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-accordion-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width }}px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-accordion-container-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.item_spacing }}px;
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }} {
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: {{ block.settings.padding }}px;
+    cursor: pointer;
+    background-color: {{ block.settings.header_background_color }};
+    transition: background-color 0.3s ease;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .ai-accordion-header-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.header_hover_color }};
+  }
+
+  .ai-accordion-title-{{ ai_gen_id }} {
+    color: {{ block.settings.title_color }};
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .ai-accordion-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  .ai-accordion-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    stroke: {{ block.settings.icon_color }};
+  }
+
+  .ai-accordion-item-{{ ai_gen_id }}.active .ai-accordion-icon-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-accordion-content-wrapper-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} {
+    padding: 0 {{ block.settings.padding }}px {{ block.settings.padding }}px;
+    color: {{ block.settings.content_color }};
+    font-size: {{ block.settings.content_size }}px;
+    line-height: 1.6;
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} a {
+    color: {{ block.settings.link_color }};
+    text-decoration: underline;
+  }
+
+  .ai-accordion-content-{{ ai_gen_id }} a:hover {
+    color: {{ block.settings.link_hover_color }};
+  }
+
+  .ai-accordion-sub-item-{{ ai_gen_id }} {
+    border: 1px solid {{ block.settings.sub_border_color }};
+    border-radius: {{ block.settings.sub_border_radius }}px;
+    margin-top: {{ block.settings.sub_item_spacing }}px;
+    background-color: {{ block.settings.sub_background_color }};
+  }
+
+  .ai-accordion-sub-item-{{ ai_gen_id }}:first-child {
+    margin-top: 0;
+  }
+
+  .ai-accordion-sub-header-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: {{ block.settings.sub_padding }}px;
+    cursor: pointer;
+    background-color: {{ block.settings.sub_header_background_color }};
+    transition: background-color 0.3s ease;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .ai-accordion-sub-header-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.sub_header_hover_color }};
+  }
+
+  .ai-accordion-sub-title-{{ ai_gen_id }} {
+    color: {{ block.settings.sub_title_color }};
+    font-size: {{ block.settings.sub_title_size }}px;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .ai-accordion-sub-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.sub_icon_size }}px;
+    height: {{ block.settings.sub_icon_size }}px;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+
+  .ai-accordion-sub-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    stroke: {{ block.settings.sub_icon_color }};
+  }
+
+  .ai-accordion-sub-item-{{ ai_gen_id }}.active .ai-accordion-sub-icon-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-accordion-sub-content-wrapper-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .ai-accordion-sub-content-{{ ai_gen_id }} {
+    padding: 0 {{ block.settings.sub_padding }}px {{ block.settings.sub_padding }}px;
+    color: {{ block.settings.sub_content_color }};
+    font-size: {{ block.settings.sub_content_size }}px;
+    line-height: 1.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-accordion-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<accordion-block-{{ ai_gen_id }} class="ai-accordion-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-accordion-container-{{ ai_gen_id }}">
+    {% for i in (1..5) %}
+      {% liquid
+        assign title_key = 'item_' | append: i | append: '_title'
+        assign content_key = 'item_' | append: i | append: '_content'
+        assign has_sub_key = 'item_' | append: i | append: '_has_sub'
+        
+        assign title = block.settings[title_key]
+        assign content = block.settings[content_key]
+        assign has_sub = block.settings[has_sub_key]
+      %}
+      
+      {% if title != blank %}
+        <div class="ai-accordion-item-{{ ai_gen_id }}" data-accordion-item>
+          <button class="ai-accordion-header-{{ ai_gen_id }}" aria-expanded="false">
+            <h3 class="ai-accordion-title-{{ ai_gen_id }}">{{ title }}</h3>
+            <div class="ai-accordion-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+          </button>
+          <div class="ai-accordion-content-wrapper-{{ ai_gen_id }}">
+            <div class="ai-accordion-content-{{ ai_gen_id }}">
+              {% if has_sub %}
+                {% for j in (1..3) %}
+                  {% liquid
+                    assign sub_title_key = 'item_' | append: i | append: '_sub_' | append: j | append: '_title'
+                    assign sub_content_key = 'item_' | append: i | append: '_sub_' | append: j | append: '_content'
+                    
+                    assign sub_title = block.settings[sub_title_key]
+                    assign sub_content = block.settings[sub_content_key]
+                  %}
+                  
+                  {% if sub_title != blank %}
+                    <div class="ai-accordion-sub-item-{{ ai_gen_id }}" data-sub-accordion-item>
+                      <button class="ai-accordion-sub-header-{{ ai_gen_id }}" aria-expanded="false">
+                        <h4 class="ai-accordion-sub-title-{{ ai_gen_id }}">{{ sub_title }}</h4>
+                        <div class="ai-accordion-sub-icon-{{ ai_gen_id }}">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                        </div>
+                      </button>
+                      <div class="ai-accordion-sub-content-wrapper-{{ ai_gen_id }}">
+                        <div class="ai-accordion-sub-content-{{ ai_gen_id }}">
+                          {{ sub_content }}
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              {% else %}
+                {{ content }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</accordion-block-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AccordionBlock{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.items = this.querySelectorAll('[data-accordion-item]');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.items.forEach((item) => {
+          const header = item.querySelector('.ai-accordion-header-{{ ai_gen_id }}');
+          const contentWrapper = item.querySelector('.ai-accordion-content-wrapper-{{ ai_gen_id }}');
+          const content = item.querySelector('.ai-accordion-content-{{ ai_gen_id }}');
+
+          header.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            
+            if (isActive) {
+              item.classList.remove('active');
+              contentWrapper.style.maxHeight = null;
+              header.setAttribute('aria-expanded', 'false');
+              
+              item.querySelectorAll('[data-sub-accordion-item].active').forEach(subItem => {
+                subItem.classList.remove('active');
+                const subWrapper = subItem.querySelector('.ai-accordion-sub-content-wrapper-{{ ai_gen_id }}');
+                subWrapper.style.maxHeight = null;
+              });
+            } else {
+              item.classList.add('active');
+              this.updateMaxHeight(contentWrapper, content);
+              header.setAttribute('aria-expanded', 'true');
+            }
+          });
+
+          const subItems = item.querySelectorAll('[data-sub-accordion-item]');
+          subItems.forEach((subItem) => {
+            const subHeader = subItem.querySelector('.ai-accordion-sub-header-{{ ai_gen_id }}');
+            const subContentWrapper = subItem.querySelector('.ai-accordion-sub-content-wrapper-{{ ai_gen_id }}');
+            const subContent = subItem.querySelector('.ai-accordion-sub-content-{{ ai_gen_id }}');
+
+            subHeader.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const isActive = subItem.classList.contains('active');
+              
+              if (isActive) {
+                subItem.classList.remove('active');
+                subContentWrapper.style.maxHeight = null;
+                subHeader.setAttribute('aria-expanded', 'false');
+              } else {
+                subItem.classList.add('active');
+                subContentWrapper.style.maxHeight = subContent.scrollHeight + 'px';
+                subHeader.setAttribute('aria-expanded', 'true');
+              }
+
+              setTimeout(() => {
+                this.updateMaxHeight(contentWrapper, content);
+              }, 10);
+            });
+          });
+        });
+      }
+
+      updateMaxHeight(wrapper, content) {
+        wrapper.style.maxHeight = content.scrollHeight + 'px';
+      }
+    }
+
+    customElements.define('accordion-block-{{ ai_gen_id }}', AccordionBlock{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "嵌套手风琴",
+  "settings": [
+    {
+      "type": "header",
+      "content": "布局"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width",
+      "label": "桌面宽度",
+      "min": 400,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "label": "项目间距",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "内边距",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "主手风琴样式"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "圆角",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "边框宽度",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "边框颜色",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "背景颜色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "主手风琴标题栏"
+    },
+    {
+      "type": "color",
+      "id": "header_background_color",
+      "label": "背景颜色",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "header_hover_color",
+      "label": "悬停背景颜色",
+      "default": "#eeeeee"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "标题颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "标题大小",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "图标颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "图标大小",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "主手风琴内容"
+    },
+    {
+      "type": "color",
+      "id": "content_color",
+      "label": "文本颜色",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "content_size",
+      "label": "文本大小",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "链接颜色",
+      "default": "#000f9f"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "链接悬停颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "子手风琴样式"
+    },
+    {
+      "type": "range",
+      "id": "sub_item_spacing",
+      "label": "子项目间距",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "sub_padding",
+      "label": "子内边距",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "sub_border_radius",
+      "label": "子圆角",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "sub_border_color",
+      "label": "子边框颜色",
+      "default": "#d0d0d0"
+    },
+    {
+      "type": "color",
+      "id": "sub_background_color",
+      "label": "子背景颜色",
+      "default": "#fafafa"
+    },
+    {
+      "type": "color",
+      "id": "sub_header_background_color",
+      "label": "子标题背景颜色",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "sub_header_hover_color",
+      "label": "子标题悬停颜色",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "sub_title_color",
+      "label": "子标题颜色",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "sub_title_size",
+      "label": "子标题大小",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "sub_icon_color",
+      "label": "子图标颜色",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "sub_icon_size",
+      "label": "子图标大小",
+      "min": 14,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "sub_content_color",
+      "label": "子内容颜色",
+      "default": "#555555"
+    },
+    {
+      "type": "range",
+      "id": "sub_content_size",
+      "label": "子内容大小",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "项目 1"
+    },
+    {
+      "type": "text",
+      "id": "item_1_title",
+      "label": "标题",
+      "default": "产品信息"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_1_has_sub",
+      "label": "启用子手风琴",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "item_1_content",
+      "label": "内容"
+    },
+    {
+      "type": "text",
+      "id": "item_1_sub_1_title",
+      "label": "子项 1 标题",
+      "default": "尺寸指南"
+    },
+    {
+      "type": "richtext",
+      "id": "item_1_sub_1_content",
+      "label": "子项 1 内容",
+      "default": "<p>请参考我们的详细尺寸指南以选择合适的尺码。</p>"
+    },
+    {
+      "type": "text",
+      "id": "item_1_sub_2_title",
+      "label": "子项 2 标题",
+      "default": "材质说明"
+    },
+    {
+      "type": "richtext",
+      "id": "item_1_sub_2_content",
+      "label": "子项 2 内容",
+      "default": "<p>100% 纯棉,透气舒适。</p>"
+    },
+    {
+      "type": "text",
+      "id": "item_1_sub_3_title",
+      "label": "子项 3 标题",
+      "default": "护理说明"
+    },
+    {
+      "type": "richtext",
+      "id": "item_1_sub_3_content",
+      "label": "子项 3 内容",
+      "default": "<p>机洗,温和洗涤,不可漂白。</p>"
+    },
+    {
+      "type": "header",
+      "content": "项目 2"
+    },
+    {
+      "type": "text",
+      "id": "item_2_title",
+      "label": "标题",
+      "default": "配送与退货"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_2_has_sub",
+      "label": "启用子手风琴",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "item_2_content",
+      "label": "内容"
+    },
+    {
+      "type": "text",
+      "id": "item_2_sub_1_title",
+      "label": "子项 1 标题",
+      "default": "配送时间"
+    },
+    {
+      "type": "richtext",
+      "id": "item_2_sub_1_content",
+      "label": "子项 1 内容",
+      "default": "<p>标准配送 3-5 个工作日。</p>"
+    },
+    {
+      "type": "text",
+      "id": "item_2_sub_2_title",
+      "label": "子项 2 标题",
+      "default": "退货政策"
+    },
+    {
+      "type": "richtext",
+      "id": "item_2_sub_2_content",
+      "label": "子项 2 内容",
+      "default": "<p>30 天无理由退货。</p>"
+    },
+    {
+      "type": "text",
+      "id": "item_2_sub_3_title",
+      "label": "子项 3 标题"
+    },
+    {
+      "type": "richtext",
+      "id": "item_2_sub_3_content",
+      "label": "子项 3 内容"
+    },
+    {
+      "type": "header",
+      "content": "项目 3"
+    },
+    {
+      "type": "text",
+      "id": "item_3_title",
+      "label": "标题",
+      "default": "常见问题"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_3_has_sub",
+      "label": "启用子手风琴",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "item_3_content",
+      "label": "内容",
+      "default": "<p>这是一个普通的手风琴项目,没有子项。您可以在这里添加常规内容和<a href=\"#\">链接</a>。</p>"
+    },
+    {
+      "type": "text",
+      "id": "item_3_sub_1_title",
+      "label": "子项 1 标题"
+    },
+    {
+      "type": "richtext",
+      "id": "item_3_sub_1_content",
+      "label": "子项 1 内容"
+    },
+    {
+      "type": "text",
+      "id": "item_3_sub_2_title",
+      "label": "子项 2 标题"
+    },
+    {
+      "type": "richtext",
+      "id": "item_3_sub_2_content",
+      "label": "子项 2 内容"
+    },
+    {
+      "type": "text",
+      "id": "item_3_sub_3_title",
+      "label": "子项 3 标题"
+    },
+    {
+      "type": "richtext",
+      "id": "item_3_sub_3_content",
+      "label": "子项 3 内容"
+    },
+    {
+      "type": "header",
+      "content": "项目 4"
+    },
+    {
+      "type": "text",
+      "id": "item_4_title",
+      "label": "标题"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_4_has_sub",
+      "label": "启用子手风琴",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "item_4_content",
+      "label": "内容"
+    },
+    {
+      "type": "text",
+      "id": "item_4_sub_1_title",
+      "label": "子项 1 标题"
+    },
+    {
+      "type": "richtext",
+      "id": "item_4_sub_1_content",
+      "label": "子项 1 内容"
+    },
+    {
+      "type": "text",
+      "id": "item_4_sub_2_title",
+      "label": "子项 2 标题"
+    },
+    {
+      "type": "richtext",
+      "id": "item_4_sub_2_content",
+      "label": "子项 2 内容"
+    },
+    {
+      "type": "text",
+      "id": "item_4_sub_3_title",
+      "label": "子项 3 标题"
+    },
+    {
+      "type": "richtext",
+      "id": "item_4_sub_3_content",
+      "label": "子项 3 内容"
+    },
+    {
+      "type": "header",
+      "content": "项目 5"
+    },
+    {
+      "type": "text",
+      "id": "item_5_title",
+      "label": "标题"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_5_has_sub",
+      "label": "启用子手风琴",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "item_5_content",
+      "label": "内容"
+    },
+    {
+      "type": "text",
+      "id": "item_5_sub_1_title",
+      "label": "子项 1 标题"
+    },
+    {
+      "type": "richtext",
+      "id": "item_5_sub_1_content",
+      "label": "子项 1 内容"
+    },
+    {
+      "type": "text",
+      "id": "item_5_sub_2_title",
+      "label": "子项 2 标题"
+    },
+    {
+      "type": "richtext",
+      "id": "item_5_sub_2_content",
+      "label": "子项 2 内容"
+    },
+    {
+      "type": "text",
+      "id": "item_5_sub_3_title",
+      "label": "子项 3 标题"
+    },
+    {
+      "type": "richtext",
+      "id": "item_5_sub_3_content",
+      "label": "子项 3 内容"
+    }
+  ],
+  "presets": [
+    {
+      "name": "嵌套手风琴"
+    }
+  ]
+}
+{% endschema %}

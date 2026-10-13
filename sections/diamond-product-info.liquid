@@ -1,0 +1,373 @@
+{% comment %}
+  Diamond Product Information Section
+  - Left: Media gallery (image / video / 3D model / 3D spin)
+  - Right: Product info panel populated from external API
+{% endcomment %}
+
+<script>
+  window.__dpi_images = [
+    {% for image in product.images %}
+      "{{ image | img_url: 'master' }}"{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+</script>
+{%- for block in section.blocks -%}
+  {%- if block.type == 'skin-tone' -%}
+    <div
+      id="dpi-skin-tone-data"
+      style="display:none;"
+      data-img-dark="{{ block.settings.img_dark | image_url: width: 800 }}"
+      data-img-medium="{{ block.settings.img_medium | image_url: width: 800 }}"
+      data-img-light="{{ block.settings.img_light | image_url: width: 800 }}"
+      {{ block.shopify_attributes }}
+    ></div>
+  {%- endif -%}
+{%- endfor -%}
+
+
+<link rel="stylesheet" href="{{ 'diamond-product-info.css' | asset_url }}">
+<script src="{{ 'diamond-product-info.js' | asset_url }}" defer></script>
+
+{% liquid
+  assign dpi_title_font = section.settings.dpi_title_font
+  assign dpi_title_weight = section.settings.dpi_title_weight
+  assign dpi_title_variant = dpi_title_font | font_modify: 'weight', dpi_title_weight
+  assign dpi_title_font = dpi_title_variant | default: dpi_title_font
+%}
+
+<style>
+  {% unless section.settings.dpi_title_keep_original_font %}
+    {{ dpi_title_font | font_face: font_display: 'swap' }}
+  {% endunless %}
+
+  #shopify-section-{{ section.id }} .dpi-title {
+    {% if section.settings.dpi_title_keep_original_font %}
+      font-family: Georgia, 'Times New Roman', serif;
+    {% else %}
+      font-family: {{ dpi_title_font.family | json }},
+        {{ dpi_title_font.fallback_families }};
+    {% endif %}
+    font-size: {{ section.settings.dpi_title_size }}px;
+    font-weight: {{ section.settings.dpi_title_weight }};
+    
+  }
+</style>
+
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<div
+  class="dpi-section"
+  data-product-id="{{ product.id }}"
+  data-shop-domain="{{ shop.permanent_domain }}"
+  data-api-endpoint="{{ section.settings.api_endpoint }}"
+  data-variant-available="{{ current_variant.available }}"
+  data-variant-id="{{ current_variant.id }}"
+>
+
+  <!-- LEFT: Media Grid -->
+<div class="dpi-gallery">
+  <div class="dpi-media-grid" id="dpi-media-grid">
+    <div class="dpi-skeleton dpi-skeleton--media"></div>
+    <div class="dpi-skeleton dpi-skeleton--media"></div>
+  </div>
+</div>
+
+  <!-- RIGHT: Product Info -->
+  <div class="dpi-info">
+    <!-- Title & Price (Shopify native) -->
+    
+    <div>
+      {%- comment -%} 顶部标签 {%- endcomment -%}
+    {% comment %} <div class="dpi-rp__info-top">
+      <span class="dpi-rp__collection-label"></span>
+      <div id="dpi-diamond-report"></div>
+      
+    </div> {% endcomment %}
+        <h1 class="dpi-title">{{ product.title }}</h1>
+        <div class="dpi-price-row">
+          <div class="dpi-price">{{ current_variant.price | money }}</div>
+          <div id="dpi-diamond-report"></div>
+        </div>
+        <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}">
+          {{ product.metafields.judgeme.badge }}
+        </div>
+    </div>
+    
+
+    <!-- Diamond attributes -->
+    <div class="dpi-section-block dpi-diamond-attributes" aria-label="Diamond details">
+      <div class="dpi-diamond-attribute">
+        <span class="dpi-diamond-attribute__label">CARAT</span>
+        <span class="dpi-diamond-attribute__value" id="dpi-diamond-carat">—</span>
+      </div>
+
+      <div class="dpi-diamond-attribute">
+        <span class="dpi-diamond-attribute__label">COLOR</span>
+        <span class="dpi-diamond-attribute__value" id="dpi-diamond-color">—</span>
+      </div>
+
+      <div class="dpi-diamond-attribute">
+        <span class="dpi-diamond-attribute__label">CUT</span>
+        <span class="dpi-diamond-attribute__value" id="dpi-diamond-cut">—</span>
+      </div>
+
+      <div class="dpi-diamond-attribute">
+        <span class="dpi-diamond-attribute__label">CLARITY</span>
+        <span class="dpi-diamond-attribute__value" id="dpi-diamond-clarity">—</span>
+      </div>
+    </div>
+
+
+
+{%- if current_variant.available and current_variant.inventory_quantity == 1 -%}
+  <div class="dpi-stock-badge">
+    <span class="dpi-stock-badge__dot"></span>
+    ONLY ONE AVAILABLE
+  </div>
+{%- endif -%}
+    <!-- Stock status -->
+    <div class="dpi-stock-status" id="dpi-stock-status">
+      {%- unless current_variant.available -%}
+        <span class="dpi-sold-out-badge">Sold Out</span>
+      {%- endunless -%}
+    </div>
+
+    <!-- CTA Buttons -->
+    <button
+      class="dpi-btn dpi-btn--primary"
+      id="dpi-choose-btn"
+      {% unless current_variant.available %}disabled{% endunless %}
+    >
+      CHOOSE THIS DIAMOND
+    </button>
+
+    <button class="dpi-btn dpi-btn--wishlist">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      ADD TO WISHLIST
+    </button>
+
+    <!-- Additional diamond attributes -->
+  <div
+    class="dpi-diamond-attributes dpi-diamond-attributes--secondary"
+    aria-label="Additional diamond details"
+  >
+    <div class="dpi-diamond-attribute">
+      <span class="dpi-diamond-attribute__label">SKU</span>
+      <span class="dpi-diamond-attribute__value" id="dpi-diamond-sku">—</span>
+    </div>
+
+    <div class="dpi-diamond-attribute">
+      <span class="dpi-diamond-attribute__label">SYMMETRY</span>
+      <span class="dpi-diamond-attribute__value" id="dpi-diamond-symmetry">—</span>
+    </div>
+
+    <div class="dpi-diamond-attribute">
+      <span class="dpi-diamond-attribute__label">MEASUREMENTS</span>
+      <span class="dpi-diamond-attribute__value" id="dpi-diamond-measurements">—</span>
+    </div>
+
+    <div class="dpi-diamond-attribute">
+      <span class="dpi-diamond-attribute__label">POLISH</span>
+      <span class="dpi-diamond-attribute__value" id="dpi-diamond-polish">—</span>
+    </div>
+  </div>
+
+
+    {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'product-shipping' -%}
+            {%- render 'product-shipping', block: block -%}
+          {%- when 'fold' -%}
+            {%- render 'fold', block: block -%}
+          {%- when 'product-sharing' -%}
+            {%- render 'product-sharing', block: block -%}
+          {%- when 'diamond-report-contact' -%}
+            {%- render 'block-service', block: block, report_mode: true -%}
+        {%- endcase -%}
+      {%- endfor -%}
+   
+  </div>
+</div>
+
+<!-- Lightbox for images -->
+<div class="dpi-lightbox" id="dpi-lightbox">
+  <div class="dpi-lightbox__overlay" id="dpi-lightbox-overlay"></div>
+  <div class="dpi-lightbox__content">
+    <button class="dpi-lightbox__close" id="dpi-lightbox-close">✕</button>
+    <img id="dpi-lightbox-img" src="" alt="">
+  </div>
+</div>
+
+<!-- Modal for 3D model -->
+<div class="dpi-model-modal" id="dpi-model-modal">
+  <div class="dpi-model-modal__overlay" id="dpi-model-modal-overlay"></div>
+  <div class="dpi-model-modal__content">
+    <button class="dpi-model-modal__close" id="dpi-model-modal-close">✕</button>
+    <model-viewer
+      id="dpi-model-viewer"
+      camera-controls
+      auto-rotate
+      style="width:100%;height:100%;"
+    ></model-viewer>
+  </div>
+</div>
+
+
+
+
+{% schema %}
+{
+  "name": "Diamond Product Info",
+  "tag": "section",
+  "class": "dpi-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "api_endpoint",
+      "label": "API Endpoint Base URL",
+      "placeholder": "https://your-api.com",
+      "info": "Base URL for the product details API, e.g. https://api.example.com"
+    },
+    {
+      "type": "header",
+      "content": "商品标题字体样式"
+    },
+    {
+      "type": "checkbox",
+      "id": "dpi_title_keep_original_font",
+      "label": "保留原有 Georgia 字体",
+      "default": true
+    },
+    {
+      "type": "font_picker",
+      "id": "dpi_title_font",
+      "label": "商品标题字体",
+      "default": "assistant_n4",
+      "info": "关闭保留原有 Georgia 字体后生效"
+    },
+    {
+      "type": "range",
+      "id": "dpi_title_size",
+      "label": "商品标题字号",
+      "min": 12,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "select",
+      "id": "dpi_title_weight",
+      "label": "商品标题字重",
+      "options": [
+        { "value": "400", "label": "常规" },
+        { "value": "500", "label": "中等" },
+        { "value": "600", "label": "半粗" },
+        { "value": "700", "label": "加粗" }
+      ],
+      "default": "400"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "diamond-report-contact",
+      "name": "Diamond Report Contact",
+      "limit": 1,
+      "settings": [
+        { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+        { "type": "image_picker", "id": "report_image", "label": "Report background image" },
+        { "type": "text", "id": "report_heading", "label": "Heading", "default": "Have questions about this diamond?" },
+        { "type": "text", "id": "report_button_label", "label": "Button label", "default": "Ask a Diamond Expert" },
+        { "type": "text", "id": "email_us_title", "label": "Form title", "default": "Ask a Diamond Expert" },
+        { "type": "textarea", "id": "email_us_desc", "label": "Form description", "default": "Our diamond specialists are here to help with your questions." },
+        { "type": "text", "id": "email_us_subject", "label": "Email subject", "default": "Diamond inquiry" },
+        { "type": "textarea", "id": "email_us_success", "label": "Success message", "default": "Thank you! Our diamond specialists will be in touch shortly." },
+        { "type": "text", "id": "email_us_newsletter", "label": "Updates label", "default": "Send me updates on new styles and special offers." },
+        { "type": "text", "id": "submit_label", "label": "Submit label", "default": "Submit" }
+      ]
+    },
+    {
+      "type": "product-shipping",
+      "name": "Product Shipping",
+      "limit": 1,
+      "settings": [
+        { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+        { "type": "text", "id": "header", "label": "Header" },
+        { "type": "header", "content": "One" },
+        { "type": "image_picker", "id": "image1", "label": "Image 1" },
+        { "type": "text", "id": "title1", "label": "Title 1" },
+        { "type": "header", "content": "Two" },
+        { "type": "image_picker", "id": "image2", "label": "Image 2" },
+        { "type": "text", "id": "title2", "label": "Title 2" },
+        { "type": "header", "content": "Three" },
+        { "type": "image_picker", "id": "image3", "label": "Image 3" },
+        { "type": "text", "id": "title3", "label": "Title 3" },
+        { "type": "header", "content": "Four" },
+        { "type": "image_picker", "id": "image4", "label": "Image 4" },
+        { "type": "text", "id": "title4", "label": "Title 4" }
+      ]
+    },
+    {
+      "type": "fold",
+      "name": "Fold",
+      "settings": [
+        { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+        { "type": "select", "id": "content_or_recommended", "label": "Content or Recommended", "default": "content", "options": [
+          { "value": "content", "label": "content" },
+          { "value": "recommended", "label": "recommended" }
+        ]},
+        { "type": "checkbox", "id": "show", "label": "show fold", "default": false },
+        { "type": "html", "id": "header", "label": "header" },
+        { "type": "liquid", "id": "content", "label": "content" },
+        { "type": "header", "content": "icon" },
+        { "type": "checkbox", "id": "icon", "label": "icon", "default": false },
+        { "type": "image_picker", "id": "header_icon", "label": "header icon" },
+        { "type": "url", "id": "header_icon_url", "label": "header icon url" },
+        { "type": "header", "content": "Margin" },
+        { "type": "text", "id": "pc_margin", "label": "pc margin", "default": "0" },
+        { "type": "text", "id": "mb_margin", "label": "mb margin", "default": "0" },
+        { "type": "header", "content": "Padding" },
+        { "type": "text", "id": "pc_padding", "label": "pc padding", "default": "0" },
+        { "type": "text", "id": "mb_padding", "label": "mb padding", "default": "0" },
+        { "type": "checkbox", "id": "use_line", "label": "use line", "default": false }
+      ]
+    },
+    {
+      "type": "product-sharing",
+      "name": "Product Sharing",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Sharing:" },
+        { "type": "header", "content": "Padding" },
+        { "type": "range", "id": "padding-block-start", "label": "Top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 16 },
+        { "type": "range", "id": "padding-block-end", "label": "Bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "padding-inline-start", "label": "Left", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "padding-inline-end", "label": "Right", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+      ]
+    },
+    {
+        "type": "skin-tone",
+        "name": "Skin Tone Slider",
+        "limit": 1,
+        "settings": [
+          { "type": "header", "content": "Lighter" },
+          { "type": "image_picker", "id": "img_dark", "label": "Dark Skin Image" },
+          { "type": "header", "content": "Medium" },
+          { "type": "image_picker", "id": "img_medium", "label": "Medium Skin Image" },
+          { "type": "header", "content": "Darker" },
+          { "type": "image_picker", "id": "img_light", "label": "Light Skin Image" }
+        ]
+      }
+
+
+
+  ],
+  "presets": [
+    {
+      "name": "Diamond Product Info"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,292 @@
+{% doc %}
+  @prompt
+    生成一个按钮，按钮可以完全自定义颜色。可以自定义展示样式和位置，以及居中之类的，按钮的文案也可以编辑，点击按钮跳转到选定的链接。
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-custom-button-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-custom-button-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    width: 100%;
+    {% if block.settings.alignment == 'left' %}
+      justify-content: flex-start;
+    {% elsif block.settings.alignment == 'center' %}
+      justify-content: center;
+    {% elsif block.settings.alignment == 'right' %}
+      justify-content: flex-end;
+    {% endif %}
+  }
+
+  .ai-custom-button-link-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_background_color }};
+    color: {{ block.settings.button_text_color }};
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: {{ block.settings.button_font_weight }};
+    text-transform: {{ block.settings.button_text_transform }};
+    {% if block.settings.button_width_style == 'full' %}
+      width: 100%;
+    {% elsif block.settings.button_width_style == 'auto' %}
+      width: auto;
+    {% elsif block.settings.button_width_style == 'custom' %}
+      width: {{ block.settings.button_custom_width }}px;
+    {% endif %}
+  }
+
+  .ai-custom-button-link-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background_color }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_border_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-custom-button-wrapper-{{ ai_gen_id }} {
+      {% if block.settings.mobile_alignment == 'left' %}
+        justify-content: flex-start;
+      {% elsif block.settings.mobile_alignment == 'center' %}
+        justify-content: center;
+      {% elsif block.settings.mobile_alignment == 'right' %}
+        justify-content: flex-end;
+      {% endif %}
+    }
+
+    .ai-custom-button-link-{{ ai_gen_id }} {
+      {% if block.settings.mobile_width_style == 'full' %}
+        width: 100%;
+      {% elsif block.settings.mobile_width_style == 'auto' %}
+        width: auto;
+      {% endif %}
+    }
+  }
+{% endstyle %}
+
+<div class="ai-custom-button-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-custom-button-wrapper-{{ ai_gen_id }}">
+    <a
+      href="{{ block.settings.button_link }}"
+      class="ai-custom-button-link-{{ ai_gen_id }}"
+    >
+      {{ block.settings.button_text }}
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "自定义按钮",
+  "settings": [
+    {
+      "type": "header",
+      "content": "按钮内容"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "按钮文字",
+      "default": "点击这里"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "按钮链接"
+    },
+    {
+      "type": "header",
+      "content": "按钮样式"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "背景颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "文字颜色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "边框颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "边框宽度",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "圆角",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "字体大小",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "button_font_weight",
+      "label": "字体粗细",
+      "options": [
+        { "value": "400", "label": "正常" },
+        { "value": "500", "label": "中等" },
+        { "value": "600", "label": "半粗" },
+        { "value": "700", "label": "粗体" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "button_text_transform",
+      "label": "文字大小写",
+      "options": [
+        { "value": "none", "label": "默认" },
+        { "value": "uppercase", "label": "全部大写" },
+        { "value": "lowercase", "label": "全部小写" },
+        { "value": "capitalize", "label": "首字母大写" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "垂直内边距",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "水平内边距",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "悬停效果"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background_color",
+      "label": "悬停背景颜色",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "悬停文字颜色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "悬停边框颜色",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "按钮宽度和位置"
+    },
+    {
+      "type": "select",
+      "id": "button_width_style",
+      "label": "宽度样式",
+      "options": [
+        { "value": "auto", "label": "自适应内容" },
+        { "value": "full", "label": "全宽" },
+        { "value": "custom", "label": "自定义宽度" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "button_custom_width",
+      "label": "自定义宽度",
+      "min": 100,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "对齐方式",
+      "options": [
+        { "value": "left", "label": "左对齐" },
+        { "value": "center", "label": "居中" },
+        { "value": "right", "label": "右对齐" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "移动端设置"
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "移动端对齐",
+      "options": [
+        { "value": "left", "label": "左对齐" },
+        { "value": "center", "label": "居中" },
+        { "value": "right", "label": "右对齐" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "mobile_width_style",
+      "label": "移动端宽度",
+      "options": [
+        { "value": "auto", "label": "自适应内容" },
+        { "value": "full", "label": "全宽" }
+      ],
+      "default": "full"
+    }
+  ],
+  "presets": [
+    {
+      "name": "自定义按钮"
+    }
+  ]
+}
+{% endschema %}

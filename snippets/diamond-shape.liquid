@@ -1,0 +1,28 @@
+{%- doc -%}
+  Diamond Shape metaobject image strip for collection filters.
+
+  @param {object} [filters] - Collection filters for URL matching
+  @param {string} [heading_text] - Heading above images (default: Diamond Shape)
+  @param {string} [filter_style] - 'horizontal' | 'vertical'
+  @param {string} [id_prefix] - Prefix to avoid duplicate IDs
+  @param {boolean} [deferred] - Drawer: accordion + multi-select
+{%- enddoc -%}
+
+{% liquid
+  assign panel_heading = heading_text
+  if panel_heading == blank
+    assign panel_heading = 'Diamond Shape'
+  endif
+%}
+
+{% render 'variant-metaobject-filter',
+  metaobject_type: 'variant_shape',
+  filter_label: 'Shape',
+  heading_text: panel_heading,
+  panel_id: 'diamond-shape',
+  swatch_row_class: 'variant-metaobject-strip--shape',
+  filters: filters,
+  filter_style: filter_style,
+  id_prefix: id_prefix,
+  deferred: deferred
+%}

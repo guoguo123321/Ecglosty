@@ -1,0 +1,58 @@
+{%- doc -%}
+  Returns "1" when a mega menu panel should bind to a top-level nav link.
+  Supports | -separated aliases for translated menu titles/handles, and optional 1-based menu_item_index.
+
+  @param {string} panel_title - Panel menu_title setting (aliases: ENGAGEMENT RINGS|VERLOBUNGSRINGE)
+  @param {string} panel_handle - Panel menu_handle setting (aliases allowed)
+  @param {number} [panel_index] - Optional 1-based top-level menu position
+  @param {string} link_title - Current locale nav title
+  @param {string} link_handle - Current locale nav handle
+  @param {number} link_index - 1-based top-level menu position
+{%- enddoc -%}
+{%- liquid
+  assign matched = false
+  assign panel_index_num = panel_index | default: 0 | plus: 0
+  assign link_index_num = link_index | default: 0 | plus: 0
+  assign link_title_normalized = link_title | strip | downcase
+  assign link_title_handle = link_title | handleize | downcase
+  assign link_handle_normalized = link_handle | strip | handleize | downcase
+
+  if panel_index_num > 0 and panel_index_num == link_index_num
+    assign matched = true
+  endif
+
+  unless matched
+    assign title_blob = panel_title | strip | downcase | replace: ',', '|'
+    assign title_parts = title_blob | split: '|'
+    for title_part in title_parts
+      assign title_alias = title_part | strip
+      if title_alias == blank
+        continue
+      endif
+      assign title_alias_handle = title_alias | handleize
+      if title_alias == link_title_normalized or title_alias_handle == link_title_handle or title_alias_handle == link_handle_normalized
+        assign matched = true
+        break
+      endif
+    endfor
+  endunless
+
+  unless matched
+    assign handle_blob = panel_handle | strip | downcase | replace: ',', '|'
+    assign handle_parts = handle_blob | split: '|'
+    for handle_part in handle_parts
+      assign handle_alias = handle_part | strip | handleize
+      if handle_alias == blank
+        continue
+      endif
+      if handle_alias == link_handle_normalized or handle_alias == link_title_handle
+        assign matched = true
+        break
+      endif
+    endfor
+  endunless
+
+  if matched
+    echo '1'
+  endif
+-%}

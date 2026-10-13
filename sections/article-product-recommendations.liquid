@@ -1,0 +1,216 @@
+{% liquid
+  assign se_stts = section.settings
+  assign stt_layout = se_stts.layout
+  if stt_layout == 'lgs-container'
+    assign html_layout = '<div class="lgs-container">__</div>' | split: '__'
+  elsif stt_layout == 'custom-container'
+    assign html_layout = '<div class="custom-container">__</div>' | split: '__'
+  else
+    assign html_layout = '__' | split: '__'
+  endif
+  assign seed_product = se_stts.product
+  assign max_products = se_stts.max_products | default: 4
+%}
+{%- if se_stts.layout == 'custom-container' %}
+<style>
+  .{{ section.id }} .custom-container{
+    max-width:{{ se_stts.custom_container }};
+    margin: 0 auto;
+  }
+</style>
+{%- endif -%}
+<script src="{{ 'product-recommendations.js' | asset_url }}" type="module" fetchpriority="low"></script>
+<product-recommendations
+  id="product-recommendations-{{ section.id }}"
+  class="product-recommendations article-product-recommendations"
+  data-url="{{ routes.product_recommendations_url }}?limit={{ max_products }}"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ seed_product.id }}"
+  data-intent="{{ se_stts.recommendation_type }}"
+  data-recommendations-performed="{{ recommendations.performed }}"
+  data-hydration-key="product-recommendations-{{ section.id }}"
+  {{ section.shopify_attributes }}
+>
+  <div class="{{ section.id }} article-product-recommendations-box lgs-section-inner" {% render 'section_style', se_stts: se_stts -%}>
+    {{-html_layout[0]-}}
+    {%- render 'section_tophead', se_stts: se_stts -%}
+    <div class="article-product-recommendations-container {{ se_stts.box_align }}">
+      {%- if seed_product == blank -%}
+        <div class="article-product-recommendations-items">
+          {% for i in (1..max_products) %}
+            <div class="article-product-recommendations-item">
+              <div class="article-product-recommendations-link">
+                <div class="article-product-recommendations-media">
+                  {{ 'product-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff' }}
+                </div>
+                <div class="article-product-recommendations-title">Product title</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {%- elsif recommendations.performed -%}
+        {% liquid
+          if recommendations.products_count == 0
+            if se_stts.recommendation_type == 'related'
+              assign products = collections.all.products | reject: 'id', seed_product.id
+            else
+              assign products = null
+            endif
+          else
+            assign products = recommendations.products
+          endif
+        %}
+        {%- if products != blank and products.size > 0 -%}
+          <div class="article-product-recommendations-items" data-has-recommendations="true">
+            {% for product in products limit: max_products %}
+              <div class="article-product-recommendations-item">
+                <a class="article-product-recommendations-link" href="{{ product.url }}">
+                  <div class="article-product-recommendations-media">
+                    {% if product.featured_image != blank %}
+                      <img src="{{ product.featured_image | image_url }}" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}" alt="{{ product.title | escape }}" loading="lazy">
+                    {%- else -%}
+                      {{ 'product-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff' }}
+                    {% endif %}
+                  </div>
+                  <div class="article-product-recommendations-title">{{ product.title }}</div>
+                  <div class="article-product-recommendations-price" translate="no">
+                    {%- if product.compare_at_price > product.price -%}
+                      <s>{{ product.compare_at_price | money }}</s>
+                    {%- endif -%}
+                    <span>{{ product.price | money }}</span>
+                  </div>
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        {%- else -%}
+          <div class="article-product-recommendations-items">
+            {%- assign fallback_count = 0 -%}
+            {% for product in collections.all.products %}
+              {%- if product.id == seed_product.id -%}{%- continue -%}{%- endif -%}
+              {%- if fallback_count >= max_products -%}{%- break -%}{%- endif -%}
+              {%- assign fallback_count = fallback_count | plus: 1 -%}
+              <div class="article-product-recommendations-item">
+                <a class="article-product-recommendations-link" href="{{ product.url }}">
+                  <div class="article-product-recommendations-media">
+                    {% if product.featured_image != blank %}
+                      <img src="{{ product.featured_image | image_url }}" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}" alt="{{ product.title | escape }}" loading="lazy">
+                    {%- else -%}
+                      {{ 'product-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff' }}
+                    {% endif %}
+                  </div>
+                  <div class="article-product-recommendations-title">{{ product.title }}</div>
+                  <div class="article-product-recommendations-price" translate="no">
+                    <span>{{ product.price | money }}</span>
+                  </div>
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="article-product-recommendations-items">
+          {% for i in (1..max_products) %}
+            <div class="article-product-recommendations-item article-product-recommendations-skeleton" aria-label="{{ 'accessibility.loading_product_recommendations' | t }}">
+              <div class="article-product-recommendations-media"></div>
+              <div class="article-product-recommendations-title">&nbsp;</div>
+              <div class="article-product-recommendations-price">&nbsp;</div>
+            </div>
+          {% endfor %}
+        </div>
+      {%- endif -%}
+    </div>
+    {{-html_layout[1]-}}
+  </div>
+</product-recommendations>
+{% schema %}
+  {
+    "name": "Article products",
+    "class": "shopify-article-product-recommendations",
+    "tag": "section",
+    "enabled_on": {
+      "templates": ["article"]
+    },
+    "settings": [
+      {"type": "product","id": "product","label": "+ Source product","info": "Recommendations are based on this product, same as product page Related products"},
+      {"type": "select","id": "recommendation_type","label": "+ Recommendation type","default": "related",
+        "options": [
+          {"value": "related","label": "Related"},
+          {"value": "complementary","label": "Complementary"}
+        ]
+      },
+      {"type": "range","id": "max_products","label": "+ Product number","min": 2,"max": 8,"step": 1,"default": 4},
+
+      {"type": "select","id": "layout","label": "layout","default":"lgs-container",
+        "options": [
+          {"label":"lgs-container","value": "lgs-container"},
+          {"label":"wrapped container","value": "wrapped-container"},
+          {"label":"custom container","value": "custom-container"}
+        ]
+      },
+      {"type": "text","id": "custom_container","label": "custom container","default": "1200px"},
+
+      {"type": "select","id": "box_align","label": "+ box align","default": "lgs-text-center",
+        "options": [
+          {"value": "lgs-text-start","label": "Left"},
+          {"value": "lgs-text-center","label": "Center"},
+          {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+
+      {"type": "header","content": "1. Heading options"},
+      {"type": "select","id": "design_heading","label": "+ Design heading","default": "1",
+        "options": [
+          {"value": "1","label": "Design 01"},
+          {"value": "2","label": "Design 02"},
+          {"value": "3","label": "Design 03"},
+          {"value": "4","label": "Design 04"},
+          {"value": "5","label": "Design 05"},
+          {"value": "6","label": "Design 06 (width line-awesome)"},
+          {"value": "7","label": "Design 07"},
+          {"value": "8","label": "Design 08"},
+          {"value": "9","label": "Design 09"},
+          {"value": "10","label": "Design 10"},
+          {"value": "11","label": "Design 11"},
+          {"value": "12","label": "Design 12"},
+          {"value": "13","label": "Design 13"},
+          {"value": "14","label": "Design 14"},
+          {"value": "15","label": "Design 15"},
+          {"value": "16","label": "Design 16"}
+        ]
+      },
+      {"type": "select","id": "heading_align","label": "+ Heading align","default": "lgs-text-center",
+        "options": [
+          {"value": "lgs-text-start","label": "Left"},
+          {"value": "lgs-text-center","label": "Center"},
+          {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+      {"type": "html","id": "top_heading","label": "+ Heading","default": "Recommended products"},
+      {"type": "text","id": "icon_heading","label": "Enter a icon name on heading","info": "Only used for design 6 [LineAwesome]()","default": "las la-gem"},
+      {"type": "textarea","id": "top_subheading","label": "+ Subheading"},
+      {"type": "number","id": "tophead_mb","label": "+ Space bottom (px)","info": "The vertical spacing between heading and content","default": 30},
+
+      {"type":"color","id":"cl_bg","label":"bg_color","default":"#ffffff"},
+      {"type": "color_background","id": "cl_bg_gradient","label": "Background gradient"},
+
+      {"type": "header","content": "+ Design pc options"},
+      {"type": "text","id": "mg","label": "Margin","info":"Margin top, margin right, margin bottom, margin left. If you not use to blank","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd","label": "Padding","info":"Padding top, padding right, padding bottom, padding left. If you not use to blank","default": "40px,0px,40px,0px"},
+
+      {"type": "header","content": "+ Design Tablet Options"},
+      {"type": "text","id": "mg_tb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_tb","label": "Padding","default": "30px,0px,30px,0px"},
+
+      {"type": "header","content": "+ Design mobile options"},
+      {"type": "text","id": "mg_mb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_mb","label": "Padding","default": "20px,16px,20px,16px"}
+    ],
+    "presets":[
+      {
+        "name":"Article products",
+        "category": "t:categories.lg"
+      }
+    ]
+  }
+{% endschema %}

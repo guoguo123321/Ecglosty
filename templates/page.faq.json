@@ -1,0 +1,118 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "Title",
+          "disabled": true,
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-primary--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "color_scheme": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "lg_section_NBPaT9": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_T8UNkq": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1200px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "FAQ",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "90px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "50px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "30px,0px,30px,0px"
+          },
+          "blocks": {
+            "faqs_cHWbEP": {
+              "type": "_faqs",
+              "name": "Faqs",
+              "settings": {
+                "faqs": [
+                  "what-is-an-oval-cut-engagement-ring",
+                  "what-should-i-look-for-in-terms-of-length-to-width-ratio-for-oval-diamonds",
+                  "what-is-the-bow-tie-effect-in-oval-diamonds",
+                  "how-do-oval-diamonds-compare-to-other-shapes-in-terms-of-sparkle-and-perceived-size",
+                  "do-oval-diamonds-show-color-or-inclusions-more-easily",
+                  "are-oval-cut-diamonds-more-durable-than-other-shapes"
+                ]
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faqs_cHWbEP"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_T8UNkq"
+      ],
+      "disabled": true,
+      "name": "lg section",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "lg_section_NBPaT9"
+  ]
+}

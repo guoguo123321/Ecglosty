@@ -1,0 +1,235 @@
+{% liquid
+  assign se_stts = section.settings
+  assign set_blo = section.blocks
+  assign stt_layout = se_stts.layout
+  if stt_layout == 'lgs-container'
+    assign html_layout = '<div class="lgs-container">__</div>' | split: '__'
+  elsif stt_layout == 'custom-container'
+    assign html_layout = '<div class="custom-container">__</div>' | split: '__'
+  else
+    assign html_layout = '__' | split: '__'
+  endif
+  assign show_pag = false
+  assign show_nav = false
+  if se_stts.show_pagination_pc or se_stts.show_pagination_mb
+    assign show_pag = true
+  endif
+  if se_stts.show_navigation_pc or se_stts.show_navigation_mb
+    assign show_nav = true
+  endif
+%}
+<style>
+  {%- if se_stts.layout == 'custom-container' -%}
+  .{{ section.id }} .custom-container{max-width:{{ se_stts.custom_container }};margin: 0 auto;}
+  {%- endif -%}
+  {%- liquid
+    assign heading_c = se_stts.color_scheme.settings.foreground_heading
+    assign subheading_c = se_stts.color_scheme.settings.foreground_subheading
+  -%}
+  {%- if heading_c != blank and heading_c.alpha != 0.0 -%}
+  .{{ section.id }} .lgs-title{--color:var(--color-foreground-heading);color:var(--color-foreground-heading);}
+  {%- endif -%}
+  {%- if subheading_c != blank and subheading_c.alpha != 0.0 -%}
+  .{{ section.id }} .lgs-subtitle{--color:var(--color-foreground-subheading);color:var(--color-foreground-subheading);}
+  {%- endif -%}
+  .{{ section.id }} .index-text-item .index-text-content{margin-bottom:var(--content-mb-pc);color:var(--color-foreground);}
+  .{{ section.id }} .index-text-item .index-text-title{color:var(--color-foreground);}
+  .{{ section.id }} .index-text-item .index-text-img{margin-bottom:var(--img-mb-pc);}
+  .{{ section.id }} .swiper-button-prev.common-prev svg rect,
+  .{{ section.id }} .swiper-button-next.common-next svg rect{stroke:var(--color-arrow);}
+  .{{ section.id }} .swiper-button-prev.common-prev svg path,
+  .{{ section.id }} .swiper-button-next.common-next svg path{fill:var(--color-arrow);}
+  .{{ section.id }} .swiper-button-prev.common-prev:hover svg rect,
+  .{{ section.id }} .swiper-button-next.common-next:hover svg rect{fill:var(--color-arrow-hover);stroke:var(--color-arrow-hover);fill-opacity:1;}
+  .{{ section.id }} .swiper-button-prev.common-prev:hover svg path,
+  .{{ section.id }} .swiper-button-next.common-next:hover svg path{fill:#ffffff;fill-opacity:1;}
+  @media (max-width:767px){
+    .{{ section.id }} .index-text-item .index-text-content{margin-bottom:var(--content-mb-mb);}
+    .{{ section.id }} .index-text-item .index-text-img{margin-bottom:var(--img-mb-mb);}
+  }
+</style>
+{% render 'swiper-assets' %}
+<div class="{{ section.id }} index-text-box lgs-section-inner color-{{ se_stts.color_scheme }}" {% render 'section_style', se_stts: se_stts -%}>
+  {{-html_layout[0]-}}
+    {%- render 'section_tophead', se_stts: se_stts -%}
+    <div class="index-text-swiper">
+      <div class="swiper index-text">
+        <div class="swiper-wrapper">
+          {% for block in set_blo %}
+            {%- assign blo_setts = block.settings -%}
+            <div class="swiper-slide" {{ block.shopify_attributes }}>
+              <div class="index-text-item" style="--img-w-pc:{{ blo_setts.image_width_pc }}px;--img-w-mb:{{ blo_setts.image_width_mb }}px;--content-mb-pc:{{ blo_setts.content_mb_pc }}px;--content-mb-mb:{{ blo_setts.content_mb_mb }}px;--img-mb-pc:{{ blo_setts.img_mb_pc }}px;--img-mb-mb:{{ blo_setts.img_mb_mb }}px;">
+                <div class="index-text-content">{{ blo_setts.content }}</div>
+                  {% comment %} 图片 {% endcomment %}
+                  {% if blo_setts.image != blank %}
+                    <img class="index-text-img" src="{{ blo_setts.image | image_url }}" width="{{ blo_setts.image.width }}" height="{{ blo_setts.image.height }}" alt="{{ blo_setts.title | escape }}">
+                  {%- else -%}
+                    {{ 'blog-apparel-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff index-text-img' }}
+                  {% endif %}
+                  {% if blo_setts.title != blank %}<div class="index-text-title">{{ blo_setts.title }}</div>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="index-text-media common-swiper-media{% if se_stts.show_pagination_pc %} has-pag-pc{% endif %}{% if se_stts.show_navigation_pc %} has-nav-pc{% endif %}{% if se_stts.show_pagination_mb %} has-pag-mb{% endif %}{% if se_stts.show_navigation_mb %} has-nav-mb{% endif %} media-align-{{ se_stts.media_align_mb }}">
+          {%- if show_pag -%}
+          <div class="swiper-pagination index-text-pagination common-swiper-pagination"></div>
+          {%- endif -%}
+          {%- if show_nav -%}
+          <div class="common-swiper-direction">
+            <div class="common-prev swiper-button-prev index-text-prev custom-prev">
+              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+                <rect x="0.5" y="0.5" width="33" height="33" rx="16.5" fill="none" stroke="#000"/>
+                <path fill="#000" d="M20 21.257 19.248 22 14 17l5.248-5 .752.743L15.587 17z"/>
+              </svg>
+            </div>
+            <div class="common-next swiper-button-next index-text-next custom-next">
+              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+                <rect x="0.5" y="0.5" width="33" height="33" rx="16.5" fill="none" stroke="#000"/>
+                <path fill="#000" d="M14 12.743 14.752 12 20 17l-5.248 5-.752-.743L18.413 17z"/>
+              </svg>
+            </div>
+          </div>
+          {%- endif -%}
+        </div>
+      </div>  
+    </div>
+  {{-html_layout[1]-}}
+</div>
+
+<script>
+themeSwiperReady(function () {
+
+    new Swiper('.{{ section.id }} .index-text', {
+      slidesPerView : 1,
+      loop: true,
+      {%- if show_pag -%}
+      pagination: {
+        el: '.{{ section.id }} .index-text-pagination',
+        clickable: true,
+      },
+      {%- endif -%}
+      {%- if show_nav -%}
+      navigation: {
+        nextEl: '.{{ section.id }} .index-text-next',
+        prevEl: '.{{ section.id }} .index-text-prev',
+      },
+      {%- endif -%}
+       breakpointsBase: 'container',
+       breakpoints: { 
+         0: {
+           slidesPerView: 1,
+           spaceBetween: 0
+         }
+       },
+    })
+}, '.{{ section.id }}');
+</script>
+{% schema %}
+  {
+    "name": "index-text",
+    "class": "shopify-index-text",
+    "tag": "section",
+    "settings": [
+      {"type": "select","id": "layout","label": "layout","default":"lgs-container",
+        "options": [
+          {"label":"lgs-container","value": "lgs-container"},
+          {"label":"wrapped container","value": "wrapped-container"},
+          {"label":"custom container","value": "custom-container"},
+        ]
+      },
+      {"type": "text","id": "custom_container","label": "custom container","default": "1200px"},
+
+      {"type": "header","content": "Swiper controls"},
+      {"type": "checkbox","id": "show_pagination_pc","label": "Show pagination (PC)","default": false},
+      {"type": "checkbox","id": "show_navigation_pc","label": "Show navigation arrows (PC)","default": true},
+      {"type": "checkbox","id": "show_pagination_mb","label": "Show pagination (Mobile)","default": false},
+      {"type": "checkbox","id": "show_navigation_mb","label": "Show navigation arrows (Mobile)","default": true},
+      {"type": "select","id": "media_align_mb","label": "Controls align (Mobile)","default": "between",
+        "options": [
+          {"value": "start","label": "Left"},
+          {"value": "center","label": "Center"},
+          {"value": "end","label": "Right"},
+          {"value": "between","label": "Space between"}
+        ]
+      },
+
+      {"type": "header","content": "Colors"},
+      {"type": "color_scheme","id": "color_scheme","label": "t:settings.color_scheme","default": "scheme-1","info": "Content, title, and navigation arrows. Section heading uses Headings / Sub heading when set; otherwise Config Header"},
+
+      {"type": "header","content": "1. Heading options"},
+      {"type": "select","id": "design_heading","label": "+ Design heading","default": "1",
+          "options": [
+              {"value": "1","label": "Design 01"},
+              {"value": "2","label": "Design 02"},
+              {"value": "3","label": "Design 03"},
+              {"value": "4","label": "Design 04"},
+              {"value": "5","label": "Design 05"},
+              {"value": "6","label": "Design 06 (width line-awesome)"},
+              {"value": "7","label": "Design 07"},
+              {"value": "8","label": "Design 08"},
+              {"value": "9","label": "Design 09"},
+              {"value": "10","label": "Design 10"},
+              {"value": "11","label": "Design 11"},
+              {"value": "12","label": "Design 12"},
+              {"value": "13","label": "Design 13"},
+              {"value": "14","label": "Design 14"},
+              {"value": "15","label": "Design 15"},
+              {"value": "16","label": "Design 16"}
+          ]
+      },
+      {"type": "select","id": "heading_align","label": "+ Heading align","default": "lgs-text-center",
+        "options": [
+            {"value": "lgs-text-start","label": "Left"},
+            {"value": "lgs-text-center","label": "Center"},
+            {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+      {"type": "html","id": "top_heading","label": "+ Heading","default": "index-text heading"},
+      {"type": "text","id": "icon_heading","label": "Enter a icon name on heading","info": "Only used for design 6 [LineAwesome]()","default": "las la-gem"},
+      {"type": "textarea","id": "top_subheading","label": "+ Subheading"},
+      {"type": "number","id": "tophead_mb","label": "+ Space bottom (px)","info": "The vertical spacing between heading and content","default": 30},
+
+
+      {"type":"color","id":"cl_bg","label":"bg_color","default":"#ffffff"},
+      {"type": "color_background","id": "cl_bg_gradient","label": "Background gradient"},
+
+      {"type": "header","content": "+ Design pc options"},
+      {"type": "text","id": "mg","label": "Margin","info":"Margin top, margin right, margin bottom, margin left. If you not use to blank","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd","label": "Padding","info":"Padding top, padding right, padding bottom, padding left. If you not use to blank","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design Tablet Options"},
+      {"type": "text","id": "mg_tb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_tb","label": "Padding","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design mobile options"},
+      {"type": "text","id": "mg_mb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_mb","label": "Padding","default": "0px,0px,0px,0px"},
+    ],
+    "blocks":[
+      {
+        "type": "text",
+        "name": "text",
+        "settings": [
+          {"type": "html","id": "content","label": "content"},
+          {"type": "image_picker","id": "image","label": "Image (Child)"},
+          {"type": "header","content": "Image size"},
+          {"type": "range","id": "image_width_pc","label": "Image width PC (px)","min": 20,"max": 300,"step": 5,"default": 80,"unit": "px"},
+          {"type": "range","id": "image_width_mb","label": "Image width Mobile (px)","min": 20,"max": 200,"step": 5,"default": 50,"unit": "px"},
+          {"type": "header","content": "Spacing"},
+          {"type": "range","id": "content_mb_pc","label": "Content space bottom PC","min": 0,"max": 100,"step": 2,"default": 32,"unit": "px"},
+          {"type": "range","id": "content_mb_mb","label": "Content space bottom Mobile","min": 0,"max": 80,"step": 2,"default": 16,"unit": "px"},
+          {"type": "range","id": "img_mb_pc","label": "Image space bottom PC","min": 0,"max": 100,"step": 2,"default": 24,"unit": "px"},
+          {"type": "range","id": "img_mb_mb","label": "Image space bottom Mobile","min": 0,"max": 80,"step": 2,"default": 12,"unit": "px"},
+          {"type": "text","id": "title","label": "title"},
+        ]
+      },
+    ],
+    "presets":[
+      {
+        "name":"Index Text",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

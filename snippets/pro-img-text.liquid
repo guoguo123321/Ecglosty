@@ -1,0 +1,119 @@
+{% doc %}
+  Product image text block with optional popup links.
+  @param {object} settings - Block settings
+  @param {string} [shopify_attributes] - Theme editor attributes
+  @example
+  {% render 'pro-img-text', settings: block.settings, shopify_attributes: block.shopify_attributes %}
+{% enddoc %}
+{% liquid
+  assign blo_setts = settings | default: block.settings
+%}
+<div class="pro-img-text-box" data-pro-img-text {{ shopify_attributes }}>
+  <div class="pro-img-text-left">
+    <div class="pro-img-text-header">{{ blo_setts.header }}</div>
+
+    <div class="pro-img-text-info1">
+      <div class="pro-img-text-item">
+        {% if blo_setts.icon1 != blank %}
+          <img src="{{ blo_setts.icon1 | image_url }}" width="{{ blo_setts.icon1.width }}" height="{{ blo_setts.icon1.height }}" alt="">
+        {% endif %}
+        <div class="pro-img-text-title">{{ blo_setts.title1 }}</div>
+      </div>
+      {% if blo_setts.content1 != blank %}<div class="pro-img-text-content">{{ blo_setts.content1 }}</div>{% endif %}
+    </div>
+
+    <div class="pro-img-text-info2">
+      <div class="pro-img-text-item">
+        {% if blo_setts.icon2 != blank %}
+          <img src="{{ blo_setts.icon2 | image_url }}" width="{{ blo_setts.icon2.width }}" height="{{ blo_setts.icon2.height }}" alt="">
+        {% endif %}
+        <div class="pro-img-text-title">{{ blo_setts.title2 }}</div>
+      </div>
+      {% if blo_setts.content2 != blank %}<div class="pro-img-text-content">{{ blo_setts.content2 }}</div>{% endif %}
+    </div>
+  </div>
+
+  <div class="pro-img-text-right">
+    {% if blo_setts.image != blank %}
+      <img src="{{ blo_setts.image | image_url }}" width="{{ blo_setts.image.width }}" height="{{ blo_setts.image.height }}" alt="">
+    {% endif %}
+  </div>
+
+  <div class="pro-img-text-modal" data-pro-img-text-modal hidden>
+    <div class="pro-img-text-modal__overlay" data-pro-img-text-modal-close></div>
+    <div class="pro-img-text-modal__dialog" role="dialog" aria-modal="true">
+      <button type="button" class="pro-img-text-modal__close" data-pro-img-text-modal-close aria-label="Close">&times;</button>
+      <div class="pro-img-text-modal__title" data-pro-img-text-modal-title></div>
+      <div class="pro-img-text-modal__body" data-pro-img-text-modal-body></div>
+    </div>
+  </div>
+
+  {%- if blo_setts.popup1_content != blank -%}
+  <template data-pro-img-text-popup="popup1">
+    <div data-title>{{ blo_setts.popup1_title | escape }}</div>
+    <div data-body>{{ blo_setts.popup1_content }}</div>
+  </template>
+  {%- endif -%}
+  {%- if blo_setts.popup2_content != blank -%}
+  <template data-pro-img-text-popup="popup2">
+    <div data-title>{{ blo_setts.popup2_title | escape }}</div>
+    <div data-body>{{ blo_setts.popup2_content }}</div>
+  </template>
+  {%- endif -%}
+  {%- if blo_setts.popup3_content != blank -%}
+  <template data-pro-img-text-popup="popup3">
+    <div data-title>{{ blo_setts.popup3_title | escape }}</div>
+    <div data-body>{{ blo_setts.popup3_content }}</div>
+  </template>
+  {%- endif -%}
+</div>
+<script>
+  (function() {
+    var roots = document.querySelectorAll('[data-pro-img-text]');
+    if (!roots.length) return;
+
+    roots.forEach(function(root) {
+      if (root.dataset.proImgTextReady) return;
+      root.dataset.proImgTextReady = '1';
+
+      var modal = root.querySelector('[data-pro-img-text-modal]');
+      var titleEl = root.querySelector('[data-pro-img-text-modal-title]');
+      var bodyEl = root.querySelector('[data-pro-img-text-modal-body]');
+      if (!modal || !titleEl || !bodyEl) return;
+
+      function openModal(key) {
+        var tpl = root.querySelector('[data-pro-img-text-popup="' + key + '"]');
+        if (!tpl) return;
+        var titleNode = tpl.content.querySelector('[data-title]');
+        var bodyNode = tpl.content.querySelector('[data-body]');
+        titleEl.textContent = titleNode ? titleNode.textContent : '';
+        titleEl.hidden = !titleEl.textContent;
+        bodyEl.innerHTML = bodyNode ? bodyNode.innerHTML : '';
+        modal.hidden = false;
+        document.documentElement.classList.add('pro-img-text-modal-open');
+      }
+
+      function closeModal() {
+        modal.hidden = true;
+        bodyEl.innerHTML = '';
+        titleEl.textContent = '';
+        document.documentElement.classList.remove('pro-img-text-modal-open');
+      }
+
+      root.addEventListener('click', function(e) {
+        var link = e.target.closest('.pro-img-text-content a[href^="#popup"]');
+        if (link && root.contains(link)) {
+          e.preventDefault();
+          var key = (link.getAttribute('href') || '').replace(/^#/, '');
+          if (key) openModal(key);
+          return;
+        }
+        if (e.target.closest('[data-pro-img-text-modal-close]')) closeModal();
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+      });
+    });
+  })();
+</script>

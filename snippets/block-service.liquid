@@ -1,0 +1,281 @@
+{% doc %}
+  Product contact/service bar (Drop a Hint / Email Us / Phone / Live Chat).
+  @param {object} block - Section or theme block
+  @param {boolean} [report_mode] - Render the diamond report contact card
+{% enddoc %}
+{% liquid
+  assign blo_setts = block.settings
+  assign uid = block.id
+  assign phone = blo_setts.phone | default: '+1.818.666.6081'
+  assign phone_href = phone | replace: ' ', '' | replace: '.', '' | replace: '-', '' | replace: '(', '' | replace: ')', ''
+%}
+
+{%- capture default_svg_hint -%}
+<svg class="icon icon-drop-a-hint" viewBox="0 0 1021.09 881.84" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="62" d="m971.89,850.84H49.19c-10.4,0-18.19-7.8-18.19-18.19V130.88c0-10.4,7.8-18.19,18.19-18.19h922.7c10.4,0,18.19,7.8,18.19,18.19v701.77c-1.3,10.4-9.1,18.19-18.19,18.19Z"/><path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="62" d="m40.1,117.88l397.67,409.37c41.59,45.49,114.36,44.19,155.95-2.6l55.88-62.38L990.09,117.88"/><line fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="62" stroke-linecap="round" x1="132.06" y1="750.99" x2="401.35" y2="489.86"/><line fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="62" stroke-linecap="round" x1="888.96" y1="750.99" x2="640.92" y2="510.47"/><path fill="currentColor" d="m636.34,0C660.42,0,683.17,5.35,703.25,17.4c20.07,12.04,36.13,28.1,48.18,48.18,12.04,20.07,17.4,41.48,17.4,65.57,0,17.4-4.01,33.46-9.37,49.51-6.69,16.06-16.06,30.78-29.44,42.82l-219.47,216.79-222.15-216.79c-13.38-12.04-22.75-26.76-29.44-42.82-6.69-16.06-9.37-32.12-9.37-49.51,0-24.09,5.35-45.5,17.4-65.57,12.04-20.07,28.1-36.13,48.18-48.18C335.24,5.35,357.99,0,382.07,0c17.4,0,34.79,2.68,50.85,9.37,16.06,6.69,30.78,16.06,44.16,28.1l32.12,30.78,32.12-30.78c13.38-12.04,26.76-22.75,44.16-28.1C601.54,2.68,618.94,0,636.34,0h0Z"/></svg>
+{%- endcapture -%}
+{%- capture default_svg_email -%}
+<svg class="icon icon-email-us" viewBox="0 0 1027.96 803.99" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="62" d="m38.87,31.88l456.74,475.11c13.12,14.44,35.44,13.12,47.25,0l110.25-124.68L996.97,33.19"/><line fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="62" x1="985.97" y1="764.86" x2="638.17" y2="384.24"/><line fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="62" x1="37.87" y1="766.86" x2="394.86" y2="401.99"/><rect fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="62" x="31" y="31" width="965.96" height="741.99" rx="12.3" ry="12.3"/></svg>
+{%- endcapture -%}
+{%- capture default_svg_phone -%}
+<svg class="icon icon-tel" viewBox="0 0 1001.2 1003.93" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="71" d="m82.36,382.94c38.6,77.21,81.07,159.56,158.28,243.21l56.62,61.77c75.92,83.64,158.28,153.13,235.48,200.74,78.49,48.9,154.42,77.21,216.18,79.78h5.15c91.36,0,184.01-92.65,205.89-154.42,13.8-40.15.69-66.84-17.86-78.88-.95-.61-1.88-1.24-2.78-1.92-59.62-45.08-176.62-114.87-227.71-125.09h0c-4.25-.85-8.62-.85-12.87,0h0c-30.88,3.86-50.19,23.16-64.34,37.32-15.44,15.44-20.59,19.3-32.17,19.3h0c-3.79,0-7.52-.93-10.86-2.71-12.55-6.72-47.27-29.76-124.25-111.81l-43.75-46.32c-74.1-82.45-94.87-118.34-100.08-131.02-1.44-3.52-1.63-7.45-.33-11.02,2.38-6.51,8.39-10.63,25.77-18.81,18.02-9.01,43.75-21.88,55.33-48.9l.97-2.42c1.06-2.65,1.6-5.48,1.6-8.33v-2.11c0-47.21-53.15-148.84-91.68-209.51-.52-.82-1.02-1.65-1.48-2.51-6.85-12.97-25.04-33.76-67.7-33.76-38.6,0-73.35,19.3-118.39,46.32-28.31,15.44-79.78,54.05-88.79,106.8-10.29,56.62,5.15,114.53,43.75,194.31Z"/></svg>
+{%- endcapture -%}
+{%- capture default_svg_chat -%}
+<svg class="icon icon-live-chat" viewBox="0 0 1036.61 868.62" aria-hidden="true" focusable="false"><line fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="71" stroke-linecap="round" x1="143.59" y1="208.43" x2="749.86" y2="208.43"/><line fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="71" stroke-linecap="round" x1="143.59" y1="383.14" x2="542.56" y2="383.14"/><path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="71" d="m358.62,714.45H78.05c-23.5,0-42.55-19.05-42.55-42.55V78.05c0-23.5,19.05-42.55,42.55-42.55h880.51c23.5,0,42.55,19.05,42.55,42.55v593.84c0,23.5-19.05,42.55-42.55,42.55h-279.37"/><path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="71" stroke-linecap="round" d="m679.58,714.47c-10.43,0-20.86,3.91-28.68,10.43l-103,96.48c-15.65,15.65-41.72,15.65-57.37,0l-103-96.48c-7.82-6.52-18.25-10.43-28.68-10.43"/></svg>
+{%- endcapture -%}
+
+<div
+  class="block-service {{ block.id }} color-{{ blo_setts.color_scheme }}{% if report_mode %} dpi-report-contact{% endif %}"
+  data-block-service
+  id="bs-root-{{ uid }}"
+  {{ block.shopify_attributes }}
+>
+  {% if report_mode %}
+    <div class="hsd-diamond-report-image">
+      {% if blo_setts.report_image != blank %}
+        {{ blo_setts.report_image | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'dpi-report-contact__image' }}
+      {% endif %}
+      <div class="dpi-report-contact__content">
+        {% if blo_setts.report_heading != blank %}
+          <h2 class="dpi-report-contact__heading">{{ blo_setts.report_heading | escape }}</h2>
+        {% endif %}
+        <button type="button" class="block-service__action dpi-report-contact__button" data-bs-open="email-{{ uid }}" aria-haspopup="dialog" aria-controls="bs-email-{{ uid }}">
+          {{ blo_setts.report_button_label | escape }}
+        </button>
+      </div>
+    </div>
+  {% else %}
+  <div class="block-service__content content">
+    <ul class="block-service__list">
+      {%- if blo_setts.show_drop_hint -%}
+        <li>
+          <button type="button" class="block-service__action" data-bs-open="hint-{{ uid }}">
+            {% render 'block-service-icon',
+              icon_type: blo_setts.drop_hint_icon_type,
+              svg: blo_setts.drop_hint_svg,
+              image: blo_setts.drop_hint_image,
+              default_svg: default_svg_hint
+            %}
+            <span>{{ blo_setts.drop_hint_label | default: 'Drop a Hint' }}</span>
+          </button>
+        </li>
+      {%- endif -%}
+
+      {%- if blo_setts.show_email_us -%}
+        <li>
+          <button type="button" class="block-service__action" data-bs-open="email-{{ uid }}">
+            {% render 'block-service-icon',
+              icon_type: blo_setts.email_us_icon_type,
+              svg: blo_setts.email_us_svg,
+              image: blo_setts.email_us_image,
+              default_svg: default_svg_email
+            %}
+            <span>{{ blo_setts.email_us_label | default: 'Email Us' }}</span>
+          </button>
+        </li>
+      {%- endif -%}
+
+      {%- if blo_setts.show_phone -%}
+        <li>
+          <a class="block-service__action" href="tel:{{ phone_href }}">
+            {% render 'block-service-icon',
+              icon_type: blo_setts.phone_icon_type,
+              svg: blo_setts.phone_svg,
+              image: blo_setts.phone_image,
+              default_svg: default_svg_phone
+            %}
+            <span>{{ phone }}</span>
+          </a>
+        </li>
+      {%- endif -%}
+
+      {%- if blo_setts.show_live_chat -%}
+        <li>
+          <button type="button" class="block-service__action" data-bs-live-chat{% if blo_setts.live_chat_url != blank %} data-bs-chat-url="{{ blo_setts.live_chat_url }}"{% endif %}>
+            {% render 'block-service-icon',
+              icon_type: blo_setts.live_chat_icon_type,
+              svg: blo_setts.live_chat_svg,
+              image: blo_setts.live_chat_image,
+              default_svg: default_svg_chat
+            %}
+            <span>{{ blo_setts.live_chat_label | default: 'Live Chat' }}</span>
+          </button>
+        </li>
+      {%- endif -%}
+    </ul>
+  </div>
+  {% endif %}
+
+  {%- if blo_setts.show_drop_hint -%}
+    <dialog class="block-service__dialog dialog-from" id="bs-hint-{{ uid }}" data-bs-dialog="hint-{{ uid }}">
+      <div class="block-service__dialog-panel">
+        <button type="button" class="block-service__dialog-close" data-bs-close aria-label="Close">&times;</button>
+        {%- assign hint_form_id = 'bs-hint-form-' | append: uid -%}
+        {%- form 'contact', id: hint_form_id, class: 'block-service__form ticket-drop-a-hint' -%}
+          <input type="hidden" name="contact[subject]" value="{{ blo_setts.drop_hint_subject | default: 'Drop a Hint' }}">
+          <input type="hidden" name="contact[product]" value="{{ product.title | escape }}{% if product.selected_or_first_available_variant %} | {{ product.selected_or_first_available_variant.id }}{% endif %}">
+          <fieldset>
+            <legend class="title">{{ blo_setts.drop_hint_title | default: 'Drop a Hint' }}</legend>
+            <div class="description">{{ blo_setts.drop_hint_desc | default: 'Enter the email address where you would like this to be sent.' }}</div>
+
+            {%- if form.posted_successfully? and form.id == hint_form_id -%}
+              <div class="block-service__form-success">{{ blo_setts.drop_hint_success | default: 'Your hint has been successfully sent!' }}</div>
+            {%- else -%}
+              <div class="block-service__field">
+                <label class="visually-hidden" for="bs-hint-recipient-{{ uid }}">Recipient email</label>
+                <input type="email" id="bs-hint-recipient-{{ uid }}" name="contact[recipient_email]" placeholder="Recipient email" required>
+              </div>
+              <div class="block-service__field">
+                <label class="visually-hidden" for="bs-hint-email-{{ uid }}">Your email</label>
+                <input type="email" id="bs-hint-email-{{ uid }}" name="contact[email]" placeholder="Your email" required value="{% if customer %}{{ customer.email }}{% endif %}">
+              </div>
+              <div class="block-service__field">
+                <label class="visually-hidden" for="bs-hint-name-{{ uid }}">Your name</label>
+                <input type="text" id="bs-hint-name-{{ uid }}" name="contact[name]" placeholder="Your name" required value="{% if customer %}{{ customer.name }}{% endif %}">
+              </div>
+              <div class="block-service__field">
+                <label class="visually-hidden" for="bs-hint-msg-{{ uid }}">Your message</label>
+                <textarea id="bs-hint-msg-{{ uid }}" name="contact[body]" placeholder="Your message" rows="4"></textarea>
+              </div>
+              <label class="block-service__check">
+                <input type="checkbox" name="contact[newsletter]" value="yes" checked>
+                <span>{{ blo_setts.drop_hint_newsletter | default: 'Sign me up for updates.' }}</span>
+              </label>
+              <div class="block-service__form-actions field-buttons">
+                <button type="submit" class="block-service__submit btn">{{ blo_setts.submit_label | default: 'Submit' }}</button>
+              </div>
+            {%- endif -%}
+          </fieldset>
+        {%- endform -%}
+      </div>
+    </dialog>
+  {%- endif -%}
+
+  {%- if blo_setts.show_email_us or report_mode -%}
+    <dialog class="block-service__dialog dialog-from" id="bs-email-{{ uid }}" data-bs-dialog="email-{{ uid }}" aria-labelledby="bs-email-title-{{ uid }}">
+      <div class="block-service__dialog-panel">
+        <button type="button" class="block-service__dialog-close" data-bs-close aria-label="Close">&times;</button>
+        {%- assign email_form_id = 'bs-email-form-' | append: uid -%}
+        {%- form 'contact', id: email_form_id, class: 'block-service__form ticket-need-help' -%}
+          {% if report_mode %}
+            {% if form.posted_successfully? or form.errors %}
+              <span hidden data-bs-result></span>
+            {% endif %}
+          {% endif %}
+          <input type="hidden" name="contact[subject]" value="{{ blo_setts.email_us_subject | default: 'Need Help' }}">
+          <input type="hidden" name="contact[product]" value="{{ product.title | escape }}{% if product.selected_or_first_available_variant %} | {{ product.selected_or_first_available_variant.id }}{% endif %}">
+          <fieldset>
+            <div class="title" id="bs-email-title-{{ uid }}">{{ blo_setts.email_us_title | default: 'Need Help?' | escape }}</div>
+            <div class="description">{{ blo_setts.email_us_desc | default: 'Get expert answers! Our jewelry specialists can help with all your inquiries.' }}</div>
+
+            {%- if form.posted_successfully? -%}
+              <div class="block-service__form-success">{{ blo_setts.email_us_success | default: 'Thank you for reaching out! Our team has received your inquiry and will be in touch shortly.' }}</div>
+            {%- else -%}
+              {% if form.errors %}
+                <div class="block-service__form-errors" role="alert">{{ form.errors | default_errors }}</div>
+              {% endif %}
+              <div class="block-service__field-row">
+                <div class="block-service__field">
+                  <label class="visually-hidden" for="bs-email-fn-{{ uid }}">First name</label>
+                  <input type="text" id="bs-email-fn-{{ uid }}" name="contact[first_name]" placeholder="First name" required>
+                </div>
+                <div class="block-service__field">
+                  <label class="visually-hidden" for="bs-email-ln-{{ uid }}">Last name</label>
+                  <input type="text" id="bs-email-ln-{{ uid }}" name="contact[last_name]" placeholder="Last name" required>
+                </div>
+              </div>
+              <div class="block-service__field">
+                <label class="visually-hidden" for="bs-email-email-{{ uid }}">Email address</label>
+                <input type="email" id="bs-email-email-{{ uid }}" name="contact[email]" placeholder="Email address" required value="{% if customer %}{{ customer.email }}{% endif %}">
+              </div>
+              <div class="block-service__field">
+                <label class="visually-hidden" for="bs-email-phone-{{ uid }}">Phone (optional)</label>
+                <input type="text" id="bs-email-phone-{{ uid }}" name="contact[phone]" placeholder="Phone (optional)">
+              </div>
+              <div class="block-service__field">
+                <label class="visually-hidden" for="bs-email-msg-{{ uid }}">Your message</label>
+                <textarea id="bs-email-msg-{{ uid }}" name="contact[body]" placeholder="Your message" rows="4"></textarea>
+              </div>
+              <label class="block-service__check">
+                <input type="checkbox" name="contact[newsletter]" value="yes" checked>
+                <span>{{ blo_setts.email_us_newsletter | default: 'Send me updates on new styles and special offers.' }}</span>
+              </label>
+              <div class="block-service__form-actions field-buttons">
+                <button type="submit" class="block-service__submit btn">{{ blo_setts.submit_label | default: 'Submit' }}</button>
+              </div>
+            {%- endif -%}
+          </fieldset>
+        {%- endform -%}
+      </div>
+    </dialog>
+  {%- endif -%}
+</div>
+
+<script>
+  (function () {
+    var root = document.getElementById('bs-root-{{ uid }}');
+    if (!root || root.dataset.bsReady) return;
+    root.dataset.bsReady = '1';
+
+    root.querySelectorAll('[data-bs-open]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-bs-open');
+        var dialog = root.querySelector('[data-bs-dialog="' + id + '"]');
+        if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
+      });
+    });
+
+    root.querySelectorAll('[data-bs-close]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var dialog = btn.closest('dialog');
+        if (dialog) dialog.close();
+      });
+    });
+
+    root.querySelectorAll('dialog.block-service__dialog').forEach(function (dialog) {
+      dialog.addEventListener('click', function (e) {
+        if (e.target === dialog) dialog.close();
+      });
+    });
+
+    var result = root.querySelector('[data-bs-result]');
+    if (result) {
+      var resultDialog = result.closest('dialog');
+      if (resultDialog && typeof resultDialog.showModal === 'function') resultDialog.showModal();
+    }
+
+    var chatBtn = root.querySelector('[data-bs-live-chat]');
+    if (chatBtn) {
+      chatBtn.addEventListener('click', function () {
+        if (window.tidioChatApi && typeof window.tidioChatApi.open === 'function') {
+          window.tidioChatApi.open();
+          return;
+        }
+        if (window.GorgiasChat && typeof window.GorgiasChat.open === 'function') {
+          window.GorgiasChat.open();
+          return;
+        }
+        if (window.$crisp && typeof window.$crisp.push === 'function') {
+          window.$crisp.push(['do', 'chat:open']);
+          return;
+        }
+        var url = chatBtn.getAttribute('data-bs-chat-url');
+        if (url) window.location.href = url;
+      });
+    }
+
+    {%- if blo_setts.show_drop_hint -%}
+      {%- assign hint_form_id = 'bs-hint-form-' | append: uid -%}
+      {%- if form.posted_successfully? and form.id == hint_form_id -%}
+        var dHint = root.querySelector('[data-bs-dialog="hint-{{ uid }}"]');
+        if (dHint && typeof dHint.showModal === 'function') dHint.showModal();
+      {%- endif -%}
+    {%- endif -%}
+    {%- if blo_setts.show_email_us -%}
+      {%- assign email_form_id = 'bs-email-form-' | append: uid -%}
+      {%- if form.posted_successfully? and form.id == email_form_id -%}
+        var dEmail = root.querySelector('[data-bs-dialog="email-{{ uid }}"]');
+        if (dEmail && typeof dEmail.showModal === 'function') dEmail.showModal();
+      {%- endif -%}
+    {%- endif -%}
+  })();
+</script>

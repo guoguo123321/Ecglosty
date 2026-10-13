@@ -1,0 +1,438 @@
+{% doc %}
+  @prompt
+    用户在购物车页面，下单之前可以备注一些信息
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-cart-note-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-cart-note-container-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: {{ block.settings.padding }}px;
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+  }
+
+  .ai-cart-note-header-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: {{ block.settings.spacing }}px;
+    cursor: pointer;
+  }
+
+  .ai-cart-note-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .ai-cart-note-icon-{{ ai_gen_id }} {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-cart-note-icon-{{ ai_gen_id }}.active {
+    transform: rotate(180deg);
+  }
+
+  .ai-cart-note-content-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .ai-cart-note-content-{{ ai_gen_id }}.active {
+    max-height: 500px;
+  }
+
+  .ai-cart-note-label-{{ ai_gen_id }} {
+    display: block;
+    font-size: {{ block.settings.label_size }}px;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 8px;
+  }
+
+  .ai-cart-note-textarea-{{ ai_gen_id }} {
+    width: 100%;
+    min-height: {{ block.settings.textarea_height }}px;
+    padding: 12px;
+    border: 1px solid {{ block.settings.input_border_color }};
+    border-radius: {{ block.settings.input_border_radius }}px;
+    background-color: {{ block.settings.input_background }};
+    color: {{ block.settings.input_text_color }};
+    font-size: 14px;
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  .ai-cart-note-textarea-{{ ai_gen_id }}:focus {
+    outline: none;
+    border-color: {{ block.settings.input_focus_border_color }};
+  }
+
+  .ai-cart-note-textarea-{{ ai_gen_id }}::placeholder {
+    color: {{ block.settings.placeholder_color }};
+  }
+
+  .ai-cart-note-char-count-{{ ai_gen_id }} {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: {{ block.settings.text_color }};
+    margin-top: 4px;
+    opacity: 0.7;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-cart-note-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<cart-note-{{ ai_gen_id }}
+  class="ai-cart-note-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-cart-note-container-{{ ai_gen_id }}">
+    <div
+      class="ai-cart-note-header-{{ ai_gen_id }}"
+      role="button"
+      aria-expanded="{% if block.settings.open_by_default %}true{% else %}false{% endif %}"
+      aria-controls="ai-cart-note-content-{{ ai_gen_id }}"
+      tabindex="0"
+    >
+      <h3 class="ai-cart-note-title-{{ ai_gen_id }}">{{ block.settings.title }}</h3>
+      <svg
+        class="ai-cart-note-icon-{{ ai_gen_id }} {% if block.settings.open_by_default %}active{% endif %}"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+
+    <div
+      id="ai-cart-note-content-{{ ai_gen_id }}"
+      class="ai-cart-note-content-{{ ai_gen_id }} {% if block.settings.open_by_default %}active{% endif %}"
+    >
+      {% if block.settings.label != blank %}
+        <label
+          for="ai-cart-note-textarea-{{ ai_gen_id }}"
+          class="ai-cart-note-label-{{ ai_gen_id }}"
+        >
+          {{ block.settings.label }}
+        </label>
+      {% endif %}
+
+      <textarea
+        id="ai-cart-note-textarea-{{ ai_gen_id }}"
+        name="note"
+        class="ai-cart-note-textarea-{{ ai_gen_id }}"
+        placeholder="{{ block.settings.placeholder }}"
+        maxlength="{{ block.settings.max_characters }}"
+        aria-label="{{ block.settings.label | default: block.settings.title }}"
+      >{{ cart.note }}</textarea>
+
+      {% if block.settings.show_character_count %}
+        <span class="ai-cart-note-char-count-{{ ai_gen_id }}">
+          <span class="ai-cart-note-current-count-{{ ai_gen_id }}">0</span> / {{ block.settings.max_characters }}
+        </span>
+      {% endif %}
+    </div>
+  </div>
+</cart-note-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CartNote{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.header = this.querySelector('.ai-cart-note-header-{{ ai_gen_id }}');
+        this.content = this.querySelector('.ai-cart-note-content-{{ ai_gen_id }}');
+        this.icon = this.querySelector('.ai-cart-note-icon-{{ ai_gen_id }}');
+        this.textarea = this.querySelector('.ai-cart-note-textarea-{{ ai_gen_id }}');
+        this.charCount = this.querySelector('.ai-cart-note-current-count-{{ ai_gen_id }}');
+      }
+
+      connectedCallback() {
+        this.setupEventListeners();
+        this.updateCharCount();
+      }
+
+      setupEventListeners() {
+        this.header.addEventListener('click', () => this.toggleContent());
+        this.header.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.toggleContent();
+          }
+        });
+
+        this.textarea.addEventListener('input', () => {
+          this.updateCharCount();
+          this.saveNote();
+        });
+
+        this.textarea.addEventListener('change', () => {
+          this.saveNote();
+        });
+      }
+
+      toggleContent() {
+        const isActive = this.content.classList.contains('active');
+        this.content.classList.toggle('active');
+        this.icon.classList.toggle('active');
+        this.header.setAttribute('aria-expanded', !isActive);
+      }
+
+      updateCharCount() {
+        if (this.charCount) {
+          this.charCount.textContent = this.textarea.value.length;
+        }
+      }
+
+      saveNote() {
+        const note = this.textarea.value;
+        
+        fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ note: note })
+        })
+        .catch((error) => {
+          console.error('Error saving cart note:', error);
+        });
+      }
+    }
+
+    customElements.define('cart-note-{{ ai_gen_id }}', CartNote{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "购物车备注",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "内容"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "标题",
+      "default": "订单备注"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "输入框标签"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "占位符文本",
+      "default": "请在此处添加您的备注信息..."
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "默认展开",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "字符限制"
+    },
+    {
+      "type": "range",
+      "id": "max_characters",
+      "label": "最大字符数",
+      "min": 50,
+      "max": 500,
+      "step": 10,
+      "default": 200
+    },
+    {
+      "type": "checkbox",
+      "id": "show_character_count",
+      "label": "显示字符计数",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "样式"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "桌面宽度",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "textarea_height",
+      "label": "输入框高度",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "内边距",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "label": "间距",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "边框圆角",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "边框宽度",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "input_border_radius",
+      "label": "输入框圆角",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "颜色"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "背景颜色",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "文本颜色",
+      "default": "#282828"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "边框颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "input_background",
+      "label": "输入框背景",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "输入框文本",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "输入框边框",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "input_focus_border_color",
+      "label": "输入框聚焦边框",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color",
+      "label": "占位符颜色",
+      "default": "#999999"
+    },
+    {
+      "type": "header",
+      "content": "字体大小"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "标题大小",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "标签大小",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    }
+  ],
+  "presets": [
+    {
+      "name": "购物车备注"
+    }
+  ]
+}
+{% endschema %}

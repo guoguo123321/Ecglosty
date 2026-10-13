@@ -1,0 +1,163 @@
+{%- doc -%}
+  Mobile-only "Shown with + Diamond Shape" bar under product media.
+  Uses product option whose name contains "shape" (e.g. View with Diamond Shape),
+  and Variant Shape metaobject fields: variant_shape_title / variant_shape_image.
+
+  @param {object} product - Product object
+  @param {string} [id] - Unique id suffix
+{%- enddoc -%}
+
+{%- liquid
+  assign shape_option = nil
+  assign shown_with_label = ''
+  assign current_shape = ''
+  assign current_shape_image = nil
+
+  if shop.metaobjects.variant_shape != blank
+    assign shape_entries = shop.metaobjects.variant_shape.values
+  elsif shop.metaobjects['variant_shape'] != blank
+    assign shape_entries = shop.metaobjects['variant_shape'].values
+  elsif shop.metaobjects['variant-shape'] != blank
+    assign shape_entries = shop.metaobjects['variant-shape'].values
+  else
+    assign shape_entries = nil
+  endif
+
+  for opt in product.options_with_values
+    assign opt_name_down = opt.name | downcase
+    if opt_name_down contains 'shape'
+      assign shape_option = opt
+    endif
+    if opt_name_down contains 'centerstone' or opt_name_down contains 'center stone' or opt_name_down contains 'carat'
+      if opt.selected_value != blank
+        assign shown_with_label = opt.selected_value.name | default: opt.selected_value
+      elsif opt.values.size > 0
+        assign shown_with_label = opt.values.first.name | default: opt.values.first
+      endif
+    endif
+  endfor
+
+  if shape_option != blank
+    assign current_shape = shape_option.selected_value.name | default: shape_option.selected_value | default: shape_option.values.first.name | default: shape_option.values.first
+  endif
+
+  if shape_option != blank and shape_entries != blank and current_shape != blank
+    assign current_handle = current_shape | handleize
+    for mo in shape_entries
+      assign mo_title = mo['variant_shape_title'].value | default: mo.variant_shape_title.value | default: mo.variant_shape_title | default: mo.title.value | default: mo.title
+      assign mo_title = mo_title | strip
+      assign mo_handle = mo_title | handleize
+      if mo_title == current_shape or mo_handle == current_handle
+        assign mo_image = mo['variant_shape_image'].value | default: mo.variant_shape_image.value | default: mo.variant_shape_image | default: mo.image.value | default: mo.image
+        if mo_image.preview_image != blank
+          assign current_shape_image = mo_image.preview_image
+        elsif mo_image != blank
+          assign current_shape_image = mo_image
+        endif
+        break
+      endif
+    endfor
+  endif
+
+  if shown_with_label == blank
+    assign shown_with_label = '1 ct'
+  else
+    assign shown_with_label = shown_with_label.name | default: shown_with_label
+  endif
+-%}
+
+{%- if shape_option != blank and shape_option.values.size > 0 -%}
+  <div
+    class="cmg-shape-viewer"
+    id="cmg-shape-viewer-{{ id }}"
+    data-option-name="{{ shape_option.name | escape }}"
+  >
+    <div class="cmg-shape-viewer__bar">
+      <span class="cmg-shape-viewer__shown">Shown with {{ shown_with_label | escape }}</span>
+      <div class="cmg-shape-viewer__dropdown">
+        <button
+          type="button"
+          class="cmg-shape-viewer__trigger"
+          aria-expanded="false"
+          aria-controls="cmg-shape-panel-{{ id }}"
+          id="cmg-shape-trigger-{{ id }}"
+        >
+          {%- if current_shape_image != blank -%}
+            <img
+              class="cmg-shape-viewer__icon"
+              src="{{ current_shape_image | image_url: width: 48 }}"
+              alt=""
+              width="18"
+              height="18"
+              loading="lazy"
+            >
+          {%- endif -%}
+          <span class="cmg-shape-viewer__label">{{ current_shape | escape }}</span>
+          <svg class="cmg-shape-viewer__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div
+          class="cmg-shape-viewer__panel"
+          id="cmg-shape-panel-{{ id }}"
+          hidden
+          role="listbox"
+          aria-label="{{ shape_option.name | escape }}"
+        >
+          {%- for product_option_value in shape_option.values -%}
+            {%- liquid
+              assign option_value_name = product_option_value.name | default: product_option_value
+              assign option_value_handle = option_value_name | handleize
+              assign shape_img = nil
+              assign shape_img_url = ''
+
+              if shape_entries != blank
+                for mo in shape_entries
+                  assign mo_title = mo['variant_shape_title'].value | default: mo.variant_shape_title.value | default: mo.variant_shape_title | default: mo.title.value | default: mo.title
+                  assign mo_title = mo_title | strip
+                  assign mo_handle = mo_title | handleize
+                  if mo_title == option_value_name or mo_handle == option_value_handle
+                    assign mo_image = mo['variant_shape_image'].value | default: mo.variant_shape_image.value | default: mo.variant_shape_image | default: mo.image.value | default: mo.image
+                    if mo_image.preview_image != blank
+                      assign shape_img = mo_image.preview_image
+                    elsif mo_image != blank
+                      assign shape_img = mo_image
+                    endif
+                    break
+                  endif
+                endfor
+              endif
+
+              if shape_img != blank
+                assign shape_img_url = shape_img | image_url: width: 64
+              endif
+            -%}
+            <button
+              type="button"
+              class="cmg-shape-viewer__option{% if product_option_value.selected or option_value_name == current_shape %} is-selected{% endif %}"
+              role="option"
+              aria-selected="{% if product_option_value.selected or option_value_name == current_shape %}true{% else %}false{% endif %}"
+              data-shape-value="{{ option_value_name | escape }}"
+              data-option-value-id="{{ product_option_value.id }}"
+              {% if product_option_value.product_url != blank %}
+                data-connected-product-url="{{ product_option_value.product_url }}"
+              {% endif %}
+              {% if product_option_value.variant.id %}
+                data-variant-id="{{ product_option_value.variant.id }}"
+              {% endif %}
+              {% if product_option_value.available == false %}
+                data-unavailable="true"
+              {% endif %}
+            >
+              {%- if shape_img_url != blank -%}
+                <img src="{{ shape_img_url }}" alt="" width="28" height="28" loading="lazy">
+              {%- endif -%}
+              <span>{{ option_value_name | escape }}</span>
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}

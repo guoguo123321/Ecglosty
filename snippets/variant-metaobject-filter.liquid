@@ -1,0 +1,888 @@
+{%- doc -%}
+  Image strip from variant_color or variant_shape metaobjects.
+
+  Default (collection page): horizontal link strip, click navigates immediately.
+  When deferred: true (filters drawer): collapsible accordion + multi-select checkboxes;
+  filters apply only via Apply / See results.
+
+  @param {string} metaobject_type - 'variant_color' or 'variant_shape'
+  @param {string} filter_label - Accessible group label
+  @param {string} panel_id - Unique id suffix
+  @param {string} swatch_row_class - Modifier for metal vs shape styling
+  @param {object} [filters] - Collection filters for URL matching
+  @param {string} [heading_text] - Heading / accordion summary label
+  @param {string} [filter_style] - 'horizontal' | 'vertical' (drawer accordion only)
+  @param {string} [id_prefix] - Prefix to avoid duplicate IDs
+  @param {boolean} [deferred] - Use accordion + checkboxes (drawer only)
+{%- enddoc -%}
+
+{% liquid
+  assign metaobject_entries = nil
+
+  if metaobject_type == 'variant_shape'
+    if shop.metaobjects.variant_shape != blank
+      assign metaobject_entries = shop.metaobjects.variant_shape.values
+    elsif shop.metaobjects['variant_shape'] != blank
+      assign metaobject_entries = shop.metaobjects['variant_shape'].values
+    elsif shop.metaobjects['variant-shape'] != blank
+      assign metaobject_entries = shop.metaobjects['variant-shape'].values
+    endif
+  else
+    if shop.metaobjects.variant_color != blank
+      assign metaobject_entries = shop.metaobjects.variant_color.values
+    elsif shop.metaobjects['variant_color'] != blank
+      assign metaobject_entries = shop.metaobjects['variant_color'].values
+    elsif shop.metaobjects['variant-color'] != blank
+      assign metaobject_entries = shop.metaobjects['variant-color'].values
+    endif
+  endif
+
+  assign option_filter = nil
+  if filters != blank
+    for filter in filters
+      assign filter_label_down = filter.label | downcase
+      assign filter_param_down = filter.param_name | downcase
+      assign skip_taxonomy = false
+      # Skip Shopify taxonomy color-pattern; Metal strip needs variant option filters.
+      if filter_param_down contains 'shopify.color-pattern' or filter_param_down contains 'color-pattern'
+        assign skip_taxonomy = true
+      endif
+      unless skip_taxonomy
+        if metaobject_type == 'variant_shape'
+          if filter_label_down contains 'shape' or filter_label_down contains 'diamond' or filter_label_down contains 'cut' or filter_param_down contains 'shape' or filter_param_down contains 'diamond' or filter_param_down contains 'cut'
+            assign option_filter = filter
+            break
+          endif
+        else
+          unless filter_label_down contains 'shape' or filter_param_down contains 'shape'
+            if filter_label_down contains 'color' or filter_label_down contains 'metal' or filter_param_down contains 'color' or filter_param_down contains 'metal' or filter_param_down contains 'option.color' or filter_param_down contains 'option.metal'
+              assign option_filter = filter
+              break
+            endif
+          endunless
+        endif
+      endunless
+    endfor
+  endif
+
+  # Prefer the list filter with the most title overlaps
+  if option_filter == blank and filters != blank and metaobject_entries != blank
+    assign best_overlap = 0
+    for filter in filters
+      assign filter_param_down = filter.param_name | downcase
+      if filter_param_down contains 'shopify.color-pattern' or filter_param_down contains 'color-pattern'
+        assign skip_filter = true
+      elsif filter.type == 'price_range' or filter.type == 'boolean'
+        assign skip_filter = true
+      else
+        assign skip_filter = false
+        assign filter_label_down = filter.label | downcase
+        if metaobject_type == 'variant_shape'
+          if filter_label_down contains 'color' or filter_label_down contains 'metal'
+            unless filter_label_down contains 'shape' or filter_label_down contains 'diamond'
+              assign skip_filter = true
+            endunless
+          endif
+        elsif filter_label_down contains 'shape' or filter_label_down contains 'diamond'
+          assign skip_filter = true
+        endif
+      endif
+
+      if skip_filter == false
+        assign overlap_count = 0
+        for value in filter.values
+          assign value_key = value.label | downcase | strip
+          assign value_handle = value.label | handleize
+          assign value_param = value.value | downcase | strip
+          for mo in metaobject_entries
+            if metaobject_type == 'variant_shape'
+              assign probe_title = mo['variant_shape_title'].value | default: mo.variant_shape_title.value | default: mo.variant_shape_title | default: mo.name.value | default: mo.name | default: mo.title.value | default: mo.title | default: mo.system.handle
+            else
+              assign probe_title = mo['variant_color_title'].value | default: mo.variant_color_title.value | default: mo.variant_color_title | default: mo.name.value | default: mo.name | default: mo.title.value | default: mo.title | default: mo.system.handle
+            endif
+            assign probe_title = probe_title | strip
+            if probe_title != blank
+              assign probe_key = probe_title | downcase | strip
+              assign probe_handle = probe_title | handleize
+              assign probe_sys = mo.system.handle | default: '' | downcase
+              if probe_key == value_key or probe_handle == value_handle or probe_key == value_param or probe_handle == value_param or probe_sys == value_param or probe_sys == value_handle
+                assign overlap_count = overlap_count | plus: 1
+                break
+              endif
+            endif
+          endfor
+        endfor
+        if overlap_count > best_overlap
+          assign best_overlap = overlap_count
+          assign option_filter = filter
+        endif
+      endif
+    endfor
+  endif
+
+  if id_prefix == blank
+    assign id_prefix = 'meta'
+  endif
+
+  assign panel_heading = heading_text
+  if panel_heading == blank
+    assign panel_heading = filter_label
+  endif
+
+  assign active_value_count = 0
+  if option_filter != blank
+    assign active_value_count = option_filter.active_values | size
+  endif
+
+  assign use_deferred = false
+  if deferred == true or deferred == 'true'
+    assign use_deferred = true
+  endif
+%}
+
+{% if metaobject_entries != blank or option_filter != blank %}
+  {% if use_deferred and metaobject_entries != blank %}
+    {% capture accordion_children %}
+      <details
+        id="Facet-Details-{{ id_prefix }}-{{ panel_id }}"
+        class="facets__panel"
+        open
+      >
+        <summary class="facets__summary">
+          <span class="facets__label">{{ panel_heading }}</span>
+          <div class="facets__status-wrapper">
+            <facet-status-component
+              class="facets__status"
+              facet-type="list"
+              data-filter-style="{{ filter_style }}"
+            >
+              <span
+                class="{% if active_value_count > 0 %}bubble facets__bubble {% endif %}hide-when-empty"
+                ref="facetStatus"
+              >
+                {%- if active_value_count > 0 -%}
+                  {{- active_value_count -}}
+                {%- endif -%}
+              </span>
+            </facet-status-component>
+            <span class="svg-wrapper icon-caret icon-animated">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          </div>
+        </summary>
+        <div
+          class="facets__inputs facets__panel-content details-content variant-metaobject-strip {{ swatch_row_class }}"
+          id="facet-inputs-{{ id_prefix }}-{{ panel_id }}"
+          role="group"
+          aria-label="{{ filter_label }}"
+        >
+          <ul class="variant-metaobject-strip__list list-unstyled">
+            {%- for mo in metaobject_entries -%}
+              {% liquid
+                if metaobject_type == 'variant_shape'
+                  assign mo_title = mo['variant_shape_title'].value | default: mo.variant_shape_title.value | default: mo.variant_shape_title | default: mo.title.value | default: mo.title
+                else
+                  assign mo_title = mo['variant_color_title'].value | default: mo.variant_color_title.value | default: mo.variant_color_title | default: mo.title.value | default: mo.title
+                endif
+
+                assign mo_title = mo_title | strip
+
+                if metaobject_type == 'variant_shape'
+                  assign mo_image = mo['variant_shape_image'].value | default: mo.variant_shape_image.value | default: mo.variant_shape_image | default: blank
+                else
+                  assign mo_image = mo['variant_color_image'].value | default: mo.variant_color_image.value | default: mo.variant_color_image | default: blank
+                endif
+                if mo_image == blank
+                  assign mo_image = mo.image.value | default: mo.image | default: blank
+                endif
+
+                assign filter_value = nil
+                assign is_filter_active = false
+
+                if option_filter != blank and mo_title != blank
+                  assign mo_key = mo_title | downcase | strip
+                  assign mo_handle = mo_title | handleize
+                  for value in option_filter.values
+                    assign value_key = value.label | downcase | strip
+                    assign value_handle = value.label | handleize
+                    assign value_param = value.value | downcase | strip
+                    if value_key == mo_key or value_handle == mo_handle or value_param == mo_key or value_param == mo_handle
+                      assign filter_value = value
+                      assign is_filter_active = value.active
+                      break
+                    endif
+                  endfor
+                endif
+
+                assign strip_image = nil
+                assign strip_image_url = nil
+
+                if mo_image != blank
+                  if mo_image.preview_image != blank
+                    assign strip_image = mo_image.preview_image
+                  else
+                    assign strip_image = mo_image
+                  endif
+
+                  assign strip_image_url = strip_image | image_url: width: 160
+                  if strip_image_url == blank
+                    assign strip_image_url = mo_image | image_url: width: 160
+                  endif
+                  if strip_image_url == blank
+                    assign strip_image_url = mo_image | file_url
+                  endif
+                  if strip_image_url == blank and mo_image.url != blank
+                    assign strip_image_url = mo_image.url
+                  endif
+                endif
+
+                assign input_id = 'Filter-meta-' | append: id_prefix | append: '-' | append: panel_id | append: '-' | append: forloop.index
+              %}
+
+              {% liquid
+  assign strip_karat_label = ''
+  if metaobject_type != 'variant_shape'
+    assign metal_title = mo_title | strip | upcase
+    assign metal_prefix = metal_title | split: ' ' | first
+    if metal_title contains 'PLATINUM'
+      assign strip_karat_label = 'PT'
+    elsif metal_prefix contains 'K'
+      assign metal_number = metal_prefix | remove: 'K' | plus: 0
+      if metal_number > 0
+        assign strip_karat_label = metal_prefix
+      endif
+    endif
+  endif
+%}
+{% if strip_image_url != blank %}
+                {% liquid
+  assign strip_sort_rank = 0
+  assign strip_sort_value = mo.sort_order.value
+  assign strip_source_index = forloop.index0
+  for sort_entry in metaobject_entries
+    assign entry_sort_value = sort_entry.sort_order.value
+    assign entry_precedes = false
+    if strip_sort_value == blank
+      if entry_sort_value != blank
+        assign entry_precedes = true
+      elsif forloop.index0 < strip_source_index
+        assign entry_precedes = true
+      endif
+    elsif entry_sort_value != blank
+      if entry_sort_value < strip_sort_value
+        assign entry_precedes = true
+      elsif entry_sort_value == strip_sort_value and forloop.index0 < strip_source_index
+        assign entry_precedes = true
+      endif
+    endif
+    if entry_precedes
+      assign strip_sort_rank = strip_sort_rank | plus: 1
+    endif
+  endfor
+%}
+<li class="variant-metaobject-strip__item" style="--variant-metaobject-sort-order: {{ strip_sort_rank }};">
+                  {% if filter_value != blank %}
+                    <label
+                      class="variant-metaobject-strip__link{% if is_filter_active %} variant-metaobject-strip__link--active{% endif %}"
+                      for="{{ input_id }}"
+                    >
+                      <input
+                        id="{{ input_id }}"
+                        class="variant-metaobject-strip__input"
+                        type="checkbox"
+                        name="{{ filter_value.param_name }}"
+                        value="{{ filter_value.value }}"
+                        {% if is_filter_active %}
+                          checked
+                        {% endif %}
+                        data-label="{{ mo_title | escape }}"
+                        tabindex="-1"
+                      >
+                      <span class="variant-metaobject-strip__media">
+                        <img
+                          src="{{ strip_image_url }}"
+                          alt="{{ mo_title | escape }}"
+                          class="variant-metaobject-strip__img"
+                          width="{% if metaobject_type == 'variant_shape' %}32{% else %}28{% endif %}"
+                          height="{% if metaobject_type == 'variant_shape' %}32{% else %}28{% endif %}"
+                          loading="lazy"
+                          decoding="async"
+                        >
+{% if strip_karat_label != blank %}
+  <span class="variant-metaobject-strip__karat-label" aria-hidden="true">{{ strip_karat_label | escape }}</span>
+{% endif %}
+                      </span>
+                      {% if mo_title != blank %}
+                        <span class="variant-metaobject-strip__name">{{ mo_title }}</span>
+                      {% endif %}
+                    </label>
+                  {% else %}
+                    <span class="variant-metaobject-strip__link variant-metaobject-strip__link--disabled">
+                      <span class="variant-metaobject-strip__media">
+                        <img
+                          src="{{ strip_image_url }}"
+                          alt="{{ mo_title | escape }}"
+                          class="variant-metaobject-strip__img"
+                          width="{% if metaobject_type == 'variant_shape' %}32{% else %}28{% endif %}"
+                          height="{% if metaobject_type == 'variant_shape' %}32{% else %}28{% endif %}"
+                          loading="lazy"
+                          decoding="async"
+                        >
+{% if strip_karat_label != blank %}
+  <span class="variant-metaobject-strip__karat-label" aria-hidden="true">{{ strip_karat_label | escape }}</span>
+{% endif %}
+                      </span>
+                      {% if mo_title != blank %}
+                        <span class="variant-metaobject-strip__name">{{ mo_title }}</span>
+                      {% endif %}
+                    </span>
+                  {% endif %}
+                </li>
+              {% endif %}
+            {%- endfor -%}
+          </ul>
+        </div>
+      </details>
+    {% endcapture %}
+    {% render 'accordion-custom-component',
+      children: accordion_children,
+      class: 'facets__item variant-metaobject-strip-group',
+      open: true,
+      open_by_default_on_desktop: true,
+      open_by_default_on_mobile: true
+    %}
+  {% else %}
+    {% liquid
+      assign heading_active_label = 'All'
+      if option_filter != blank and option_filter.active_values.size == 1
+        assign heading_active_label = option_filter.active_values[0].label
+      elsif option_filter != blank and option_filter.active_values.size > 1
+        assign heading_active_label = option_filter.active_values.size | append: ' selected'
+      endif
+    %}
+    <variant-metaobject-strip-component
+      id="variant-metaobject-strip-{{ panel_id }}"
+      class="variant-metaobject-strip-group"
+      data-default-label="{{ heading_active_label | escape }}"
+    >
+      {% if panel_heading != blank %}
+        <p class="variant-metaobject-strip__heading">
+          {{ panel_heading }}
+          <span class="all" ref="labelEl">{{ heading_active_label }}</span>
+        </p>
+      {% endif %}
+      <div
+        class="variant-metaobject-strip {{ swatch_row_class }}"
+        role="group"
+        aria-label="{{ filter_label }}"
+      >
+        <ul class="variant-metaobject-strip__list list-unstyled">
+          {%- for mo in metaobject_entries -%}
+            {% liquid
+              if metaobject_type == 'variant_shape'
+                assign mo_title = mo['variant_shape_title'].value | default: mo.variant_shape_title.value | default: mo.variant_shape_title | default: mo.name.value | default: mo.name | default: mo.title.value | default: mo.title | default: mo.system.handle
+                assign mo_image = mo['variant_shape_image'].value | default: mo.variant_shape_image.value | default: mo.variant_shape_image | default: blank
+              else
+                assign mo_title = mo['variant_color_title'].value | default: mo.variant_color_title.value | default: mo.variant_color_title | default: mo.name.value | default: mo.name | default: mo.title.value | default: mo.title | default: mo.system.handle
+                assign mo_image = mo['variant_color_image'].value | default: mo.variant_color_image.value | default: mo.variant_color_image | default: blank
+              endif
+              assign mo_title = mo_title | strip
+              if mo_image == blank
+                assign mo_image = mo.image.value | default: mo.image | default: blank
+              endif
+
+              assign mo_key = mo_title | downcase | strip
+              assign mo_handle = mo_title | handleize
+              assign mo_sys = mo.system.handle | default: '' | downcase | strip
+
+              assign filter_url = nil
+              assign is_filter_active = false
+              assign filter_param = nil
+              assign filter_value_raw = nil
+
+              if option_filter != blank and mo_title != blank
+                for value in option_filter.values
+                  assign value_key = value.label | downcase | strip
+                  assign value_handle = value.label | handleize
+                  assign value_param = value.value | downcase | strip
+                  assign value_param_handle = value.value | handleize
+                  assign matched = false
+                  if value_key == mo_key or value_handle == mo_handle or value_param == mo_key or value_param == mo_handle or value_param_handle == mo_handle or value_param == mo_sys or value_handle == mo_sys or value_param_handle == mo_sys
+                    assign matched = true
+                  elsif mo_key contains value_key or value_key contains mo_key
+                    assign value_key_size = value_key | size
+                    assign mo_key_size = mo_key | size
+                    if value_key_size > 2 and mo_key_size > 2
+                      assign matched = true
+                    endif
+                  endif
+                  if matched
+                    assign filter_param = value.param_name
+                    assign filter_value_raw = value.value
+                    if value.active
+                      assign filter_url = value.url_to_remove
+                      assign is_filter_active = true
+                    else
+                      assign filter_url = value.url_to_add
+                      assign is_filter_active = false
+                    endif
+                    break
+                  endif
+                endfor
+              endif
+
+              if filter_url == blank and filters != blank and mo_title != blank
+                for filter in filters
+                  unless filter.type == 'price_range' or filter.type == 'boolean'
+                    assign filter_label_down = filter.label | downcase
+                    assign allow_filter = true
+                    if metaobject_type == 'variant_shape'
+                      if filter_label_down contains 'color' or filter_label_down contains 'metal'
+                        unless filter_label_down contains 'shape' or filter_label_down contains 'diamond'
+                          assign allow_filter = false
+                        endunless
+                      endif
+                    elsif filter_label_down contains 'shape' or filter_label_down contains 'diamond'
+                      assign allow_filter = false
+                    endif
+                    if allow_filter
+                      for value in filter.values
+                        assign value_key = value.label | downcase | strip
+                        assign value_handle = value.label | handleize
+                        assign value_param = value.value | downcase | strip
+                        assign value_param_handle = value.value | handleize
+                        if value_key == mo_key or value_handle == mo_handle or value_param == mo_key or value_param == mo_handle or value_param_handle == mo_handle or value_param == mo_sys or value_handle == mo_sys
+                          assign filter_param = value.param_name
+                          assign filter_value_raw = value.value
+                          if value.active
+                            assign filter_url = value.url_to_remove
+                            assign is_filter_active = true
+                          else
+                            assign filter_url = value.url_to_add
+                            assign is_filter_active = false
+                          endif
+                          break
+                        endif
+                      endfor
+                    endif
+                  endunless
+                  if filter_url != blank
+                    break
+                  endif
+                endfor
+              endif
+
+              assign strip_image_url = nil
+              if mo_image != blank
+                if mo_image.preview_image != blank
+                  assign strip_image_url = mo_image.preview_image | image_url: width: 160
+                else
+                  assign strip_image_url = mo_image | image_url: width: 160
+                endif
+                if strip_image_url == blank
+                  assign strip_image_url = mo_image | file_url
+                endif
+                if strip_image_url == blank and mo_image.url != blank
+                  assign strip_image_url = mo_image.url
+                endif
+              endif
+
+              # Horizontal strip: Shape + Metal are peer client filters (AND), like lucenjuri filter-values.
+              assign use_client_filter = false
+              assign client_filter_group = ''
+              if mo_title != blank
+                assign use_client_filter = true
+                assign is_filter_active = false
+                if metaobject_type == 'variant_shape'
+                  assign client_filter_group = 'shape'
+                  assign filter_param = 'vm_shape'
+                else
+                  assign client_filter_group = 'color'
+                  assign filter_param = 'vm_color'
+                endif
+                assign filter_value_raw = mo_title
+                assign encoded_value = mo_title | url_encode
+                assign request_path = request.path | default: collection.url | default: ''
+                assign filter_url = request_path | append: '?' | append: filter_param | append: '=' | append: encoded_value
+
+                if request.query_string != blank
+                  assign qs = request.query_string | url_decode | replace: '+', ' '
+                  assign needle = filter_param | append: '=' | append: mo_title
+                  assign needle_encoded = filter_param | append: '=' | append: encoded_value
+                  if qs contains needle or qs contains needle_encoded
+                    assign is_filter_active = true
+                  endif
+                endif
+              endif
+            %}
+
+            {% liquid
+  assign strip_karat_label = ''
+  if metaobject_type != 'variant_shape'
+    assign metal_title = mo_title | strip | upcase
+    assign metal_prefix = metal_title | split: ' ' | first
+    if metal_title contains 'PLATINUM'
+      assign strip_karat_label = 'PT'
+    elsif metal_prefix contains 'K'
+      assign metal_number = metal_prefix | remove: 'K' | plus: 0
+      if metal_number > 0
+        assign strip_karat_label = metal_prefix
+      endif
+    endif
+  endif
+%}
+{% if strip_image_url != blank %}
+              {% liquid
+  assign strip_sort_rank = 0
+  assign strip_sort_value = mo.sort_order.value
+  assign strip_source_index = forloop.index0
+  for sort_entry in metaobject_entries
+    assign entry_sort_value = sort_entry.sort_order.value
+    assign entry_precedes = false
+    if strip_sort_value == blank
+      if entry_sort_value != blank
+        assign entry_precedes = true
+      elsif forloop.index0 < strip_source_index
+        assign entry_precedes = true
+      endif
+    elsif entry_sort_value != blank
+      if entry_sort_value < strip_sort_value
+        assign entry_precedes = true
+      elsif entry_sort_value == strip_sort_value and forloop.index0 < strip_source_index
+        assign entry_precedes = true
+      endif
+    endif
+    if entry_precedes
+      assign strip_sort_rank = strip_sort_rank | plus: 1
+    endif
+  endfor
+%}
+<li class="variant-metaobject-strip__item" style="--variant-metaobject-sort-order: {{ strip_sort_rank }};">
+                {% if filter_url != blank %}
+                  <a
+                    href="{{ filter_url }}"
+                    class="variant-metaobject-strip__link{% if is_filter_active %} variant-metaobject-strip__link--active{% endif %}"
+                    {% if is_filter_active %}
+                      aria-current="true"
+                    {% endif %}
+                    data-strip-filter
+                    data-filter-param="{{ filter_param | escape }}"
+                    data-filter-value="{{ filter_value_raw | escape }}"
+                    data-filter-active="{% if is_filter_active %}true{% else %}false{% endif %}"
+                    {% if use_client_filter %}
+                      data-client-filter="true"
+                      data-filter-group="{{ client_filter_group }}"
+                    {% endif %}
+                    data-label="{{ mo_title | escape }}"
+                    title="{{ mo_title | escape }}"
+                  >
+                    <span class="variant-metaobject-strip__media">
+<img
+                      src="{{ strip_image_url }}"
+                      alt="{{ mo_title | escape }}"
+                      class="variant-metaobject-strip__img"
+                      width="{% if metaobject_type == 'variant_shape' %}32{% else %}28{% endif %}"
+                      height="{% if metaobject_type == 'variant_shape' %}32{% else %}28{% endif %}"
+                      loading="lazy"
+                      decoding="async"
+                    >
+{% if strip_karat_label != blank %}
+  <span class="variant-metaobject-strip__karat-label" aria-hidden="true">{{ strip_karat_label | escape }}</span>
+{% endif %}</span>
+                  </a>
+                {% else %}
+                  <span
+                    class="variant-metaobject-strip__link variant-metaobject-strip__link--disabled"
+                    data-label="{{ mo_title | escape }}"
+                    title="{{ mo_title | escape }}"
+                  >
+                    <span class="variant-metaobject-strip__media">
+<img
+                      src="{{ strip_image_url }}"
+                      alt="{{ mo_title | escape }}"
+                      class="variant-metaobject-strip__img"
+                      width="{% if metaobject_type == 'variant_shape' %}32{% else %}28{% endif %}"
+                      height="{% if metaobject_type == 'variant_shape' %}32{% else %}28{% endif %}"
+                      loading="lazy"
+                      decoding="async"
+                    >
+{% if strip_karat_label != blank %}
+  <span class="variant-metaobject-strip__karat-label" aria-hidden="true">{{ strip_karat_label | escape }}</span>
+{% endif %}</span>
+                  </span>
+                {% endif %}
+              </li>
+            {% endif %}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </variant-metaobject-strip-component>
+  {% endif %}
+{% endif %}
+
+{% stylesheet %}
+  .facets--horizontal .facets__form:has(.variant-metaobject-filters-bar) {
+    @media screen and (min-width: 750px) {
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 6px var(--gap-md);
+    }
+  }
+
+  .facets--horizontal .facets__form:has(.variant-metaobject-filters-bar) .variant-metaobject-filters-bar {
+    @media screen and (max-width: 1124px) {
+      width: 100%;
+    }
+    @media screen and (min-width: 750px) {
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: 100%;
+      padding-block: 0;
+    }
+  }
+
+  .facets--horizontal .facets__form:has(.variant-metaobject-filters-bar) .facets__filters-wrapper {
+    @media screen and (min-width: 750px) {
+      flex: 0 0 auto;
+      max-width: none;
+      margin-inline-end: 0;
+    }
+  }
+
+  .variant-metaobject-strip {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .product-grid__item[data-vm-filtered-out='true'],
+  .product-grid__item[hidden] {
+    display: none !important;
+  }
+
+  .product-grid[data-vm-filter-mode='true'] ~ .pagination[data-vm-pagination='hidden'],
+  .product-grid[data-vm-filter-mode='true'] + .pagination[data-vm-pagination='hidden'] {
+    display: none !important;
+  }
+
+  .product-grid-container[data-vm-filter-loading='true'] .product-grid {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .variant-metaobject-strip--metal .variant-metaobject-strip__link--active .variant-metaobject-strip__img {
+    outline: 1px solid #06374C;
+    outline-offset: 1.99px;
+    border-radius: 50%;
+  }
+
+  .variant-metaobject-strip--shape .variant-metaobject-strip__link--active:after {
+    background: #06374C;
+  }
+
+  /* Drawer only: image + name below (do not affect top strip) */
+  .facets--drawer .variant-metaobject-filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    padding-inline: 0;
+    padding-block: 0;
+    margin-bottom: 0;
+    box-sizing: border-box;
+  }
+
+  .facets--drawer .variant-metaobject-filters-bar__divider {
+    display: none;
+  }
+
+  .facets--drawer .variant-metaobject-strip.facets__panel-content {
+    padding-inline: 0;
+    box-sizing: border-box;
+  }
+
+  .facets--drawer .variant-metaobject-strip__list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow-x: visible;
+    height: auto;
+    gap: 12px 10px;
+    margin: 0;
+    padding-block: var(--padding-xs) var(--padding-sm);
+    padding-inline: 0;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  .facets--drawer .variant-metaobject-strip--metal .variant-metaobject-strip__list,
+  .facets--drawer .variant-metaobject-strip--shape .variant-metaobject-strip__list {
+    height: auto;
+    overflow-x: visible;
+    padding: var(--padding-xs) 0 var(--padding-sm);
+  }
+
+  .facets--drawer .variant-metaobject-strip__item {
+    flex: 0 0 auto;
+    width: 64px;
+    max-width: calc(25% - 8px);
+  }
+
+  /* Beat theme `label:has(input[type=checkbox])` (inline-flex + align-items:center) */
+  .facets--drawer label.variant-metaobject-strip__link,
+  .facets--drawer label.variant-metaobject-strip__link:has(input[type='checkbox']) {
+    position: relative;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    width: 100%;
+    text-align: center;
+    line-height: 1.2;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .facets--drawer .variant-metaobject-strip__link.variant-metaobject-strip__link--disabled {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Hide native checkbox — never show theme check UI on focus/active */
+  .facets--drawer .variant-metaobject-strip__input,
+  .facets--drawer .variant-metaobject-strip__link > input[type='checkbox'],
+  .facets--drawer .variant-metaobject-strip__link > input[type='checkbox']:focus,
+  .facets--drawer .variant-metaobject-strip__link > input[type='checkbox']:active,
+  .facets--drawer .variant-metaobject-strip__link > input[type='checkbox']:checked {
+    position: absolute !important;
+    inset: 0 auto auto 0 !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    display: block !important;
+    background: transparent !important;
+  }
+
+  .facets--drawer .variant-metaobject-strip__input::after,
+  .facets--drawer .variant-metaobject-strip__input:checked::after,
+  .facets--drawer .variant-metaobject-strip__link > input[type='checkbox']::after,
+  .facets--drawer .variant-metaobject-strip__link > input[type='checkbox']:checked::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .facets--drawer .variant-metaobject-strip__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    line-height: 0;
+  }
+
+  .facets--drawer .variant-metaobject-strip--metal .variant-metaobject-strip__media {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Multi-line labels: top-aligned across the row */
+  .facets--drawer .variant-metaobject-strip__name {
+    display: block;
+    margin-block-start: 6px;
+    width: 100%;
+    font-size: 11px;
+    line-height: 1.25;
+    color: #808080;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    align-self: stretch;
+    vertical-align: top;
+  }
+
+  .facets--drawer .variant-metaobject-strip--metal .variant-metaobject-strip__img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+  }
+
+  .facets--drawer .variant-metaobject-strip--shape .variant-metaobject-strip__img {
+    width: 36px;
+    height: 36px;
+    border-radius: 0;
+  }
+
+  .facets--drawer .variant-metaobject-strip--metal .variant-metaobject-strip__link:after,
+  .facets--drawer .variant-metaobject-strip--shape .variant-metaobject-strip__link:after {
+    content: none;
+  }
+
+  .facets--drawer .variant-metaobject-strip--metal .variant-metaobject-strip__media:after {
+    box-sizing: border-box;
+    content: '';
+    width: 34px;
+    height: 34px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid transparent;
+    pointer-events: none;
+  }
+
+  .facets--drawer .variant-metaobject-strip--metal .variant-metaobject-strip__link:hover .variant-metaobject-strip__media:after,
+  .facets--drawer .variant-metaobject-strip--metal .variant-metaobject-strip__link:has(input:checked) .variant-metaobject-strip__media:after,
+  .facets--drawer .variant-metaobject-strip--metal .variant-metaobject-strip__link--active .variant-metaobject-strip__media:after {
+    border: 1px solid #06374C;
+  }
+
+  .facets--drawer .variant-metaobject-strip--metal .variant-metaobject-strip__link--active .variant-metaobject-strip__img,
+  .facets--drawer .variant-metaobject-strip--metal .variant-metaobject-strip__link:has(input:checked) .variant-metaobject-strip__img {
+    outline: none;
+  }
+
+  .facets--drawer .variant-metaobject-strip--shape .variant-metaobject-strip__media:after {
+    content: '';
+    width: calc(100% - 10px);
+    height: 1.42px;
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    bottom: 0;
+    background: transparent;
+  }
+
+  .facets--drawer .variant-metaobject-strip--shape .variant-metaobject-strip__link:hover .variant-metaobject-strip__media:after,
+  .facets--drawer .variant-metaobject-strip--shape .variant-metaobject-strip__link:has(input:checked) .variant-metaobject-strip__media:after,
+  .facets--drawer .variant-metaobject-strip--shape .variant-metaobject-strip__link--active .variant-metaobject-strip__media:after {
+    background: #06374C;
+  }
+
+  .facets--drawer .variant-metaobject-strip-group .facets__summary,
+  .facets--drawer .variant-metaobject-strip-group .facets__label {
+    color: var(--color-foreground);
+  }
+{% endstylesheet %}

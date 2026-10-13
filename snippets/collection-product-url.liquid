@@ -1,0 +1,45 @@
+{%- doc -%}
+  Product/variant URL that keeps the active collection context for breadcrumbs.
+
+  @param {string} url - Output of product.url or variant.url
+  @param {object} [context_collection] - Optional collection override
+  @param {object} [product] - Product object for handle fallback
+{%- enddoc -%}
+
+{% liquid
+  assign active_collection = context_collection | default: collection
+
+  if active_collection == blank
+    assign path_segments = request.path | split: '/'
+    assign read_collection_handle = false
+
+    for segment in path_segments
+      if read_collection_handle and segment != blank and segment != 'products'
+        assign active_collection = collections[segment]
+        break
+      endif
+
+      if segment == 'collections'
+        assign read_collection_handle = true
+      endif
+    endfor
+  endif
+
+  assign product_handle = product.handle | default: ''
+  if product_handle == blank and url contains '/products/'
+    assign product_handle = url | split: '/products/' | last | split: '?' | first | split: '/' | first
+  endif
+%}
+
+{%- if active_collection != blank and product_handle != blank -%}
+  {%- assign collection_product_url = active_collection.url | append: '/products/' | append: product_handle -%}
+  {%- if url contains '?' -%}
+    {%- assign query_part = url | split: '?' | last -%}
+    {%- assign collection_product_url = collection_product_url | append: '?' | append: query_part -%}
+  {%- endif -%}
+  {{- collection_product_url -}}
+{%- elsif active_collection != blank -%}
+  {{- url | within: active_collection -}}
+{%- else -%}
+  {{- url -}}
+{%- endif -%}

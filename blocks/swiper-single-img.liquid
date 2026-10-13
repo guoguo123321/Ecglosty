@@ -1,0 +1,26 @@
+{%- liquid
+  assign blo_setts = block.settings
+-%}
+<a class="swiper-collection-img-item" href="{{ product.url }}">
+    {% comment %} 图片 {% endcomment %}
+    {% if blo_setts.image != blank %}
+      <img src="{{ blo_setts.image | image_url }}" width="{{ blo_setts.image.width }}" height="{{ blo_setts.image.height }}">
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff'}}
+    {% endif %}
+</a>
+{% schema %}
+  {
+    "name": "swiper-single-img",
+    "settings":[
+      {"type":"image_picker","id":"image","label":"image"},
+      {"type":"url","id":"image_url","label":"image url"},
+    ],
+    "presets":[
+      {
+        "name":"Swiper Single img",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,3331 @@
+{% comment %}
+  Diamond List Section
+  - Left: custom filter panel (Origin, Shape, Carat, Color, Clarity, Cut, Price, Report)
+  - Right: list view with accordion row expand, Visual/List toggle, Quick Ship, Sort
+  - Data: fetched from external api_endpoint setting
+{% endcomment %}
+
+<style>
+  /* ===== LAYOUT ===== */
+  .dl-page {
+    display: flex;
+    gap: 24px;
+    padding: 24px 16px;
+    max-width: 1365px;
+    margin: 0 auto;
+    font-family: inherit;
+    font-size: 13px;
+    color: #1a1a1a;
+  }
+
+  /* ===== LEFT FILTER PANEL ===== */
+  .dl-filters {
+    width: 295px;
+    flex-shrink: 0;
+  }
+
+  .dl-filter-reset {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: #555;
+  }
+  .dl-filter-reset button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    font-size: 12px;
+    padding: 0;
+    text-decoration: underline;
+  }
+
+  /* Origin toggle */
+  .dl-origin-toggle {
+    display: flex;
+    border: 1px solid #ccc;
+   
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .dl-origin-toggle button {
+    flex: 1;
+    padding: 8px 4px;
+    border: none;
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    color: #555;
+    transition: background 0.2s, color 0.2s;
+  }
+  .dl-origin-toggle button.active {
+    background: #073746;
+    color: #fff;
+  }
+
+  /* Filter group */
+  .dl-filter-group {
+    border-top: 1px solid #e5e5e5;
+    padding: 12px 0;
+  }
+  .dl-filter-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    user-select: none;
+  }
+  .dl-filter-group-header .dl-chevron {
+    font-size: 10px;
+    transition: transform 0.2s;
+  }
+  .dl-filter-group.open .dl-chevron {
+    transform: rotate(180deg);
+  }
+  .dl-filter-group-body {
+    display: none;
+    padding-top: 12px;
+  }
+  .dl-filter-group.open .dl-filter-group-body {
+    display: block;
+  }
+
+  /* Shape grid */
+  .dl-shape-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .dl-shape-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 6px 4px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    font-size: 10px;
+    color: #555;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .dl-shape-item:hover,
+  .dl-shape-item.active {
+    border-color: #073746;
+    color: #073746;
+  }
+  .dl-shape-item svg,
+  .dl-shape-item img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  /* Range slider */
+  .dl-range-wrap {
+    padding: 4px 0 8px;
+  }
+  .dl-range-track {
+    position: relative;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    margin: 16px 0 8px;
+  }
+  .dl-range-fill {
+    position: absolute;
+    height: 100%;
+    background: #073746;
+    border-radius: 2px;
+  }
+  .dl-range-wrap input[type=range] {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  top: 0;
+  left: 0;
+  opacity: 1;                  /* 改为 1，让 thumb 可见 */
+  cursor: pointer;
+  margin: 0;
+  pointer-events: none;
+  background: transparent;     /* input 本身透明，只显示 thumb */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Chrome / Safari */
+.dl-range-wrap input[type=range]::-webkit-slider-thumb {
+  pointer-events: all;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #073746;         /* 深绿色实心圆球 */
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+/* Firefox */
+.dl-range-wrap input[type=range]::-moz-range-thumb {
+  pointer-events: all;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #073746;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+/* Firefox track 透明 */
+.dl-range-wrap input[type=range]::-moz-range-track {
+  background: transparent;
+}
+
+
+  .dl-range-wrap input[type=range][data-role=min] {
+    z-index: 4;
+    }
+    .dl-range-wrap input[type=range][data-role=max] {
+    z-index: 5;
+    }
+  .dl-range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+  }
+  .dl-range-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #aaa;
+    margin-top: 6px;
+  }
+  /* 仅用于 Cut、Color、Clarity，不影响 Carat 和 Price */
+  .dl-step-range .dl-range-track {
+    margin: 16px 7px 8px;
+    background: #d8dedc;
+  }
+
+  /* 白色分隔线盖在已选和未选轨道之上 */
+  .dl-step-range .dl-range-track::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(
+      to right,
+      transparent calc(100% - 2px),
+      #fff calc(100% - 2px)
+    );
+    background-size: calc(100% / var(--dl-segments)) 100%;
+  }
+
+  /* 扩大输入范围，让首尾圆点的中心对齐轨道两端 */
+  .dl-step-range input[type="range"] {
+    left: -7px;
+    width: calc(100% + 14px);
+  }
+
+  .dl-step-range .dl-range-ticks {
+    margin: 6px 7px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    color: #555;
+    font-size: 10px;
+    line-height: 1.15;
+  }
+
+  .dl-step-range .dl-range-ticks span {
+    width: 0;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .dl-step-range[data-filter="cut"] .dl-range-ticks {
+    min-height: 25px;
+  }
+/* end仅用于 Cut、Color、Clarity，不影响 Carat 和 Price */
+
+  /* Checkboxes */
+  .dl-checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .dl-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .dl-checkbox-item input[type=checkbox] {
+    width: 14px;
+    height: 14px;
+    accent-color: #073746;
+    cursor: pointer;
+  }
+
+  /* ===== RIGHT CONTENT ===== */
+  .dl-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Top bar */
+  .dl-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .dl-view-toggle {
+    display: flex;
+    border: 1px solid #ccc;
+   
+    overflow: hidden;
+  }
+  .dl-view-toggle button {
+    padding: 6px 14px;
+    border: none;
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .dl-view-toggle button.active {
+    background: #073746;
+    color: #fff;
+  }
+  .dl-quick-ship {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    font-size: 12px;
+    color: #555;
+    cursor: pointer;
+  }
+  .dl-quick-ship input[type=checkbox] {
+    accent-color: #073746;
+  }
+  .dl-sort-select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #333;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  /* Tabs */
+  .dl-tabs {
+    display: flex;
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 0;
+  }
+  .dl-tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: #555;
+    user-select: none;
+  }
+  .dl-tab.active {
+    border-bottom-color: #073746;
+    color: #073746;
+    font-weight: 500;
+  }
+
+  /* Table */
+  .dl-table-wrap {
+    overflow-x: auto;
+  }
+  .dl-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .dl-table thead th {
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 1px solid #e5e5e5;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  .dl-table thead th:hover {
+    color: #073746;
+  }
+  .dl-table thead th .sort-icon {
+    font-size: 9px;
+    margin-left: 2px;
+    opacity: 0.5;
+  }
+  .dl-table tbody tr.dl-row {
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .dl-table tbody tr.dl-row:hover {
+    background: #f9f9f9;
+  }
+  .dl-table tbody tr.dl-row.active {
+    background: #073746;
+    color: #fff;
+  }
+  .dl-table tbody tr.dl-row.active td {
+    color: #fff;
+  }
+  .dl-table tbody td {
+    padding: 10px 12px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .dl-shape-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .dl-badge {
+    display: inline-block;
+    font-size: 9px;
+    padding: 1px 5px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    margin-bottom: 2px;
+    opacity: 0.7;
+  }
+  .dl-wishlist-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: inherit;
+    padding: 0;
+    line-height: 1;
+  }
+  .dl-wishlist-btn.active {
+    color: #073746;
+  }
+  tr.dl-row.active .dl-wishlist-btn {
+    color: #fff;
+  }
+
+  /* Expand row */
+  .dl-expand-row {
+    display: none;
+  }
+  .dl-expand-row.open {
+    display: table-row;
+  }
+  .dl-expand-cell {
+    padding: 0 !important;
+    border-bottom: 2px solid #073746;
+  }
+  .dl-expand-inner {
+    display: flex;
+    gap: 24px;
+    padding: 20px 16px;
+    background: #fff;
+  }
+  .dl-expand-img {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    flex-shrink: 0;
+    background: #f5f5f5;
+    border-radius: 4px;
+  }
+  .dl-expand-img-placeholder {
+    width: 140px;
+    height: 140px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-size: 32px;
+    flex-shrink: 0;
+  }
+  .dl-expand-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .dl-expand-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .dl-expand-price {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 12px;
+  }
+  .dl-expand-specs {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px 12px;
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+  .dl-expand-spec-label {
+    color: #888;
+    margin-bottom: 2px;
+  }
+  .dl-expand-spec-value {
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+  .dl-expand-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    flex-shrink: 0;
+    min-width: 140px;
+  }
+  .dl-btn-select {
+    background: #073746;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+  }
+  .dl-btn-select:hover {
+    background: var(--button-active-bg);
+  }
+  .dl-btn-details {
+    background: none;
+    border: none;
+    color: #073746;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+  }
+  .dl-tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  /* Loading / empty */
+  .dl-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+    font-size: 14px;
+  }
+  .dl-count {
+    font-size: 12px;
+    color: #888;
+    margin-left: 4px;
+  }
+
+  /* Pagination */
+  .dl-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 0;
+    font-size: 13px;
+  }
+  .dl-pagination button {
+    padding: 6px 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .dl-pagination button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .dl-pagination .dl-page-info {
+    color: #555;
+  }
+
+  @media(max-width:768px){
+  .dl-page{flex-direction:column}
+  .dl-filters{width:100%}
+  .dl-expand-specs{grid-template-columns:repeat(3,1fr)}
+  .dl-expand-inner{flex-direction:column}
+  .dl-expand-actions{flex-direction:row;width:100%}
+
+  /* 隐藏筛选侧边栏，改为抽屉 */
+  .dl-filters{
+    position:fixed;
+    top:0;left:0;
+    height:100%;
+    width:85%;
+    max-width:320px;
+    background:#fff;
+    z-index:1001;
+    overflow-y:auto;
+    transform:translateX(-100%);
+    transition:transform 0.3s ease;
+    padding: 20px 20px 0;
+    box-shadow:2px 0 16px rgba(0,0,0,0.15);
+  }
+  .dl-filters.dl-mobile-open{
+    transform:translateX(0);
+  }
+
+  /* 遮罩 */
+  .dl-mobile-filter-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.45);
+    z-index:1000;
+  }
+  .dl-mobile-filter-overlay.active{display:block;}
+
+  /* 浮动 Filters 按钮 */
+  .dl-mobile-filter-fab{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    position:fixed;
+    bottom:0;
+    left:16px;        /* 改这里 */
+    right:16px;       /* 改这里 */
+    width:calc(100% - 32px);  /* 改这里 */
+    padding:15px;
+    background:#073746;
+    color:#fff;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:0.08em;
+    border:none;
+    z-index:999;
+    cursor:pointer;
+    bottom:16px;      /* 同时底部也留点空间，视觉更好 */
+  }
+
+
+  /* VIEW RESULTS 按钮 */
+  .dl-mobile-view-results{
+    position:sticky;
+    bottom:0;
+    padding:12px 16px;
+    background:#fff;
+    border:1px solid #fff;
+  }
+  .dl-mobile-view-results button{
+    width:100%;
+    padding:13px;
+    background:#073746;
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.1em;
+    border:none;
+    cursor:pointer;
+  }
+  .dl-mobile-filter-header{
+    position:absolute;
+    top: 3px;
+      right: 0px;
+    z-index:10;
+  }
+  .dl-mobile-filter-close{
+    background:none;
+    border:none;
+    font-size:20px;
+    color:#555;
+    cursor:pointer;
+    padding:4px 8px;
+    line-height:1;
+  }
+  .dl-mobile-filter-close:hover{color:#073746;}
+
+
+}
+
+/* 桌面端隐藏移动端元素 */
+@media(min-width:769px){
+  .dl-mobile-filter-fab,
+  .dl-mobile-filter-overlay,
+  .dl-mobile-view-results{display:none!important;}
+  .dl-mobile-filter-header{display:none!important;}
+}
+
+
+  {% comment %} 筛选选择 {% endcomment %}
+  .dl-filter-reset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+  min-height: 0;
+}
+.dl-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 12px;
+  background: #fff;
+}
+.dl-filter-tag button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  color: #888;
+  padding: 0;
+  line-height: 1;
+}
+.dl-filter-reset-all {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border: 1px solid #333;
+  border-radius: 20px;
+  font-size: 12px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 500;
+}
+.dl-flex{display:flex;align-items: center;}
+/* Wishlist active state */
+.dl-wishlist-btn.wishlisted {
+  color: #616161;
+}
+.dl-wishlist-btn.wishlisted::before {
+  content: '♥';
+}
+.dl-wishlist-btn:not(.wishlisted)::before {
+  content: '♡';
+}
+.dl-grid-icon-btn.dl-wishlist-btn::before {
+ font-size:24px;
+     margin-top: 3px;
+}
+
+/* Compare tab */
+.dl-compare-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+  font-size: 14px;
+}
+
+/* ===== GRID / VISUAL VIEW ===== */
+#dl-grid-wrap-{{ section.id }} {
+ 
+}
+.dl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+   margin-top:20px;
+}
+.dl-grid-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.dl-grid-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+}
+.dl-grid-card-img-wrap {
+  position: relative;
+  background: #f5f5f5;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.dl-grid-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.dl-grid-card-img-placeholder {
+  font-size: 48px;
+  color: #ccc;
+}
+.dl-grid-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #eaf8ed;
+  color: #282828;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.dl-grid-icons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.dl-grid-icon-btn {
+  background: rgba(255,255,255,0.85);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+  padding: 0;
+  line-height: 1;
+  transition: background 0.15s;
+}
+.dl-grid-icon-btn:hover { background: #fff; }
+.dl-grid-icon-btn.wishlisted { color: #073746; }
+.dl-grid-card-body {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+.dl-grid-card-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+  line-height: 1.4;
+}
+.dl-grid-card-sub {
+  font-size: 12px;
+  color: #888;
+}
+.dl-grid-card-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-top: 2px;
+}
+.dl-grid-card-select {
+  margin-top: 10px;
+  width: 100%;
+  padding: 9px 0;
+  border: 1.5px solid #073746;
+  border-radius: 3px;
+  background: #fff;
+  color: #073746;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  transition: background 0.15s, color 0.15s;
+}
+.dl-grid-card-select:hover {
+  background: #073746;
+  color: #fff;
+}
+@media (max-width: 900px) {
+  .dl-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .dl-grid { grid-template-columns: 1fr; }
+}
+
+.dl-expand-spin {
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+}
+
+.dl-expand-spin:active {
+  cursor: grabbing;
+}
+
+.dl-expand-spin canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.dl-expand-spin-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 12px;
+  background: #f5f5f5;
+}
+
+.dl-expand-video {
+  display: block;
+  background: #000;
+  object-fit: contain;
+}
+
+.dpi-drag-label {
+  position: absolute;
+  bottom: 12px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #888;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 2;
+}
+.dpi-spin-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0);
+  font-size: 13px;
+  color: #666;
+}
+
+
+</style>
+<div class="dl-mobile-filter-overlay" id="dl-overlay-{{ section.id }}" onclick="dlCloseMobileFilters('{{ section.id }}')"></div>
+
+<div class="dl-page" id="dl-page-{{ section.id }}">
+
+  {%- comment -%} ===== LEFT FILTER PANEL ===== {%- endcomment -%}
+  <aside class="dl-filters" id="dl-filters-{{ section.id }}">
+    <!-- Mobile Close Button -->
+    <div class="dl-mobile-filter-header" id="dl-mobile-filter-header-{{ section.id }}">
+      <button class="dl-mobile-filter-close"  aria-label="Close filters">✕</button>
+    </div>
+
+    <div class="dl-filter-reset" id="dl-filter-reset-{{ section.id }}"></div>
+
+
+    {%- comment -%} Diamond Origin  只有天然钻，先隐藏{%- endcomment -%}
+    {% comment %} <div style="margin-bottom:8px;font-size:13px;font-weight:500;">Diamond Origin</div>
+    <div class="dl-origin-toggle" id="dl-origin-{{ section.id }}">
+      <button class="active" data-origin="Lab Grown" onclick="dlSetOrigin('{{ section.id }}','Lab Grown',this)">Lab Grown Diamonds</button>
+      <button  data-origin="natural" onclick="dlSetOrigin('{{ section.id }}','Natural',this)">Natural Diamonds</button>
+      
+    </div> {% endcomment %}
+
+    {%- comment -%} Diamond Shape {%- endcomment -%}
+    <div class="dl-filter-group open" id="dl-fg-shape-{{ section.id }}">
+  <div class="dl-filter-group-header" onclick="dlToggleGroup('dl-fg-shape-{{ section.id }}')">
+    <span>Diamond Shape</span>
+    <span class="dl-chevron">
+      <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242">
+        <path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path>
+      </svg>
+    </span>
+  </div>
+  <div class="dl-filter-group-body">
+    <div class="dl-shape-grid" id="dl-shapes-{{ section.id }}">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'diamond_shape' -%}
+          <div
+            class="dl-shape-item"
+            data-shape="{{ block.settings.shape_name | escape }}"
+            onclick="dlToggleShape('{{ section.id }}','{{ block.settings.shape_name | escape }}',this)"
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.shape_image != blank -%}
+              <img
+                src="{{ block.settings.shape_image | image_url: width: 60 }}"
+                alt="{{ block.settings.shape_name | escape }}"
+                width="60"
+                height="60"
+                loading="lazy"
+              >
+            {%- else -%}
+              {{- block.settings.shape_name | escape -}}
+            {%- endif -%}
+            <span>{{ block.settings.shape_name }}</span>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+
+    {%- comment -%} Carat {%- endcomment -%}
+    <div class="dl-filter-group open" id="dl-fg-carat-{{ section.id }}">
+      <div class="dl-filter-group-header" onclick="dlToggleGroup('dl-fg-carat-{{ section.id }}')">
+        <span>Carat All</span><span class="dl-chevron"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242"><path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path></svg></span>
+      </div>
+      <div class="dl-filter-group-body">
+        <div class="dl-range-wrap" data-filter="carat" data-min="0.5" data-max="20" data-step="0.1">
+          <div class="dl-range-track">
+            <div class="dl-range-fill"></div>
+            <input type="range" min="0.5" max="20" step="0.1" value="0.5" data-role="min">
+            <input type="range" min="0.5" max="20" step="0.1" value="20" data-role="max">
+          </div>
+          <div class="dl-range-labels">
+            <span class="dl-range-min-label">0.5</span>
+            <span class="dl-range-max-label">20</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} Color {%- endcomment -%}
+    <div class="dl-filter-group open" id="dl-fg-color-{{ section.id }}">
+      <div class="dl-filter-group-header" onclick="dlToggleGroup('dl-fg-color-{{ section.id }}')">
+        <span>Color All</span><span class="dl-chevron"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242"><path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path></svg></span>
+      </div>
+      <div class="dl-filter-group-body">
+        <div class="dl-range-wrap dl-step-range" data-filter="color" data-min="0" data-max="9" data-step="1" style="--dl-segments: 9">
+        <div class="dl-range-track">
+          <div class="dl-range-fill"></div>
+          <input type="range" min="0" max="9" step="1" value="0" data-role="min" aria-label="Minimum color">
+          <input type="range" min="0" max="9" step="1" value="9" data-role="max" aria-label="Maximum color">
+        </div>
+        <div class="dl-range-ticks">
+          <span>M</span><span>L</span><span>K</span><span>J</span><span>I</span>
+          <span>H</span><span>G</span><span>F</span><span>E</span><span>D</span>
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+    {%- comment -%} Clarity {%- endcomment -%}
+    <div class="dl-filter-group open" id="dl-fg-clarity-{{ section.id }}">
+      <div class="dl-filter-group-header" onclick="dlToggleGroup('dl-fg-clarity-{{ section.id }}')">
+        <span>Clarity All</span><span class="dl-chevron"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242"><path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path></svg></span>
+      </div>
+      <div class="dl-filter-group-body">
+        <div class="dl-range-wrap dl-step-range" data-filter="clarity" data-min="0" data-max="7" data-step="1" style="--dl-segments: 7">
+          <div class="dl-range-track">
+            <div class="dl-range-fill"></div>
+            <input type="range" min="0" max="7" step="1" value="0" data-role="min" aria-label="Minimum clarity">
+            <input type="range" min="0" max="7" step="1" value="7" data-role="max" aria-label="Maximum clarity">
+          </div>
+          <div class="dl-range-ticks">
+            <span>SI2</span><span>SI1</span><span>VS2</span><span>VS1</span>
+            <span>VVS2</span><span>VVS1</span><span>IF</span><span>FL</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    {%- comment -%} Cut {%- endcomment -%}
+    <div class="dl-filter-group open" id="dl-fg-cut-{{ section.id }}">
+      <div class="dl-filter-group-header" onclick="dlToggleGroup('dl-fg-cut-{{ section.id }}')">
+        <span>Cut All</span><span class="dl-chevron"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242"><path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path></svg></span>
+      </div>
+      <div class="dl-filter-group-body">
+        <div class="dl-range-wrap dl-step-range" data-filter="cut" data-min="0" data-max="4" data-step="1" style="--dl-segments: 4">
+          <div class="dl-range-track">
+            <div class="dl-range-fill"></div>
+            <input type="range" min="0" max="4" step="1" value="0" data-role="min" aria-label="Minimum cut">
+            <input type="range" min="0" max="4" step="1" value="4" data-role="max" aria-label="Maximum cut">
+          </div>
+          <div class="dl-range-ticks">
+            <span>Fair</span><span>Good</span><span>Very<br>Good</span>
+            <span>Ideal</span><span>Super<br>Ideal</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    {%- comment -%} Setting Price {%- endcomment -%}
+    <div class="dl-filter-group open" id="dl-fg-price-{{ section.id }}">
+      <div class="dl-filter-group-header" onclick="dlToggleGroup('dl-fg-price-{{ section.id }}')">
+        <span>Price</span><span class="dl-chevron"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242"><path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path></svg></span>
+      </div>
+      <div class="dl-filter-group-body">
+        <div class="dl-range-wrap" data-filter="price" data-min="10" data-max="10000" data-step="10">
+          <div class="dl-range-track">
+            <div class="dl-range-fill"></div>
+            <input type="range" min="10" max="10000" step="10" value="10" data-role="min">
+            <input type="range" min="10" max="10000" step="10" value="10000" data-role="max">
+          </div>
+          <div class="dl-range-labels">
+            <span class="dl-range-min-label">$10</span>
+            <span class="dl-range-max-label">$10000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} Report {%- endcomment -%}
+    {% comment %} <div class="dl-filter-group open" id="dl-fg-report-{{ section.id }}">
+      <div class="dl-filter-group-header" onclick="dlToggleGroup('dl-fg-report-{{ section.id }}')">
+        <span>Report</span><span class="dl-chevron"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242"><path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path></svg></span>
+      </div>
+      <div class="dl-filter-group-body">
+        <div class="dl-checkbox-list">
+          {%- assign reports = 'IGI,GIA,HRD' | split: ',' -%}
+            {%- for report in reports -%}
+            <label class="dl-checkbox-item">
+              <input type="checkbox" value="{{ report }}" onchange="dlFilterChange('{{ section.id }}')">
+              <span>{{ report }}</span>
+              <span style="font-size:11px;color:#aaa;margin-left:2px;">ⓘ</span>
+            </label>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div> {% endcomment %}
+      <!-- Mobile View Results Button -->
+      <div class="dl-mobile-view-results">
+        <button id="dl-mobile-view-results-{{ section.id }}">VIEW RESULTS</button>
+      </div>
+
+  </aside>
+
+  {%- comment -%} ===== RIGHT CONTENT ===== {%- endcomment -%}
+  <div class="dl-content">
+
+    {%- comment -%} Top bar {%- endcomment -%}
+    <div class="dl-topbar">
+      <div class="dl-view-toggle" id="dl-view-{{ section.id }}">
+        <button onclick="dlSetView('{{ section.id }}','visual',this)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect x="0" y="0" width="6" height="6"/><rect x="8" y="0" width="6" height="6"/><rect x="0" y="8" width="6" height="6"/><rect x="8" y="8" width="6" height="6"/></svg>
+          Visual
+        </button>
+        <button class="active" onclick="dlSetView('{{ section.id }}','list',this)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect x="0" y="1" width="14" height="2"/><rect x="0" y="6" width="14" height="2"/><rect x="0" y="11" width="14" height="2"/></svg>
+          List
+        </button>
+      </div>
+      <label class="dl-quick-ship">
+        {% comment %} <input type="checkbox" id="dl-quickship-{{ section.id }}" onchange="dlFilterChange('{{ section.id }}')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/><rect x="9" y="11" width="14" height="10" rx="1"/><circle cx="12" cy="21" r="1"/><circle cx="20" cy="21" r="1"/></svg>
+        Quick Ship {% endcomment %}
+      </label>
+      <select class="dl-sort-select" id="dl-sort-{{ section.id }}" onchange="dlFilterChange('{{ section.id }}')">
+        <option value="popular">Sort By: Most Popular</option>
+        <option value="priceAsc">Price: Low to High</option>
+        <option value="priceDesc">Price: High to Low</option>
+        <option value="caratAsc">Carat: Low to High</option>
+        <option value="caratDesc">Carat: High to Low</option>
+      </select>
+    </div>
+
+    {%- comment -%} Tabs {%- endcomment -%}
+    <div class="dl-tabs">
+      <div class="dl-tab active" id="dl-tab-all-{{ section.id }}" onclick="dlSetTab('{{ section.id }}','all',this)">
+        All Diamonds <span class="dl-count" id="dl-total-{{ section.id }}">(0)</span>
+      </div>
+      <div class="dl-tab" id="dl-tab-compare-{{ section.id }}" onclick="dlSetTab('{{ section.id }}','compare',this)">
+        ♡ Compare <span class="dl-count" id="dl-count-{{ section.id }}">(0)</span>
+      </div>
+    </div>
+
+    {%- comment -%} Table {%- endcomment -%}
+    <div class="dl-table-wrap" id="dl-table-wrap-{{ section.id }}">
+      <table class="dl-table" id="dl-table-{{ section.id }}">
+        <thead>
+          <tr>
+            <th onclick="dlSort('{{ section.id }}','shape')">Shape <span class="sort-icon">⇅</span></th>
+            <th onclick="dlSort('{{ section.id }}','carat')">Carat <span class="sort-icon">⇅</span></th>
+            <th onclick="dlSort('{{ section.id }}','color')">Color <span class="sort-icon">⇅</span></th>
+            <th onclick="dlSort('{{ section.id }}','clarity')">Clarity <span class="sort-icon">⇅</span></th>
+            <th onclick="dlSort('{{ section.id }}','cut')">Cut <span class="sort-icon">⇅</span></th>
+            <th onclick="dlSort('{{ section.id }}','price')">Price <span class="sort-icon">⇅</span></th>
+            <th><div class="text-center">Compare</div></th>
+          </tr>
+        </thead>
+        <tbody id="dl-tbody-{{ section.id }}">
+          <tr><td colspan="7" class="dl-loading">Loading diamonds...</td></tr>
+        </tbody>
+      </table>
+    </div>
+        {%- comment -%} Grid / Visual View {%- endcomment -%}
+    <div id="dl-grid-wrap-{{ section.id }}" style="display:none;">
+      <div class="dl-grid" id="dl-grid-{{ section.id }}"></div>
+    </div>
+
+    <div id="dl-compare-wrap-{{ section.id }}" style="display:none;">
+        <div class="dl-table-wrap">
+          <table class="dl-table" id="dl-compare-table-{{ section.id }}">
+            <thead>
+              <tr>
+                <th>Shape</th><th>Carat</th><th>Color</th><th>Clarity</th>
+                <th>Cut</th><th>Price</th><th><div class="text-center">Compare</div></th>
+              </tr>
+            </thead>
+            <tbody id="dl-compare-tbody-{{ section.id }}"></tbody>
+          </table>
+          <div class="dl-compare-empty" id="dl-compare-empty-{{ section.id }}" style="display:none;">
+            No diamonds in your wishlist yet.
+          </div>
+      </div>
+    </div>
+
+
+    {%- comment -%} Pagination {%- endcomment -%}
+    <div class="dl-pagination" id="dl-pagination-{{ section.id }}">
+      <button id="dl-prev-{{ section.id }}" onclick="dlChangePage('{{ section.id }}',-1)" disabled>← Prev</button>
+      <span class="dl-page-info" id="dl-page-info-{{ section.id }}">Page 1</span>
+      <button id="dl-next-{{ section.id }}" onclick="dlChangePage('{{ section.id }}',1)">Next →</button>
+    </div>
+
+  </div>
+</div>
+<div class="lgs-container">
+<!-- Mobile Floating Filter Button -->
+<button class="dl-mobile-filter-fab" id="dl-filter-fab-{{ section.id }}">
+  Filters
+  <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill:white;" t="1621832162336" class="icon" viewBox="0 0 1024 1024" version="1.1" p-id="8897">
+    <path d="M981.333333 682.666667H509.866667c-10.24-72.106667-72.106667-128-147.2-128s-136.96 55.893333-147.2 128H42.666667v42.666666h172.8c10.24 72.106667 72.106667 128 147.2 128s136.96-55.893333 147.2-128H981.333333v-42.666666zM362.666667 810.666667a106.666667 106.666667 0 0 1 0-213.333334 106.666667 106.666667 0 0 1 0 213.333334zM661.333333 469.333333c75.093333 0 136.96-55.893333 147.2-128H981.333333V298.666667h-172.8c-10.24-72.106667-72.106667-128-147.2-128s-136.96 55.893333-147.2 128H42.666667v42.666666h471.466666c10.24 72.106667 72.106667 128 147.2 128z m0-256a106.666667 106.666667 0 0 1 0 213.333334 106.666667 106.666667 0 0 1 0-213.333334z" p-id="8898"></path>
+</svg>
+</button>
+</div>
+<script>
+  window.dlShapeImages = window.dlShapeImages || {};
+  window.dlShapeImages[{{ section.id | json }}] = {
+    {%- assign comma = false -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'diamond_shape' and block.settings.shape_image != blank -%}
+        {%- if comma -%},{%- endif -%}
+        {{ block.settings.shape_name | json }}: {{ block.settings.shape_image | image_url: width: 60 | json }}
+        {%- assign comma = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+  };
+</script>
+<script>
+(function() {
+  const SID = '{{ section.id }}';
+  const API_ENDPOINT = {{ section.settings.api_endpoint | json }};
+  const PAGE_SIZE = {{ section.settings.page_size | default: 40 }};
+
+  // State
+  const state = {
+    origin: 'Lab Grown',
+    shapes: [],
+    carat: [0.5, 20],
+    color: [0, 9],
+    clarity: [0, 7],
+    cut: [0, 4],
+    price: [10, 10000],
+    _initPriceMin: 10,
+    _initPriceMax: 10000,
+    reports: [],
+    quickShip: false,
+    sort: 'popular',
+    page: 1,
+    total: 0,
+    data: [],
+    expandedRow: null,
+    view: 'list',
+    tab:'diamonds'
+  };
+
+  const COLOR_LABELS = ['M','L','K','J','I','H','G','F','E','D'];
+
+  const CLARITY_LABELS = ['SI2','SI1','VS2','VS1','VVS2','VVS1','IF','FL'];
+  const CUT_LABELS = ['Fair','Good','Very Good','Ideal','Super Ideal'];
+  // ===== URL 参数回填筛选器 =====
+  function dlInitFromURL() {
+    const params = new URLSearchParams(location.search);
+
+    // origin
+    const origin = params.get('origin');
+    if (origin === 'Lab Grown' || origin === 'natural') {
+      state.origin = origin;
+      document.querySelectorAll(`#dl-origin-${SID} button`).forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.origin === origin);
+      });
+    }
+
+    // shape（支持逗号分隔多个，如 shape=round,oval）
+    const shapeParam = params.get('shape');
+    if (shapeParam) {
+      const shape = shapeParam.split(',').map(s => s.trim()).find(Boolean);
+      const el = [...document.querySelectorAll(`#dl-shapes-${SID} .dl-shape-item`)]
+        .find(item => item.dataset.shape?.toLowerCase() === shape?.toLowerCase());
+
+      if (el) {
+        el.classList.add('active');
+        state.shapes = [el.dataset.shape];
+      }
+    }
+
+
+    // range slider 通用回填
+    function setRangeSlider(filterKey, minVal, maxVal) {
+      const wrap = document.querySelector(`#dl-filters-${SID} .dl-range-wrap[data-filter="${filterKey}"]`);
+      if (!wrap) return;
+      const minInput = wrap.querySelector('[data-role=min]');
+      const maxInput = wrap.querySelector('[data-role=max]');
+      if (minVal !== null && minInput) { minInput.value = minVal; minInput.dispatchEvent(new Event('input')); }
+      if (maxVal !== null && maxInput) { maxInput.value = maxVal; maxInput.dispatchEvent(new Event('input')); }
+    }
+
+    // carat
+    const minCarat = params.get('minCarat');
+    const maxCarat = params.get('maxCarat');
+    if (minCarat || maxCarat) {
+      setRangeSlider('carat', minCarat ? parseFloat(minCarat) : null, maxCarat ? parseFloat(maxCarat) : null);
+    }
+
+    // price（先存 state，等 API 返回后 updatePriceSliderRange 再同步 UI）
+    const minPrice = params.get('minPrice');
+    const maxPrice = params.get('maxPrice');
+    if (minPrice) { state.price[0] = parseFloat(minPrice); state._urlPriceMin = parseFloat(minPrice); }
+    if (maxPrice) { state.price[1] = parseFloat(maxPrice); state._urlPriceMax = parseFloat(maxPrice); }
+
+    // color（支持字母 D-I 或数字索引）
+    
+    const minColorStr = params.get('minColor');
+    const maxColorStr = params.get('maxColor');
+    if (minColorStr || maxColorStr) {
+      const toIdx = s => isNaN(s) ? COLOR_LABELS.indexOf(s.toUpperCase()) : parseInt(s);
+      setRangeSlider('color', minColorStr ? toIdx(minColorStr) : null, maxColorStr ? toIdx(maxColorStr) : null);
+    }
+
+    // clarity（支持字母 FL/VVS1/... 或数字索引）
+    const minClarityStr = params.get('minClarity');
+    const maxClarityStr = params.get('maxClarity');
+    if (minClarityStr || maxClarityStr) {
+      const toIdx = s => isNaN(s) ? CLARITY_LABELS.indexOf(s.toUpperCase()) : parseInt(s);
+      setRangeSlider('clarity', minClarityStr ? toIdx(minClarityStr) : null, maxClarityStr ? toIdx(maxClarityStr) : null);
+    }
+
+    // cut（支持字母 Good/Very Good/Excellent 或数字索引）
+    const minCutStr = params.get('minCut');
+    const maxCutStr = params.get('maxCut');
+    if (minCutStr || maxCutStr) {
+      const toIdx = s => isNaN(s) ? CUT_LABELS.findIndex(c => c.toLowerCase() === s.toLowerCase()) : parseInt(s);
+      setRangeSlider('cut', minCutStr ? toIdx(minCutStr) : null, maxCutStr ? toIdx(maxCutStr) : null);
+    }
+
+    // quickShip
+    {% comment %} const quickShip = params.get('quickShip');
+    if (quickShip === 'true' || quickShip === '1') {
+      state.quickShip = true;
+      const cb = document.getElementById(`dl-quickship-${SID}`);
+      if (cb) cb.checked = true;
+    } {% endcomment %}
+
+    // report（支持逗号分隔多个，如 report=GIA,IGI）
+    const reportParam = params.get('report');
+    if (reportParam) {
+      const reports = reportParam.split(',').map(s => s.trim()).filter(Boolean);
+      state.reports = reports;
+      reports.forEach(r => {
+        const cb = document.querySelector(`#dl-fg-report-${SID} input[type=checkbox][value="${r}"]`);
+        if (cb) cb.checked = true;
+      });
+    }
+  }
+  // ===== END URL 参数回填 =====
+  // 防抖：slider 停止拖动 300ms 后才发请求
+  let _dlFetchTimer = null;
+  function debouncedFetchData() {
+    clearTimeout(_dlFetchTimer);
+    _dlFetchTimer = setTimeout(() => fetchData(), 300);
+  }
+
+  // ---- Init ----
+  function init() {
+    initRangeSliders();
+     window['dlState_' + SID] = state;
+     dlInitFromURL(); 
+    fetchData();
+    dlUpdateWishlistCount(SID);
+   
+  }
+
+  // ---- Range Sliders ----
+  function initRangeSliders() {
+    document.querySelectorAll(`#dl-filters-${SID} .dl-range-wrap`).forEach(wrap => {
+      const minInput = wrap.querySelector('[data-role=min]');
+      const maxInput = wrap.querySelector('[data-role=max]');
+      const fill = wrap.querySelector('.dl-range-fill');
+      const minLabel = wrap.querySelector('.dl-range-min-label');
+      const maxLabel = wrap.querySelector('.dl-range-max-label');
+      const filterKey = wrap.dataset.filter;
+      const absMin = parseFloat(wrap.dataset.min);
+      const absMax = parseFloat(wrap.dataset.max);
+        function updateFill() {
+        let minV = parseFloat(minInput.value);
+        let maxV = parseFloat(maxInput.value);
+        const pMin = ((minV - absMin) / (absMax - absMin)) * 100;
+        const pMax = ((maxV - absMin) / (absMax - absMin)) * 100;
+        fill.style.left = pMin + '%';
+        fill.style.width = (pMax - pMin) + '%';
+        if (minLabel) minLabel.textContent = filterKey === 'price' ? '$' + minV.toLocaleString() : minV;
+        if (maxLabel) maxLabel.textContent = filterKey === 'price' ? '$' + maxV.toLocaleString() : maxV;
+        state[filterKey] = [minV, maxV];
+
+        // 动态调整 z-index，让靠近右侧的滑块在上层
+        if (minV / (absMax - absMin) > 0.5) {
+            minInput.style.zIndex = 5;
+            maxInput.style.zIndex = 4;
+        } else {
+            minInput.style.zIndex = 4;
+            maxInput.style.zIndex = 5;
+        }
+        }
+
+        minInput.addEventListener('input', () => {
+          if (parseFloat(minInput.value) > parseFloat(maxInput.value)) {
+            minInput.value = maxInput.value;
+          }
+          updateFill();
+          if (!state._batchResetting) debouncedFetchData();   // ← 改这里
+        });
+
+        maxInput.addEventListener('input', () => {
+          if (parseFloat(maxInput.value) < parseFloat(minInput.value)) {
+            maxInput.value = minInput.value;
+          }
+          updateFill();
+          if (!state._batchResetting) debouncedFetchData();   // ← 改这里
+        });
+
+
+        updateFill();
+
+    });
+  }
+
+  // ---- Fetch ----
+  function buildParams() {
+    const params = new URLSearchParams();
+    params.set('origin', state.origin);
+    if (state.shapes.length) params.set('shapes', state.shapes.join(','));
+    params.set('carat_min', state.carat[0]);
+    params.set('carat_max', state.carat[1]);
+    params.set('color_min', COLOR_LABELS[state.color[0]] || 'M');
+    params.set('color_max', COLOR_LABELS[state.color[1]] || 'D');
+    params.set('cut_min', CUT_LABELS[state.cut[0]] || 'Fair');
+    params.set('cut_max', CUT_LABELS[state.cut[1]] || 'Super Ideal');
+
+    params.set('clarity_min', CLARITY_LABELS[state.clarity[0]] || 'SI2');
+    params.set('clarity_max', CLARITY_LABELS[state.clarity[1]] || 'FL');
+   
+    params.set('price_min', state.price[0]);
+    params.set('price_max', state.price[1]);
+    if (state.reports.length) params.set('reports', state.reports.join(','));
+    //if (state.quickShip) params.set('quick_ship', '1');
+    params.set('sort', state.sort);
+    params.set('page', state.page);
+    params.set('per_page', PAGE_SIZE);
+    return params.toString();
+  }
+function updateFilterReset() {
+  const container = document.getElementById(`dl-filter-reset-${SID}`);
+  if (!container) return;
+
+  const tags = [];
+
+  // Price
+  if (state.price[0] !== 10 || state.price[1] !== 10000) {
+    tags.push({
+      label: `$${state.price[0].toLocaleString()} - $${state.price[1].toLocaleString()}`,
+      clear: () => {
+        state.price = [10, 10000];
+        resetRangeSlider('price');
+      }
+    });
+  }
+
+  // Shapes
+  state.shapes.forEach(shape => {
+    tags.push({
+      label: shape,
+      clear: () => {
+        const idx = state.shapes.indexOf(shape);
+        if (idx > -1) state.shapes.splice(idx, 1);
+        const el = document.querySelector(`#dl-shapes-${SID} [data-shape="${shape}"]`);
+        if (el) el.classList.remove('active');
+      }
+    });
+  });
+
+  // Carat
+  if (state.carat[0] !== 0.5 || state.carat[1] !== 20) {
+    tags.push({
+      label: `${state.carat[0]} - ${state.carat[1]} Carat`,
+      clear: () => {
+        state.carat = [0.5, 20];
+        resetRangeSlider('carat');
+      }
+    });
+  }
+
+  // Cut
+    if (state.cut[0] !== 0 || state.cut[1] !== 4) {
+    const cutMin = CUT_LABELS[state.cut[0]] || CUT_LABELS[0];
+    const cutMax = CUT_LABELS[Math.min(state.cut[1], CUT_LABELS.length - 1)];
+    tags.push({
+        label: `${cutMin} - ${cutMax} Cut`,
+        clear: () => {
+        state.cut = [0, 4];
+        resetRangeSlider('cut');
+        }
+    });
+    }
+
+  // Color
+if (state.color[0] !== 0 || state.color[1] !== 9) {
+  const colorMin = COLOR_LABELS[state.color[0]] || COLOR_LABELS[0];
+  const colorMax = COLOR_LABELS[Math.min(state.color[1], COLOR_LABELS.length - 1)];
+  tags.push({
+    label: `Color ${colorMin} - ${colorMax}`,
+    clear: () => {
+      state.color = [0, 9];
+      resetRangeSlider('color');
+    }
+  });
+}
+
+// Clarity
+if (state.clarity[0] !== 0 || state.clarity[1] !== 7) {
+  const clarityMin = CLARITY_LABELS[state.clarity[0]] || CLARITY_LABELS[0];
+  const clarityMax = CLARITY_LABELS[Math.min(state.clarity[1], CLARITY_LABELS.length - 1)];
+  tags.push({
+    label: `${clarityMin} - ${clarityMax}`,
+    clear: () => {
+      state.clarity = [0, 7];
+      resetRangeSlider('clarity');
+    }
+  });
+}
+
+
+  // Reports
+  state.reports.forEach(report => {
+    tags.push({
+      label: report,
+      clear: () => {
+        state.reports = state.reports.filter(r => r !== report);
+        const cb = document.querySelector(`#dl-fg-report-${SID} input[value="${report}"]`);
+        if (cb) cb.checked = false;
+      }
+    });
+  });
+
+  // Render
+    if (!tags.length) {
+    container.innerHTML = '';
+    return;
+    }
+
+    container.innerHTML =
+    tags.map((tag, i) => `
+        <span class="dl-filter-tag">
+        ${tag.label}
+        <button data-tag-index="${i}" aria-label="Remove filter">✕</button>
+        </span>
+    `).join('') +
+    `<button class="dl-filter-reset-all" onclick="dlResetFilters('${SID}')">Reset All ✕</button>`;
+
+    // 用事件委托绑定，避免字符串传参问题
+    container.querySelectorAll('[data-tag-index]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const idx = parseInt(this.dataset.tagIndex);
+        if (tags[idx]) {
+        tags[idx].clear();
+        state.page = 1;
+        fetchData();
+        }
+    });
+    });
+
+
+  
+}
+
+function resetRangeSlider(filterKey) {
+  const wrap = document.querySelector(`#dl-filters-${SID} .dl-range-wrap[data-filter="${filterKey}"]`);
+  if (!wrap) return;
+  const minInput = wrap.querySelector('[data-role=min]');
+  const maxInput = wrap.querySelector('[data-role=max]');
+  if (minInput) minInput.value = minInput.min;
+  if (maxInput) maxInput.value = maxInput.max;
+  minInput?.dispatchEvent(new Event('input'));
+}
+
+  function fetchData() {
+    updateFilterReset();
+    const tbody = document.getElementById(`dl-tbody-${SID}`);
+    tbody.innerHTML = '<tr><td colspan="7" class="dl-loading">Loading diamonds...</td></tr>';
+    let shopDomain = window.Shopify?.shop || location.hostname;
+    shopDomain= "https://"+shopDomain
+    const body = {
+      shopDomain: shopDomain,
+      shapes:     state.shapes.length ? state.shapes : [],
+      minCarat:   state.carat[0],
+      maxCarat:   state.carat[1],
+      colors: state.color[0] === 0 && state.color[1] === 9
+      ? []
+      : COLOR_LABELS.slice(state.color[0], state.color[1] + 1),
+
+      fancyColors: [],
+      cuts: state.cut[0] === 0 && state.cut[1] === 4
+      ? []
+      : CUT_LABELS.slice(state.cut[0], state.cut[1] + 1),
+      claritys:   state.clarity[0] === 0 && state.clarity[1] === 7
+                    ? []
+                    : CLARITY_LABELS.slice(state.clarity[0], state.clarity[1] + 1),
+      minPrice:   state.price[0],
+      maxPrice:   state.price[1],
+      page:       state.page - 1,   // 后台从0开始
+      size:       PAGE_SIZE,
+      sortBy:     state.sort
+    };
+    if(state.origin){
+      body.diamondOrigin = state.origin
+    }
+    {% comment %} if(state.quickShip){
+      body.quickShip = 1;
+    } {% endcomment %}
+    if(state.reports){
+      body.reports = state.reports;
+    }
+
+    fetch(API_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+      .then(r => r.json())
+      .then(json => {
+          const diamonds = json.content || [];
+          const total = json.totalElements || diamonds.length;
+          state.data = diamonds;
+          state.total = total;
+          state.page = (json.number || 0) + 1;
+
+          // 动态更新 Price 滑块范围
+          {% comment %} if (diamonds.length > 0) {
+            const prices = diamonds.map(d => d.price).filter(p => typeof p === 'number');
+            if (prices.length > 0) {
+              const minP = Math.floor(Math.min(...prices));
+              const maxP = Math.ceil(Math.max(...prices));
+              updatePriceSliderRange(minP, maxP);
+            }
+          } {% endcomment %}
+
+          renderTable();
+        })
+
+      .catch((e) => {
+        console.log(e);
+        tbody.innerHTML = '<tr><td colspan="7" class="dl-loading">Failed to load data. Please check your API endpoint.</td></tr>';
+      });
+  }
+  function updatePriceSliderRange(minP, maxP) {
+    const wrap = document.querySelector(`#dl-filters-${SID} .dl-range-wrap[data-filter="price"]`);
+    if (!wrap) return;
+
+    const minInput = wrap.querySelector('[data-role=min]');
+    const maxInput = wrap.querySelector('[data-role=max]');
+    const fill = wrap.querySelector('.dl-range-fill');
+    const minLabel = wrap.querySelector('.dl-range-min-label');
+    const maxLabel = wrap.querySelector('.dl-range-max-label');
+
+    // 更新 input 的 min/max 属性
+    wrap.dataset.min = minP;
+    wrap.dataset.max = maxP;
+    minInput.min = minP;
+    minInput.max = maxP;
+    maxInput.min = minP;
+    maxInput.max = maxP;
+
+    // 只在用户没有手动调整过价格时才重置滑块位置
+    if (state.price[0] === state._initPriceMin && state.price[1] === state._initPriceMax) {
+      minInput.value = minP;
+      maxInput.value = maxP;
+      state.price = [minP, maxP];
+      state._initPriceMin = minP;
+      state._initPriceMax = maxP;
+    }
+    // 如果 URL 指定了 price，在 API 返回范围后同步 slider UI
+    if (state._urlPriceMin != null || state._urlPriceMax != null) {
+      const clampedMin = Math.max(minP, state._urlPriceMin ?? minP);
+      const clampedMax = Math.min(maxP, state._urlPriceMax ?? maxP);
+      minInput.value = clampedMin;
+      maxInput.value = clampedMax;
+      state.price = [clampedMin, clampedMax];
+      state._urlPriceMin = null;
+      state._urlPriceMax = null;
+    }
+
+
+    // 更新填充条和标签
+    const absMin = minP;
+    const absMax = maxP;
+    const pMin = ((parseFloat(minInput.value) - absMin) / (absMax - absMin)) * 100;
+    const pMax = ((parseFloat(maxInput.value) - absMin) / (absMax - absMin)) * 100;
+    if (fill) {
+      fill.style.left = pMin + '%';
+      fill.style.width = (pMax - pMin) + '%';
+    }
+    if (minLabel) minLabel.textContent = '$' + parseFloat(minInput.value).toLocaleString();
+    if (maxLabel) maxLabel.textContent = '$' + parseFloat(maxInput.value).toLocaleString();
+  }
+
+  // ---- Render Grid (Visual View) ----
+  function renderGrid() {
+    const gridEl = document.getElementById(`dl-grid-${SID}`);
+    const totalEl = document.getElementById(`dl-total-${SID}`);
+    if (totalEl) totalEl.textContent = `(${state.total.toLocaleString()})`;
+    updatePagination();
+
+    if (!gridEl) return;
+    if (!state.data.length) {
+      gridEl.innerHTML = '<div class="dl-loading" style="grid-column:1/-1">No diamonds found matching your filters.</div>';
+      return;
+    }
+
+    // 简单判断 Best Value：价格最低的前20%标记
+    const prices = state.data.map(d => typeof d.price === 'number' ? d.price : Infinity);
+    const sortedPrices = [...prices].sort((a,b) => a - b);
+    const bestValueThreshold = sortedPrices[Math.max(0, Math.floor(sortedPrices.length * 0.2) - 1)];
+
+    let html = '';
+    state.data.forEach((d, idx) => {
+      const attr = d;
+      const priceFormatted = typeof d.price === 'number'
+        ? '$ ' + d.price.toLocaleString()
+        : (d.price_display || d.price || '-');
+
+      // 图片
+      let imgHtml = '';
+      let imgs = [];
+      if (attr.medias && attr.medias.length > 0) {
+        imgs = attr.medias.filter(m => m.mediaType === 1 && m.url).map(m => m.url);
+      }
+      if (!imgs.length && d.pictures) {
+        imgs = d.pictures.split(',').map(s => s.trim()).filter(Boolean);
+      }
+      if (imgs[0]) {
+        imgHtml = `<img src="${imgs[0]}" alt="${attr.shape || ''} Diamond" loading="lazy">`;
+      } else {
+        imgHtml = `<div class="dl-grid-card-img-placeholder">💎</div>`;
+      }
+
+      // Best Value 徽章
+      const isBestValue = typeof d.price === 'number' && d.price <= bestValueThreshold;
+      const badgeHtml = isBestValue ? `<span class="dl-grid-badge">Best Value</span>` : '';
+
+      // Wishlist 按钮
+      const wishlisted = dlIsWishlisted(d);
+      const wishlistHtml = `
+        <button class="dl-grid-icon-btn dl-wishlist-btn ${wishlisted ? 'wishlisted' : ''}"
+          id="dl-gwl-${SID}-${idx}"
+          onclick="event.stopPropagation();dlToggleWishlist('${SID}',${idx})"
+          title="Add to Wishlist">
+        </button>`;
+
+      // 360° 图标（如有 medias 视频类型）
+      const has360 = attr.medias && attr.medias.some(m => m.mediaType === 2);
+      const icon360Html = has360
+        ? `<button class="dl-grid-icon-btn" title="360° View" onclick="event.stopPropagation()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 10l3-3 3 3M12 7v10"/>
+            </svg>
+           </button>`
+        : '';
+
+      // 名称 & 副标题
+      const cardName = attr.name || 'Secret Garden Diamond Ring';
+      const cardSub  = attr.carat ? `(${attr.carat}ct. tw.)` : '';
+
+      html += `
+        <div class="dl-grid-card" onclick="dlToggleRow('${SID}','${idx}')">
+          <div class="dl-grid-card-img-wrap">
+            ${imgHtml}
+            ${badgeHtml}
+            <div class="dl-grid-icons">
+              ${icon360Html}
+              ${wishlistHtml}
+            </div>
+          </div>
+          <div class="dl-grid-card-body">
+            <div class="dl-grid-card-name">${cardName}</div>
+            ${cardSub ? `<div class="dl-grid-card-sub">${cardSub}</div>` : ''}
+            <div class="dl-grid-card-price">${priceFormatted}</div>
+            <button class="dl-grid-card-select" onclick="event.stopPropagation();dlSelectDiamond('${SID}',${idx})">Select Diamond</button>
+          </div>
+        </div>
+      `;
+    });
+
+    gridEl.innerHTML = html;
+    dlSyncWishlistButtons(SID);
+    dlUpdateWishlistCount(SID);
+  }
+
+  // ---- Render Table ----
+  function renderTable() {
+        // 如果当前是 visual 视图，渲染网格
+    if (state.view === 'visual') { renderGrid(); return; }
+
+    const tbody = document.getElementById(`dl-tbody-${SID}`);
+    const totalEl = document.getElementById(`dl-total-${SID}`);
+    if (totalEl) totalEl.textContent = `(${state.total.toLocaleString()})`;
+
+    updatePagination();
+
+    if (!state.data.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="dl-loading">No diamonds found matching your filters.</td></tr>';
+      return;
+    }
+    let html = '';
+    state.data.forEach((d, idx) => {
+      const attr = d;
+      let cut = '';
+      if(attr.cut){
+        if(attr.cut=="Id"){
+          cut = 'Ideal';
+        }else if(cut=='-'){
+          if(attr.symm){
+            cut = attr.symm=='EX'?attr.symm:
+            attr.symm=='VG'?'Very Good':
+            attr.symm=='GD'?'Good':
+            attr.symm=='ID'?'Ideal':
+            attr.symm=='VERYGOOD'?'Very Good':"";
+          }
+          
+        }else{
+          cut = attr.cut;
+        }
+      }else{
+          if(attr.symm){
+            cut = attr.symm=='EX'?attr.symm:
+            attr.symm=='VG'?'Very Good':
+            attr.symm=='GD'?'Good':
+            attr.symm=='ID'?'Ideal':
+            attr.symm=='VERYGOOD'?'Very Good':"";
+          }
+      }
+      let report='-';
+      if(attr.report && attr.report!='-'){
+         report=String(attr.report)
+        .replace('(SH)','')
+        .trim();
+      }
+      
+      
+      const rowId = `dl-row-${SID}-${idx}`;
+      const expandId = `dl-expand-${SID}-${idx}`;
+      const priceFormatted = typeof d.price === 'number'
+        ? '$' + d.price.toLocaleString()
+        : (d.price_display || d.price || '-');
+        
+
+      html += `
+        <tr class="dl-row" id="${rowId}" onclick="dlToggleRow('${SID}','${idx}')">
+          <td>
+            <div class="dl-flex">
+             ${shapeIconSVG(attr.shape, '{{ section.id }}')}
+              ${attr.shape || '-'}
+            </div>
+          </td>
+          <td>${attr.carat || '-'}</td>
+          <td>${attr.color || '-'}</td>
+          <td>${attr.clarity || '-'}</td>
+          <td>${cut || '-'}</td>
+          <td>${priceFormatted}</td>
+          <td>
+            <div class="text-center">
+              <button 
+                class="dl-wishlist-btn ${dlIsWishlisted(d) ? 'wishlisted' : ''}" 
+                id="dl-wl-${SID}-${idx}"
+                onclick="event.stopPropagation();dlToggleWishlist('${SID}',${idx})"
+                title="Add to Wishlist">
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr class="dl-expand-row" id="${expandId}">
+          <td class="dl-expand-cell" colspan="7">
+            <div class="dl-expand-inner">
+              ${dlBuildExpandMedia(attr, d, idx)}
+
+              <div class="dl-expand-info">
+                <div class="dl-expand-title">${attr.name || (attr.carat + ' ct. ' + attr.shape + ' Diamond')}</div>
+                <div class="dl-expand-price">${priceFormatted}</div>
+                <div class="dl-expand-specs">
+                  <div><div class="dl-expand-spec-label">Shape:</div><div class="dl-expand-spec-value">${attr.shape || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Carat:</div><div class="dl-expand-spec-value">${attr.carat || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Cut:</div><div class="dl-expand-spec-value">${cut || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Color:</div><div class="dl-expand-spec-value">${attr.color || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Clarity:</div><div class="dl-expand-spec-value">${attr.clarity || '-'}</div></div>
+                  {% comment %} <div><div class="dl-expand-spec-label">LW:</div><div class="dl-expand-spec-value">${attr.diamondLength && attr.diamondWidth ? (attr.diamondLength + '/' + attr.diamondWidth) : '-' || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Fluor:</div><div class="dl-expand-spec-value">${attr.flo || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Symmetry:</div><div class="dl-expand-spec-value">${attr.symm || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Table:</div><div class="dl-expand-spec-value">${attr.diamondTable ? attr.diamondTable + '%' : '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Origin:</div><div class="dl-expand-spec-value">${attr.diamondOrigin || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Measurements:</div><div class="dl-expand-spec-value">${`${attr.diamondLength} × ${attr.diamondWidth} × ${attr.diamondHeight}`}</div></div>
+                  <div><div class="dl-expand-spec-label">Culet:</div><div class="dl-expand-spec-value">${attr.culet || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Polish:</div><div class="dl-expand-spec-value">${attr.pol || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Girdle:</div><div class="dl-expand-spec-value">${attr.girdle || '-'}</div></div>
+                  <div><div class="dl-expand-spec-label">Depth:</div><div class="dl-expand-spec-value">${attr.depth ? attr.depth + '%' : '-'}</div></div> {% endcomment %}
+                  <div><div class="dl-expand-spec-label">Report:</div><div class="dl-expand-spec-value">${report}</div></div>
+                  {% comment %} <div><div class="dl-expand-spec-label">Loose Diamond Delivery:</div><div class="dl-expand-spec-value">${d.delivery || '-'}</div></div> {% endcomment %}
+                </div>
+                ${d.quick_ship ? '<span class="dl-tag">QUICK SHIP</span>' : ''}
+                ${d.only_one ? '<span class="dl-tag">ONLY ONE AVAILABLE</span>' : ''}
+              </div>
+              <div class="dl-expand-actions">
+                <button class="dl-btn-select" onclick="dlSelectDiamond('${SID}',${idx})">Select Diamond</button>
+                <button class="dl-btn-details" data-sid="${SID}" 
+                  data-url-handle='${JSON.stringify(d.urlHandle)}' onclick="dlViewDetails(this)">View Diamond Details</button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+
+    dlSyncWishlistButtons(SID);
+    dlUpdateWishlistCount(SID);
+  }
+  function dlBuildExpandMedia(attr, d, idx) {
+  const medias = Array.isArray(attr.medias)
+    ? attr.medias
+    : [];
+
+  /*
+   * 条件 1：
+   * mediaType = 4，优先作为 3D 旋转图片使用
+   */
+  const spinMedia = medias.find(
+    m =>
+      String(m.mediaType) === '4' &&
+      m.url
+  );
+
+  if (spinMedia) {
+    const mediaJson = encodeURIComponent(
+      JSON.stringify(spinMedia)
+    );
+
+    return `
+      <div
+        class="dl-expand-img dl-expand-spin"
+        data-dl-spin-media="${mediaJson}"
+        data-dl-spin-id="${SID}-${idx}"
+      >
+        <span class="dl-expand-spin-loading">
+          Loading…
+        </span>
+      </div>
+    `;
+  }
+
+  /*
+   * 条件 2：
+   * mediaType = 2，作为视频使用
+   */
+  const videoMedia = medias.find(
+    m =>
+      String(m.mediaType) === '2' &&
+      m.url
+  );
+
+  if (videoMedia) {
+    return `
+      <video
+        class="dl-expand-img dl-expand-video"
+        data-dl-video-src="${dlEscapeHtml(videoMedia.url)}"
+        controls
+        playsinline
+        preload="none"
+        onclick="event.stopPropagation();"
+      >
+      </video>
+    `;
+  }
+
+
+  /*
+   * 默认逻辑：
+   * mediaType = 1，或者使用 d.pictures
+   */
+  let imgs = medias
+    .filter(
+      m =>
+        String(m.mediaType) === '1' &&
+        m.url
+    )
+    .map(m => m.url);
+
+  if (!imgs.length && d.pictures) {
+    imgs = d.pictures
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+  }
+
+  return imgs[0]
+    ? `
+      <img
+        class="dl-expand-img"
+        data-dl-image-src="${dlEscapeHtml(imgs[0])}"
+        alt="${dlEscapeHtml(attr.shape || 'Diamond')} Diamond"
+        onclick="event.stopPropagation();"
+      >
+    `
+    : `
+      <div class="dl-expand-img-placeholder">
+        💎
+      </div>
+    `;
+
+}
+
+function dlEscapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+function dlDestroyExpandSpin(expand) {
+  if (!expand) return;
+
+  const spinContainer = expand.querySelector('[data-dl-spin-media]');
+  if (!spinContainer) return;
+
+  if (typeof spinContainer.dlSpinDestroy === 'function') {
+    spinContainer.dlSpinDestroy();
+    spinContainer.dlSpinDestroy = null;
+  }
+
+  delete spinContainer.dataset.dlSpinInitialized;
+  delete spinContainer.dataset.dlSpinLoading;
+  spinContainer.innerHTML = '<span class="dl-expand-spin-loading">Loading…</span>';
+}
+
+function dlInitExpandSpinForRow(sid, idx) {
+  const expandId = `dl-expand-${sid}-${idx}`;
+  const expand = document.getElementById(expandId);
+
+  if (!expand) {
+    return;
+  }
+
+  /*
+   * 当前行展开后，才加载普通图片
+   */
+  const lazyImage = expand.querySelector(
+    '[data-dl-image-src]'
+  );
+
+  if (
+    lazyImage &&
+    !lazyImage.getAttribute('src')
+  ) {
+    lazyImage.setAttribute(
+      'src',
+      lazyImage.dataset.dlImageSrc
+    );
+  }
+
+  /*
+   * 当前行展开后，才加载视频
+   */
+  const lazyVideo = expand.querySelector(
+    '[data-dl-video-src]'
+  );
+
+  if (
+    lazyVideo &&
+    !lazyVideo.getAttribute('src')
+  ) {
+    lazyVideo.setAttribute(
+      'src',
+      lazyVideo.dataset.dlVideoSrc
+    );
+
+    lazyVideo.load();
+  }
+
+  /*
+   * 当前行没有 3D 媒体，就到这里结束
+   */
+  const spinContainer = expand.querySelector(
+    '[data-dl-spin-media]'
+  );
+
+  if (!spinContainer) {
+    return;
+  }
+
+  /*
+   * 防止同一行重复初始化
+   */
+  if (
+    spinContainer.dataset.dlSpinInitialized === 'true' ||
+    spinContainer.dataset.dlSpinLoading === 'true'
+  ) {
+    return;
+  }
+
+  spinContainer.dataset.dlSpinLoading = 'true';
+
+  try {
+    const media = JSON.parse(
+      decodeURIComponent(
+        spinContainer.dataset.dlSpinMedia
+      )
+    );
+
+    spinContainer.innerHTML = '';
+
+    /*
+     * 第三个参数传入当前行的容器，
+     * 3D 内容只会插入当前展开行
+     */
+    spinContainer.dlSpinDestroy = renderSpin(
+      media,
+      spinContainer.dataset.dlSpinId,
+      spinContainer
+    );
+
+    spinContainer.dataset.dlSpinInitialized =
+      'true';
+
+    spinContainer.addEventListener(
+      'click',
+      event => {
+        event.stopPropagation();
+      }
+    );
+  } catch (error) {
+    console.error(
+      'Failed to initialize diamond 3D media:',
+      error
+    );
+
+    spinContainer.innerHTML = `
+      <div class="dl-expand-img-placeholder">
+        💎
+      </div>
+    `;
+  }
+}
+
+
+//和钻石详情使用同一个3D旋转代码
+function isPortraitMedia(index) {
+  return index >= 4;
+}
+// ── 创建媒体容器 ──────────────────────────────────────────────────────────
+function createMediaItem(index, extraClasses) {
+  const item = document.createElement('div');
+  item.className = 'dpi-media-item' + (extraClasses ? ' ' + extraClasses : '');
+  if (isPortraitMedia(index)) {
+    item.classList.add('dpi-media-item--portrait');
+  }
+  return item;
+}
+
+function renderSpin(media, index, targetElement) {
+  const item = createMediaItem(index, 'dpi-media-item--product');
+
+  const { url, imageName, imageSuffix, imageNumber } = media;
+
+  const TOTAL_FRAMES = imageNumber || 1;
+
+  // 鼠标拖动灵敏度
+  // 数值越小，鼠标移动相同距离时旋转越快
+  const SENSITIVITY = 1.0;
+
+  // 自动旋转速度
+  const AUTO_PLAY_SPEED = 0.5;
+
+  // 惯性衰减速度
+  // 数值越小，松手后停止越快
+  const FRICTION = 0.90;
+
+  // 松手时的速度放大倍数
+  const SPEED_BOOST = 2.5;
+
+  // 松手后的最大惯性速度
+  const MAX_INERTIA = 0.8;
+
+  const frameUrls = [];
+
+  for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    frameUrls.push(
+      url + imageName + i + '.' + imageSuffix
+    );
+  }
+
+  const canvas = document.createElement('canvas');
+
+  canvas.width = 800;
+  canvas.height = 800;
+
+  canvas.style.cssText = `
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: grab;
+    display: block;
+    transform: translateZ(0);
+    touch-action: none;
+  `;
+
+  const loader = document.createElement('div');
+
+  loader.className = 'dpi-spin-loader';
+
+  loader.innerHTML = `
+    <div style="text-align: center;">
+    <span id="dpi-spin-text-${index}">Loading…</span>
+
+    <div
+      style="
+        width: 160px;
+        height: 5px;
+        background: #e0e0e0;
+        border-radius: 3px;
+        margin-top: 10px;
+        overflow: hidden;
+      "
+    >
+      <div
+        id="dpi-spin-bar-${index}"
+        style="
+          width: 0%;
+          height: 100%;
+          background: #1a3a4a;
+          transition: width 0.1s;
+        "
+      ></div>
+    </div>
+    </div>
+  `;
+
+  const dragLabel = document.createElement('div');
+
+  dragLabel.className = 'dpi-drag-label';
+  dragLabel.textContent = 'Drag to Spin';
+  dragLabel.style.opacity = '1';
+
+  item.appendChild(canvas);
+  item.appendChild(loader);
+  item.appendChild(dragLabel);
+
+  
+  if (targetElement) {
+    targetElement.appendChild(item);
+  } else {
+    mediaGridEl.appendChild(item);
+  }
+
+  const ctx = canvas.getContext('2d');
+
+  const imgs = new Array(TOTAL_FRAMES);
+
+  let loadedCount = 0;
+  let isReady = false;
+
+  let currentFrameFloat = 0.0;
+  let lastRenderedFrame = -1;
+
+  let isDragging = false;
+  let isMouseOver = false;
+
+  let startX = 0;
+  let startFrameFloat = 0.0;
+
+  let trackX = 0;
+  let trackTime = 0;
+
+  let finalVelocity = 0;
+  let inertiaSpeed = 0;
+
+  let rafId = null;
+  let destroyed = false;
+  let loaderTimeoutId = null;
+
+  // 用于根据真实帧间隔计算速度
+  let lastAnimationTime = 0;
+
+  const spinTextEl = document.getElementById(
+    `dpi-spin-text-${index}`
+  );
+
+  const spinBarEl = document.getElementById(
+    `dpi-spin-bar-${index}`
+  );
+
+  function clampFrame(frame) {
+    return (
+      (frame % TOTAL_FRAMES + TOTAL_FRAMES) %
+      TOTAL_FRAMES
+    );
+  }
+
+  function renderFrame(frameFloat) {
+    const frame = Math.round(
+      clampFrame(frameFloat)
+    );
+
+    if (frame === lastRenderedFrame) {
+      return;
+    }
+
+    const img = imgs[frame];
+
+    if (
+      img &&
+      img.complete &&
+      img.naturalWidth > 0
+    ) {
+      ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      lastRenderedFrame = frame;
+    }
+  }
+
+  function animate(now = performance.now()) {
+    if (destroyed) return;
+    if (!lastAnimationTime) {
+      lastAnimationTime = now;
+    }
+
+    // 以 60fps 为基准计算时间差，
+    // 防止高刷新率屏幕旋转速度过快
+    const deltaTime = Math.min(
+      (now - lastAnimationTime) / 16.667,
+      2
+    );
+
+    lastAnimationTime = now;
+
+    if (!isDragging && isReady) {
+      if (Math.abs(inertiaSpeed) > 0) {
+        currentFrameFloat -=
+          inertiaSpeed * deltaTime;
+
+        // 根据实际时间逐渐降低惯性
+        inertiaSpeed *= Math.pow(
+          FRICTION,
+          deltaTime
+        );
+
+        // 速度足够小时直接停止
+        if (Math.abs(inertiaSpeed) < 0.02) {
+          inertiaSpeed = 0;
+        }
+      }
+
+      // 没有惯性并且鼠标不在图片上时，缓慢自动旋转
+      if (
+        inertiaSpeed === 0 &&
+        !isMouseOver
+      ) {
+        currentFrameFloat +=
+          AUTO_PLAY_SPEED * deltaTime;
+      }
+
+      renderFrame(currentFrameFloat);
+    }
+
+    rafId = requestAnimationFrame(animate);
+  }
+
+  // 先加载第 1 帧并立即显示
+  const firstImg = new Image();
+
+  firstImg.onload = () => {
+    if (destroyed) return;
+    if (firstImg.naturalWidth > 0) {
+      canvas.width = firstImg.naturalWidth;
+      canvas.height = firstImg.naturalHeight;
+    }
+
+    imgs[0] = firstImg;
+
+    // 先显示第 1 帧
+    renderFrame(0);
+
+    // 然后加载剩余所有帧
+    preloadAllFrames();
+  };
+
+  firstImg.onerror = () => {
+    if (destroyed) return;
+    // 第 1 帧失败时，也继续尝试加载其他帧
+    preloadAllFrames();
+  };
+
+  firstImg.src = frameUrls[0];
+
+  function preloadAllFrames() {
+    if (destroyed) return;
+    loadedCount = 0;
+
+    frameUrls.forEach((src, idx) => {
+      // 第 1 帧已经加载过，直接计数
+      if (idx === 0 && imgs[0]) {
+        loadedCount++;
+
+        updateLoader();
+
+        if (loadedCount === TOTAL_FRAMES) {
+          finishLoading();
+        }
+
+        return;
+      }
+
+      const img = new Image();
+
+      img.onload = () => {
+        if (destroyed) return;
+        loadedCount++;
+
+        updateLoader();
+
+        if (loadedCount === TOTAL_FRAMES) {
+          finishLoading();
+        }
+      };
+
+      img.onerror = () => {
+        if (destroyed) return;
+        loadedCount++;
+
+        updateLoader();
+
+        if (loadedCount === TOTAL_FRAMES) {
+          finishLoading();
+        }
+      };
+
+      img.src = src;
+      imgs[idx] = img;
+    });
+  }
+
+  function updateLoader() {
+    const percentage = Math.floor(
+      (loadedCount / TOTAL_FRAMES) * 100
+    );
+
+    if (spinBarEl) {
+      spinBarEl.style.width =
+        percentage + '%';
+    }
+
+    if (spinTextEl) {
+      spinTextEl.textContent =
+        percentage + '%';
+    }
+  }
+
+  function finishLoading() {
+    if (destroyed || isReady) return;
+
+    isReady = true;
+    loader.style.opacity = '0';
+
+    loaderTimeoutId = setTimeout(() => {
+      if (!destroyed) loader.style.display = 'none';
+    }, 300);
+
+    animate();
+  }
+
+
+  item.addEventListener('mouseenter', () => {
+    isMouseOver = true;
+  });
+
+  item.addEventListener('mouseleave', () => {
+    isMouseOver = false;
+
+    dragLabel.style.opacity = '1';
+
+    if (isDragging) {
+      handleEnd();
+    }
+  });
+
+  function handleStart(event) {
+    if (!isReady) {
+      return;
+    }
+
+    isDragging = true;
+    inertiaSpeed = 0;
+    finalVelocity = 0;
+
+    dragLabel.style.opacity = '0';
+    canvas.style.cursor = 'grabbing';
+
+    const clientX =
+      event.clientX ??
+      event.touches?.[0]?.clientX ??
+      0;
+
+    startX = clientX;
+    startFrameFloat = currentFrameFloat;
+
+    trackX = clientX;
+    trackTime = performance.now();
+  }
+
+  function handleMove(event) {
+    if (!isDragging) {
+      return;
+    }
+
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+
+    const clientX =
+      event.clientX ??
+      event.touches?.[0]?.clientX ??
+      0;
+
+    const now = performance.now();
+
+    const deltaX = clientX - startX;
+
+    // 鼠标拖动时实时旋转
+    currentFrameFloat =
+      startFrameFloat -
+      deltaX / SENSITIVITY;
+
+    renderFrame(currentFrameFloat);
+
+    const dt = now - trackTime;
+
+    if (dt > 0) {
+      const instantVelocity =
+        (clientX - trackX) / dt;
+
+      // 平滑计算速度，防止松手瞬间加速
+      finalVelocity =
+        finalVelocity * 0.75 +
+        instantVelocity * 0.25;
+
+      trackX = clientX;
+      trackTime = now;
+    }
+  }
+
+  function handleEnd() {
+    if (!isDragging) {
+      return;
+    }
+
+    isDragging = false;
+    canvas.style.cursor = 'grab';
+
+    // 限制松手后的惯性速度
+    inertiaSpeed = Math.max(
+      -MAX_INERTIA,
+      Math.min(
+        MAX_INERTIA,
+        finalVelocity * SPEED_BOOST
+      )
+    );
+
+    finalVelocity = 0;
+  }
+
+  // 鼠标事件
+  canvas.addEventListener(
+    'mousedown',
+    handleStart
+  );
+
+  window.addEventListener(
+    'mousemove',
+    handleMove
+  );
+
+  window.addEventListener(
+    'mouseup',
+    handleEnd
+  );
+
+  // 触摸事件
+  canvas.addEventListener(
+    'touchstart',
+    (event) => {
+      isMouseOver = true;
+      handleStart(event);
+    },
+    {
+      passive: false
+    }
+  );
+
+  canvas.addEventListener(
+    'touchmove',
+    handleMove,
+    {
+      passive: false
+    }
+  );
+
+  function handleTouchEnd() {
+    isMouseOver = false;
+    handleEnd();
+  }
+
+  window.addEventListener('touchend', handleTouchEnd);
+
+  return function destroySpin() {
+    if (destroyed) return;
+    destroyed = true;
+
+    if (rafId !== null) cancelAnimationFrame(rafId);
+    if (loaderTimeoutId !== null) clearTimeout(loaderTimeoutId);
+
+    window.removeEventListener('mousemove', handleMove);
+    window.removeEventListener('mouseup', handleEnd);
+    window.removeEventListener('touchend', handleTouchEnd);
+
+    firstImg.onload = null;
+    firstImg.onerror = null;
+    firstImg.src = '';
+
+    imgs.forEach(img => {
+      if (!img || img === firstImg) return;
+      img.onload = null;
+      img.onerror = null;
+      img.src = '';
+    });
+
+    imgs.length = 0;
+    item.remove();
+  };
+
+
+}
+
+//end 3D旋转代码
+
+
+  function shapeIconSVG(shape, sectionId) {
+    const imageMap = (window.dlShapeImages && window.dlShapeImages[sectionId]) || {};
+    if (imageMap[shape]) {
+      return `<img src="${imageMap[shape]}" alt="${shape}" class="dl-shape-icon">`;
+    }
+    return dlShapeSVGFallback(shape);
+  }
+
+  function dlShapeSVGFallback(shape) {
+    const s = (shape || '').toLowerCase();
+    let path = '';
+    if (s === 'round') path = '<circle cx="11" cy="11" r="7"/>';
+    else if (s === 'oval') path = '<ellipse cx="11" cy="11" rx="6" ry="8"/>';
+    else if (s === 'emerald') path = '<rect x="4" y="6" width="14" height="10" rx="1.5"/>';
+    else if (s.includes('cushion')) path = '<rect x="4" y="4" width="14" height="14" rx="4"/>';
+    else if (s === 'pear') path = '<path d="M11 3 C15 3 17 7 17 10 C17 15 14 19 11 19 C8 19 5 15 5 10 C5 7 7 3 11 3Z"/>';
+    else if (s === 'radiant') path = '<polygon points="7,4 15,4 18,11 15,18 7,18 4,11"/>';
+    else if (s === 'princess') path = '<rect x="4" y="4" width="14" height="14"/>';
+    else if (s === 'marquise') path = '<ellipse cx="11" cy="11" rx="9" ry="5"/>';
+    else if (s === 'asscher') path = '<rect x="5" y="5" width="12" height="12" rx="1"/>';
+    else path = '<circle cx="11" cy="11" r="7"/>';
+    return `<svg class="dl-shape-icon" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">${path}</svg>`;
+  }
+
+  // ---- Pagination ----
+  function updatePagination() {
+    const totalPages = Math.ceil(state.total / PAGE_SIZE) || 1;
+    const infoEl = document.getElementById(`dl-page-info-${SID}`);
+    const prevBtn = document.getElementById(`dl-prev-${SID}`);
+    const nextBtn = document.getElementById(`dl-next-${SID}`);
+    if (infoEl) infoEl.textContent = `Page ${state.page} of ${totalPages || 1}`;
+    if (prevBtn) prevBtn.disabled = state.page <= 1;
+    if (nextBtn) nextBtn.disabled = state.page >= totalPages;
+  }
+
+  // ---- Global handlers (attached to window for inline onclick) ----
+  window.dlToggleRow = function(sid, idx) {
+    if (sid !== SID) return;
+
+    const row = document.getElementById(`dl-row-${SID}-${idx}`);
+    const expand = document.getElementById(`dl-expand-${SID}-${idx}`);
+    if (!row || !expand) return;
+
+    const isOpen = expand.classList.contains('open');
+
+    // 先销毁上一行的旋转，再关闭展开行
+    document.querySelectorAll(`#dl-tbody-${SID} .dl-expand-row.open`)
+      .forEach(openExpand => {
+        dlDestroyExpandSpin(openExpand);
+        openExpand.classList.remove('open');
+      });
+
+    document.querySelectorAll(`#dl-tbody-${SID} .dl-row.active`)
+      .forEach(activeRow => activeRow.classList.remove('active'));
+
+    if (isOpen) {
+      state.expandedRow = null;
+      return;
+    }
+
+    row.classList.add('active');
+    expand.classList.add('open');
+    state.expandedRow = idx;
+
+    requestAnimationFrame(() => {
+      // 快速连续点击时，避免上一行排队中的初始化又执行
+      if (expand.isConnected && expand.classList.contains('open')) {
+        dlInitExpandSpinForRow(SID, idx);
+      }
+    });
+  };
+
+
+  window.dlSetOrigin = function(sid, origin, btn) {
+    if (sid !== SID) return;
+    state.origin = origin;
+    document.querySelectorAll(`#dl-origin-${SID} button`).forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.page = 1;
+    fetchData();
+  };
+
+  window.dlToggleShape = function(sid, shape, el) {
+    if (sid !== SID) return;
+
+    const wasSelected = state.shapes.includes(shape);
+
+    document.querySelectorAll(`#dl-shapes-${SID} .dl-shape-item`)
+      .forEach(item => item.classList.remove('active'));
+
+    state.shapes = wasSelected ? [] : [shape];
+    if (!wasSelected) el.classList.add('active');
+
+    state.page = 1;
+    fetchData();
+  };
+
+
+  window.dlToggleGroup = function(groupId) {
+    const el = document.getElementById(groupId);
+    if (el) el.classList.toggle('open');
+  };
+
+  window.dlFilterChange = function(sid) {
+    if (sid !== SID) return;
+    //state.quickShip = document.getElementById(`dl-quickship-${SID}`)?.checked || false;
+    state.sort = document.getElementById(`dl-sort-${SID}`)?.value || 'popular';
+    state.reports = Array.from(
+      document.querySelectorAll(`#dl-fg-report-${SID} input[type=checkbox]:checked`)
+    ).map(cb => cb.value);
+    state.page = 1;
+    fetchData();
+  };
+
+  window.dlSort = function(sid, field) {
+    if (sid !== SID) return;
+    // Toggle asc/desc
+    if (state.sort === field + 'Asc') state.sort = field + 'Desc';
+    else state.sort = field + 'Asc';
+    state.page = 1;
+    fetchData();
+  };
+
+  window.dlSetView = function(sid, view, btn) {
+    if (sid !== SID) return;
+    state.view = view;
+    document.querySelectorAll(`#dl-view-${SID} button`).forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tableWrap = document.getElementById(`dl-table-wrap-${SID}`);
+    const gridWrap  = document.getElementById(`dl-grid-wrap-${SID}`);
+    const compareWrap = document.getElementById(`dl-compare-wrap-${SID}`);
+    if (state.tab === 'compare') {
+      if (tableWrap) tableWrap.style.display = 'none';
+      if (gridWrap)  gridWrap.style.display  = 'none';
+      return;
+    }else{
+      if (compareWrap) compareWrap.style.display = 'none';
+    }
+    
+    if (view === 'visual') {
+      if (tableWrap) tableWrap.style.display = 'none';
+      if (gridWrap)  gridWrap.style.display  = '';
+      renderGrid();
+    } else {
+      if (tableWrap) tableWrap.style.display = '';
+      if (gridWrap)  gridWrap.style.display  = 'none';
+      renderTable();
+    }
+  };
+
+
+  // 原来的 dlSetTab 只切换 tab active 样式
+window.dlSetTab = function(sid, tab, el) {
+  const SID = sid;
+   state.tab = tab;
+  // 切换 tab active
+  document.querySelectorAll(`#dl-page-${SID} .dl-tab`).forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  const tableWrap = document.getElementById(`dl-table-wrap-${SID}`);   // 需给 dl-table-wrap 加 id
+  const gridWrap  = document.getElementById(`dl-grid-wrap-${SID}`);
+  const compareWrap = document.getElementById(`dl-compare-wrap-${SID}`);
+  const paginationWrap= document.getElementById(`dl-pagination--${SID}`);
+  if (tab === 'compare') {
+    if (tableWrap) tableWrap.style.display = 'none';
+    if (paginationWrap) paginationWrap.style.display = 'none';
+    if (gridWrap) gridWrap.style.display = 'none';
+    if (compareWrap) compareWrap.style.display = '';
+    dlRenderCompare(SID);
+  } else {
+   
+    if (state.view && state.view === 'visual') {
+      if (gridWrap)  gridWrap.style.display  = '';
+    } else {
+      if (tableWrap) tableWrap.style.display = '';
+    }
+    
+     if (paginationWrap) paginationWrap.style.display = '';
+      if (compareWrap) compareWrap.style.display = 'none';
+  }
+};
+
+
+  window.dlChangePage = function(sid, delta) {
+    if (sid !== SID) return;
+    state.page = Math.max(1, state.page + delta);
+    fetchData();
+  };
+
+  window.dlResetFilters = function(sid) {
+    if (sid !== SID) return;
+    state.shapes = [];
+    state.carat = [0.5, 20];
+    state.color = [0, 9];
+    state.clarity = [0, 7];
+    state.cut = [0, 4];
+    state.price = [10, 10000];
+    state.reports = [];
+    //state.quickShip = false;
+    state.page = 1;
+    // Reset UI
+    document.querySelectorAll(`#dl-shapes-${SID} .dl-shape-item`).forEach(el => el.classList.remove('active'));
+    document.querySelectorAll(`#dl-filters-${SID} input[type=checkbox]`).forEach(cb => cb.checked = false);
+    state._batchResetting = true;   // ← 新增，开启批量标志
+    document.querySelectorAll(`#dl-filters-${SID} .dl-range-wrap`).forEach(wrap => {
+      const minInput = wrap.querySelector('[data-role=min]');
+      const maxInput = wrap.querySelector('[data-role=max]');
+      if (minInput) minInput.value = minInput.min;
+      if (maxInput) maxInput.value = maxInput.max;
+      minInput?.dispatchEvent(new Event('input'));
+    });
+    state._batchResetting = false;  // ← 新增，关闭批量标志
+    fetchData();
+  };
+
+  window.dlSelectDiamond = function(sid, idx) {
+    if (sid !== SID) return;
+
+    // 找到当前选中的钻石数据
+    const diamond = state.data[idx];
+    if (!diamond) return;
+
+    // 保存到本地存储
+    localStorage.setItem('current_diamond', JSON.stringify(diamond));
+
+    // 判断是否已有戒托选择
+    const ringSetting = localStorage.getItem('current_ringsetting');
+    if (ringSetting) {
+      window.location.href = '/pages/purchase-review';
+    } else {
+      localStorage.setItem('select_purchase_number', 'diamond');
+
+      const path = window.location.pathname;
+      const search = window.location.search;
+      const fullPathAndQuery = path + search;
+      localStorage.setItem('current_collections_diamond',fullPathAndQuery);
+
+      let current_collections_ringsetting = localStorage.getItem('current_collections_ringsetting');
+      if(!current_collections_ringsetting){
+        current_collections_ringsetting = '/collections/start-with-a-setting';
+        localStorage.setItem('current_collections_ringsetting',current_collections_ringsetting);
+      }
+      window.location.href = current_collections_ringsetting;
+    }
+  };
+
+
+  window.dlViewDetails = function(button) {
+   const sid = button.dataset.sid;
+  // dataset 会自动处理 HTML 实体转义，直接 parse 即可
+  const urlHandle = JSON.parse(button.dataset.urlHandle);
+    // e.g. window.location.href = '/products/diamond-' + id;
+     const ringSetting = localStorage.getItem('current_ringsetting');
+    if (ringSetting) {
+      localStorage.setItem('select_purchase_number', 'ringSetting');
+    }else{
+      localStorage.setItem('select_purchase_number', 'diamond');
+    }
+    const path = window.location.pathname;
+    const search = window.location.search;
+    const fullPathAndQuery = path + search;
+    localStorage.setItem('current_collections_diamond',fullPathAndQuery);
+    
+    window.location.href = '/products/' + urlHandle;
+  };
+
+  // ===== WISHLIST HELPERS =====
+
+const WISHLIST_KEY = 'ecglosty_wishlist';
+
+function dlGetWishlist() {
+  try {
+    const raw = localStorage.getItem(WISHLIST_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.diamonds)) return parsed;
+    }
+  } catch(e) {}
+  return { diamonds: [], others: [] };
+}
+
+function dlSaveWishlist(wl) {
+  localStorage.setItem(WISHLIST_KEY, JSON.stringify(wl));
+}
+
+// 判断某条数据是否已在 wishlist（用唯一标识，优先用 id/sku，fallback 用 title+carat）
+function dlGetDiamondKey(d) {
+  return d.id || d.sku || (d.title + '_' + d.carat);
+}
+
+function dlIsWishlisted(d) {
+  const wl = dlGetWishlist();
+  const key = dlGetDiamondKey(d);
+  return wl.diamonds.some(item => dlGetDiamondKey(item) === key);
+}
+
+// 切换 wishlist 状态
+window.dlToggleWishlist = function(sid, idx) {
+  const state = window['dlState_' + sid];  // 见下方说明
+  if (!state || !state.data[idx]) return;
+  const d = state.data[idx];
+  const key = dlGetDiamondKey(d);
+  const wl = dlGetWishlist();
+
+  const existingIdx = wl.diamonds.findIndex(item => dlGetDiamondKey(item) === key);
+  if (existingIdx >= 0) {
+    // 已选 → 取消
+    wl.diamonds.splice(existingIdx, 1);
+  } else {
+    // 未选 → 添加
+    wl.diamonds.push(d);
+  }
+  dlSaveWishlist(wl);
+
+  // 更新按钮状态
+  const btn = document.getElementById(`dl-wl-${sid}-${idx}`);
+  if (btn) {
+    btn.classList.toggle('wishlisted', existingIdx < 0);
+  }
+   const gbtn = document.getElementById(`dl-gwl-${sid}-${idx}`);
+  if (gbtn) {
+    gbtn.classList.toggle('wishlisted', existingIdx < 0);
+  }
+
+  // 更新 count
+  dlUpdateWishlistCount(sid);
+
+  // 如果 compare tab 当前是打开的，刷新渲染
+  const compareWrap = document.getElementById(`dl-compare-wrap-${sid}`);
+  if (compareWrap && compareWrap.style.display !== 'none') {
+    dlRenderCompare(sid);
+  }
+};
+
+// 更新 dl-count 显示
+function dlUpdateWishlistCount(sid) {
+  const wl = dlGetWishlist();
+  const countEl = document.getElementById(`dl-count-${sid}`);
+  if (countEl) countEl.textContent = `(${wl.diamonds.length || '0'})`;
+}
+
+// 渲染 Compare 面板
+function dlRenderCompare(sid) {
+  const wl = dlGetWishlist();
+  const tbody = document.getElementById(`dl-compare-tbody-${sid}`);
+  const emptyEl = document.getElementById(`dl-compare-empty-${sid}`);
+  if (!tbody) return;
+
+  if (wl.diamonds.length === 0) {
+    tbody.innerHTML = '';
+    if (emptyEl) emptyEl.style.display = '';
+    return;
+  }
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  let html = '';
+  wl.diamonds.forEach((d, i) => {
+    const attr = d || {};
+    const key = dlGetDiamondKey(d);
+    const rowId = `dl-crow-${sid}-${i}`;
+    const expandId = `dl-cexpand-${sid}-${i}`;
+
+    const priceFormatted = typeof d.price === 'number'
+      ? '$' + d.price.toLocaleString()
+      : (d.price_display || d.price || '-');
+
+    // 取图片（和 renderTable 逻辑一致）
+    let imgHtml = '';
+    let imgs = [];
+    if (attr.medias && attr.medias.length > 0) {
+      imgs = attr.medias.filter(m => m.mediaType === 1 && m.url).map(m => m.url);
+    }
+    if (!imgs.length && d.pictures) {
+      imgs = d.pictures.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    imgHtml = imgs[0]
+      ? `<img class="dl-expand-img" src="${imgs[0]}" alt="${attr.shape || ''} Diamond">`
+      : `<div class="dl-expand-img-placeholder">💎</div>`;
+
+    // shape icon（和 renderTable 一致）
+    const shapeIcon = (window.dlShapeImages && window.dlShapeImages[sid] && window.dlShapeImages[sid][attr.shape])
+      ? `<img src="${window.dlShapeImages[sid][attr.shape]}" alt="${attr.shape || ''}" class="dl-shape-icon">`
+      : `<span>${attr.shape || '-'}</span>`;
+
+    html += `
+      <tr class="dl-row" id="${rowId}" onclick="dlToggleCompareRow('${sid}',${i})">
+        <td>
+          <div class="dl-flex">
+            ${shapeIcon}
+            ${attr.shape || '-'}
+          </div>
+        </td>
+        <td>${attr.carat || '-'}</td>
+        <td>${attr.color || '-'}</td>
+        <td>${attr.clarity || '-'}</td>
+        <td>${attr.cut || '-'}</td>
+        <td>${priceFormatted}</td>
+        <td>
+          <div class="text-center">
+            <button
+                class="dl-wishlist-btn wishlisted"
+                data-compare-sid="${sid}"
+                data-compare-idx="${i}"
+                onclick="event.stopPropagation();dlRemoveFromCompare(this)"
+                title="Remove from Wishlist">
+              </button>
+          </div>
+        </td>
+      </tr>
+      <tr class="dl-expand-row" id="${expandId}">
+        <td class="dl-expand-cell" colspan="7">
+          <div class="dl-expand-inner">
+            ${imgHtml}
+            <div class="dl-expand-info">
+              <div class="dl-expand-title">${d.name || (attr.carat + ' ct. ' + attr.shape + ' Diamond')}</div>
+              <div class="dl-expand-price">${priceFormatted}</div>
+              <div class="dl-expand-specs">
+                <div><div class="dl-expand-spec-label">Carat:</div><div class="dl-expand-spec-value">${attr.carat || '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Cut:</div><div class="dl-expand-spec-value">${attr.cut || '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Color:</div><div class="dl-expand-spec-value">${attr.color || '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Clarity:</div><div class="dl-expand-spec-value">${attr.clarity || '-'}</div></div>
+                <div><div class="dl-expand-spec-label">LW:</div><div class="dl-expand-spec-value">${attr.diamondLength && attr.diamondWidth ? (attr.diamondLength + '/' + attr.diamondWidth) : '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Fluor:</div><div class="dl-expand-spec-value">${attr.flo || '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Symmetry:</div><div class="dl-expand-spec-value">${attr.symm || '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Table:</div><div class="dl-expand-spec-value">${attr.diamondTable ? attr.diamondTable + '%' : '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Origin:</div><div class="dl-expand-spec-value">${attr.lab || '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Measurements:</div><div class="dl-expand-spec-value">${attr.diamondLength && attr.diamondWidth && attr.diamondHeight ? (attr.diamondLength + ' × ' + attr.diamondWidth + ' × ' + attr.diamondHeight) : '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Culet:</div><div class="dl-expand-spec-value">${attr.culet || '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Polish:</div><div class="dl-expand-spec-value">${attr.pol || '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Girdle:</div><div class="dl-expand-spec-value">${attr.girdle || '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Depth:</div><div class="dl-expand-spec-value">${attr.depth ? attr.depth + '%' : '-'}</div></div>
+                <div><div class="dl-expand-spec-label">Report:</div><div class="dl-expand-spec-value">${attr.lab || '-'}</div></div>
+              </div>
+              ${d.quick_ship ? '<span class="dl-tag">QUICK SHIP</span>' : ''}
+              ${d.only_one ? '<span class="dl-tag">ONLY ONE AVAILABLE</span>' : ''}
+            </div>
+            <div class="dl-expand-actions">
+              <button class="dl-btn-select" onclick="event.stopPropagation();dlSelectDiamondFromCompare('${sid}',${i})">Select Diamond</button>
+              ${d.urlHandle ? `<button class="dl-btn-details" onclick="event.stopPropagation();dlViewDetails('${sid}',${JSON.stringify(d.urlHandle)})">View Diamond Details</button>` : ''}
+            </div>
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = html;
+}
+
+window.dlToggleCompareRow = function(sid, idx) {
+  const row = document.getElementById(`dl-crow-${sid}-${idx}`);
+  const expand = document.getElementById(`dl-cexpand-${sid}-${idx}`);
+  if (!row || !expand) return;
+
+  const isOpen = expand.classList.contains('open');
+
+  // 先收起所有
+  document.querySelectorAll(`#dl-compare-tbody-${sid} .dl-row`).forEach(r => r.classList.remove('active'));
+  document.querySelectorAll(`#dl-compare-tbody-${sid} .dl-expand-row`).forEach(e => e.classList.remove('open'));
+
+  if (!isOpen) {
+    row.classList.add('active');
+    expand.classList.add('open');
+  }
+};
+window.dlSelectDiamondFromCompare = function(sid, idx) {
+  const wl = dlGetWishlist();
+  const d = wl.diamonds[idx];
+  if (!d) return;
+  // 复用原来 dlSelectDiamond 的逻辑，直接传 d 对象
+  localStorage.setItem('ecglosty_selected_diamond', JSON.stringify(d));
+  if (d.urlHandle) {
+    location.href = '/products/' + d.urlHandle;
+  }
+};
+
+
+// 在 compare 面板里取消选择
+window.dlRemoveFromCompare = function(btn) {
+  const sid = btn.dataset.compareSid;
+  const idx = parseInt(btn.dataset.compareIdx);
+
+  const wl = dlGetWishlist();
+  if (idx < 0 || idx >= wl.diamonds.length) return;
+
+  wl.diamonds.splice(idx, 1);  // 直接按索引删除，不需要 key 比对
+  dlSaveWishlist(wl);
+  dlUpdateWishlistCount(sid);
+  dlRenderCompare(sid);
+  dlSyncWishlistButtons(sid);
+};
+
+
+// 同步主列表所有行的 wishlist 按钮状态
+function dlSyncWishlistButtons(sid) {
+  const state = window['dlState_' + sid];
+  if (!state || !state.data) return;
+  state.data.forEach((d, idx) => {
+    const btn = document.getElementById(`dl-wl-${sid}-${idx}`);
+    if (btn) btn.classList.toggle('wishlisted', dlIsWishlisted(d));
+  });
+}
+
+
+  // Boot
+  {% comment %} document.addEventListener('DOMContentLoaded', init);
+  if (document.readyState !== 'loading') init(); {% endcomment %}
+  (function waitForDL() {
+      function isReady() {
+        return (
+          document.getElementById(`dl-filters-${SID}`) &&
+          window.dlShapeImages &&
+          window.dlShapeImages[SID]  // shape 图片 map 已经建立
+        );
+      }
+
+      if (isReady()) {
+        init();
+        return;
+      }
+
+      const observer = new MutationObserver(function(mutations, obs) {
+        if (isReady()) {
+          obs.disconnect();
+          init();
+        }
+      });
+
+      observer.observe(document.body || document.documentElement, {
+        childList: true,
+        subtree: true
+      });
+    })();
+    function dlOpenMobileFilters(){
+      var filters = document.getElementById('dl-filters-'+SID);
+      var overlay = document.getElementById('dl-overlay-'+SID);
+      if(filters) filters.classList.add('dl-mobile-open');
+      if(overlay) overlay.classList.add('active');
+      document.body.style.overflow='hidden';
+    }
+    function dlCloseMobileFilters(){
+      var filters = document.getElementById('dl-filters-'+SID);
+      var overlay = document.getElementById('dl-overlay-'+SID);
+      if(filters) filters.classList.remove('dl-mobile-open');
+      if(overlay) overlay.classList.remove('active');
+      document.body.style.overflow='';
+    }
+
+    const mobileFilterfab = document.getElementById(`dl-filter-fab-${SID}`);
+    if(mobileFilterfab){
+      mobileFilterfab.addEventListener('click', dlOpenMobileFilters);
+    }
+    const mobileViewresults = document.getElementById(`dl-mobile-view-results-${SID}`);
+    if(mobileViewresults){
+      mobileViewresults.addEventListener('click', dlCloseMobileFilters);
+    }
+    const mobileFilterClose = document.getElementById(`dl-mobile-filter-header-${SID}`);
+    if(mobileFilterClose){
+      mobileFilterClose.addEventListener('click', dlCloseMobileFilters);
+    }
+
+})();
+
+</script>
+
+
+
+
+{% schema %}
+{
+  "name": "Diamond List",
+  "tag": "section",
+  "class": "diamond-list-section",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "api_endpoint",
+      "label": "API Endpoint URL",
+      "info": "External API URL to fetch diamond data. Leave blank to use mock data for preview.",
+      "placeholder": "https://your-api.com/diamonds"
+    },
+    {
+      "type": "range",
+      "id": "page_size",
+      "label": "Diamonds per page",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "diamond_shape",
+      "name": "Diamond Shape",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "shape_image",
+          "label": "Shape Image"
+        },
+        {
+          "type": "text",
+          "id": "shape_name",
+          "label": "Shape Name",
+          "default": "Round"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Diamond List"
+    }
+  ]
+}
+{% endschema %}

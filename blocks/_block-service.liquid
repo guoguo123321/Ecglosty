@@ -1,0 +1,261 @@
+{% render 'block-service', block: block %}
+
+{% schema %}
+{
+  "name": "block-service",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Items"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_drop_hint",
+      "label": "Show Drop a Hint",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_email_us",
+      "label": "Show Email Us",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Show Phone",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_live_chat",
+      "label": "Show Live Chat",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Drop a Hint"
+    },
+    {
+      "type": "text",
+      "id": "drop_hint_label",
+      "label": "Label",
+      "default": "Drop a Hint"
+    },
+    {
+      "type": "select",
+      "id": "drop_hint_icon_type",
+      "label": "Icon type",
+      "options": [
+        { "value": "svg", "label": "SVG" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "svg"
+    },
+    {
+      "type": "textarea",
+      "id": "drop_hint_svg",
+      "label": "SVG",
+      "info": "Leave blank to use the default SVG",
+      "visible_if": "{{ block.settings.drop_hint_icon_type == 'svg' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "drop_hint_image",
+      "label": "Image",
+      "visible_if": "{{ block.settings.drop_hint_icon_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Email Us"
+    },
+    {
+      "type": "text",
+      "id": "email_us_label",
+      "label": "Label",
+      "default": "Email Us"
+    },
+    {
+      "type": "select",
+      "id": "email_us_icon_type",
+      "label": "Icon type",
+      "options": [
+        { "value": "svg", "label": "SVG" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "svg"
+    },
+    {
+      "type": "textarea",
+      "id": "email_us_svg",
+      "label": "SVG",
+      "info": "Leave blank to use the default SVG",
+      "visible_if": "{{ block.settings.email_us_icon_type == 'svg' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "email_us_image",
+      "label": "Image",
+      "visible_if": "{{ block.settings.email_us_icon_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone number",
+      "default": "+1.818.666.6081"
+    },
+    {
+      "type": "select",
+      "id": "phone_icon_type",
+      "label": "Icon type",
+      "options": [
+        { "value": "svg", "label": "SVG" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "svg"
+    },
+    {
+      "type": "textarea",
+      "id": "phone_svg",
+      "label": "SVG",
+      "info": "Leave blank to use the default SVG",
+      "visible_if": "{{ block.settings.phone_icon_type == 'svg' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "phone_image",
+      "label": "Image",
+      "visible_if": "{{ block.settings.phone_icon_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Live Chat"
+    },
+    {
+      "type": "text",
+      "id": "live_chat_label",
+      "label": "Label",
+      "default": "Live Chat"
+    },
+    {
+      "type": "select",
+      "id": "live_chat_icon_type",
+      "label": "Icon type",
+      "options": [
+        { "value": "svg", "label": "SVG" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "svg"
+    },
+    {
+      "type": "textarea",
+      "id": "live_chat_svg",
+      "label": "SVG",
+      "info": "Leave blank to use the default SVG",
+      "visible_if": "{{ block.settings.live_chat_icon_type == 'svg' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "live_chat_image",
+      "label": "Image",
+      "visible_if": "{{ block.settings.live_chat_icon_type == 'image' }}"
+    },
+    {
+      "type": "url",
+      "id": "live_chat_url",
+      "label": "Live Chat fallback URL",
+      "info": "Used when Tidio / Gorgias / Crisp is not available"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button",
+      "default": "Submit"
+    },
+    {
+      "type": "header",
+      "content": "Drop a Hint form"
+    },
+    {
+      "type": "text",
+      "id": "drop_hint_title",
+      "label": "Title",
+      "default": "Drop a Hint"
+    },
+    {
+      "type": "text",
+      "id": "drop_hint_desc",
+      "label": "Description",
+      "default": "Enter the email address where you would like this to be sent."
+    },
+    {
+      "type": "text",
+      "id": "drop_hint_subject",
+      "label": "Email subject",
+      "default": "Drop a Hint"
+    },
+    {
+      "type": "text",
+      "id": "drop_hint_newsletter",
+      "label": "Newsletter text",
+      "default": "Sign me up for updates."
+    },
+    {
+      "type": "text",
+      "id": "drop_hint_success",
+      "label": "Success message",
+      "default": "Your hint has been successfully sent!"
+    },
+    {
+      "type": "header",
+      "content": "Email Us form"
+    },
+    {
+      "type": "text",
+      "id": "email_us_title",
+      "label": "Title",
+      "default": "Need Help?"
+    },
+    {
+      "type": "text",
+      "id": "email_us_desc",
+      "label": "Description",
+      "default": "Get expert answers! Our jewelry specialists can help with all your inquiries."
+    },
+    {
+      "type": "text",
+      "id": "email_us_subject",
+      "label": "Email subject",
+      "default": "Need Help"
+    },
+    {
+      "type": "text",
+      "id": "email_us_newsletter",
+      "label": "Newsletter text",
+      "default": "Send me updates on new styles and special offers."
+    },
+    {
+      "type": "text",
+      "id": "email_us_success",
+      "label": "Success message",
+      "default": "Thank you for reaching out! Our team has received your inquiry and will be in touch shortly."
+    }
+  ],
+  "presets": [
+    {
+      "name": "block-service",
+      "category": "t:categories.lg"
+    }
+  ]
+}
+{% endschema %}

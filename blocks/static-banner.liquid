@@ -1,0 +1,63 @@
+
+{%- liquid
+  assign blo_setts = block.settings
+-%}
+<style>
+  .static-banner-box .static-banner-info.{{ block.id }}{font-weight:normal;{{ block.settings.pc_position }};}
+  @media (max-width:767px) {
+    .static-banner-box .static-banner-info.{{ block.id }}{font-weight:normal;{{ block.settings.mb_position }};}
+  }
+</style>
+<div class="static-banner-box">
+  {% if blo_setts.image_pc != blank %}
+    {% liquid
+      assign fetchpriority = 'auto'
+      if blo_setts.image_mb == blank
+        assign class = "lgs-img-as-bg -lgs-lz--fadeIn lgs-slide-" | append: blo_setts.animate_slide
+        echo blo_setts.image_pc | image_url: width: blo_setts.image_pc.width, format: 'pjpg' | image_tag: class: class, alt: blo_setts.image_pc.alt, loading: "lazy", size: '100vw', widths: '100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600,2700,2800,2900,3000,3400,3600,3800,4000', fetchpriority: fetchpriority
+      else
+        assign class = "lgs-img-as-bg lgs-d-none lgs-d-md-block -lgs-lz--fadeIn lgs-slide-" | append: blo_setts.animate_slide
+        echo blo_setts.image_pc | image_url: width: blo_setts.image_pc.width, format: 'pjpg' | image_tag: class: class, alt: blo_setts.image_pc.alt, loading: "lazy", size: '100vw', widths: '100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600,2700,2800,2900,3000,3400,3600,3800,4000', fetchpriority: fetchpriority
+
+        assign class = "lgs-img-as-bg lgs-d-md-none -lgs-lz--fadeIn lgs-slide-" | append: blo_setts.animate_slide
+        echo blo_setts.image_mb | image_url: width: blo_setts.image_mb.width, format: 'pjpg' | image_tag: class: class, alt: blo_setts.image_mb.alt, loading: "lazy", size: '100vw', widths: '375, 550, 750, 1100', fetchpriority: fetchpriority
+      endif
+    -%}
+      {% comment %} <img src="{{ blo_setts.image_pc | image_url }}"> {% endcomment %}
+  {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff' }}
+  {%- endif -%}
+  <div class="static-banner-info {{ block.id }}">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "static-banner",
+    "settings":[
+      {"type":"image_picker","id":"image_pc","label":"bg_image","info": "1920 x 700px .jpg recommended"},
+      {"type":"image_picker","id":"image_mb","label":"mobile_image","info": "750 x 1000px .jpg recommended. If none is set, desktop image will be used."},
+
+      {"type": "header","content": "+ Design position"},
+      {"type":"html","id":"pc_position","label":"position(PC)","default":"top: 50%;left: 50%;transform: translate(-50%, -50%);"},
+      {"type":"html","id":"mb_position","label":"position(Mobile)","default":"top: 50%;left: 50%;transform: translate(-50%, -50%);"},
+    ],
+    "blocks": [
+      {
+        "type": "@theme"
+      },
+      {
+        "type": "_text"
+      },
+      {
+        "type": "_button"
+      },
+    ],
+    "presets":[
+      {
+        "name":"static-banner",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

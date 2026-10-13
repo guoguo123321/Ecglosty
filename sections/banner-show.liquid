@@ -1,0 +1,354 @@
+{% liquid
+  assign set_set = section.settings
+  assign set_blo = section.blocks
+  assign stt_layout = set_set.layout
+  if stt_layout == 'lgs-container'
+    assign html_layout = '<div class="lgs-container">__</div>' | split: '__'
+  else
+    assign html_layout = '__' | split: '__'
+  endif
+  assign header = set_blo | where:"type","col"
+  assign item = set_blo | where:"type","item"
+  assign images = set_blo | where:"type","image"
+  assign index = 1
+  assign banner_interval = set_set.banner_interval | times: 1000
+%}
+{% render 'swiper-assets', critical: true %}
+{%- if images.size > 0 -%}
+  {%- if images.first.settings.image_mb != blank -%}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ images.first.settings.image_mb | image_url: width: 750 }}"
+    imagesrcset="{{ images.first.settings.image_mb | image_url: width: 375 }} 375w, {{ images.first.settings.image_mb | image_url: width: 550 }} 550w, {{ images.first.settings.image_mb | image_url: width: 750 }} 750w, {{ images.first.settings.image_mb | image_url: width: 1100 }} 1100w"
+    imagesizes="100vw"
+    fetchpriority="high"
+  >
+  {%- elsif images.first.settings.image_pc != blank -%}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ images.first.settings.image_pc | image_url: width: 1100 }}"
+    imagesrcset="{{ images.first.settings.image_pc | image_url: width: 750 }} 750w, {{ images.first.settings.image_pc | image_url: width: 1100 }} 1100w, {{ images.first.settings.image_pc | image_url: width: 1500 }} 1500w"
+    imagesizes="100vw"
+    fetchpriority="high"
+  >
+  {%- endif -%}
+{%- endif -%}
+<style>
+  {% for block in images %}
+    .{{ section.id }} .banner-show-box.{{ block.id }}{font-weight:normal;{{ block.settings.pc_position }};}
+  {% endfor %}
+  @media (max-width:767px) {
+    {% for block in images %}
+      .{{ section.id }} .banner-show-box.{{ block.id }}{font-weight:normal;{{ block.settings.mb_position }};}
+    {% endfor %}
+  }
+</style>
+<div class="banner-show-box-banner lgs-section-inner {{ section.id }}" {% render 'section_style', se_stts: set_set -%}>
+  {{- html_layout[0] -}}
+    <div class="swiper bannerShow">
+      <div class="swiper-wrapper">
+        {% for img in images %}
+            {% assign img_setts = img.settings %}
+            <div class="swiper-slide banner-show-item-slide">
+              <div class="banner-show-wrapper">
+                {% if img_setts.image_pc != blank %}
+                  {% liquid
+                    if forloop.first
+                      assign img_loading = 'eager'
+                      assign fetchpriority = 'high'
+                    else
+                      assign img_loading = 'lazy'
+                      assign fetchpriority = 'low'
+                    endif
+                    assign img_class = 'lgs-img-as-bg -lgs-lz--fadeIn'
+                    if img_setts.animate_slide != blank
+                      assign img_class = img_class | append: ' lgs-slide-' | append: img_setts.animate_slide
+                    endif
+                  %}
+                  {% if img_setts.image_mb != blank %}
+                    {%- comment -%} picture: mobile only downloads mobile asset (LCP) {%- endcomment -%}
+                    <picture>
+                      <source
+                        media="(max-width: 767px)"
+                        srcset="{{ img_setts.image_mb | image_url: width: 375 }} 375w, {{ img_setts.image_mb | image_url: width: 550 }} 550w, {{ img_setts.image_mb | image_url: width: 750 }} 750w, {{ img_setts.image_mb | image_url: width: 1100 }} 1100w"
+                        sizes="100vw"
+                      >
+                      {{
+                        img_setts.image_pc
+                        | image_url: width: 2000
+                        | image_tag:
+                          class: img_class,
+                          alt: img_setts.image_pc.alt,
+                          loading: img_loading,
+                          sizes: '100vw',
+                          widths: '1100,1500,2000',
+                          fetchpriority: fetchpriority
+                      }}
+                    </picture>
+                  {% else %}
+                    {{
+                      img_setts.image_pc
+                      | image_url: width: 2000
+                      | image_tag:
+                        class: img_class,
+                        alt: img_setts.image_pc.alt,
+                        loading: img_loading,
+                        sizes: '100vw',
+                        widths: '750,1100,1500,2000',
+                        fetchpriority: fetchpriority
+                    }}
+                  {% endif %}
+                {%- else -%}
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff' }}
+                {%- endif -%}
+                <!-- info -->
+                  <div class="banner-show-container lgs-container">
+                      <div class="banner-show-box {{ img.id }}">
+                        {% comment %} {% if blo_setts.title != blank %}<div class="b-show-title" hdt-reveal="slide-in">{{ blo_setts.title }}</div>{% endif %}
+                        {% if blo_setts.subheader != blank %}<div class="b-show-subheader" hdt-reveal="slide-in">{{ blo_setts.subheader }}</div>{% endif %}
+                        {% if blo_setts.button_title != blank %}<div class="b-show-button" hdt-reveal="slide-in"><a class="custom-link {% unless blo_setts.button_link %}custom-link-disabled{% endunless %}" {% if blo_setts.button_link != blank %}href="{{ blo_setts.button_link }}"{% endif %}>{{ blo_setts.button_title }}</a></div>{% endif %} {% endcomment %}
+                        {%- for block in section.blocks offset: index -%} 
+                          {%- assign index = index | plus: 1 -%}
+                          {%- assign blo_setts = block.settings -%}
+                          {%- if block.type == 'image' -%}{% break %}{%- endif -%}
+                        {% case block.type %}
+                          {% when "custom_text" %}
+                            <{{ blo_setts.tag }} data-lh="{{ blo_setts.text_lh_mb }}" data-lh-md="{{ blo_setts.text_lh }}" data-lh-lg="{{ blo_setts.text_lh }}" class="banner-show-text lgs-animation-{{ blo_setts.animation }} lgs-text-bl lgs-font-italic-{{ blo_setts.font_italic }} lgs-hidden-mobile-{{ blo_setts.hidden_mobile }} lgs-br-mb-{{ blo_setts.remove_br_tag }} lgs-text-shadow-{{ blo_setts.text_shadow }}" id="b_{{ block.id }}" {%- render 'bk_cus_style', type: 'custom_text', bk_stts: blo_setts, ani_delay: ani_delay -%}>{{ blo_setts.text }}</{{ blo_setts.tag }}>
+                          {% when "button" %}
+                            {% if blo_setts.button_title != blank %}<div class="b-show-button"><a class="custom-link {% unless blo_setts.button_link %}custom-link-disabled{% endunless %}" {% if blo_setts.button_link != blank %}href="{{ blo_setts.button_link }}"{% endif %}>{{ blo_setts.button_title }}</a></div>{% endif %}
+                            {% comment %} <div class="b-show-button" hdt-reveal="slide-in">
+                              <a href="{{ blo_setts.button_link }}" target="{{ blo_setts.target_link }}" class="lgs-animation-{{ blo_setts.animation }} lgs-btn lgs-btn-custom lgs-pe-auto lgs-fnt-fm-{{ blo_setts.fontf }} lgs-animation-{{ blo_setts.animation }} lgs-hidden-mobile-{{ blo_setts.hidden_mobile }} lgs-btn-style-{{ blo_setts.button_style }} {% if blo_setts.button_style == 'default' or blo_setts.button_style == 'outline' %}lgs-btn-effect-{{ blo_setts.button_effect }}{% endif %}" {%- render 'bk_cus_style', type: 'custom_button', bk_stts: blo_setts, ani_delay: ani_delay -%}>{{ blo_setts.button_text }}
+                                {%- if blo_setts.button_icon_w > 0 -%}
+                                  <svg class="lgs-btn-icon" viewBox="0 0 14 10">
+                                    <use xlink:href="#lgs-icon-btn"></use>
+                                  </svg>
+                                {%- endif -%}
+                              </a>
+                            </div> {% endcomment %}
+                          {% endcase %}
+                        {%- endfor -%}
+                      </div>
+                  </div>
+                </div>
+            </div>
+        {% endfor %}
+      </div>
+
+        <div class="swiper-pagination banner-show-pagination"></div>
+        {% comment %} <div class="swiper-button-prev banner-show-prev common-prev">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="34px" height="34px" viewBox="0 0 34 34" version="1.1">
+              <title>prev</title>
+              <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g id="首页-四个产品布局" transform="translate(-50.000000, -413.000000)">
+                      <g id="编组-8备份-8" transform="translate(67.000000, 430.000000) scale(-1, 1) translate(-67.000000, -430.000000) translate(50.000000, 413.000000)">
+                          <rect id="矩形" fill-opacity="0.4" fill="#FBF9F7" x="0" y="0" width="34" height="34" rx="17"/>
+                          <path d="M21.7165137,17.7322557 L13.4409691,17.7322557 L16.5594166,20.7498504 C16.854943,21.0358874 16.854943,21.499456 16.5594166,21.785493 C16.2638902,22.0715023 15.7847788,22.0715023 15.4894488,21.785493 L11.209241,17.6433654 C11.0277046,17.467632 10.9715234,17.2274096 11.0129157,17 C10.9715234,16.7725834 11.0277046,16.5323334 11.209241,16.3566554 L15.4894488,12.2145277 C15.7847507,11.9284908 16.2638902,11.9284908 16.5594166,12.2145277 C16.854943,12.5003157 16.854943,12.9641057 16.5594166,13.249949 L13.4409691,16.2677651 L21.7165137,16.2677651 C22.134561,16.2677651 22.4732196,16.5955222 22.4732196,17 C22.4732196,17.4042496 22.1345891,17.7322557 21.7165137,17.7322557 Z" id="路径" fill="#FFFFFF" fill-rule="nonzero" transform="translate(16.736610, 17.000000) scale(-1, 1) translate(-16.736610, -17.000000) "/>
+                      </g>
+                  </g>
+              </g>
+          </svg>
+        </div>
+        <div class="swiper-button-next banner-show-next common-next">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="34px" height="34px" viewBox="0 0 34 34" version="1.1">
+              <title>next</title>
+              <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g id="首页-四个产品布局" transform="translate(-1836.000000, -413.000000)">
+                      <g id="编组-8备份" transform="translate(1836.000000, 413.000000)">
+                          <rect id="矩形" fill-opacity="0.4" fill="#FBF9F7" x="0" y="0" width="34" height="34" rx="17"/>
+                          <path d="M21.7165137,17.7322557 L13.4409691,17.7322557 L16.5594166,20.7498504 C16.854943,21.0358874 16.854943,21.499456 16.5594166,21.785493 C16.2638902,22.0715023 15.7847788,22.0715023 15.4894488,21.785493 L11.209241,17.6433654 C11.0277046,17.467632 10.9715234,17.2274096 11.0129157,17 C10.9715234,16.7725834 11.0277046,16.5323334 11.209241,16.3566554 L15.4894488,12.2145277 C15.7847507,11.9284908 16.2638902,11.9284908 16.5594166,12.2145277 C16.854943,12.5003157 16.854943,12.9641057 16.5594166,13.249949 L13.4409691,16.2677651 L21.7165137,16.2677651 C22.134561,16.2677651 22.4732196,16.5955222 22.4732196,17 C22.4732196,17.4042496 22.1345891,17.7322557 21.7165137,17.7322557 Z" id="路径" fill="#FFFFFF" fill-rule="nonzero" transform="translate(16.736610, 17.000000) scale(-1, 1) translate(-16.736610, -17.000000) "/>
+                      </g>
+                  </g>
+              </g>  
+          </svg>
+        </div> {% endcomment %}
+      <!-- 如果需要滚动条 -->
+      <!-- <div class="swiper-scrollbar"></div> -->
+    </div>        
+  {{- html_layout[1] -}}
+</div>
+<script>
+  themeSwiperReady(function () {
+  function restartAnimation() {
+    setTimeout(() => {
+      const active = document.querySelector('.swiper-pagination-bullet-active .progress');
+      if (!active) return;
+      active.style.animation = 'none';
+      active.style.width = '0px';
+      active.getBoundingClientRect();
+      active.style.animation = '';
+      startAuto();
+    }, 20);
+  }
+
+  let timer = null;
+  let mySwiper = null;
+
+  function startAuto() {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (mySwiper) mySwiper.slideNext();
+    }, {{ banner_interval }});
+  }
+
+  mySwiper = new Swiper('.{{ section.id }} .bannerShow', {
+    loop: true,
+    pagination: {
+      el: '.{{ section.id }} .swiper-pagination',
+      clickable: true,
+      renderBullet: function (index, className) {
+        return `
+        <span class="${className}">
+          <svg width="32" height="5" viewBox="0 0 32 5">
+          <rect class="bg" x="0" y="0" width="32" height="5"></rect>
+          <rect class="progress" x="0" y="0" width="32" height="5"></rect>
+          </svg>
+        </span>`;
+      }
+    },
+    on: {
+      init: function () {
+        document.documentElement.style.setProperty('--duration', '{{ banner_interval }}ms');
+        restartAnimation();
+      },
+      slideChangeTransitionStart: function () {
+        restartAnimation();
+      },
+    },
+  });
+
+  document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+          clearTimeout(timer);
+          setTimeout(() => {
+          restartAnimation();
+          }, 20);
+      } else {
+          clearTimeout(timer);
+      }
+  });
+  });
+</script>
+{% schema %}
+  {
+    "name": "banner-show",
+    "class": "shopify-banner-show",
+    "tag": "section",
+    "settings": [
+        {"type": "select","id": "layout","label": "layout","default":"lgs-container",
+          "options": [
+            {"label":"lgs-container","value": "lgs-container"},
+            {"label":"wrapped container","value": "wrapped-container"},
+          ]
+        },
+        {"type":"range","id":"banner_interval","label":"Banner switching time","min":2,"max":15,"step":1,"unit":"s","default":5},
+
+        {"type":"color","id":"cl_bg","label":"bg_color","default":"#ffffff"},
+        {"type": "color_background","id": "cl_bg_gradient","label": "Background gradient"},
+        {"type":"color","id":"pc_color","label":"pc text color"},
+        {"type":"color","id":"mobile_color","label":"mobile text color"},
+      
+        {"type": "header","content": "+ Design pc options"},
+        {"type": "text","id": "mg","label": "Margin","info":"Margin top, margin right, margin bottom, margin left. If you not use to blank","default": "0px,0px,0px,0px"},
+        {"type": "text","id": "pd","label": "Padding","info":"Padding top, padding right, padding bottom, padding left. If you not use to blank","default": "0px,0px,0px,0px"},
+      
+        {"type": "header","content": "+ Design Tablet Options"},
+        {"type": "text","id": "mg_tb","label": "Margin","default": "0px,0px,0px,0px"},
+        {"type": "text","id": "pd_tb","label": "Padding","default": "0px,0px,0px,0px"},
+      
+        {"type": "header","content": "+ Design mobile options"},
+        {"type": "text","id": "mg_mb","label": "Margin","default": "0px,0px,0px,0px"},
+        {"type": "text","id": "pd_mb","label": "Padding","default": "0px,0px,0px,0px"}
+    ],
+    "blocks":[
+      {
+        "name":"image",
+        "type":"image",
+        "settings":[
+          {"type":"image_picker","id":"image_pc","label":"bg_image","info": "1920 x 700px .jpg recommended"},
+          {"type":"image_picker","id":"image_mb","label":"mobile_image","info": "750 x 1000px .jpg recommended. If none is set, desktop image will be used."},
+
+          {"type": "header","content": "+ Design position"},
+          {"type":"html","id":"pc_position","label":"position(PC)","default":"top: 50%;left: 50%;transform: translate(-50%, -50%);"},
+          {"type":"html","id":"mb_position","label":"position(Mobile)","default":"top: 50%;left: 50%;transform: translate(-50%, -50%);"},
+        ]
+      },
+      {
+        "type": "custom_text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "textarea",
+            "id": "text",
+            "label": "Input text",
+            "default": "Text",
+            "info": "If you want to line break, please add a <br> tag in the text"
+          },
+          {
+            "type": "checkbox",
+            "id": "remove_br_tag",
+            "label": "Remove <br> tag on mobile",
+            "default": false
+          },
+          {
+            "type": "select",
+            "id": "tag",
+            "label": "Html tag",
+            "default": "p",
+            "options": [
+              {
+                "value": "h2",
+                "label": "H2"
+              },
+              {
+                "value": "h3",
+                "label": "H3"
+              },
+              {
+                "value": "h4",
+                "label": "H4"
+              },
+              {
+                "value": "h5",
+                "label": "H5"
+              }, {
+                "value": "h6",
+                "label": "H6"
+              }, {
+                "value": "p",
+                "label": "P"
+              }, {
+                "value": "div",
+                "label": "DIV"
+              }
+            ]
+          },
+          {"type": "color","id": "text_cl","label": "Color text","default": "#fff"}, 
+          {"type": "range","id": "text_fs","label": "Font size","max": 100,"min": 10,"step": 1,"unit": "px","default": 16},
+          {"type": "range","id": "text_lh","label": "Line height","max": 100,"min": 0,"step": 1,"default": 0,"unit": "px","info": "Set is '0' use to default"},
+          {"type": "range","id": "text_fw","label": "Font weight","min": 100,"max": 900,"step": 100,"default": 400},
+          {"type": "number","id": "text_ls","label": "Letter spacing (in pixel)"},
+          {"type": "number","id": "text_mgb","label": "Margin bottom","default": 15},
+          {"type": "checkbox","id": "font_italic","label": "Enable font style italic","default": false},
+          {"type": "checkbox","id": "text_shadow","label": "Enable text shadow","default": false},
+          {"type": "header","content": "===== Option mobile ====="},
+          {"type": "checkbox","id": "hidden_mobile","label": "Hidden on mobile","default": false},
+          {"type": "range","id": "text_fs_mb","label": "Font size (Mobile)","max": 60,"min": 10,"step": 1,"unit": "px","default": 16},
+          {"type": "range","id": "text_lh_mb","label": "Line height (Mobile)","max": 70,"min": 0,"step": 1,"default": 0,"unit": "px","info": "Set is '0' use to default"},
+          {"type": "number","id": "text_ls_mb","label": "Letter spacing (Mobile)"},
+          {"type": "number","id": "text_mgb_mobile","label": "Margin bottom (Mobile)","default": 10},
+        ]
+      },
+      {
+        "type": "button",
+        "name": "Button",
+        "settings": [
+          {"type":"text","id":"button_title","label":"button title"},
+          {"type":"url","id":"button_link","label":"button link"},
+        ]
+      }
+    ],
+    "presets":[{"name":"Banner Show","category": "t:categories.lg",}]
+  }
+{% endschema %}

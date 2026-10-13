@@ -1,0 +1,24 @@
+{% doc %}
+  Renders a block-service icon as SVG or image.
+  @param {string} icon_type - "svg" or "image"
+  @param {string} [svg] - Custom SVG markup
+  @param {object} [image] - Image picker object
+  @param {string} default_svg - Fallback SVG when custom SVG is blank
+{% enddoc %}
+{%- liquid
+  assign type = icon_type | default: 'svg'
+-%}
+{%- if type == 'image' and image != blank -%}
+  <img
+    class="icon"
+    src="{{ image | image_url: width: 80 }}"
+    width="20"
+    height="20"
+    alt=""
+    loading="lazy"
+  >
+{%- elsif svg != blank -%}
+  <span class="icon icon--svg">{{ svg }}</span>
+{%- else -%}
+  <span class="icon icon--svg">{{ default_svg }}</span>
+{%- endif -%}

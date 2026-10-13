@@ -1,0 +1,2002 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-primary--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "color_scheme": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "lg_section_nFzbUg": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_ytqftV": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1200px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 30,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "24px,0px,24px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "24px,0px,24px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "24px,0px,24px,0px"
+          },
+          "blocks": {
+            "brc_nav_wK8GgU": {
+              "type": "_brc-nav",
+              "name": "breadcrumbs",
+              "settings": {},
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "brc_nav_wK8GgU"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_ytqftV"
+      ],
+      "name": "lg section",
+      "settings": {}
+    },
+    "lg_section_MaN93G": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_K96eFz": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1200px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 30,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "static_banner_wiV9QY": {
+              "type": "static-banner",
+              "name": "static-banner",
+              "settings": {
+                "image_pc": "shopify://shop_images/banner.jpg",
+                "image_mb": "shopify://shop_images/banner_mobile.jpg",
+                "pc_position": "top: initial;left: 48px;bottom:32px;transform: none;",
+                "mb_position": "top: initial;left: 16px;right:16px;bottom:16px;transform: none;max-width:fit-content;"
+              },
+              "blocks": {
+                "text_iT8A7b": {
+                  "type": "_text",
+                  "name": "text",
+                  "settings": {
+                    "textarea_or_richtext": "textarea",
+                    "text": "Father’s Day Gifts: Guide for Dad",
+                    "rich_text": "<p>Text</p>",
+                    "text_url": "",
+                    "open_link": "_blank",
+                    "remove_br_tag": false,
+                    "tag": "h2",
+                    "fontf": "inherit",
+                    "text_cl": "#fff",
+                    "text_fs": 40,
+                    "text_lh": 50,
+                    "text_fw": 400,
+                    "text_mgb": 3,
+                    "font_italic": false,
+                    "text_shadow": false,
+                    "hidden_mobile": false,
+                    "text_fs_mb": 22,
+                    "text_lh_mb": 25,
+                    "text_mgb_mobile": 8
+                  },
+                  "blocks": {}
+                },
+                "text_NrrxP3": {
+                  "type": "_text",
+                  "name": "text",
+                  "settings": {
+                    "textarea_or_richtext": "textarea",
+                    "text": "Find the perfect Father’s Day gift with meaningful styles he’ll wear every day, from classic jewelry to personalized pieces made just for him.",
+                    "rich_text": "<p>Text</p>",
+                    "text_url": "",
+                    "open_link": "_blank",
+                    "remove_br_tag": false,
+                    "tag": "p",
+                    "fontf": "inherit",
+                    "text_cl": "#fff",
+                    "text_fs": 16,
+                    "text_lh": 24,
+                    "text_fw": 400,
+                    "text_mgb": 30,
+                    "font_italic": false,
+                    "text_shadow": false,
+                    "hidden_mobile": false,
+                    "text_fs_mb": 14,
+                    "text_lh_mb": 20,
+                    "text_mgb_mobile": 15
+                  },
+                  "blocks": {}
+                },
+                "text_XiGTgW": {
+                  "type": "_text",
+                  "name": "text",
+                  "disabled": true,
+                  "settings": {
+                    "textarea_or_richtext": "textarea",
+                    "text": "Shop Father's Day",
+                    "rich_text": "<p>Text</p>",
+                    "text_url": "",
+                    "open_link": "_blank",
+                    "remove_br_tag": false,
+                    "tag": "a",
+                    "fontf": "inherit",
+                    "text_cl": "#000000",
+                    "text_fs": 16,
+                    "text_lh": 24,
+                    "text_fw": 400,
+                    "text_mgb": 30,
+                    "font_italic": false,
+                    "text_shadow": false,
+                    "hidden_mobile": false,
+                    "text_fs_mb": 14,
+                    "text_lh_mb": 20,
+                    "text_mgb_mobile": 8
+                  },
+                  "blocks": {}
+                },
+                "button_tcxQPt": {
+                  "type": "_button",
+                  "name": "Button",
+                  "settings": {
+                    "button_text": "Shop Father's Day",
+                    "button_link": "",
+                    "target_link": "_self",
+                    "fontf": "inherit",
+                    "button_style": "default",
+                    "button_effect": "default",
+                    "pri_cl": "#ffffff",
+                    "second_cl": "#000000",
+                    "pri_cl_hover": "#000000",
+                    "second_cl_hover": "#fff",
+                    "fsbutton": 16,
+                    "fwbutton": 600,
+                    "button_ls": 0,
+                    "button_mh": 55,
+                    "button_bdr": 2,
+                    "button_pd_lr": 24,
+                    "button_mgb": 32,
+                    "hidden_mobile": false,
+                    "fsbutton_mb": 13,
+                    "button_mh_mb": 35,
+                    "button_pd_lr_mb": 15,
+                    "button_ls_mb": 0,
+                    "button_mgb_mb": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_iT8A7b",
+                "text_NrrxP3",
+                "text_XiGTgW",
+                "button_tcxQPt"
+              ]
+            }
+          },
+          "block_order": [
+            "static_banner_wiV9QY"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_K96eFz"
+      ],
+      "name": "Static Banner",
+      "settings": {}
+    },
+    "lg_section_R83rtW": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_bF8qaG": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1300px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Shop Father's Day Gifts by Price",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "gift_price_AJLhmB": {
+              "type": "gift-price",
+              "name": "gift-price",
+              "settings": {
+                "color_scheme": "scheme-bf98fe81-fb96-40fd-a2c2-b2c072d066f7"
+              },
+              "blocks": {
+                "gift_price_item_Yht8iH": {
+                  "type": "_gift-price-item",
+                  "name": "gift-price-item",
+                  "settings": {
+                    "title": "UNDER $100",
+                    "title_url": ""
+                  },
+                  "blocks": {}
+                },
+                "gift_price_item_RbJGDP": {
+                  "type": "_gift-price-item",
+                  "name": "gift-price-item",
+                  "settings": {
+                    "title": "UNDER $250",
+                    "title_url": ""
+                  },
+                  "blocks": {}
+                },
+                "gift_price_item_wgbjFj": {
+                  "type": "_gift-price-item",
+                  "name": "gift-price-item",
+                  "settings": {
+                    "title": "UNDER $500",
+                    "title_url": ""
+                  },
+                  "blocks": {}
+                },
+                "gift_price_item_R7zryL": {
+                  "type": "_gift-price-item",
+                  "name": "gift-price-item",
+                  "settings": {
+                    "title": "LUXE GIFTS",
+                    "title_url": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "gift_price_item_Yht8iH",
+                "gift_price_item_RbJGDP",
+                "gift_price_item_wgbjFj",
+                "gift_price_item_R7zryL"
+              ]
+            }
+          },
+          "block_order": [
+            "gift_price_AJLhmB"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_bF8qaG"
+      ],
+      "name": "Gifts by Price",
+      "settings": {}
+    },
+    "lg_section_NRNanL": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_tqC4rn": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1300px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Shop Best Selling Jewelry",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "common_swiper_BPhYhe": {
+              "type": "_common-swiper",
+              "name": "Swiper",
+              "settings": {
+                "swiper-breakpoints": "breakpoints: { \n  0: {  //当屏幕宽度大于等于320\n    slidesPerView: 2,\n    spaceBetween: 15\n  },\n  320: {  //当屏幕宽度大于等于320\n    slidesPerView: 2,\n    spaceBetween: 15\n  },\n  360: {  //当屏幕宽度大于等于320\n    slidesPerView: 2,\n    spaceBetween: 15\n  },\n  768: {  //当屏幕宽度大于等于768 \n    slidesPerView: 3,\n    spaceBetween: 8\n  },\n  1024: {  //当屏幕宽度大于等于768 \n    slidesPerView: 6,\n    spaceBetween: 24\n  },\n  1025: {  //当屏幕宽度大于等于1280\n    slidesPerView: 6,\n    spaceBetween: 24\n  }\n},",
+                "type": "none",
+                "collection": "best-sellers",
+                "collection_number": 20
+              },
+              "blocks": {
+                "swiper_single_img_zen4Va": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_2.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_FkftNB": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_3_0f997cbd-eeaa-43ca-9491-a11b40c8cbd7.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_9FtECB": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_4.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_DcFp6w": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_5.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_haMrAA": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_5.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_YyUhdy": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_5.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_N6zhjj": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_5.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "swiper_single_img_zen4Va",
+                "swiper_single_img_FkftNB",
+                "swiper_single_img_9FtECB",
+                "swiper_single_img_DcFp6w",
+                "swiper_single_img_haMrAA",
+                "swiper_single_img_YyUhdy",
+                "swiper_single_img_N6zhjj"
+              ]
+            }
+          },
+          "block_order": [
+            "common_swiper_BPhYhe"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_tqC4rn"
+      ],
+      "name": "Selling Jewelry",
+      "settings": {}
+    },
+    "index_collections_fDKXjY": {
+      "type": "index-collections",
+      "name": "Best Sellers",
+      "settings": {
+        "collection": "best-sellers",
+        "collection_number": 20,
+        "color_scheme": "",
+        "brand_color_scheme": "scheme-3",
+        "show_pagination_pc": false,
+        "show_navigation_pc": true,
+        "show_pagination_mb": false,
+        "show_navigation_mb": true,
+        "media_align_mb": "between",
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Chains He'll Love",
+        "icon_heading": "las la-gem",
+        "top_subheading": "Classic chains designed for everyday wear.",
+        "tophead_mb": 60,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,30px,0px"
+      }
+    },
+    "lg_section_XhKU3Q": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_bkWAwp": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1300px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Watches for Dad",
+            "icon_heading": "las la-gem",
+            "top_subheading": "Timepieces for the one who's always there.",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "img_with_col_hLT7GB": {
+              "type": "img-with-col",
+              "name": "image with col",
+              "settings": {
+                "space_h_item": "30",
+                "space_v_item": "30",
+                "space_h_item_tb": "15",
+                "space_v_item_tb": "30",
+                "space_h_item_mb": "15",
+                "space_v_item_mb": "15"
+              },
+              "blocks": {
+                "img_with_item_Tb8wNc": {
+                  "type": "img-with-item",
+                  "name": "image with item",
+                  "settings": {
+                    "content_align": "lgs-text-lg-center",
+                    "content_align_tb": "lgs-text-md-center",
+                    "content_align_mb": "lgs-text-center",
+                    "col_dk": "6",
+                    "col_tb": "6",
+                    "col_mb": "12"
+                  },
+                  "blocks": {
+                    "img_Rmp8Lj": {
+                      "type": "img",
+                      "name": "image",
+                      "settings": {
+                        "image": "shopify://shop_images/gallery-5.jpg",
+                        "img_width": 0,
+                        "img_width_mb": 0,
+                        "hidden_mobile": false,
+                        "mgb": 24,
+                        "mgb_mb": 12
+                      },
+                      "blocks": {}
+                    },
+                    "text_xxcEDR": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Citizen",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 28,
+                        "text_lh": 35,
+                        "text_fw": 400,
+                        "text_mgb": 16,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 16,
+                        "text_lh_mb": 20,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "button_GkLTqa": {
+                      "type": "_button",
+                      "name": "Button",
+                      "settings": {
+                        "button_text": "SHOP NOW",
+                        "button_link": "",
+                        "target_link": "_self",
+                        "fontf": "inherit",
+                        "button_style": "default",
+                        "button_effect": "default",
+                        "pri_cl": "#073746",
+                        "second_cl": "#fff",
+                        "pri_cl_hover": "#000000",
+                        "second_cl_hover": "#fff",
+                        "fsbutton": 14,
+                        "fwbutton": 400,
+                        "button_ls": 0,
+                        "button_mh": 50,
+                        "button_bdr": 0,
+                        "button_pd_lr": 24,
+                        "button_mgb": 24,
+                        "hidden_mobile": false,
+                        "fsbutton_mb": 12,
+                        "button_mh_mb": 36,
+                        "button_pd_lr_mb": 15,
+                        "button_ls_mb": 0,
+                        "button_mgb_mb": 15
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "img_Rmp8Lj",
+                    "text_xxcEDR",
+                    "button_GkLTqa"
+                  ]
+                },
+                "img_with_item_krLftx": {
+                  "type": "img-with-item",
+                  "name": "image with item",
+                  "settings": {
+                    "content_align": "lgs-text-lg-center",
+                    "content_align_tb": "lgs-text-md-center",
+                    "content_align_mb": "lgs-text-center",
+                    "col_dk": "6",
+                    "col_tb": "12",
+                    "col_mb": "12"
+                  },
+                  "blocks": {
+                    "img_DQN4Tw": {
+                      "type": "img",
+                      "name": "image",
+                      "settings": {
+                        "image": "shopify://shop_images/gallery-6.jpg",
+                        "img_width": 0,
+                        "img_width_mb": 0,
+                        "hidden_mobile": false,
+                        "mgb": 24,
+                        "mgb_mb": 12
+                      },
+                      "blocks": {}
+                    },
+                    "text_gjyC3K": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Citizen",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 28,
+                        "text_lh": 35,
+                        "text_fw": 400,
+                        "text_mgb": 16,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 16,
+                        "text_lh_mb": 20,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "button_dAMKgq": {
+                      "type": "_button",
+                      "name": "Button",
+                      "settings": {
+                        "button_text": "SHOP NOW",
+                        "button_link": "",
+                        "target_link": "_self",
+                        "fontf": "inherit",
+                        "button_style": "default",
+                        "button_effect": "default",
+                        "pri_cl": "#073746",
+                        "second_cl": "#fff",
+                        "pri_cl_hover": "#000000",
+                        "second_cl_hover": "#fff",
+                        "fsbutton": 14,
+                        "fwbutton": 400,
+                        "button_ls": 0,
+                        "button_mh": 50,
+                        "button_bdr": 0,
+                        "button_pd_lr": 24,
+                        "button_mgb": 24,
+                        "hidden_mobile": false,
+                        "fsbutton_mb": 12,
+                        "button_mh_mb": 36,
+                        "button_pd_lr_mb": 15,
+                        "button_ls_mb": 0,
+                        "button_mgb_mb": 15
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "img_DQN4Tw",
+                    "text_gjyC3K",
+                    "button_dAMKgq"
+                  ]
+                }
+              },
+              "block_order": [
+                "img_with_item_Tb8wNc",
+                "img_with_item_krLftx"
+              ]
+            }
+          },
+          "block_order": [
+            "img_with_col_hLT7GB"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_bkWAwp"
+      ],
+      "disabled": true,
+      "name": "Watches for Dad",
+      "settings": {}
+    },
+    "lg_section_Lgqrrq": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_WH79tA": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1300px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Watches for Dad",
+            "icon_heading": "las la-gem",
+            "top_subheading": "Timepieces for the one who's always there.",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "img_with_col_Eyh6cC": {
+              "type": "img-with-col",
+              "name": "image with col",
+              "settings": {
+                "space_h_item": "30",
+                "space_v_item": "0",
+                "space_h_item_tb": "0",
+                "space_v_item_tb": "0",
+                "space_h_item_mb": "15",
+                "space_v_item_mb": "0"
+              },
+              "blocks": {
+                "img_with_item_UtkXqV": {
+                  "type": "img-with-item",
+                  "name": "image with item",
+                  "settings": {
+                    "content_align": "lgs-text-lg-center",
+                    "content_align_tb": "lgs-text-md-center",
+                    "content_align_mb": "lgs-text-center",
+                    "col_dk": "6",
+                    "col_tb": "6",
+                    "col_mb": "6"
+                  },
+                  "blocks": {
+                    "img_UPLypw": {
+                      "type": "img",
+                      "name": "image",
+                      "settings": {
+                        "image": "shopify://shop_images/gallery-5.jpg",
+                        "img_width": 685,
+                        "img_width_mb": 165,
+                        "hidden_mobile": false,
+                        "mgb": 24,
+                        "mgb_mb": 12
+                      },
+                      "blocks": {}
+                    },
+                    "text_wi7pXJ": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Citizen",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 28,
+                        "text_lh": 35,
+                        "text_fw": 400,
+                        "text_mgb": 16,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 16,
+                        "text_lh_mb": 20,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "button_kx6B3h": {
+                      "type": "_button",
+                      "name": "Button",
+                      "settings": {
+                        "button_text": "SHOP NOW",
+                        "button_link": "",
+                        "target_link": "_self",
+                        "fontf": "inherit",
+                        "button_style": "default",
+                        "button_effect": "default",
+                        "pri_cl": "#073746",
+                        "second_cl": "#fff",
+                        "pri_cl_hover": "#000000",
+                        "second_cl_hover": "#fff",
+                        "fsbutton": 14,
+                        "fwbutton": 400,
+                        "button_ls": 0,
+                        "button_mh": 50,
+                        "button_bdr": 0,
+                        "button_pd_lr": 24,
+                        "button_mgb": 0,
+                        "hidden_mobile": false,
+                        "fsbutton_mb": 10,
+                        "button_mh_mb": 36,
+                        "button_pd_lr_mb": 15,
+                        "button_ls_mb": 0,
+                        "button_mgb_mb": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "img_UPLypw",
+                    "text_wi7pXJ",
+                    "button_kx6B3h"
+                  ]
+                },
+                "img_with_item_bG6b7k": {
+                  "type": "img-with-item",
+                  "name": "image with item",
+                  "settings": {
+                    "content_align": "lgs-text-lg-center",
+                    "content_align_tb": "lgs-text-md-center",
+                    "content_align_mb": "lgs-text-center",
+                    "col_dk": "6",
+                    "col_tb": "12",
+                    "col_mb": "6"
+                  },
+                  "blocks": {
+                    "img_pctNmG": {
+                      "type": "img",
+                      "name": "image",
+                      "settings": {
+                        "image": "shopify://shop_images/gallery-6.jpg",
+                        "img_width": 685,
+                        "img_width_mb": 165,
+                        "hidden_mobile": false,
+                        "mgb": 24,
+                        "mgb_mb": 12
+                      },
+                      "blocks": {}
+                    },
+                    "text_ej3Lfr": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Citizen",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 28,
+                        "text_lh": 35,
+                        "text_fw": 400,
+                        "text_mgb": 16,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 16,
+                        "text_lh_mb": 20,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "button_rCwj4N": {
+                      "type": "_button",
+                      "name": "Button",
+                      "settings": {
+                        "button_text": "SHOP NOW",
+                        "button_link": "",
+                        "target_link": "_self",
+                        "fontf": "inherit",
+                        "button_style": "default",
+                        "button_effect": "default",
+                        "pri_cl": "#073746",
+                        "second_cl": "#fff",
+                        "pri_cl_hover": "#000000",
+                        "second_cl_hover": "#fff",
+                        "fsbutton": 14,
+                        "fwbutton": 400,
+                        "button_ls": 0,
+                        "button_mh": 50,
+                        "button_bdr": 0,
+                        "button_pd_lr": 24,
+                        "button_mgb": 0,
+                        "hidden_mobile": false,
+                        "fsbutton_mb": 10,
+                        "button_mh_mb": 36,
+                        "button_pd_lr_mb": 15,
+                        "button_ls_mb": 0,
+                        "button_mgb_mb": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "img_pctNmG",
+                    "text_ej3Lfr",
+                    "button_rCwj4N"
+                  ]
+                }
+              },
+              "block_order": [
+                "img_with_item_UtkXqV",
+                "img_with_item_bG6b7k"
+              ]
+            }
+          },
+          "block_order": [
+            "img_with_col_Eyh6cC"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_WH79tA"
+      ],
+      "name": "Watches for Dad",
+      "settings": {}
+    },
+    "lg_section_BWi6re": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_KbYQ4t": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1300px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Shop Best Selling Jewelry",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "common_swiper_QPWnCt": {
+              "type": "_common-swiper",
+              "name": "Swiper",
+              "settings": {
+                "swiper-breakpoints": "breakpoints: { \n  0: {  //当屏幕宽度大于等于320\n    slidesPerView: 2,\n    spaceBetween: 15\n  },\n  320: {  //当屏幕宽度大于等于320\n    slidesPerView: 2,\n    spaceBetween: 15\n  },\n  360: {  //当屏幕宽度大于等于320\n    slidesPerView: 2,\n    spaceBetween: 15\n  },\n  768: {  //当屏幕宽度大于等于768 \n    slidesPerView: 3,\n    spaceBetween: 8\n  },\n  1024: {  //当屏幕宽度大于等于768 \n    slidesPerView: 6,\n    spaceBetween: 24\n  },\n  1025: {  //当屏幕宽度大于等于1280\n    slidesPerView: 6,\n    spaceBetween: 24\n  }\n},",
+                "type": "none",
+                "collection": "best-sellers",
+                "collection_number": 20
+              },
+              "blocks": {
+                "swiper_single_img_E9CjQd": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_2.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_4URFjP": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_3_0f997cbd-eeaa-43ca-9491-a11b40c8cbd7.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_LRTnGn": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_4.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_rc8yJr": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_5.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_qXAHtU": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_5.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_XmfAr3": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_5.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                },
+                "swiper_single_img_QUzrEP": {
+                  "type": "swiper-single-img",
+                  "name": "Swiper Single img",
+                  "settings": {
+                    "image": "shopify://shop_images/product_5.jpg",
+                    "image_url": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "swiper_single_img_E9CjQd",
+                "swiper_single_img_4URFjP",
+                "swiper_single_img_LRTnGn",
+                "swiper_single_img_rc8yJr",
+                "swiper_single_img_qXAHtU",
+                "swiper_single_img_XmfAr3",
+                "swiper_single_img_QUzrEP"
+              ]
+            }
+          },
+          "block_order": [
+            "common_swiper_QPWnCt"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_KbYQ4t"
+      ],
+      "name": "Selling Jewelry",
+      "settings": {}
+    },
+    "lg_section_VmBGn3": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_P3DHBM": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1300px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Watches for Dad",
+            "icon_heading": "las la-gem",
+            "top_subheading": "Timepieces for the one who's always there.",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "img_with_col_xVmbp8": {
+              "type": "img-with-col",
+              "name": "image with col",
+              "settings": {
+                "space_h_item": "30",
+                "space_v_item": "0",
+                "space_h_item_tb": "0",
+                "space_v_item_tb": "0",
+                "space_h_item_mb": "15",
+                "space_v_item_mb": "0"
+              },
+              "blocks": {
+                "img_with_item_ejQdeX": {
+                  "type": "img-with-item",
+                  "name": "image with item",
+                  "settings": {
+                    "content_align": "lgs-text-lg-center",
+                    "content_align_tb": "lgs-text-md-center",
+                    "content_align_mb": "lgs-text-center",
+                    "col_dk": "6",
+                    "col_tb": "6",
+                    "col_mb": "6"
+                  },
+                  "blocks": {
+                    "img_y4VhKF": {
+                      "type": "img",
+                      "name": "image",
+                      "settings": {
+                        "image": "shopify://shop_images/gallery-5.jpg",
+                        "img_width": 685,
+                        "img_width_mb": 165,
+                        "hidden_mobile": false,
+                        "mgb": 24,
+                        "mgb_mb": 12
+                      },
+                      "blocks": {}
+                    },
+                    "text_aWKPji": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Citizen",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 28,
+                        "text_lh": 35,
+                        "text_fw": 400,
+                        "text_mgb": 16,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 16,
+                        "text_lh_mb": 20,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "button_hFpYya": {
+                      "type": "_button",
+                      "name": "Button",
+                      "settings": {
+                        "button_text": "SHOP NOW",
+                        "button_link": "",
+                        "target_link": "_self",
+                        "fontf": "inherit",
+                        "button_style": "default",
+                        "button_effect": "default",
+                        "pri_cl": "#073746",
+                        "second_cl": "#fff",
+                        "pri_cl_hover": "#000000",
+                        "second_cl_hover": "#fff",
+                        "fsbutton": 14,
+                        "fwbutton": 400,
+                        "button_ls": 0,
+                        "button_mh": 50,
+                        "button_bdr": 0,
+                        "button_pd_lr": 24,
+                        "button_mgb": 0,
+                        "hidden_mobile": false,
+                        "fsbutton_mb": 10,
+                        "button_mh_mb": 36,
+                        "button_pd_lr_mb": 15,
+                        "button_ls_mb": 0,
+                        "button_mgb_mb": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "img_y4VhKF",
+                    "text_aWKPji",
+                    "button_hFpYya"
+                  ]
+                },
+                "img_with_item_PNmT77": {
+                  "type": "img-with-item",
+                  "name": "image with item",
+                  "settings": {
+                    "content_align": "lgs-text-lg-center",
+                    "content_align_tb": "lgs-text-md-center",
+                    "content_align_mb": "lgs-text-center",
+                    "col_dk": "6",
+                    "col_tb": "12",
+                    "col_mb": "6"
+                  },
+                  "blocks": {
+                    "img_iJNiXF": {
+                      "type": "img",
+                      "name": "image",
+                      "settings": {
+                        "image": "shopify://shop_images/gallery-6.jpg",
+                        "img_width": 685,
+                        "img_width_mb": 165,
+                        "hidden_mobile": false,
+                        "mgb": 24,
+                        "mgb_mb": 12
+                      },
+                      "blocks": {}
+                    },
+                    "text_a9XEeX": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Citizen",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 28,
+                        "text_lh": 35,
+                        "text_fw": 400,
+                        "text_mgb": 16,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 16,
+                        "text_lh_mb": 20,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "button_GqF34n": {
+                      "type": "_button",
+                      "name": "Button",
+                      "settings": {
+                        "button_text": "SHOP NOW",
+                        "button_link": "",
+                        "target_link": "_self",
+                        "fontf": "inherit",
+                        "button_style": "default",
+                        "button_effect": "default",
+                        "pri_cl": "#073746",
+                        "second_cl": "#fff",
+                        "pri_cl_hover": "#000000",
+                        "second_cl_hover": "#fff",
+                        "fsbutton": 14,
+                        "fwbutton": 400,
+                        "button_ls": 0,
+                        "button_mh": 50,
+                        "button_bdr": 0,
+                        "button_pd_lr": 24,
+                        "button_mgb": 0,
+                        "hidden_mobile": false,
+                        "fsbutton_mb": 10,
+                        "button_mh_mb": 36,
+                        "button_pd_lr_mb": 15,
+                        "button_ls_mb": 0,
+                        "button_mgb_mb": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "img_iJNiXF",
+                    "text_a9XEeX",
+                    "button_GqF34n"
+                  ]
+                }
+              },
+              "block_order": [
+                "img_with_item_ejQdeX",
+                "img_with_item_PNmT77"
+              ]
+            }
+          },
+          "block_order": [
+            "img_with_col_xVmbp8"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_P3DHBM"
+      ],
+      "name": "Watches for Dad",
+      "settings": {}
+    },
+    "index_collections_7m3ahY": {
+      "type": "index-collections",
+      "name": "Best Sellers",
+      "settings": {
+        "collection": "best-sellers",
+        "collection_number": 20,
+        "color_scheme": "",
+        "brand_color_scheme": "",
+        "show_pagination_pc": false,
+        "show_navigation_pc": true,
+        "show_pagination_mb": false,
+        "show_navigation_mb": true,
+        "media_align_mb": "between",
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Chains He'll Love",
+        "icon_heading": "las la-gem",
+        "top_subheading": "Classic chains designed for everyday wear.",
+        "tophead_mb": 60,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,30px,0px"
+      }
+    },
+    "lg_section_BemBX7": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_MTdTB9": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Oval Cut Engagement Rings FAQs",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "faqs_g6YPfW": {
+              "type": "_faqs",
+              "name": "Faqs",
+              "settings": {
+                "faqs": [
+                  "what-is-an-oval-cut-engagement-ring",
+                  "what-should-i-look-for-in-terms-of-length-to-width-ratio-for-oval-diamonds",
+                  "what-is-the-bow-tie-effect-in-oval-diamonds",
+                  "how-do-oval-diamonds-compare-to-other-shapes-in-terms-of-sparkle-and-perceived-size",
+                  "do-oval-diamonds-show-color-or-inclusions-more-easily",
+                  "are-oval-cut-diamonds-more-durable-than-other-shapes"
+                ]
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faqs_g6YPfW"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_MTdTB9"
+      ],
+      "name": "FAQs",
+      "settings": {}
+    },
+    "lg_section_Nte4yY": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_MLiBaw": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1300px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "KAY At Your Service",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,56px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,30px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "img_with_col_zKkUpt": {
+              "type": "img-with-col",
+              "name": "image with col",
+              "settings": {
+                "space_h_item": "30",
+                "space_v_item": "30",
+                "space_h_item_tb": "15",
+                "space_v_item_tb": "30",
+                "space_h_item_mb": "15",
+                "space_v_item_mb": "15"
+              },
+              "blocks": {
+                "img_with_item_bJ4c8A": {
+                  "type": "img-with-item",
+                  "name": "image with item",
+                  "settings": {
+                    "content_align": "lgs-text-lg-center",
+                    "content_align_tb": "lgs-text-md-center",
+                    "content_align_mb": "lgs-text-center",
+                    "col_dk": "3",
+                    "col_tb": "6",
+                    "col_mb": "6"
+                  },
+                  "blocks": {
+                    "img_FRyg9L": {
+                      "type": "img",
+                      "name": "image",
+                      "settings": {
+                        "image": "shopify://shop_images/FY_1.png",
+                        "img_width": 0,
+                        "img_width_mb": 0,
+                        "hidden_mobile": false,
+                        "mgb": 24,
+                        "mgb_mb": 12
+                      },
+                      "blocks": {}
+                    },
+                    "text_jFdJpW": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Join Vault Rewards",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 24,
+                        "text_lh": 30,
+                        "text_fw": 600,
+                        "text_mgb": 8,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 16,
+                        "text_lh_mb": 20,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "text_UbH6HH": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Unlock immediate access to exclusive benefits, rewards, and more.",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 14,
+                        "text_lh": 20,
+                        "text_fw": 400,
+                        "text_mgb": 8,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 12,
+                        "text_lh_mb": 18,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "button_ck76Jk": {
+                      "type": "_button",
+                      "name": "Button",
+                      "settings": {
+                        "button_text": "SHOP NOW",
+                        "button_link": "",
+                        "target_link": "_self",
+                        "fontf": "inherit",
+                        "button_style": "bordered",
+                        "button_effect": "default",
+                        "pri_cl": "#000000",
+                        "second_cl": "#fff",
+                        "pri_cl_hover": "#000000",
+                        "second_cl_hover": "#fff",
+                        "fsbutton": 14,
+                        "fwbutton": 400,
+                        "button_ls": 0,
+                        "button_mh": 30,
+                        "button_bdr": 0,
+                        "button_pd_lr": 24,
+                        "button_mgb": 0,
+                        "hidden_mobile": false,
+                        "fsbutton_mb": 10,
+                        "button_mh_mb": 36,
+                        "button_pd_lr_mb": 15,
+                        "button_ls_mb": 0,
+                        "button_mgb_mb": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "img_FRyg9L",
+                    "text_jFdJpW",
+                    "text_UbH6HH",
+                    "button_ck76Jk"
+                  ]
+                },
+                "img_with_item_dTzPfE": {
+                  "type": "img-with-item",
+                  "name": "image with item",
+                  "settings": {
+                    "content_align": "lgs-text-lg-center",
+                    "content_align_tb": "lgs-text-md-center",
+                    "content_align_mb": "lgs-text-center",
+                    "col_dk": "3",
+                    "col_tb": "6",
+                    "col_mb": "6"
+                  },
+                  "blocks": {
+                    "img_JbieHr": {
+                      "type": "img",
+                      "name": "image",
+                      "settings": {
+                        "image": "shopify://shop_images/FY_2.png",
+                        "img_width": 0,
+                        "img_width_mb": 0,
+                        "hidden_mobile": false,
+                        "mgb": 24,
+                        "mgb_mb": 12
+                      },
+                      "blocks": {}
+                    },
+                    "text_qUi74H": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Join Vault Rewards",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 24,
+                        "text_lh": 30,
+                        "text_fw": 600,
+                        "text_mgb": 8,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 16,
+                        "text_lh_mb": 20,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "text_K7rDfN": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Unlock immediate access to exclusive benefits, rewards, and more.",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 14,
+                        "text_lh": 20,
+                        "text_fw": 400,
+                        "text_mgb": 8,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 12,
+                        "text_lh_mb": 18,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "button_AVyWrx": {
+                      "type": "_button",
+                      "name": "Button",
+                      "settings": {
+                        "button_text": "SHOP NOW",
+                        "button_link": "",
+                        "target_link": "_self",
+                        "fontf": "inherit",
+                        "button_style": "bordered",
+                        "button_effect": "default",
+                        "pri_cl": "#000000",
+                        "second_cl": "#fff",
+                        "pri_cl_hover": "#000000",
+                        "second_cl_hover": "#fff",
+                        "fsbutton": 14,
+                        "fwbutton": 400,
+                        "button_ls": 0,
+                        "button_mh": 30,
+                        "button_bdr": 0,
+                        "button_pd_lr": 24,
+                        "button_mgb": 0,
+                        "hidden_mobile": false,
+                        "fsbutton_mb": 10,
+                        "button_mh_mb": 36,
+                        "button_pd_lr_mb": 15,
+                        "button_ls_mb": 0,
+                        "button_mgb_mb": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "img_JbieHr",
+                    "text_qUi74H",
+                    "text_K7rDfN",
+                    "button_AVyWrx"
+                  ]
+                },
+                "img_with_item_8hX4x8": {
+                  "type": "img-with-item",
+                  "name": "image with item",
+                  "settings": {
+                    "content_align": "lgs-text-lg-center",
+                    "content_align_tb": "lgs-text-md-center",
+                    "content_align_mb": "lgs-text-center",
+                    "col_dk": "3",
+                    "col_tb": "6",
+                    "col_mb": "6"
+                  },
+                  "blocks": {
+                    "img_pPNpU3": {
+                      "type": "img",
+                      "name": "image",
+                      "settings": {
+                        "image": "shopify://shop_images/FY_3.webp",
+                        "img_width": 0,
+                        "img_width_mb": 0,
+                        "hidden_mobile": false,
+                        "mgb": 24,
+                        "mgb_mb": 12
+                      },
+                      "blocks": {}
+                    },
+                    "text_xg8Wz7": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Join Vault Rewards",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 24,
+                        "text_lh": 30,
+                        "text_fw": 600,
+                        "text_mgb": 8,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 16,
+                        "text_lh_mb": 20,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "text_GF99RG": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Unlock immediate access to exclusive benefits, rewards, and more.",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 14,
+                        "text_lh": 20,
+                        "text_fw": 400,
+                        "text_mgb": 8,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 12,
+                        "text_lh_mb": 18,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "button_qY44G8": {
+                      "type": "_button",
+                      "name": "Button",
+                      "settings": {
+                        "button_text": "SHOP NOW",
+                        "button_link": "",
+                        "target_link": "_self",
+                        "fontf": "inherit",
+                        "button_style": "bordered",
+                        "button_effect": "default",
+                        "pri_cl": "#000000",
+                        "second_cl": "#fff",
+                        "pri_cl_hover": "#000000",
+                        "second_cl_hover": "#fff",
+                        "fsbutton": 14,
+                        "fwbutton": 400,
+                        "button_ls": 0,
+                        "button_mh": 30,
+                        "button_bdr": 0,
+                        "button_pd_lr": 24,
+                        "button_mgb": 0,
+                        "hidden_mobile": false,
+                        "fsbutton_mb": 10,
+                        "button_mh_mb": 36,
+                        "button_pd_lr_mb": 15,
+                        "button_ls_mb": 0,
+                        "button_mgb_mb": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "img_pPNpU3",
+                    "text_xg8Wz7",
+                    "text_GF99RG",
+                    "button_qY44G8"
+                  ]
+                },
+                "img_with_item_iaGhQk": {
+                  "type": "img-with-item",
+                  "name": "image with item",
+                  "settings": {
+                    "content_align": "lgs-text-lg-center",
+                    "content_align_tb": "lgs-text-md-center",
+                    "content_align_mb": "lgs-text-center",
+                    "col_dk": "3",
+                    "col_tb": "6",
+                    "col_mb": "6"
+                  },
+                  "blocks": {
+                    "img_L6GXKX": {
+                      "type": "img",
+                      "name": "image",
+                      "settings": {
+                        "image": "shopify://shop_images/FY_4.png",
+                        "img_width": 0,
+                        "img_width_mb": 0,
+                        "hidden_mobile": false,
+                        "mgb": 24,
+                        "mgb_mb": 12
+                      },
+                      "blocks": {}
+                    },
+                    "text_YPFUEM": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Join Vault Rewards",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 24,
+                        "text_lh": 30,
+                        "text_fw": 600,
+                        "text_mgb": 8,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 16,
+                        "text_lh_mb": 20,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "text_CaNkic": {
+                      "type": "_text",
+                      "name": "text",
+                      "settings": {
+                        "textarea_or_richtext": "textarea",
+                        "text": "Unlock immediate access to exclusive benefits, rewards, and more.",
+                        "rich_text": "<p>Text</p>",
+                        "text_url": "",
+                        "open_link": "_blank",
+                        "remove_br_tag": false,
+                        "tag": "div",
+                        "fontf": "inherit",
+                        "text_cl": "#000000",
+                        "text_fs": 14,
+                        "text_lh": 20,
+                        "text_fw": 400,
+                        "text_mgb": 8,
+                        "font_italic": false,
+                        "text_shadow": false,
+                        "hidden_mobile": false,
+                        "text_fs_mb": 12,
+                        "text_lh_mb": 18,
+                        "text_mgb_mobile": 8
+                      },
+                      "blocks": {}
+                    },
+                    "button_tEpKGE": {
+                      "type": "_button",
+                      "name": "Button",
+                      "settings": {
+                        "button_text": "SHOP NOW",
+                        "button_link": "",
+                        "target_link": "_self",
+                        "fontf": "inherit",
+                        "button_style": "bordered",
+                        "button_effect": "default",
+                        "pri_cl": "#000000",
+                        "second_cl": "#fff",
+                        "pri_cl_hover": "#000000",
+                        "second_cl_hover": "#fff",
+                        "fsbutton": 14,
+                        "fwbutton": 400,
+                        "button_ls": 0,
+                        "button_mh": 30,
+                        "button_bdr": 0,
+                        "button_pd_lr": 24,
+                        "button_mgb": 0,
+                        "hidden_mobile": false,
+                        "fsbutton_mb": 10,
+                        "button_mh_mb": 36,
+                        "button_pd_lr_mb": 15,
+                        "button_ls_mb": 0,
+                        "button_mgb_mb": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "img_L6GXKX",
+                    "text_YPFUEM",
+                    "text_CaNkic",
+                    "button_tEpKGE"
+                  ]
+                }
+              },
+              "block_order": [
+                "img_with_item_bJ4c8A",
+                "img_with_item_dTzPfE",
+                "img_with_item_8hX4x8",
+                "img_with_item_iaGhQk"
+              ]
+            }
+          },
+          "block_order": [
+            "img_with_col_zKkUpt"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_MLiBaw"
+      ],
+      "name": "KAY At Your Service",
+      "settings": {}
+    },
+    "lg_section_DN7d8X": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_ejeb4Y": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1300px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,45px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,30px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,20px,0px"
+          },
+          "blocks": {
+            "text_JbABUp": {
+              "type": "_text",
+              "name": "text",
+              "settings": {
+                "textarea_or_richtext": "textarea",
+                "text": "From timeless jewelry and watches to personalized pieces that add a thoughtful touch, these Father's Day gifts are designed to be worn and appreciated every day. Whether you are shopping for something classic or more modern, this Father’s Day gift guide makes it easy to find a piece that feels both personal and lasting.",
+                "rich_text": "<p>Text</p>",
+                "text_url": "",
+                "open_link": "_blank",
+                "remove_br_tag": false,
+                "tag": "div",
+                "fontf": "inherit",
+                "text_cl": "#000000",
+                "text_fs": 14,
+                "text_lh": 25,
+                "text_fw": 400,
+                "text_mgb": 0,
+                "font_italic": false,
+                "text_shadow": false,
+                "hidden_mobile": false,
+                "text_fs_mb": 14,
+                "text_lh_mb": 20,
+                "text_mgb_mobile": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_JbABUp"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_ejeb4Y"
+      ],
+      "name": "KAY At Your Service",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "lg_section_nFzbUg",
+    "lg_section_MaN93G",
+    "lg_section_R83rtW",
+    "lg_section_NRNanL",
+    "index_collections_fDKXjY",
+    "lg_section_XhKU3Q",
+    "lg_section_Lgqrrq",
+    "lg_section_BWi6re",
+    "lg_section_VmBGn3",
+    "index_collections_7m3ahY",
+    "lg_section_BemBX7",
+    "lg_section_Nte4yY",
+    "lg_section_DN7d8X"
+  ]
+}

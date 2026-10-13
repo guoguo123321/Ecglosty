@@ -1,0 +1,83 @@
+{%- doc -%}
+  Prefixed version of typography-style for section settings like title_*, link_*, price_*.
+
+  @param {object} settings - section/block settings
+  @param {string} [prefix] - setting id prefix, e.g. "title_" / "link_" / "price_"
+{%- enddoc -%}
+{%- liquid
+  assign prefix = prefix | default: ''
+  assign preset_key = prefix | append: 'type_preset'
+  assign color_key = prefix | append: 'color'
+  assign font_key = prefix | append: 'font'
+  assign font_size_key = prefix | append: 'font_size'
+  assign weight_key = prefix | append: 'weight'
+  assign line_height_key = prefix | append: 'line_height'
+  assign letter_spacing_key = prefix | append: 'letter_spacing'
+  assign case_key = prefix | append: 'case'
+  assign wrap_key = prefix | append: 'wrap'
+
+  assign preset = settings[preset_key] | default: 'rte'
+  assign setting_color = settings[color_key]
+  assign setting_font = settings[font_key]
+  assign setting_font_size = settings[font_size_key]
+  assign setting_weight = settings[weight_key]
+  assign setting_line_height = settings[line_height_key] | default: 'normal'
+  assign setting_letter_spacing = settings[letter_spacing_key] | default: 'normal'
+  assign setting_case = settings[case_key] | default: 'none'
+  assign setting_wrap = settings[wrap_key] | default: 'pretty'
+-%}
+{%- capture variables -%}
+  {%- if preset != 'rte' and setting_color != blank -%}
+    --color: {{ setting_color }};
+  {%- endif -%}
+  {%- if preset == 'custom' -%}
+    {%- liquid
+      if setting_font_size != blank
+        assign font_size_value = setting_font_size | split: 'rem' | first | times: 1.0
+        if font_size_value > 4.5
+          assign type = 'display'
+        elsif font_size_value > 3.5
+          assign type = 'heading'
+        else
+          assign type = 'body'
+        endif
+      endif
+    -%}
+    {%- if setting_font_size != blank -%}
+      {%- liquid
+        assign font_size_rem = setting_font_size | split: 'rem' | first | times: 1.0
+        assign fluid_size_cutoff_rem = 3.0
+        if font_size_rem >= fluid_size_cutoff_rem
+          assign target_viewport = 1400
+          assign vw_value = font_size_rem | times: 16 | divided_by: target_viewport | times: 100
+          assign scale_factor = font_size_rem | divided_by: fluid_size_cutoff_rem
+          assign base_min_rem = 3.0
+          assign scaling_bonus_rem = scale_factor | minus: 1 | times: 0.25
+          assign dynamic_min_rem = base_min_rem | plus: scaling_bonus_rem
+        endif
+      -%}
+      {%- if font_size_rem >= fluid_size_cutoff_rem -%}
+        --font-size: clamp({{ dynamic_min_rem }}rem, {{ vw_value }}vw, {{ setting_font_size }});
+      {%- else -%}
+        --font-size: {{ setting_font_size }};
+      {%- endif -%}
+    {%- endif -%}
+    {%- if setting_weight != blank -%}
+      --font-weight: {{ setting_weight }};
+    {%- else -%}
+      --font-weight: {{ setting_font | replace: 'family', 'weight' }};
+    {%- endif -%}
+    --font-family: {{ setting_font }};
+    --text-transform: {{ setting_case }};
+    --text-wrap: {{ setting_wrap }};
+    {%- if setting_font_size == blank -%}
+      --line-height--display: var(--line-height--display-{{ setting_line_height }});
+      --line-height--heading: var(--line-height--heading-{{ setting_line_height }});
+      --line-height--body: var(--line-height--body-{{ setting_line_height }});
+    {%- else -%}
+      --line-height: var(--line-height--{{ type }}-{{ setting_line_height }});
+    {%- endif -%}
+    --letter-spacing: var(--letter-spacing--{{ type }}-{{ setting_letter_spacing }});
+  {%- endif -%}
+{%- endcapture -%}
+{{- variables | strip | strip_newlines -}}

@@ -1,0 +1,419 @@
+{% doc %}
+  @prompt
+    在购物车的结账按钮前面加入一个订单备注功能，用户可以写一些文案。并且这些留言会自动同步到订单的备注里面，方便我们在后台查看订单的时候查看。
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-cart-note-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    margin: {{ block.settings.spacing_top }}px 0 {{ block.settings.spacing_bottom }}px;
+  }
+
+  .ai-cart-note-container-{{ ai_gen_id }} {
+    width: 100%;
+  }
+
+  .ai-cart-note-header-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .ai-cart-note-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+  }
+
+  .ai-cart-note-toggle-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: {{ block.settings.text_color }};
+    font-size: 14px;
+  }
+
+  .ai-cart-note-icon-{{ ai_gen_id }} {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-cart-note-icon-{{ ai_gen_id }}.open {
+    transform: rotate(180deg);
+  }
+
+  .ai-cart-note-content-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .ai-cart-note-content-{{ ai_gen_id }}.open {
+    max-height: 500px;
+  }
+
+  .ai-cart-note-textarea-{{ ai_gen_id }} {
+    width: 100%;
+    min-height: {{ block.settings.textarea_height }}px;
+    padding: 12px 16px;
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+
+  .ai-cart-note-textarea-{{ ai_gen_id }}:focus {
+    outline: none;
+    border-color: {{ block.settings.focus_border_color }};
+  }
+
+  .ai-cart-note-textarea-{{ ai_gen_id }}::placeholder {
+    color: {{ block.settings.placeholder_color }};
+  }
+
+  .ai-cart-note-char-count-{{ ai_gen_id }} {
+    margin-top: 8px;
+    font-size: 12px;
+    color: {{ block.settings.placeholder_color }};
+    text-align: right;
+  }
+{% endstyle %}
+
+<cart-note-{{ ai_gen_id }}
+  class="ai-cart-note-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+  data-open-by-default="{{ block.settings.open_by_default }}"
+>
+  <div class="ai-cart-note-container-{{ ai_gen_id }}">
+    {% if block.settings.show_toggle %}
+      <div class="ai-cart-note-header-{{ ai_gen_id }}" data-toggle-header>
+        <h3 class="ai-cart-note-title-{{ ai_gen_id }}">{{ block.settings.title }}</h3>
+        <div class="ai-cart-note-toggle-{{ ai_gen_id }}">
+          {% if block.settings.show_toggle_text %}
+            <span data-toggle-text>
+              {% if block.settings.open_by_default %}
+                {{ block.settings.close_text }}
+              {% else %}
+                {{ block.settings.open_text }}
+              {% endif %}
+            </span>
+          {% endif %}
+          <svg
+            class="ai-cart-note-icon-{{ ai_gen_id }} {% if block.settings.open_by_default %}open{% endif %}"
+            data-toggle-icon
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+    {% else %}
+      <h3 class="ai-cart-note-title-{{ ai_gen_id }}">{{ block.settings.title }}</h3>
+    {% endif %}
+
+    <div
+      class="ai-cart-note-content-{{ ai_gen_id }} {% if block.settings.open_by_default or block.settings.show_toggle == false %}open{% endif %}"
+      data-note-content
+    >
+      <textarea
+        class="ai-cart-note-textarea-{{ ai_gen_id }}"
+        name="note"
+        id="cart-note-{{ ai_gen_id }}"
+        placeholder="{{ block.settings.placeholder }}"
+        {% if block.settings.max_characters > 0 %}maxlength="{{ block.settings.max_characters }}"{% endif %}
+        data-cart-note-textarea
+      >{{ cart.note }}</textarea>
+      
+      {% if block.settings.show_character_count and block.settings.max_characters > 0 %}
+        <div class="ai-cart-note-char-count-{{ ai_gen_id }}" data-char-count>
+          <span data-current-count>{{ cart.note | size }}</span> / {{ block.settings.max_characters }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</cart-note-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CartNote{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.toggleHeader = this.querySelector('[data-toggle-header]');
+        this.toggleIcon = this.querySelector('[data-toggle-icon]');
+        this.toggleText = this.querySelector('[data-toggle-text]');
+        this.noteContent = this.querySelector('[data-note-content]');
+        this.textarea = this.querySelector('[data-cart-note-textarea]');
+        this.charCount = this.querySelector('[data-char-count]');
+        this.currentCount = this.querySelector('[data-current-count]');
+        this.updateTimeout = null;
+      }
+
+      connectedCallback() {
+        if (this.toggleHeader) {
+          this.toggleHeader.addEventListener('click', this.handleToggle.bind(this));
+        }
+
+        if (this.textarea) {
+          this.textarea.addEventListener('input', this.handleInput.bind(this));
+          this.textarea.addEventListener('change', this.updateCartNote.bind(this));
+        }
+      }
+
+      handleToggle() {
+        const isOpen = this.noteContent.classList.contains('open');
+        
+        if (isOpen) {
+          this.noteContent.classList.remove('open');
+          this.toggleIcon.classList.remove('open');
+          if (this.toggleText) {
+            this.toggleText.textContent = this.toggleText.textContent.replace(
+              '{{ block.settings.close_text }}',
+              '{{ block.settings.open_text }}'
+            );
+          }
+        } else {
+          this.noteContent.classList.add('open');
+          this.toggleIcon.classList.add('open');
+          if (this.toggleText) {
+            this.toggleText.textContent = this.toggleText.textContent.replace(
+              '{{ block.settings.open_text }}',
+              '{{ block.settings.close_text }}'
+            );
+          }
+        }
+      }
+
+      handleInput(event) {
+        if (this.currentCount) {
+          this.currentCount.textContent = event.target.value.length;
+        }
+
+        clearTimeout(this.updateTimeout);
+        this.updateTimeout = setTimeout(() => {
+          this.updateCartNote();
+        }, 500);
+      }
+
+      updateCartNote() {
+        const note = this.textarea.value;
+        
+        fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ note: note })
+        })
+        .then(response => response.json())
+        .catch(error => {
+          console.error('Error updating cart note:', error);
+        });
+      }
+    }
+
+    customElements.define('cart-note-{{ ai_gen_id }}', CartNote{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "订单备注",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "内容"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "标题",
+      "default": "订单备注"
+    },
+    {
+      "type": "textarea",
+      "id": "placeholder",
+      "label": "占位符文本",
+      "default": "请在此处添加您的订单备注或特殊要求..."
+    },
+    {
+      "type": "header",
+      "content": "切换设置"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_toggle",
+      "label": "显示折叠/展开按钮",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "默认展开",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_toggle_text",
+      "label": "显示切换文本",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "open_text",
+      "label": "展开文本",
+      "default": "添加备注"
+    },
+    {
+      "type": "text",
+      "id": "close_text",
+      "label": "收起文本",
+      "default": "收起"
+    },
+    {
+      "type": "header",
+      "content": "字符限制"
+    },
+    {
+      "type": "range",
+      "id": "max_characters",
+      "label": "最大字符数",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "default": 500,
+      "info": "设置为 0 表示无限制"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_character_count",
+      "label": "显示字符计数",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "样式"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "标题大小",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "textarea_height",
+      "label": "文本框高度",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "边框宽度",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "边框圆角",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "颜色"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "背景颜色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "文本颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "边框颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "focus_border_color",
+      "label": "聚焦边框颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color",
+      "label": "占位符颜色",
+      "default": "#999999"
+    },
+    {
+      "type": "header",
+      "content": "间距"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "label": "上边距",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "label": "下边距",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "订单备注"
+    }
+  ]
+}
+{% endschema %}

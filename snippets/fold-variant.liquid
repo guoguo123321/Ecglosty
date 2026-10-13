@@ -1,0 +1,27 @@
+<div class="fold-variant-box">
+  {% if blo_setts.type =="shape" %}
+    <div class="fold-variant-items fold-variant-item-shape">
+      <img class="active" src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/shape1_00827d93-c423-424e-9fe9-98bcc2e53fd2.png?v=1780974672" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/shape2_4a81660d-3293-4a18-b37e-2bf65ff8aecf.png?v=1780974672" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/shape3_f63e95d2-84e4-4b32-af6a-98c2487e0dba.png?v=1780974672" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/shape4_32b1308b-fbed-4f0a-ac49-f3b006669086.png?v=1780984293" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/shape5_846426ba-2961-444f-a026-deddaa999b89.png?v=1780974671" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/shape6_5d482899-30b3-423b-ad7b-da796eb8e60c.png?v=1780974671" width="32" height="32">
+    </div>
+  {% elsif blo_setts.type == "centerstone" %}
+    <div class="fold-variant-items fold-variant-item-centerstone">
+      <span class="active">1</span>
+      <span>1½</span>
+      <span>2</span>
+      <span>2½</span>
+      <span>3</span>
+      <span>3½</span>
+      <span>4</span>
+    </div>
+  {% elsif blo_setts.type == "diamond-origin" %}
+    <div class="fold-variant-items fold-variant-item-diamond-origin">
+      <span class="active">Natura</span>
+      <span>Lab Grown</span>
+    </div>
+  {% endif %}
+</div>

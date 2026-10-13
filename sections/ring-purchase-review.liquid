@@ -1,0 +1,1942 @@
+<div class="rpr-section" id="rpr-section">
+  <div class="rpr-container">
+    <!-- LEFT: Media Grid -->
+    <div class="rpr-media-col">
+      <div class="rpr-media-grid" id="rpr-media-grid"></div>
+    </div>
+
+    <!-- RIGHT: Info Panel -->
+    <div class="rpr-info-col" id="rpr-info-col">
+      <h1 class="rpr-title">Your One-Of-A-Kind Ring</h1>
+      <div class="rpr-total-price" id="rpr-total-price"></div>
+
+      <div class="rpr-section-block">
+        <div class="rpr-label">SETTING</div>
+        <div class="rpr-setting-row">
+          <span class="rpr-setting-name" id="rpr-setting-name"></span>
+          <span class="rpr-setting-price" id="rpr-setting-price"></span>
+        </div>
+        {% comment %} <div class="rpr-stars">★★★★★</div> {% endcomment %}
+      </div>
+
+      <div class="rpr-section-block">
+        <div class="rpr-label">DIAMOND</div>
+        <div class="rpr-diamond-row">
+          <span class="rpr-diamond-title" id="rpr-diamond-title"></span>
+          <span class="rpr-diamond-price" id="rpr-diamond-price"></span>
+        </div>
+        <div class="rpr-diamond-specs" id="rpr-diamond-specs"></div>
+      </div>
+
+      <div class="rpr-section-block">
+        <div class="rpr-label">RING SIZE</div>
+        <div class="rpr-sizes" id="rpr-sizes"></div>
+      </div>
+      <div class="rpr-engraving">
+      <label class="rpr-engraving-label" for="rpr-engraving">
+        <input type="checkbox" id="rpr-engraving">
+        <span>Add Engraving (Optional)</span>
+      </label>
+      <div class="rpr-engraving-input-wrap" id="rpr-engraving-input-wrap" hidden>
+        <input
+          type="text"
+          id="rpr-engraving-input"
+          name="properties-option-engraving"
+          placeholder="Enter your engraving text"
+          autocomplete="off"
+        >
+      </div>
+    </div>
+
+
+      <div class="rpr-ring-total-row">
+        <span>RING TOTAL</span>
+        <span id="rpr-ring-total-val"></span>
+      </div>
+
+      <button class="rpr-btn-primary" id="rpr-choose-btn">ADD TO BAG</button>
+      {% comment %} <button class="rpr-btn-secondary" id="rpr-wishlist-btn">♡ ADD TO WISHLIST</button> {% endcomment %}
+      <div class="rpr-error-info" id="rpr-error-info"></div>
+      <div class="rpr-ship-info" id="rpr-ship-info" style="display:none"></div>
+
+      <div class="rpr-trust-grid" style="display:none">
+        <div class="rpr-trust-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>Global Delivery</span></div>
+        <div class="rpr-trust-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg><span>Free Shipping</span></div>
+        <div class="rpr-trust-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg><span>45-days Return</span></div>
+        <div class="rpr-trust-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg><span>1 year Warranty</span></div>
+      </div>
+
+      <div class="rpr-accordion" style="display:none">
+        <div class="rpr-accordion-header" id="rpr-accordion-header">
+          Diamond Details <span class="rpr-accordion-arrow">▼</span>
+        </div>
+        <div class="rpr-accordion-body" id="rpr-accordion-body"></div>
+      </div>
+
+      {%- comment -%} 物流保障 / 区块化子组件渲染 - 按 section.blocks 顺序遍历,block 拖到哪里就在 dpi-rp__info 内哪渲染 {%- endcomment -%}
+      {%- assign dpi_acc_open = false -%}
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'product-order-details' -%}
+            {%- render 'product-order-details', block: block -%}
+          {%- when 'product-shipping' -%}
+            {%- render 'product-shipping', block: block -%}
+          {%- when 'fold' -%}
+            {%- render 'fold', block: block -%}
+          {%- when 'product-sharing' -%}
+            {%- render 'product-sharing', block: block -%}
+          {%- when 'block-service' -%}
+            {%- render 'block-service', block: block -%}
+          {%- when 'dpi-ring-accordion-item' -%}
+            {%- if dpi_acc_open == false -%}
+              <div class="dpi-rp__accordion-wrap">
+                <div
+                  class="accordion accordion--{{ section.id }} accordion--plus accordion--dividers"
+                  style="
+                    --summary-font-family: var(--font-h6--family);
+                    --summary-font-style: var(--font-h6--style);
+                    --summary-font-weight: var(--font-h6--weight);
+                    --summary-font-size: var(--font-h6--size);
+                    --summary-font-line-height: var(--font-h6--line-height);
+                    --summary-font-case: var(--font-h6--case);
+                    --border-width: 1px;
+                    --border-style: solid;
+                    --color-border: rgba(var(--color-foreground-rgb), 0.15);
+                    --padding-block-start: 14px;
+                    --padding-block-end: 14px;
+                  "
+                >
+                  {%- assign dpi_acc_open = true -%}
+            {%- endif -%}
+            {%- render 'dpi-ring-accordion-item', block: block -%}
+        {%- endcase -%}
+      {%- endfor -%}
+      {%- if dpi_acc_open == true -%}
+                </div>
+            </div>
+      {%- endif -%}
+{%- comment -%} end物流保障 / 区块化子组件渲染 - 按 section.blocks 顺序遍历,block 拖到哪里就在 dpi-rp__info 内哪渲染 {%- endcomment -%}
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="rpr-lightbox" id="rpr-lightbox">
+  <div class="rpr-lightbox-overlay" id="rpr-lightbox-overlay"></div>
+  <div class="rpr-lightbox-content">
+    <button class="rpr-lightbox-close" id="rpr-lightbox-close">✕</button>
+    <img id="rpr-lightbox-img" src="" alt="">
+  </div>
+</div>
+
+<!-- 3D Model Modal -->
+<div class="rpr-model-modal" id="rpr-model-modal">
+  <div class="rpr-model-overlay" id="rpr-model-overlay"></div>
+  <div class="rpr-model-content">
+    <button class="rpr-model-close" id="rpr-model-close">✕</button>
+    <model-viewer id="rpr-model-viewer" auto-rotate camera-controls style="width:100%;height:500px;"></model-viewer>
+  </div>
+</div>
+
+<style>
+  .rpr-error-info {
+  display: none;
+  color: #c0392b;
+  font-size: 12px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background: #fdf0ef;
+  border-left: 3px solid #c0392b;
+}
+
+/* ── Reset & Container ── */
+.rpr-section { font-family: inherit; color: #1a1a1a; }
+.rpr-container {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  gap: 40px;
+  align-items: start;
+}
+
+/* ── Media Grid ── */
+.rpr-media-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.rpr-media-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+.rpr-media-item img,
+.rpr-media-item video,
+.rpr-media-item canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.rpr-media-item img { cursor: zoom-in; }
+
+/* 3D Badge */
+.rpr-3d-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 2;
+  letter-spacing: 0.05em;
+}
+
+/* Spin loader */
+.rpr-spin-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  {% comment %} background: #f5f5f5; {% endcomment %}
+  font-size: 12px;
+  color: #666;
+  transition: opacity 0.3s;
+  z-index: 3;
+}
+.rpr-spin-bar-wrap {
+  width: 120px;
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.rpr-spin-bar {
+  height: 100%;
+  background: #1a3a4a;
+  width: 0%;
+  transition: width 0.1s;
+}
+.rpr-drag-label {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 4;
+  white-space: nowrap;
+}
+
+/* ── Info Panel ── */
+.rpr-info-col { padding: 10px 0; }
+.rpr-title {
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0 0 6px;
+  letter-spacing: 0.02em;
+}
+.rpr-total-price {
+  font-size: 20px;
+  font-weight: 300;
+  color: #333;
+  margin-bottom: 20px;
+}
+.rpr-section-block {
+  border-top: 1px solid #e0e0e0;
+  padding: 14px 0;
+}
+.rpr-label {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: #888;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.rpr-setting-row,
+.rpr-diamond-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 14px;
+}
+.rpr-setting-name,
+.rpr-diamond-title { flex: 1; line-height: 1.4; }
+.rpr-setting-price,
+.rpr-diamond-price { white-space: nowrap; font-weight: 500; }
+.rpr-stars { color: #f5a623; font-size: 13px; margin-top: 4px; }
+.rpr-diamond-specs { font-size: 12px; color: #666; margin-top: 4px; }
+
+
+.rpr-engraving {
+  margin-top: 16px;
+}
+
+.rpr-engraving-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+}
+
+.rpr-engraving-label input {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  accent-color: #1a3a4a;
+}
+
+.rpr-engraving-input-wrap {
+  margin-top: 10px;
+}
+
+.rpr-engraving-input-wrap[hidden] {
+  display: none;
+}
+
+#rpr-engraving-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  font: inherit;
+}
+
+/* Ring Size */
+.rpr-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.rpr-size-pill {
+  min-width: 40px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  border-radius: 2px;
+}
+.rpr-size-pill:hover { border-color: #1a3a4a; }
+.rpr-size-pill.active {
+  background: #1a3a4a;
+  color: #fff;
+  border-color: #1a3a4a;
+}
+
+/* Ring Total Row */
+.rpr-ring-total-row {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #e0e0e0;
+  padding: 14px 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+/* Buttons */
+.rpr-btn-primary {
+  width: 100%;
+  padding: 16px;
+  background: #1a3a4a;
+  color: #fff;
+  border: none;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+.rpr-btn-primary:hover { background: #0f2530; }
+.rpr-btn-secondary {
+  width: 100%;
+  padding: 15px;
+  background: #fff;
+  color: #1a3a4a;
+  border: 1px solid #1a3a4a;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: all 0.2s;
+}
+.rpr-btn-secondary:hover { background: #f5f5f5; }
+
+/* Ship Info */
+.rpr-ship-info {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+/* Trust Grid */
+.rpr-trust-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  border: 1px solid #e0e0e0;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.rpr-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #444;
+}
+
+/* Accordion */
+.rpr-accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid #e0e0e0;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+}
+.rpr-accordion-arrow { transition: transform 0.2s; font-size: 10px; }
+.rpr-accordion-header.open .rpr-accordion-arrow { transform: rotate(180deg); }
+.rpr-accordion-body {
+  display: none;
+  padding-bottom: 12px;
+}
+.rpr-accordion-body.open { display: block; }
+.rpr-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.rpr-detail-label { color: #888; }
+.rpr-detail-val { font-weight: 500; }
+
+/* ── Lightbox ── */
+.rpr-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+.rpr-lightbox.open { display: flex; }
+.rpr-lightbox-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  cursor: pointer;
+}
+.rpr-lightbox-content {
+  position: relative;
+  z-index: 1;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+.rpr-lightbox-content img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  display: block;
+}
+.rpr-lightbox-close {
+  position: absolute;
+  top: -36px;
+  right: 0;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* ── 3D Modal ── */
+.rpr-model-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+.rpr-model-modal.open { display: flex; }
+.rpr-model-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  cursor: pointer;
+}
+.rpr-model-content {
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  width: 90vw;
+  max-width: 800px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.rpr-model-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 2;
+  color: #333;
+}
+
+.rpr-size-pill--more {
+  min-width: 80px;
+  background: #fff;
+  color: #1a3a4a;
+  border-color: #1a3a4a;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.rpr-size-pill--more:hover {
+  background: #1a3a4a;
+  color: #fff;
+}
+
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .rpr-container {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── Data ──────────────────────────────────────────────────────────────────
+  let rs, cd;
+  try { rs = JSON.parse(localStorage.getItem('current_ringsetting') || 'null'); } catch(e) {}
+  try { cd = JSON.parse(localStorage.getItem('current_diamond') || 'null'); } catch(e) {}
+
+  // ── DOM refs ──────────────────────────────────────────────────────────────
+  const mediaGrid      = document.getElementById('rpr-media-grid');
+  const lightbox       = document.getElementById('rpr-lightbox');
+  const lightboxImg    = document.getElementById('rpr-lightbox-img');
+  const lightboxClose  = document.getElementById('rpr-lightbox-close');
+  const lightboxOverlay= document.getElementById('rpr-lightbox-overlay');
+  const modelModal     = document.getElementById('rpr-model-modal');
+  const modelViewer    = document.getElementById('rpr-model-viewer');
+  const modelClose     = document.getElementById('rpr-model-close');
+  const modelOverlay   = document.getElementById('rpr-model-overlay');
+  const accordionHeader= document.getElementById('rpr-accordion-header');
+  const accordionBody  = document.getElementById('rpr-accordion-body');
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function fmt(n) {
+    return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+
+  // ── Lightbox ──────────────────────────────────────────────────────────────
+  function openLightbox(src) {
+    lightboxImg.src = src;
+    lightbox.classList.add('open');
+  }
+  lightboxClose.addEventListener('click', () => lightbox.classList.remove('open'));
+  lightboxOverlay.addEventListener('click', () => lightbox.classList.remove('open'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      lightbox.classList.remove('open');
+      modelModal.classList.remove('open');
+    }
+  });
+
+  // ── 3D Modal ──────────────────────────────────────────────────────────────
+  function openModelModal(src) {
+    // Lazy-load model-viewer script
+    if (!window.customElements.get('model-viewer')) {
+      const s = document.createElement('script');
+      s.type = 'module';
+      s.src = 'https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js';
+      document.head.appendChild(s);
+    }
+    modelViewer.setAttribute('src', src);
+    modelModal.classList.add('open');
+  }
+  modelClose.addEventListener('click', () => modelModal.classList.remove('open'));
+  modelOverlay.addEventListener('click', () => modelModal.classList.remove('open'));
+
+  // ── mediaType 1: Image ────────────────────────────────────────────────────
+  function renderImage(media) {
+    const item = document.createElement('div');
+    item.className = 'rpr-media-item';
+    const img = document.createElement('img');
+    img.src = media.url;
+    img.alt = '';
+    img.loading = 'lazy';
+    img.addEventListener('click', () => openLightbox(media.url));
+    item.appendChild(img);
+    mediaGrid.appendChild(item);
+  }
+
+  // ── mediaType 2: Video ────────────────────────────────────────────────────
+  function renderVideo(media) {
+    const item = document.createElement('div');
+    item.className = 'rpr-media-item';
+    const video = document.createElement('video');
+    video.src = media.url;
+    if (media.previewImage) video.poster = media.previewImage;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.addEventListener('mouseenter', () => video.play());
+    video.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+    item.appendChild(video);
+    mediaGrid.appendChild(item);
+  }
+
+  // ── mediaType 3: 3D Model ─────────────────────────────────────────────────
+  function renderModel(media) {
+    const item = document.createElement('div');
+    item.className = 'rpr-media-item';
+    if (media.previewImage) {
+      const img = document.createElement('img');
+      img.src = media.previewImage;
+      img.alt = '3D Model';
+      img.loading = 'lazy';
+      img.addEventListener('click', () => openModelModal(media.url));
+      item.appendChild(img);
+    }
+    const badge = document.createElement('div');
+    badge.className = 'rpr-3d-badge';
+    badge.textContent = '3D';
+    badge.addEventListener('click', () => openModelModal(media.url));
+    item.appendChild(badge);
+    mediaGrid.appendChild(item);
+  }
+
+  // ── mediaType 4: 360° Spin ────────────────────────────────────────────────
+  function renderSpin(media, index) {
+    const item = document.createElement('div');
+    item.className = 'rpr-media-item';
+    item.style.position = 'relative';
+
+    const { url, imageName, imageSuffix, imageNumber } = media;
+    const TOTAL_FRAMES    = imageNumber || 1;
+    const SENSITIVITY     = 8.0;
+    const AUTO_PLAY_SPEED = 0.3;
+    const FRICTION        = 0.985;
+    const SPEED_BOOST     = 15.0;
+    const MAX_INERTIA     = 5.0;
+
+    const padLen = String(TOTAL_FRAMES).length;
+    const frameUrls = [];
+    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+      frameUrls.push(url + imageName + i + '.' + imageSuffix);
+      // 如果你要补零，就用:
+      // frameUrls.push(url + imageName + String(i).padStart(padLen, '0') + '.' + imageSuffix);
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 800; canvas.height = 800;
+    canvas.style.cssText = 'width:100%;height:100%;object-fit:contain;cursor:grab;display:block;transform:translateZ(0);';
+
+    const loader = document.createElement('div');
+    loader.className = 'rpr-spin-loader';
+    const loaderText = document.createElement('div');
+    loaderText.textContent = `Loading…`;
+    const barWrap = document.createElement('div');
+    barWrap.className = 'rpr-spin-bar-wrap';
+    const bar = document.createElement('div');
+    bar.className = 'rpr-spin-bar';
+    barWrap.appendChild(bar);
+    loader.appendChild(loaderText);
+    loader.appendChild(barWrap);
+
+    const dragLabel = document.createElement('div');
+    dragLabel.className = 'rpr-drag-label';
+    dragLabel.textContent = 'Drag to Spin';
+
+    item.appendChild(canvas);
+    item.appendChild(loader);
+    item.appendChild(dragLabel);
+    mediaGrid.appendChild(item);
+
+    const ctx = canvas.getContext('2d');
+    const imgs = new Array(TOTAL_FRAMES);
+    let loadedCount = 0, isReady = false;
+    let currentFrameFloat = 0.0, lastRenderedFrame = -1;
+    let isDragging = false, isMouseOver = false;
+    let startX = 0, startFrameFloat = 0.0;
+    let trackX = 0, trackTime = 0, finalVelocity = 0, inertiaSpeed = 0;
+
+    function clampFrame(f) { return (f % TOTAL_FRAMES + TOTAL_FRAMES) % TOTAL_FRAMES; }
+
+    function renderFrame(ff) {
+      const f = Math.round(clampFrame(ff));
+      if (f === lastRenderedFrame) return;
+      const img = imgs[f];
+      if (img && img.complete && img.naturalWidth > 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        lastRenderedFrame = f;
+      }
+    }
+
+    function animate() {
+      if (!isDragging && isReady) {
+        if (inertiaSpeed !== 0) {
+          currentFrameFloat -= inertiaSpeed;
+          inertiaSpeed *= FRICTION;
+          if (inertiaSpeed < 0) {
+            if (-inertiaSpeed <= AUTO_PLAY_SPEED) inertiaSpeed = 0;
+          } else {
+            if (inertiaSpeed <= 0.15) inertiaSpeed = 0;
+          }
+        }
+        if (inertiaSpeed === 0 && !isMouseOver) currentFrameFloat += AUTO_PLAY_SPEED;
+        renderFrame(currentFrameFloat);
+      }
+      requestAnimationFrame(animate);
+    }
+
+    // 1. 先加载第一帧，显示静态图片
+    const firstImg = new Image();
+    firstImg.onload = () => {
+      imgs[0] = firstImg;
+      // 设置真实尺寸
+      if (firstImg.naturalWidth > 0) {
+        canvas.width = firstImg.naturalWidth;
+        canvas.height = firstImg.naturalHeight;
+      }
+      renderFrame(0); // 先画出第 1 帧
+
+      // 2. 再开始预加载所有帧（包括第 1 帧，其实已经有缓存了）
+      preloadAllFrames();
+    };
+    firstImg.onerror = () => {
+      // 如果第一帧加载失败，也继续预加载其他帧
+      preloadAllFrames();
+    };
+    firstImg.src = frameUrls[0];
+
+    function preloadAllFrames() {
+      // 避免重复统计第一帧
+      loadedCount = imgs[0] && imgs[0].complete ? 1 : 0;
+      bar.style.width = (loadedCount / TOTAL_FRAMES) * 100 + '%';
+
+      frameUrls.forEach((src, idx) => {
+        // 如果已经有第一帧，就跳过重新 new
+        if (idx === 0 && imgs[0]) return;
+
+        const img = new Image();
+        img.onload = () => {
+          loadedCount++;
+          const pct = Math.floor((loadedCount / TOTAL_FRAMES) * 100);
+          bar.style.width = pct + '%';
+          loaderText.textContent = `${pct}%`;
+
+          if (loadedCount === TOTAL_FRAMES) {
+            isReady = true;
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 300);
+            // 第一帧已经画过了，这里只需要启动动画
+            animate();
+          }
+        };
+        img.onerror = () => {
+          loadedCount++;
+        };
+        img.src = src;
+        imgs[idx] = img;
+      });
+
+      // 启动动画循环（只会在 isReady 为 true 时真正动起来）
+      animate();
+    }
+
+    // Events 与你原来的保持一致
+    item.addEventListener('mouseenter', () => { isMouseOver = true; });
+    item.addEventListener('mouseleave', () => {
+      isMouseOver = false;
+      dragLabel.style.opacity = '1';
+      if (isDragging) handleEnd();
+    });
+
+    function handleStart(e) {
+      if (!isReady) return;
+      isDragging = true; inertiaSpeed = 0; finalVelocity = 0;
+      dragLabel.style.opacity = '0';
+      canvas.style.cursor = 'grabbing';
+      const clientX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+      startX = clientX; startFrameFloat = currentFrameFloat;
+      trackX = clientX; trackTime = performance.now();
+    }
+    function handleMove(e) {
+      if (!isDragging) return;
+      if (e.cancelable) e.preventDefault();
+      const clientX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+      const now = performance.now();
+      currentFrameFloat = clampFrame(startFrameFloat - (clientX - startX) / SENSITIVITY);
+      renderFrame(currentFrameFloat);
+      const dt = now - trackTime;
+      if (dt > 0) { finalVelocity = (clientX - trackX) / dt; trackX = clientX; trackTime = now; }
+    }
+    function handleEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+      canvas.style.cursor = 'grab';
+      inertiaSpeed = Math.max(-MAX_INERTIA, Math.min(MAX_INERTIA, finalVelocity * SPEED_BOOST));
+      finalVelocity = 0;
+    }
+
+    canvas.addEventListener('mousedown', handleStart);
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleEnd);
+    canvas.addEventListener('touchstart', (e) => { isMouseOver = true; handleStart(e); }, { passive: false });
+    canvas.addEventListener('touchmove', handleMove, { passive: false });
+    window.addEventListener('touchend', () => { isMouseOver = false; handleEnd(); });
+  }
+
+  // ── Render Media ──────────────────────────────────────────────────────────
+  function renderMedia(medias) {
+    if (!medias || !medias.length) return;
+    medias.sort((a, b) => a.sortOrder - b.sortOrder);
+    medias.forEach((media, i) => {
+      switch (media.mediaType) {
+        case 1: renderImage(media); break;
+        case 2: renderVideo(media); break;
+        case 3: renderModel(media); break;
+        case 4: renderSpin(media, i); break;
+        default: renderImage(media);
+      }
+    });
+  }
+
+  // ── Render Info Panel ─────────────────────────────────────────────────────
+  function renderInfo() {
+    if (!rs || !cd) return;
+
+    const sku = rs.selectedSku || {};
+    const settingPrice = sku.productPrice || 0;
+    const diamondPrice = cd.price || 0;
+    const total = settingPrice + diamondPrice;
+    const attr = cd;
+   
+    document.getElementById('rpr-total-price').textContent = fmt(total);
+    document.getElementById('rpr-setting-name').textContent = sku.specSkuValue.replaceAll("::"," ");
+    document.getElementById('rpr-setting-price').textContent = fmt(settingPrice);
+    document.getElementById('rpr-diamond-title').textContent = `${attr.carat} Carat ${attr.shape} Diamond`;
+    document.getElementById('rpr-diamond-price').textContent = fmt(diamondPrice);
+    document.getElementById('rpr-diamond-specs').textContent =
+      [attr.cut && attr.cut + ' cut', attr.color && attr.color + ' color', attr.clarity && attr.clarity + ' clarity']
+        .filter(Boolean).join(' · ');
+    document.getElementById('rpr-ring-total-val').textContent = fmt(total);
+
+    if (cd.delivery) {
+      document.getElementById('rpr-ship-info').innerHTML =
+        `Order now and your order ships by <strong>${cd.delivery}</strong>`;
+    }
+
+    // Ring sizes
+    const sizesEl = document.getElementById('rpr-sizes');
+    if (rs.ringSize) {
+      const ringSizeList = rs.ringSize.split(',').map(s => s.trim()).filter(Boolean);
+      renderRingSize(sizesEl, ringSizeList);
+    }
+
+
+    // Diamond details accordion
+    {% comment %} const details = [
+      ['Report', cd.report], ['Measurements', cd.measurements],
+      ['Table', cd.table], ['Depth', cd.depth ? cd.depth + '%' : ''],
+      ['Polish', cd.polish], ['Symmetry', cd.symmetry],
+      ['Fluorescence', cd.fluor], ['Girdle', cd.girdle],
+      ['Culet', cd.culet], ['Origin', cd.origin],
+      ['L/W Ratio', cd.lw],
+    ];
+    details.forEach(([label, val]) => {
+      if (!val) return;
+      const row = document.createElement('div');
+      row.className = 'rpr-detail-row';
+      row.innerHTML = `<span class="rpr-detail-label">${label}</span><span class="rpr-detail-val">${val}</span>`;
+      accordionBody.appendChild(row);
+    }); {% endcomment %}
+  }
+
+  // ── Accordion ─────────────────────────────────────────────────────────────
+  accordionHeader.addEventListener('click', () => {
+    accordionHeader.classList.toggle('open');
+    accordionBody.classList.toggle('open');
+  });
+  
+  // ── Ring Size Renderer ────────────────────────────────────────────────────────
+  function renderRingSize(container, ringSizeList) {
+    if (!container || !ringSizeList || ringSizeList.length === 0) return;
+
+    let selectedSize = null;
+    let showAll = false;
+
+    function getDisplaySizes(sizes) {
+      if (sizes.length <= 5) return { displayed: sizes, hasMore: false };
+
+      const numericSizes = sizes.map(s => parseFloat(s));
+      const minVal = Math.min(...numericSizes);
+      const maxVal = Math.max(...numericSizes);
+
+      if (minVal < 4 && maxVal > 8) {
+        const preferred = ['4.5', '5', '6', '7', '8'];
+        const displayed = preferred
+          .map(p => sizes.find(s => parseFloat(s) === parseFloat(p)))
+          .filter(Boolean);
+
+        if (displayed.length < 5) {
+          sizes.forEach(s => {
+            if (displayed.length >= 5) return;
+            if (!displayed.includes(s)) displayed.push(s);
+          });
+        }
+        return { displayed, hasMore: true };
+      }
+
+      // 原规则：取中间，间隔1个，取5个
+      const mid = Math.floor(sizes.length / 2);
+      let startIdx = Math.max(0, mid - 4);
+      const picked = [];
+      let i = startIdx;
+      while (picked.length < 5 && i < sizes.length) {
+        picked.push(sizes[i]);
+        i += 2;
+      }
+      if (picked.length < 5) {
+        let j = 0;
+        while (picked.length < 5 && j < sizes.length) {
+          if (!picked.includes(sizes[j])) picked.push(sizes[j]);
+          j++;
+        }
+      }
+      return { displayed: picked, hasMore: true };
+    }
+
+    function renderSizeButtons(sizes) {
+      container.innerHTML = '';
+      const { displayed, hasMore } = showAll
+        ? { displayed: sizes, hasMore: false }
+        : getDisplaySizes(sizes);
+
+      displayed.forEach((size, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'rpr-size-pill' + (idx === 0 && !selectedSize ? ' active' : '');
+        btn.type = 'button';
+        btn.textContent = size;
+        btn.dataset.size = size;
+
+        if (selectedSize === size) btn.classList.add('active');
+
+        btn.addEventListener('click', () => {
+          container.querySelectorAll('.rpr-size-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedSize = size;
+        });
+
+        container.appendChild(btn);
+      });
+
+      if (hasMore && !showAll) {
+        const moreBtn = document.createElement('button');
+        moreBtn.className = 'rpr-size-pill rpr-size-pill--more';
+        moreBtn.type = 'button';
+        moreBtn.textContent = 'View More Sizes';
+        moreBtn.addEventListener('click', () => {
+          showAll = true;
+          renderSizeButtons(sizes);
+        });
+        container.appendChild(moreBtn);
+      }
+    }
+
+    renderSizeButtons(ringSizeList);
+  }
+
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  if (rs && rs.selectedSku && rs.selectedSku.medias) {
+    
+    renderMedia(rs.selectedSku.medias);
+  }
+  renderInfo();
+
+  const engravingCheckbox = document.getElementById('rpr-engraving');
+  const engravingInputWrap = document.getElementById('rpr-engraving-input-wrap');
+  const engravingInput = document.getElementById('rpr-engraving-input');
+
+  engravingCheckbox.addEventListener('change', () => {
+    engravingInputWrap.hidden = !engravingCheckbox.checked;
+
+    if (engravingCheckbox.checked) {
+      engravingInput.focus();
+    } else {
+      engravingInput.value = '';
+    }
+  });
+
+
+  // ── Add To Bag ────────────────────────────────────────────────────────────
+  async function addToBag() {
+    const btn = document.getElementById('rpr-choose-btn');
+    const errorEl = document.getElementById('rpr-error-info');
+
+    function showError(msg) {
+      const displayMsg = (msg && msg.toLowerCase().includes('already sold out'))
+        ? 'Sorry, the product you selected is currently sold out.'
+        : msg;
+      errorEl.textContent = displayMsg;
+      errorEl.style.display = 'block';
+    }
+    function clearError() {
+      errorEl.textContent = '';
+      errorEl.style.display = 'none';
+    }
+
+    clearError();
+
+    // 1. 校验 ring size 已选
+    const activeSize = document.querySelector('#rpr-sizes .rpr-size-pill.active');
+    if (!activeSize) {
+      showError('Please select a ring size.');
+      return;
+    }
+    const ringSize = activeSize.textContent.trim();
+
+    // 2. 校验本地数据
+    if (!rs || !cd) {
+      showError('Missing ring setting or diamond data. Please go back and make your selections.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Adding…';
+
+    try {
+      // 3. 生成分组 ID
+      const groupId = 'grp-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+
+      // 4. 用 products/{handle}.js 查询 diamond 第一个变体 + 库存
+      const diamondHandle = cd.urlHandle;
+      if (!diamondHandle) throw new Error('Diamond urlHandle is missing.');
+
+      const productResp = await fetch(
+        `${window.Shopify.routes.root}products/${diamondHandle}.js`
+      );
+      if (!productResp.ok) throw new Error('Diamond product not found: ' + diamondHandle);
+
+      const productData = await productResp.json();
+      const firstVariant = productData.variants?.[0];
+      if (!firstVariant) throw new Error('No variants found for diamond product.');
+
+      // 库存校验：available 为 false 或 quantity <= 0 时拦截
+      if (!firstVariant.available) {
+        throw new Error('Sorry, this diamond is no longer available.');
+      }
+
+      const diamondVariantId = firstVariant.id;
+
+      // 5. 获取 ring setting variant ID
+      const ringVariantId = rs.selectedVariantId;
+      if (!ringVariantId) throw new Error('Ring setting variant ID is missing.');
+
+      // 6. 构建两个 line items
+      const attr = cd;
+      const items = [
+        {
+          id: diamondVariantId,
+          quantity: 1,
+          properties: {
+            'Cut':      attr.cut     || '',
+            'Clarity':  attr.clarity || '',
+            'Color':    attr.color   || '',
+            'Shape':    attr.shape   || '',
+            '_groupId': groupId
+          }
+        },
+        {
+          id: ringVariantId,
+          quantity: 1,
+          properties: {
+            'Alias name': rs.alias || '',
+            'Ring size':  ringSize,
+            '_groupId':   groupId,
+            ...(engravingCheckbox.checked && engravingInput.value.trim()
+              ? { 'Engraving': engravingInput.value.trim() }
+              : {})
+          }
+
+        }
+      ];
+
+      // 7. 添加到购物车
+      const cartResp = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items })
+      });
+
+      if (!cartResp.ok) {
+        const errData = await cartResp.json().catch(() => ({}));
+        throw new Error(errData.description || 'Failed to add to cart.');
+      }
+
+      // 8. 成功 → 跳转购物车
+      btn.textContent = 'Added!';
+      window.localStorage.removeItem('current_ringsetting');
+      window.localStorage.removeItem('current_diamond');
+      setTimeout(() => { window.location.href = '/cart'; }, 600);
+
+    } catch (err) {
+      console.error('[RPR] addToBag error:', err);
+      showError(err.message || 'Something went wrong. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'ADD TO BAG';
+    }
+  }
+
+
+  document.getElementById('rpr-choose-btn').addEventListener('click', addToBag);
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Ring Purchase Review",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "product-order-details",
+      "name": "Product Order Details",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "range",
+          "id": "option_vertical_gap",
+          "label": "t:settings.vertical_gap",
+          "min": 0,
+          "max": 60,
+          "step": 1,
+          "unit": "px",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "option_horizontal_gap",
+          "label": "t:settings.horizontal_gap",
+          "min": 0,
+          "max": 60,
+          "step": 1,
+          "unit": "px",
+          "default": 8
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Order Details"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "delivery_text",
+          "label": "Delivery text",
+          "default": "Delivery by"
+        },
+        {
+          "type": "number",
+          "id": "ship_days",
+          "label": "发货时效（天）",
+          "default": 10,
+          "info": "当前日期 + 此天数 = 显示的发货日期"
+        },
+        {
+          "type": "select",
+          "id": "date_format",
+          "label": "Date format",
+          "options": [
+            {
+              "value": "%b %d, %Y",
+              "label": "Month Day, Year"
+            },
+            {
+              "value": "%d %B %Y",
+              "label": "Day Month Year"
+            },
+            {
+              "value": "%m/%d/%Y",
+              "label": "MM/DD/YYYY"
+            },
+            {
+              "value": "%d/%m/%Y",
+              "label": "DD/MM/YYYY"
+            }
+          ],
+          "default": "%b %d, %Y"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "shipping_text",
+          "label": "Shipping text",
+          "default": "Free Express Shipping"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "returns_text",
+          "label": "Returns text",
+          "default": "Free 60-Day Returns"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "warranty_text",
+          "label": "Warranty text",
+          "default": "Free Lifetime Warranty"
+        },
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "image_border_radius",
+          "label": "Image border radius",
+          "min": 0,
+          "max": 32,
+          "step": 2,
+          "unit": "px",
+          "default": 8
+        },
+        {
+          "type": "header",
+          "content": "Style"
+        },
+        {
+          "type": "range",
+          "id": "desktop_width_percent",
+          "label": "Desktop width",
+          "min": 50,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 100
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background",
+          "default": "#fafafa"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text",
+          "default": "#282828"
+        },
+        {
+          "type": "range",
+          "id": "padding",
+          "label": "Padding",
+          "min": 16,
+          "max": 64,
+          "step": 4,
+          "unit": "px",
+          "default": 16
+        },
+        {
+          "type": "header",
+          "content": "Typography"
+        },
+        {
+          "type": "range",
+          "id": "heading_size",
+          "label": "Heading size",
+          "min": 16,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "text_size",
+          "label": "Text size",
+          "min": 12,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 14
+        }
+      ]
+    },
+    {
+      "type": "product-shipping",
+      "name": "Product Shipping",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "header",
+          "label": "Header"
+        },
+        {
+          "type": "header",
+          "content": "One"
+        },
+        {
+          "type": "image_picker",
+          "id": "image1",
+          "label": "Image 1"
+        },
+        {
+          "type": "text",
+          "id": "title1",
+          "label": "Title 1"
+        },
+        {
+          "type": "header",
+          "content": "Two"
+        },
+        {
+          "type": "image_picker",
+          "id": "image2",
+          "label": "Image 2"
+        },
+        {
+          "type": "text",
+          "id": "title2",
+          "label": "Title 2"
+        },
+        {
+          "type": "header",
+          "content": "Three"
+        },
+        {
+          "type": "image_picker",
+          "id": "image3",
+          "label": "Image 3"
+        },
+        {
+          "type": "text",
+          "id": "title3",
+          "label": "Title 3"
+        },
+        {
+          "type": "header",
+          "content": "Four"
+        },
+        {
+          "type": "image_picker",
+          "id": "image4",
+          "label": "Image 4"
+        },
+        {
+          "type": "text",
+          "id": "title4",
+          "label": "Title 4"
+        }
+      ]
+    },
+    {
+      "type": "fold",
+      "name": "Fold",
+      "settings": [
+        {
+          "type": "select",
+          "id": "content_or_recommended",
+          "label": "Content or Recommended",
+          "default": "content",
+          "options": [
+            {
+              "value": "content",
+              "label": "content"
+            },
+            {
+              "value": "recommended",
+              "label": "recommended"
+            },
+            {
+              "value": "variant",
+              "label": "variant"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "type",
+          "label": "type",
+          "default": "shape",
+          "options": [
+            {
+              "value": "shape",
+              "label": "shape"
+            },
+            {
+              "value": "centerstone",
+              "label": "centerstone"
+            },
+            {
+              "value": "diamond-origin",
+              "label": "diamond-origin"
+            }
+          ],
+          "visible_if": "{{ block.settings.content_or_recommended == 'variant' }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "show",
+          "label": "show fold",
+          "default": false
+        },
+        {
+          "type": "html",
+          "id": "header",
+          "label": "header"
+        },
+        {
+          "type": "liquid",
+          "id": "content",
+          "label": "content"
+        },
+        {
+          "type": "header",
+          "content": "icon"
+        },
+        {
+          "type": "checkbox",
+          "id": "icon",
+          "label": "icon",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "header_icon",
+          "label": "header icon"
+        },
+        {
+          "type": "url",
+          "id": "header_icon_url",
+          "label": "header icon url"
+        },
+        {
+          "type": "header",
+          "content": "Margin"
+        },
+        {
+          "type": "text",
+          "id": "pc_margin",
+          "label": "pc margin",
+          "default": "0"
+        },
+        {
+          "type": "text",
+          "id": "mb_margin",
+          "label": "mb margin",
+          "default": "0"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "text",
+          "id": "pc_padding",
+          "label": "pc padding",
+          "default": "0"
+        },
+        {
+          "type": "text",
+          "id": "mb_padding",
+          "label": "mb padding",
+          "default": "0"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_line",
+          "label": "use line",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "product-sharing",
+      "name": "Product Sharing",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Sharing:"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding-block-start",
+          "label": "Top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "padding-block-end",
+          "label": "Bottom",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding-inline-start",
+          "label": "Left",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding-inline-end",
+          "label": "Right",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "block-service",
+      "name": "Block Service",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "t:settings.color_scheme",
+          "default": "scheme-1"
+        },
+        {
+          "type": "header",
+          "content": "Items"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_drop_hint",
+          "label": "Show Drop a Hint",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_email_us",
+          "label": "Show Email Us",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_phone",
+          "label": "Show Phone",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_live_chat",
+          "label": "Show Live Chat",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Drop a Hint"
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_label",
+          "label": "Label",
+          "default": "Drop a Hint"
+        },
+        {
+          "type": "select",
+          "id": "drop_hint_icon_type",
+          "label": "Icon type",
+          "default": "svg",
+          "options": [
+            {
+              "value": "svg",
+              "label": "SVG"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "drop_hint_svg",
+          "label": "SVG",
+          "info": "Leave blank to use the default SVG",
+          "visible_if": "{{ block.settings.drop_hint_icon_type == 'svg' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "drop_hint_image",
+          "label": "Image",
+          "visible_if": "{{ block.settings.drop_hint_icon_type == 'image' }}"
+        },
+        {
+          "type": "header",
+          "content": "Email Us"
+        },
+        {
+          "type": "text",
+          "id": "email_us_label",
+          "label": "Label",
+          "default": "Email Us"
+        },
+        {
+          "type": "select",
+          "id": "email_us_icon_type",
+          "label": "Icon type",
+          "default": "svg",
+          "options": [
+            {
+              "value": "svg",
+              "label": "SVG"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "email_us_svg",
+          "label": "SVG",
+          "info": "Leave blank to use the default SVG",
+          "visible_if": "{{ block.settings.email_us_icon_type == 'svg' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "email_us_image",
+          "label": "Image",
+          "visible_if": "{{ block.settings.email_us_icon_type == 'image' }}"
+        },
+        {
+          "type": "header",
+          "content": "Phone"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone number",
+          "default": "+1.818.666.6081"
+        },
+        {
+          "type": "select",
+          "id": "phone_icon_type",
+          "label": "Icon type",
+          "default": "svg",
+          "options": [
+            {
+              "value": "svg",
+              "label": "SVG"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "phone_svg",
+          "label": "SVG",
+          "info": "Leave blank to use the default SVG",
+          "visible_if": "{{ block.settings.phone_icon_type == 'svg' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "phone_image",
+          "label": "Image",
+          "visible_if": "{{ block.settings.phone_icon_type == 'image' }}"
+        },
+        {
+          "type": "header",
+          "content": "Live Chat"
+        },
+        {
+          "type": "text",
+          "id": "live_chat_label",
+          "label": "Label",
+          "default": "Live Chat"
+        },
+        {
+          "type": "select",
+          "id": "live_chat_icon_type",
+          "label": "Icon type",
+          "default": "svg",
+          "options": [
+            {
+              "value": "svg",
+              "label": "SVG"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "live_chat_svg",
+          "label": "SVG",
+          "info": "Leave blank to use the default SVG",
+          "visible_if": "{{ block.settings.live_chat_icon_type == 'svg' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "live_chat_image",
+          "label": "Image",
+          "visible_if": "{{ block.settings.live_chat_icon_type == 'image' }}"
+        },
+        {
+          "type": "url",
+          "id": "live_chat_url",
+          "label": "Live Chat fallback URL"
+        },
+        {
+          "type": "text",
+          "id": "submit_label",
+          "label": "Submit button",
+          "default": "Submit"
+        },
+        {
+          "type": "header",
+          "content": "Drop a Hint form"
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_title",
+          "label": "Title",
+          "default": "Drop a Hint"
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_desc",
+          "label": "Description",
+          "default": "Enter the email address where you would like this to be sent."
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_subject",
+          "label": "Email subject",
+          "default": "Drop a Hint"
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_newsletter",
+          "label": "Newsletter text",
+          "default": "Sign me up for updates."
+        },
+        {
+          "type": "text",
+          "id": "drop_hint_success",
+          "label": "Success message",
+          "default": "Your hint has been successfully sent!"
+        },
+        {
+          "type": "header",
+          "content": "Email Us form"
+        },
+        {
+          "type": "text",
+          "id": "email_us_title",
+          "label": "Title",
+          "default": "Need Help?"
+        },
+        {
+          "type": "text",
+          "id": "email_us_desc",
+          "label": "Description",
+          "default": "Get expert answers! Our jewelry specialists can help with all your inquiries."
+        },
+        {
+          "type": "text",
+          "id": "email_us_subject",
+          "label": "Email subject",
+          "default": "Need Help"
+        },
+        {
+          "type": "text",
+          "id": "email_us_newsletter",
+          "label": "Newsletter text",
+          "default": "Send me updates on new styles and special offers."
+        },
+        {
+          "type": "text",
+          "id": "email_us_success",
+          "label": "Success message",
+          "default": "Thank you for reaching out! Our team has received your inquiry and will be in touch shortly."
+        }
+      ]
+    },
+    {
+      "type": "skin-tone",
+      "name": "Skin Tone Slider",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Darker"
+        },
+        {
+          "type": "image_picker",
+          "id": "img_dark",
+          "label": "Dark Skin Image"
+        },
+        {
+          "type": "header",
+          "content": "Medium"
+        },
+        {
+          "type": "image_picker",
+          "id": "img_medium",
+          "label": "Medium Skin Image"
+        },
+        {
+          "type": "header",
+          "content": "Lighter"
+        },
+        {
+          "type": "image_picker",
+          "id": "img_light",
+          "label": "Light Skin Image"
+        }
+      ]
+    },
+    {
+      "type": "dpi-ring-accordion-item",
+      "name": "Accordion Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Accordion Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image",
+          "info": "Optional image displayed before the heading (32x32px). Takes precedence over inline SVG."
+        },
+        {
+          "type": "richtext",
+          "id": "icon_svg",
+          "label": "Icon (inline SVG)",
+          "info": "Paste raw SVG markup here (e.g. <svg viewBox=\"0 0 24 24\">...</svg>). Used if no Icon Image is uploaded."
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "content_type",
+          "label": "Content type",
+          "default": "text",
+          "options": [
+            {
+              "value": "text",
+              "label": "Plain text"
+            },
+            {
+              "value": "richtext",
+              "label": "Rich text / HTML"
+            },
+            {
+              "value": "page",
+              "label": "Page content"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "text_content",
+          "label": "Text content",
+          "info": "Used when content type is 'Plain text'."
+        },
+        {
+          "type": "richtext",
+          "id": "richtext_content",
+          "label": "Rich text content",
+          "info": "Used when content type is 'Rich text / HTML'."
+        },
+        {
+          "type": "page",
+          "id": "page_content",
+          "label": "Page",
+          "info": "Used when content type is 'Page content'."
+        }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Ring Purchase Review" }]
+}
+{% endschema %}

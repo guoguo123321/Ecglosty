@@ -1,0 +1,22 @@
+{%- doc -%}
+  Renders collection metafield "mobile nav icon" for mobile drawer third-level links.
+
+  @param {object} link - The menu link (expects collection_link with object metafields.custom.mobile_nav_icon)
+{%- enddoc -%}
+
+{%- if link.type == 'collection_link' and link.object != blank -%}
+  {%- assign nav_icon = link.object.metafields.custom.mobile_nav_icon.value -%}
+  {%- if nav_icon != blank -%}
+    <span class="menu-drawer__mobile-nav-icon" aria-hidden="true">
+      {{
+        nav_icon
+        | image_url: width: 48
+        | image_tag:
+          loading: 'lazy',
+          widths: '24, 48, 72',
+          class: 'menu-drawer__mobile-nav-icon-img',
+          alt: ''
+      }}
+    </span>
+  {%- endif -%}
+{%- endif -%}

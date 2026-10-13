@@ -1,0 +1,395 @@
+{% liquid
+  assign se_stts = section.settings
+  assign set_blo = section.blocks
+  assign stt_layout = se_stts.layout
+  if stt_layout == 'lgs-container'
+    assign html_layout = '<div class="lgs-container">__</div>' | split: '__'
+  elsif stt_layout == 'custom-container'
+    assign html_layout = '<div class="custom-container">__</div>' | split: '__'
+  else
+    assign html_layout = '__' | split: '__'
+  endif
+  assign image = set_blo | where:"type","image"
+  assign text = set_blo | where:"type","text"
+  assign show_pag = false
+  assign show_nav = false
+  if se_stts.show_pagination_pc or se_stts.show_pagination_mb
+    assign show_pag = true
+  endif
+  if se_stts.show_navigation_pc or se_stts.show_navigation_mb
+    assign show_nav = true
+  endif
+%}
+<style>
+  {%- if se_stts.layout == 'custom-container' -%}
+  .{{ section.id }} .custom-container{max-width:{{ se_stts.custom_container }};margin: 0 auto;}
+  {%- endif -%}
+  {%- liquid
+    assign heading_c = se_stts.color_scheme.settings.foreground_heading
+    assign subheading_c = se_stts.color_scheme.settings.foreground_subheading
+  -%}
+  {%- if heading_c != blank and heading_c.alpha != 0.0 -%}
+  .{{ section.id }} .lgs-title{--color:var(--color-foreground-heading);color:var(--color-foreground-heading);}
+  {%- endif -%}
+  {%- if subheading_c != blank and subheading_c.alpha != 0.0 -%}
+  .{{ section.id }} .lgs-subtitle{--color:var(--color-foreground-subheading);color:var(--color-foreground-subheading);}
+  {%- endif -%}
+  .{{ section.id }} .index-blog-info{text-align:{{ se_stts.title_align }};{% if se_stts.title_align == 'center' %}padding-left:clamp(20px,2.941176vw,40px);padding-right:clamp(20px,2.941176vw,40px);{% elsif se_stts.title_align == 'right' %}padding-left:clamp(20px,2.941176vw,40px);padding-right:0;{% endif %}}
+  .{{ section.id }} .index-blog-info .index-blog-title a{color:inherit;}
+  .{{ section.id }} .index-blog-info .index-blog-title a:hover{--color:var(--color-primary);color:var(--color-primary);}
+  .{{ section.id }} .index-blog-info .index-blog-link a{color:var(--color-primary);}
+  .{{ section.id }} .index-blog-info .index-blog-link a:hover{color:var(--color-primary-hover);}
+  .{{ section.id }} .swiper-button-prev.common-prev svg rect,
+  .{{ section.id }} .swiper-button-next.common-next svg rect{stroke:var(--color-arrow);}
+  .{{ section.id }} .swiper-button-prev.common-prev svg path,
+  .{{ section.id }} .swiper-button-next.common-next svg path{fill:var(--color-arrow);}
+  .{{ section.id }} .swiper-button-prev.common-prev:hover svg rect,
+  .{{ section.id }} .swiper-button-next.common-next:hover svg rect{fill:var(--color-arrow-hover);stroke:var(--color-arrow-hover);fill-opacity:1;}
+  .{{ section.id }} .swiper-button-prev.common-prev:hover svg path,
+  .{{ section.id }} .swiper-button-next.common-next:hover svg path{fill:#ffffff;fill-opacity:1;}
+</style>
+{% render 'swiper-assets' %}
+<div class="{{ section.id }} index-blog-box index-blog-img-{{ se_stts.image_ratio }} lgs-section-inner color-{{ se_stts.color_scheme }}" {% render 'section_style', se_stts: se_stts -%}>
+  {{-html_layout[0]-}}
+    {%- render 'section_tophead', se_stts: se_stts -%}
+    <div class="index-blog-swiper">
+      <div class="swiper index-blog">
+        <div class="swiper-wrapper">
+          {% for block in se_stts.blog.articles limit:se_stts.blog_number %}
+            <div class="swiper-slide">
+              <div class="index-blog-item img-water-box">
+                  {% comment %} 图片 {% endcomment %}
+                   {% if block.image != blank %}
+                    <div class="img-water-ripples"><a href="{{ block.url }}"><img src="{{ block.image | image_url }}" width="{{ block.image.width }}" height="{{ block.image.height }}" alt="{{ block.title | escape }}" loading="lazy"></a></div>
+                  {%- else -%}
+                    <div class="img-water-ripples">{{ 'blog-apparel-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff' }}</div>
+                  {% endif %}
+                  <div class="index-blog-info">
+                    <div
+                      class="{% render 'lg-typography-classes', settings: se_stts, prefix: 'title_', base_class: 'index-blog-title' %}"
+                      style="{% render 'lg-typography-style', settings: se_stts, prefix: 'title_' %}"
+                    ><a href="{{ block.url }}">{{ block.title }}</a></div>
+                    {% comment %} <div class="index-blog-link"><a href="{{ block.url }}">Read & shop</a></div> {% endcomment %}
+                  </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="index-blog-media common-swiper-media{% if se_stts.show_pagination_pc %} has-pag-pc{% endif %}{% if se_stts.show_navigation_pc %} has-nav-pc{% endif %}{% if se_stts.show_pagination_mb %} has-pag-mb{% endif %}{% if se_stts.show_navigation_mb %} has-nav-mb{% endif %} media-align-{{ se_stts.media_align_mb }}">
+          {%- if show_pag -%}
+          <div class="swiper-pagination index-blog-pagination common-swiper-pagination"></div>
+          {%- endif -%}
+          {%- if show_nav -%}
+          <div class="common-swiper-direction">
+            <!-- 如果需要导航按钮 -->
+            <div class="common-prev swiper-button-prev index-blog-prev custom-prev">
+              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+                <rect x="0.5" y="0.5" width="33" height="33" rx="16.5" fill="none" stroke="#000"/>
+                <path fill="#000" d="M20 21.257 19.248 22 14 17l5.248-5 .752.743L15.587 17z"/>
+              </svg>
+            </div>
+            <div class="common-next swiper-button-next index-blog-next custom-next">
+              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+                <rect x="0.5" y="0.5" width="33" height="33" rx="16.5" fill="none" stroke="#000"/>
+                <path fill="#000" d="M14 12.743 14.752 12 20 17l-5.248 5-.752-.743L18.413 17z"/>
+              </svg>
+            </div>
+          </div>
+          {%- endif -%}
+        </div>
+        
+        <!-- 如果需要滚动条 -->
+        <!-- <div class="swiper-scrollbar"></div> -->
+      </div>  
+    </div>
+  {{-html_layout[1]-}}
+</div>
+
+<script>
+themeSwiperReady(function () {
+
+    new Swiper('.{{ section.id }} .index-blog', {
+       slidesPerView : 2,
+      loop: true,
+      loopAdditionalSlides: 3,
+      {%- if show_pag -%}
+      pagination: {
+        el: '.{{ section.id }} .index-blog-pagination',
+        clickable: true,
+      },
+      {%- endif -%}
+      {%- if show_nav -%}
+      navigation: {
+        nextEl: '.{{ section.id }} .index-blog-next',
+        prevEl: '.{{ section.id }} .index-blog-prev',
+      },
+      {%- endif -%}
+      {%- if se_stts.autoplay -%}
+      autoplay: {
+        delay: {{ se_stts.autoplay_speed | times: 1000 }},
+        pauseOnMouseEnter: true,
+        disableOnInteraction: false,
+      },
+      {%- endif -%}
+       breakpointsBase: 'container',
+       breakpoints: { 
+         0: {
+           slidesPerView: 2,
+           spaceBetween: 8
+         },
+         768: {
+           slidesPerView: 3,
+           spaceBetween: 8
+         },
+         1025: {
+           slidesPerView: 3,
+           spaceBetween: 25
+         }
+       },
+    })
+}, '.{{ section.id }}');
+</script>
+{% schema %}
+  {
+    "name": "index-blog",
+    "class": "shopify-index-blog",
+    "tag": "section",
+    "settings": [
+      {"type": "blog","id": "blog","label": "+ Blog"},
+      {"type": "range","id": "blog_number","label": "blog number","min": 1,"max": 50,"step": 1,"default": 20},
+
+      {"type": "header","content": "Image style"},
+      {"type": "select","id": "image_ratio","label": "Image ratio","default": "landscape",
+        "options": [
+          {"value": "landscape","label": "Landscape (横长方形)"},
+          {"value": "portrait","label": "Portrait (竖长方形)"},
+          {"value": "square","label": "Square (正方形)"}
+        ]
+      },
+      {"type": "select","id": "title_align","label": "Title align","default": "left",
+        "options": [
+          {"value": "left","label": "Left"},
+          {"value": "center","label": "Center"},
+          {"value": "right","label": "Right"}
+        ]
+      },
+
+      {"type": "select","id": "layout","label": "layout","default":"lgs-container",
+        "options": [
+          {"label":"lgs-container","value": "lgs-container"},
+          {"label":"wrapped container","value": "wrapped-container"},
+          {"label":"custom container","value": "custom-container"},
+        ]
+      },
+      {"type": "text","id": "custom_container","label": "custom container","default": "1200px"},
+
+      {"type": "header","content": "Swiper controls"},
+      {"type": "checkbox","id": "show_pagination_pc","label": "Show pagination (PC)","default": false},
+      {"type": "checkbox","id": "show_navigation_pc","label": "Show navigation arrows (PC)","default": true},
+      {"type": "checkbox","id": "show_pagination_mb","label": "Show pagination (Mobile)","default": false},
+      {"type": "checkbox","id": "show_navigation_mb","label": "Show navigation arrows (Mobile)","default": true},
+      {"type": "select","id": "media_align_mb","label": "Controls align (Mobile)","default": "between",
+        "options": [
+          {"value": "start","label": "Left"},
+          {"value": "center","label": "Center"},
+          {"value": "end","label": "Right"},
+          {"value": "between","label": "Space between"}
+        ]
+      },
+      {"type": "checkbox","id": "autoplay","label": "Autoplay","default": false},
+      {"type": "range","id": "autoplay_speed","label": "Autoplay speed","min": 2,"max": 10,"step": 1,"unit": "s","default": 4,
+        "visible_if": "{{ section.settings.autoplay }}"
+      },
+
+      {"type": "header","content": "Colors"},
+      {"type": "color_scheme","id": "color_scheme","label": "t:settings.color_scheme","default": "scheme-1","info": "Navigation arrows. Article title color comes from Title typography below. Section heading uses Headings / Sub heading when set; otherwise Config Header"},
+
+      {"type": "header","content": "Title typography"},
+      {
+        "type": "select",
+        "id": "title_type_preset",
+        "label": "t:settings.preset",
+        "options": [
+          {"value": "rte","label": "t:options.default"},
+          {"value": "paragraph","label": "t:options.paragraph"},
+          {"value": "h1","label": "t:options.h1"},
+          {"value": "h2","label": "t:options.h2"},
+          {"value": "h3","label": "t:options.h3"},
+          {"value": "h4","label": "t:options.h4"},
+          {"value": "h5","label": "t:options.h5"},
+          {"value": "h6","label": "t:options.h6"},
+          {"value": "custom","label": "t:options.custom"}
+        ],
+        "default": "h5",
+        "info": "t:info.edit_presets_in_theme_settings"
+      },
+      {
+        "type": "select",
+        "id": "title_font",
+        "label": "t:settings.font",
+        "options": [
+          {"value": "var(--font-body--family)","label": "t:options.body"},
+          {"value": "var(--font-subheading--family)","label": "t:options.subheading"},
+          {"value": "var(--font-heading--family)","label": "t:options.heading"},
+          {"value": "var(--font-accent--family)","label": "t:options.accent"}
+        ],
+        "default": "var(--font-heading--family)",
+        "visible_if": "{{ section.settings.title_type_preset == 'custom' }}"
+      },
+      {
+        "type": "select",
+        "id": "title_font_size",
+        "label": "t:settings.size",
+        "options": [
+          {"value": "","label": "t:options.default"},
+          {"value": "0.625rem","label": "10px"},
+          {"value": "0.75rem","label": "12px"},
+          {"value": "0.875rem","label": "14px"},
+          {"value": "1rem","label": "16px"},
+          {"value": "1.125rem","label": "18px"},
+          {"value": "1.25rem","label": "20px"},
+          {"value": "1.5rem","label": "24px"},
+          {"value": "2rem","label": "32px"},
+          {"value": "2.5rem","label": "40px"},
+          {"value": "3rem","label": "48px"},
+          {"value": "3.5rem","label": "56px"},
+          {"value": "4.5rem","label": "72px"},
+          {"value": "5.5rem","label": "88px"},
+          {"value": "7.5rem","label": "120px"},
+          {"value": "9.5rem","label": "152px"},
+          {"value": "11.5rem","label": "184px"}
+        ],
+        "default": "1.25rem",
+        "visible_if": "{{ section.settings.title_type_preset == 'custom' }}"
+      },
+      {
+        "type": "select",
+        "id": "title_weight",
+        "label": "t:settings.font_weight",
+        "options": [
+          {"value": "","label": "t:options.default"},
+          {"value": "300","label": "300"},
+          {"value": "400","label": "400"},
+          {"value": "500","label": "500"},
+          {"value": "600","label": "600"},
+          {"value": "700","label": "700"}
+        ],
+        "default": "",
+        "visible_if": "{{ section.settings.title_type_preset == 'custom' }}"
+      },
+      {
+        "type": "select",
+        "id": "title_line_height",
+        "label": "t:settings.line_height",
+        "options": [
+          {"value": "tight","label": "t:options.tight"},
+          {"value": "normal","label": "t:options.normal"},
+          {"value": "loose","label": "t:options.loose"}
+        ],
+        "default": "normal",
+        "visible_if": "{{ section.settings.title_type_preset == 'custom' }}"
+      },
+      {
+        "type": "select",
+        "id": "title_letter_spacing",
+        "label": "t:settings.letter_spacing",
+        "options": [
+          {"value": "tight","label": "t:options.tight"},
+          {"value": "normal","label": "t:options.normal"},
+          {"value": "loose","label": "t:options.loose"}
+        ],
+        "default": "normal",
+        "visible_if": "{{ section.settings.title_type_preset == 'custom' }}"
+      },
+      {
+        "type": "select",
+        "id": "title_case",
+        "label": "t:settings.case",
+        "options": [
+          {"value": "none","label": "t:options.default"},
+          {"value": "uppercase","label": "t:options.uppercase"}
+        ],
+        "default": "none",
+        "visible_if": "{{ section.settings.title_type_preset == 'custom' }}"
+      },
+      {
+        "type": "select",
+        "id": "title_wrap",
+        "label": "t:settings.wrap",
+        "options": [
+          {"value": "pretty","label": "t:options.pretty"},
+          {"value": "balance","label": "t:options.balance"},
+          {"value": "nowrap","label": "t:options.none"}
+        ],
+        "visible_if": "{{ section.settings.title_type_preset == 'custom' }}"
+      },
+      {
+        "type": "select",
+        "id": "title_color",
+        "label": "t:settings.color",
+        "options": [
+          {"value": "var(--color-foreground)","label": "t:options.text"},
+          {"value": "var(--color-foreground-heading)","label": "t:options.heading"},
+          {"value": "var(--color-primary)","label": "t:options.link"}
+        ],
+        "default": "var(--color-foreground-heading)",
+        "visible_if": "{{ section.settings.title_type_preset != 'rte' }}"
+      },
+
+      {"type": "header","content": "1. Heading options"},
+      {"type": "select","id": "design_heading","label": "+ Design heading","default": "1",
+          "options": [
+              {"value": "1","label": "Design 01"},
+              {"value": "2","label": "Design 02"},
+              {"value": "3","label": "Design 03"},
+              {"value": "4","label": "Design 04"},
+              {"value": "5","label": "Design 05"},
+              {"value": "6","label": "Design 06 (width line-awesome)"},
+              {"value": "7","label": "Design 07"},
+              {"value": "8","label": "Design 08"},
+              {"value": "9","label": "Design 09"},
+              {"value": "10","label": "Design 10"},
+              {"value": "11","label": "Design 11"},
+              {"value": "12","label": "Design 12"},
+              {"value": "13","label": "Design 13"},
+              {"value": "14","label": "Design 14"},
+              {"value": "15","label": "Design 15"},
+              {"value": "16","label": "Design 16"}
+          ]
+      },
+      {"type": "select","id": "heading_align","label": "+ Heading align","default": "lgs-text-center",
+        "options": [
+            {"value": "lgs-text-start","label": "Left"},
+            {"value": "lgs-text-center","label": "Center"},
+            {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+      {"type": "html","id": "top_heading","label": "+ Heading","default": "index-blog heading"},
+      {"type": "text","id": "icon_heading","label": "Enter a icon name on heading","info": "Only used for design 6 [LineAwesome]()","default": "las la-gem"},
+      {"type": "textarea","id": "top_subheading","label": "+ Subheading"},
+      {"type": "number","id": "tophead_mb","label": "+ Space bottom (px)","info": "The vertical spacing between heading and content","default": 30},
+
+
+      {"type":"color","id":"cl_bg","label":"bg_color","default":"#ffffff"},
+      {"type": "color_background","id": "cl_bg_gradient","label": "Background gradient"},
+
+      {"type": "header","content": "+ Design pc options"},
+      {"type": "text","id": "mg","label": "Margin","info":"Margin top, margin right, margin bottom, margin left. If you not use to blank","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd","label": "Padding","info":"Padding top, padding right, padding bottom, padding left. If you not use to blank","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design Tablet Options"},
+      {"type": "text","id": "mg_tb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_tb","label": "Padding","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design mobile options"},
+      {"type": "text","id": "mg_mb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_mb","label": "Padding","default": "0px,0px,0px,0px"},
+    ],
+    "presets":[
+      {
+        "name":"Index Blog",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

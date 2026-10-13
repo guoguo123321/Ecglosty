@@ -1,0 +1,103 @@
+{%- comment -%}
+  Idempotent Swiper loader. Safe to render from many sections.
+  @param {boolean} [critical] - if true, load CSS render-blocking (above-fold carousels)
+{%- endcomment -%}
+{%- if critical -%}
+  {{ 'swiper.css' | asset_url | stylesheet_tag }}
+{%- else -%}
+  <link
+    rel="stylesheet"
+    href="{{ 'swiper.css' | asset_url }}"
+    media="print"
+    onload="this.media='all'"
+  >
+  <noscript>{{ 'swiper.css' | asset_url | stylesheet_tag }}</noscript>
+{%- endif -%}
+<script>
+  (function () {
+    if (window.themeSwiperReady) return;
+
+    var callbacks = [];
+    var loading = false;
+
+    function flush() {
+      if (!window.Swiper) return;
+      var queue = callbacks.slice();
+      callbacks.length = 0;
+      for (var i = 0; i < queue.length; i++) {
+        try {
+          queue[i]();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    function ensureScript() {
+      if (window.Swiper) {
+        flush();
+        return;
+      }
+      if (loading) return;
+      loading = true;
+      var existing = document.getElementById('theme-swiper-js');
+      if (existing) {
+        existing.addEventListener('load', flush);
+        return;
+      }
+      var s = document.createElement('script');
+      s.id = 'theme-swiper-js';
+      s.src = {{ 'swiper.js' | asset_url | json }};
+      s.defer = true;
+      s.addEventListener('load', flush);
+      document.head.appendChild(s);
+    }
+
+    /**
+     * @param {Function} cb
+     * @param {Element|string} [whenVisible] - optional element/selector; wait until near viewport
+     */
+    window.themeSwiperReady = function (cb, whenVisible) {
+      if (typeof cb !== 'function') return;
+
+      var run = function () {
+        if (window.Swiper) {
+          cb();
+          return;
+        }
+        callbacks.push(cb);
+        ensureScript();
+      };
+
+      if (!whenVisible) {
+        run();
+        return;
+      }
+
+      var el =
+        typeof whenVisible === 'string' ? document.querySelector(whenVisible) : whenVisible;
+      if (!el || !('IntersectionObserver' in window)) {
+        run();
+        return;
+      }
+
+      var io = new IntersectionObserver(
+        function (entries) {
+          for (var i = 0; i < entries.length; i++) {
+            if (entries[i].isIntersecting) {
+              io.disconnect();
+              run();
+              break;
+            }
+          }
+        },
+        { rootMargin: '200px 0px' }
+      );
+      io.observe(el);
+    };
+
+    {% if critical %}
+    ensureScript();
+    {% endif %}
+  })();
+</script>

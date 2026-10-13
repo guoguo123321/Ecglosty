@@ -1,0 +1,494 @@
+{% liquid
+  assign se_stts = section.settings
+  assign set_blo = section.blocks
+  assign stt_layout = se_stts.layout
+  if stt_layout == 'lgs-container'
+    assign html_layout = '<div class="lgs-container">__</div>' | split: '__'
+  elsif stt_layout == 'custom-container'
+    assign html_layout = '<div class="custom-container">__</div>' | split: '__'
+  else
+    assign html_layout = '__' | split: '__'
+  endif
+  assign cols = set_blo | where:"type","col"
+  assign item = set_blo | where:"type","item"
+
+  assign index1 = 0
+  assign index2 = 1
+%}
+{%- if se_stts.layout == 'custom-container' %}
+<style>
+  .{{ section.id }} .custom-container{
+    max-width:{{ se_stts.custom_container }};
+    margin: 0 auto;
+  }
+</style>
+{%- endif -%}
+<div class="new-footer-box lgs-section-inner {{ section.id }}" {% render 'section_style', se_stts: se_stts -%}>
+  {{- html_layout[0] -}}
+  {%- render 'section_tophead', se_stts: se_stts -%}
+  <div class="new-footer-container">
+    {% for col in cols offset:index1 %}
+      {%- assign index1 = index1 | plus: 1 -%}
+       <div class="{{ col.id }} new-footer-box" style="max-width:{{ col.settings.max_width }}">
+        {% for block in section.blocks offset:index2 %}
+          {%- assign index2 = index2 | plus: 1 -%}
+          {% assign blo_setts = block.settings %}
+          {% if block.type != 'col' %}
+          {% case block.type %}
+            {% when "image" %}
+              <div class="new-footer-img" style="--image_mgb:{{ blo_setts.mgb }};--image_mgb_mb:{{ blo_setts.mgb_mb }};">
+                {% if blo_setts.image != blank %}
+                  <img src="{{ blo_setts.image | image_url }}" width="{{ blo_setts.image.width }}" height="{{ blo_setts.image.height }}">
+                {%- else -%}
+                  {{ 'blog-apparel-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff' }}
+                {% endif %}
+              </div>
+            {% when "email-signup" %}
+              {%- form 'customer', class: 'email-signup__form spacing-style' %}
+                <div class="email-signup__input-group">
+                  <label
+                    for="EmailInput-{{ block.id }}"
+                    class="visually-hidden"
+                  >
+                    {{ 'blocks.email_signup.label' | t }}
+                  </label>
+                  <input
+                    id="EmailInput-{{ block.id }}"
+                    class="email-signup__input"
+                    type="email"
+                    name="contact[email]"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    autocomplete="email"
+                    placeholder="{{ 'blocks.email_signup.placeholder' | t }}"
+                    required
+                    {% if form.errors and form.id == blank %}
+                      autofocus
+                      aria-invalid="true"
+                      aria-describedby="Email-signup__message-error-{{ block.id }}"
+                    {% elsif form.posted_successfully? and form.id == blank %}
+                      aria-describedby="Email-signup__message-success-{{ block.id }}"
+                    {% endif %}
+                  >
+                  <button class="email-signup__button">{{ 'blocks.email_signup.submit' | t }}</button>
+                </div>
+
+                {%- if form.errors and form.id == blank -%}
+                  <div
+                    id="Email-signup__message-error-{{ block.id }}"
+                    class="email-signup__message"
+                    tabindex="-1"
+                  >
+                    <svg
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                      focusable="false"
+                      aria-hidden="true"
+                      class="icon-error"
+                    >
+                      {%- render 'icon', icon: 'error'  -%}
+                    </svg>
+                    {{- form.errors.translated_fields.email | capitalize }}
+                    {{ form.errors.messages.email -}}
+                  </div>
+                {%- endif -%}
+
+                {%- if form.posted_successfully? and form.id == blank -%}
+                  <div
+                    id="Email-signup__message-success-{{ block.id }}"
+                    class="email-signup__message"
+                    tabindex="-1"
+                  >
+                    <span class="svg-wrapper icon-success">
+                      {{ 'icon-checkmark.svg' | inline_asset_content }}
+                    </span>
+                    <p class="email-signup__message-text">{{ 'blocks.email_signup.success' | t }}</p>
+                  </div>
+                {%- endif -%}
+              {% endform %}
+            {%- when 'link' -%}
+              {%- liquid 
+                  assign llists = linklists[blo_setts.menu].links
+              -%}
+              <div id="bk_{{ block.id }}" class="nf-link" {{ block.shopify_attributes }}>
+                <div class="nf-link-header">{{ blo_setts.tt_hd }}</div>
+                <ul class="nf-link-ul">
+                  {%- for link in llists -%}
+                    <li class="nf-link-li">
+                      <a href="{{ link.url }}">{{ link.title }}</a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {% when "social-links" %}
+              <div class="social-icons__wrapper">
+                {% liquid
+                  assign social_links = 'facebook_url,instagram_url,youtube_url,tiktok_url,twitter_url,threads_url,linkedin_url,bluesky_url,snapchat_url,pinterest_url,tumblr_url,vimeo_url,custom_url' | split: ','
+                %}
+
+                {% for link_key in social_links %}
+                  {% liquid
+                    assign link_url = blo_setts[link_key]
+                    assign render_icon = true
+
+                    if link_url != blank
+                      # Map setting names to platform names for display and icon purposes
+                      case link_key
+                        when 'facebook_url'
+                          assign platform = 'facebook'
+                        when 'instagram_url'
+                          assign platform = 'instagram'
+                        when 'youtube_url'
+                          assign platform = 'youtube'
+                        when 'tiktok_url'
+                          assign platform = 'tiktok'
+                        when 'twitter_url'
+                          assign platform = 'twitter'
+                        when 'threads_url'
+                          assign platform = 'threads'
+                        when 'linkedin_url'
+                          assign platform = 'linkedin'
+                        when 'bluesky_url'
+                          assign platform = 'bluesky'
+                        when 'snapchat_url'
+                          assign platform = 'snapchat'
+                        when 'pinterest_url'
+                          assign platform = 'pinterest'
+                        when 'tumblr_url'
+                          assign platform = 'tumblr'
+                        when 'vimeo_url'
+                          assign platform = 'vimeo'
+                        when 'custom_url'
+                          # For custom URLs, extract domain from URL for platform identification
+                          assign platform = link_url | split: '//' | last | remove: 'www.' | split: '.' | first
+                          # Special handling for specific platforms
+                          case platform
+                            when 'x'
+                              assign platform = 'twitter'
+                            else
+                              assign render_icon = false
+                          endcase
+                      endcase
+
+                      # Check if URL has a profile path (more than just the domain)
+                      assign url_parts = link_url | split: '//' | last | split: '/'
+                      assign has_profile = false
+
+                      if url_parts.size > 1 and url_parts[1] != ''
+                        assign has_profile = true
+                      endif
+
+                      unless render_icon
+                        assign has_profile = true
+                      endunless
+                    endif
+                  %}
+
+                  {% comment %}
+                    Only render the social icon if:
+                    1. In editor mode (always show, but may be disabled)
+                    2. On storefront AND has a valid profile link
+                  {% endcomment %}
+                  {% if link_url != blank %}
+                    {% if request.design_mode or has_profile %}
+                      <div
+                        class="social-icons__icon-wrapper{% unless has_profile %} social-icons__icon-wrapper--disabled{% endunless %}"
+                      >
+                        <a
+                          href="{{ link_url }}"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="social-icons-link"
+                          aria-label="{{ platform | capitalize }}"
+                          {% unless has_profile %}
+                            {% if request.design_mode %}
+                              onclick="return false;"
+                              aria-disabled="true"
+                            {% endif %}
+                          {% endunless %}
+                        >
+                          <span class="social-icons__icon-label">{{ platform | capitalize }}</span>
+                          {% if render_icon %}
+                            {%- render 'footer-social-icon', icon: platform -%}
+                          {% endif %}
+                        </a>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% when "custom_text" %}
+              <{{ blo_setts.tag }} hdt-reveal="slide-in" data-lh="{{ blo_setts.text_lh_mb }}" data-lh-md="{{ blo_setts.text_lh }}" data-lh-lg="{{ blo_setts.text_lh }}" class="new-footer-text lgs-animation-{{ blo_setts.animation }} lgs-text-bl lgs-fnt-fm-{{ blo_setts.fontf }} lgs-font-italic-{{ blo_setts.font_italic }} lgs-hidden-mobile-{{ blo_setts.hidden_mobile }} lgs-br-mb-{{ blo_setts.remove_br_tag }} lgs-text-shadow-{{ blo_setts.text_shadow }}" id="b_{{ block.id }}" {%- render 'bk_cus_style', type: 'custom_text', bk_stts: blo_setts, ani_delay: ani_delay -%}>{{ blo_setts.text }}</{{ blo_setts.tag }}>
+      
+          {% endcase %}
+          {% else %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+       </div>
+    {% endfor %}
+  </div>
+  {{- html_layout[1] -}}
+</div>
+{% schema %}
+  {
+    "name": "new-footer",
+    "class": "shopify-new-footer",
+    "tag": "section",
+    "settings": [
+      {"type": "select","id": "layout","label": "layout","default":"lgs-container",
+        "options": [
+          {"label":"lgs-container","value": "lgs-container"},
+          {"label":"wrapped container","value": "wrapped-container"},
+          {"label":"custom container","value": "custom-container"},
+        ]
+      },
+      {"type": "text","id": "custom_container","label": "custom container","default": "1200px"},
+
+      {"type": "header","content": "1. Heading options"},
+      {"type": "select","id": "design_heading","label": "+ Design heading","default": "1",
+          "options": [
+              {"value": "1","label": "Design 01"},
+              {"value": "2","label": "Design 02"},
+              {"value": "3","label": "Design 03"},
+              {"value": "4","label": "Design 04"},
+              {"value": "5","label": "Design 05"},
+              {"value": "6","label": "Design 06 (width line-awesome)"},
+              {"value": "7","label": "Design 07"},
+              {"value": "8","label": "Design 08"},
+              {"value": "9","label": "Design 09"},
+              {"value": "10","label": "Design 10"},
+              {"value": "11","label": "Design 11"},
+              {"value": "12","label": "Design 12"},
+              {"value": "13","label": "Design 13"},
+              {"value": "14","label": "Design 14"},
+              {"value": "15","label": "Design 15"},
+              {"value": "16","label": "Design 16"}
+          ]
+      },
+      {"type": "select","id": "heading_align","label": "+ Heading align","default": "lgs-text-center",
+        "options": [
+            {"value": "lgs-text-start","label": "Left"},
+            {"value": "lgs-text-center","label": "Center"},
+            {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+      {"type": "html","id": "top_heading","label": "+ Heading","default": "index-text heading"},
+      {"type": "text","id": "icon_heading","label": "Enter a icon name on heading","info": "Only used for design 6 [LineAwesome]()","default": "las la-gem"},
+      {"type": "textarea","id": "top_subheading","label": "+ Subheading"},
+      {"type": "number","id": "tophead_mb","label": "+ Space bottom (px)","info": "The vertical spacing between heading and content","default": 30},
+
+
+      {"type":"color","id":"cl_bg","label":"bg_color","default":"#ffffff"},
+      {"type": "color_background","id": "cl_bg_gradient","label": "Background gradient"},
+
+      {"type": "header","content": "+ Design pc options"},
+      {"type": "text","id": "mg","label": "Margin","info":"Margin top, margin right, margin bottom, margin left. If you not use to blank","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd","label": "Padding","info":"Padding top, padding right, padding bottom, padding left. If you not use to blank","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design Tablet Options"},
+      {"type": "text","id": "mg_tb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_tb","label": "Padding","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design mobile options"},
+      {"type": "text","id": "mg_mb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_mb","label": "Padding","default": "0px,0px,0px,0px"},
+    ],
+    "enabled_on": {
+      "groups": ["footer"]
+    },
+    "blocks":[
+      {
+        "type":"col",
+        "name":"col",
+        "settings":[
+          {"type": "text","id": "max_width","label": "max-width"},
+        ]
+      },
+      {
+        "type": "image",
+        "name": "Image (Child)",
+        "settings": [
+          {"type": "image_picker","id": "image","label": "Image (Child)"},
+          {"type": "text","id": "mgb","label": "Margin bottom (Unit: px)","default": "0"}, 
+          {"type": "text","id": "mgb_mb","label": "Margin bottom on mobile(Unit: px)","default": "0"},
+        ]
+      },
+      {
+        "type": "email-signup",
+        "name": "Email",
+        "settings": [
+        ]
+      },
+      {
+        "type": "social-links",
+        "name": "social",
+        "settings": [
+          {
+            "type": "url",
+            "id": "facebook_url",
+            "label": "t:options.facebook"
+          },
+          {
+            "type": "url",
+            "id": "instagram_url",
+            "label": "t:options.instagram"
+          },
+          {
+            "type": "url",
+            "id": "youtube_url",
+            "label": "t:options.youtube"
+          },
+          {
+            "type": "url",
+            "id": "tiktok_url",
+            "label": "t:options.tiktok"
+          },
+          {
+            "type": "url",
+            "id": "twitter_url",
+            "label": "t:options.twitter"
+          },
+          {
+            "type": "url",
+            "id": "threads_url",
+            "label": "t:options.threads"
+          },
+          {
+            "type": "url",
+            "id": "linkedin_url",
+            "label": "t:options.linkedin"
+          },
+          {
+            "type": "url",
+            "id": "bluesky_url",
+            "label": "t:options.bluesky"
+          },
+          {
+            "type": "url",
+            "id": "snapchat_url",
+            "label": "t:options.snapchat"
+          },
+          {
+            "type": "url",
+            "id": "pinterest_url",
+            "label": "t:options.pinterest"
+          },
+          {
+            "type": "url",
+            "id": "tumblr_url",
+            "label": "t:options.tumblr"
+          },
+          {
+            "type": "url",
+            "id": "vimeo_url",
+            "label": "t:options.vimeo"
+          },
+          {
+            "type": "url",
+            "id": "custom_url",
+            "label": "t:settings.custom_link"
+          }
+        ]
+      },
+      {
+        "type": "link",
+        "name": "Linklist (child)",
+        "settings": [
+          {"type": "text","id": "tt_hd","label": "Heading","default": "Heading"},
+          {"type": "link_list","id": "menu","label": "Add menu"},
+        ]
+      },
+      {
+        "type": "custom_text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "textarea",
+            "id": "text",
+            "label": "Input text",
+            "default": "Text",
+            "info": "If you want to line break, please add a <br> tag in the text"
+          },
+          {
+            "type": "checkbox",
+            "id": "remove_br_tag",
+            "label": "Remove <br> tag on mobile",
+            "default": false
+          },
+          {
+            "type": "select",
+            "id": "tag",
+            "label": "Html tag",
+            "default": "p",
+            "options": [
+              {
+                "value": "h2",
+                "label": "H2"
+              },
+              {
+                "value": "h3",
+                "label": "H3"
+              },
+              {
+                "value": "h4",
+                "label": "H4"
+              },
+              {
+                "value": "h5",
+                "label": "H5"
+              }, {
+                "value": "h6",
+                "label": "H6"
+              }, {
+                "value": "p",
+                "label": "P"
+              }, {
+                "value": "div",
+                "label": "DIV"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "fontf",
+            "default": "inherit",
+            "label": "Font family",
+            "options": [
+              {
+                "label": "Inherit",
+                "value": "inherit"
+              }, {
+                "label": "Font family #1(EB_Garamond)",
+                "value": "1"
+              }, {
+                "label": "Font family #2(Montserrat thin)",
+                "value": "2"
+              }
+            ]
+          },
+          {"type": "color","id": "text_cl","label": "Color text","default": "#fff"}, 
+          {"type": "range","id": "text_fs","label": "Font size","max": 100,"min": 10,"step": 1,"unit": "px","default": 16},
+          {"type": "range","id": "text_lh","label": "Line height","max": 100,"min": 0,"step": 1,"default": 0,"unit": "px","info": "Set is '0' use to default"},
+          {"type": "range","id": "text_fw","label": "Font weight","min": 100,"max": 900,"step": 100,"default": 400},
+          {"type": "number","id": "text_ls","label": "Letter spacing (in pixel)"},
+          {"type": "number","id": "text_mgb","label": "Margin bottom","default": 15},
+          {"type": "checkbox","id": "font_italic","label": "Enable font style italic","default": false},
+          {"type": "checkbox","id": "text_shadow","label": "Enable text shadow","default": false},
+          {"type": "header","content": "===== Option mobile ====="},
+          {"type": "checkbox","id": "hidden_mobile","label": "Hidden on mobile","default": false},
+          {"type": "range","id": "text_fs_mb","label": "Font size (Mobile)","max": 60,"min": 10,"step": 1,"unit": "px","default": 16},
+          {"type": "range","id": "text_lh_mb","label": "Line height (Mobile)","max": 70,"min": 0,"step": 1,"default": 0,"unit": "px","info": "Set is '0' use to default"},
+          {"type": "number","id": "text_ls_mb","label": "Letter spacing (Mobile)"},
+          {"type": "number","id": "text_mgb_mobile","label": "Margin bottom (Mobile)","default": 10},
+        ]
+      },
+    ],
+    "presets":[
+      {
+        "name":"new-footer",
+        "category": "t:categories.lg"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,599 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "lg_section_NKNYVV": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_pAn7pt": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 40,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "20px,0px,20px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "20px,0px,20px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "20px,0px,20px,0px"
+          },
+          "blocks": {
+            "brc_nav_M3aBEq": {
+              "type": "_brc-nav",
+              "name": "breadcrumbs",
+              "settings": {},
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "brc_nav_M3aBEq"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_pAn7pt"
+      ],
+      "name": "Breadcrumbs",
+      "settings": {}
+    },
+    "section_NwwmHy": {
+      "type": "section",
+      "blocks": {
+        "text_GfACQA": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<p>Design Your Own Lab Grown Diamond Engagement Ring</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h3",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_ELCFr8": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>Select a setting and your dream center stone to create a one-of-a-kind lab grown diamond ring.</p>",
+            "width": "100%",
+            "max_width": "none",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_GfACQA",
+        "text_ELCFr8"
+      ],
+      "name": "t:names.rich_text_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "custom-width",
+        "custom_page_width": "1200px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 12
+      }
+    },
+    "collection_step_tzcFRW": {
+      "type": "collection-step",
+      "name": "Collection Step",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "box_align": "lgs-text-center",
+        "color_scheme": "",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 30,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,0px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,0px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,0px,0px",
+        "design_title": "Design Your Ring",
+        "step1_title": "Choose Setting",
+        "step1_content": "",
+        "step1_btn": "",
+        "step1_url": "",
+        "step1_image": "shopify://shop_images/setting.svg",
+        "step2_title": "Choose Diamond",
+        "step2_content": "",
+        "step2_btn": "Browse Diamonds",
+        "step2_url": "",
+        "step2_btn2": "",
+        "step2_url2": "",
+        "step2_image": "shopify://shop_images/diamond.svg",
+        "step3_title": "Complete Ring",
+        "step3_content": "Select Ring Size",
+        "step3_btn": "",
+        "step3_url": "",
+        "step3_image": "shopify://shop_images/ring.svg"
+      }
+    },
+    "main": {
+      "type": "collection-diamonds-list",
+      "blocks": {
+        "diamond_shape_rQMdeC": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/ecglosty_Round_Diamond.jpg",
+            "shape_name": "Round"
+          }
+        },
+        "diamond_shape_fPFetr": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/ecglosty_Oval_Diamond.webp",
+            "shape_name": "Oval"
+          }
+        },
+        "diamond_shape_prRNRL": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/ecglosty_cushion_diamond.jpg",
+            "shape_name": "Cushion"
+          }
+        },
+        "diamond_shape_7HXkHE": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/ecglosty_Pear-Shaped_Diamond.jpg",
+            "shape_name": "Pear"
+          }
+        },
+        "diamond_shape_HWjx4w": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/ecglosty_Princess_Diamond.webp",
+            "shape_name": "Princess"
+          }
+        },
+        "diamond_shape_Ck9jKB": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/ecglosty_Emerald_Diamond.jpg",
+            "shape_name": "Emerald"
+          }
+        },
+        "diamond_shape_kepfFC": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/ecglosty_Marquise_Diamond.png",
+            "shape_name": "Marquise"
+          }
+        },
+        "diamond_shape_byXxtm": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/ecglosty_Asscher_Diamond.jpg",
+            "shape_name": "Asscher"
+          }
+        },
+        "diamond_shape_94ict4": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/ecglosty_Radiant_Diamond.webp",
+            "shape_name": "Radiant"
+          }
+        },
+        "diamond_shape_bAhCn7": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/ecglostyheartdiamond.png",
+            "shape_name": "Heart"
+          }
+        }
+      },
+      "block_order": [
+        "diamond_shape_rQMdeC",
+        "diamond_shape_fPFetr",
+        "diamond_shape_prRNRL",
+        "diamond_shape_7HXkHE",
+        "diamond_shape_HWjx4w",
+        "diamond_shape_Ck9jKB",
+        "diamond_shape_kepfFC",
+        "diamond_shape_byXxtm",
+        "diamond_shape_94ict4",
+        "diamond_shape_bAhCn7"
+      ],
+      "settings": {
+        "api_endpoint": "https://api.ecglosty.com/20204/store/product/diamond/list",
+        "page_size": 50,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "lg_section_4GnnBA": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_WXDALq": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Oval Engagement Rings",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 40,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "90px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "50px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "30px,0px,30px,0px"
+          },
+          "blocks": {
+            "text_TdiK86": {
+              "type": "_text",
+              "name": "text",
+              "settings": {
+                "textarea_or_richtext": "textarea",
+                "text": "Oval cut engagement rings have become increasingly popular for their stunning beauty and unique style. The elongated shape of an oval diamond creates an elegant and sophisticated look that stands out from traditional round brilliant cuts. Oval engagement rings are perfect for those seeking a timeless yet distinctive design that will be cherished for a lifetime.",
+                "rich_text": "<p>Text</p>",
+                "text_url": "",
+                "open_link": "_blank",
+                "remove_br_tag": false,
+                "tag": "div",
+                "fontf": "inherit",
+                "text_cl": "#282828",
+                "text_fs": 16,
+                "text_lh": 22,
+                "text_fw": 400,
+                "text_mgb": 16,
+                "font_italic": false,
+                "text_shadow": false,
+                "hidden_mobile": false,
+                "text_fs_mb": 14,
+                "text_lh_mb": 20,
+                "text_mgb_mobile": 8
+              },
+              "blocks": {}
+            },
+            "text_A9aHTB": {
+              "type": "_text",
+              "name": "text",
+              "settings": {
+                "textarea_or_richtext": "textarea",
+                "text": "als the scintillation of a round diamond. This breathtaking display of light is achieved through the oval's 58 facets, which are precisely arranged to maximize the stone's radiance from every angle.",
+                "rich_text": "<p>Text</p>",
+                "text_url": "",
+                "open_link": "_blank",
+                "remove_br_tag": false,
+                "tag": "div",
+                "fontf": "inherit",
+                "text_cl": "#282828",
+                "text_fs": 16,
+                "text_lh": 22,
+                "text_fw": 400,
+                "text_mgb": 16,
+                "font_italic": false,
+                "text_shadow": false,
+                "hidden_mobile": false,
+                "text_fs_mb": 14,
+                "text_lh_mb": 20,
+                "text_mgb_mobile": 8
+              },
+              "blocks": {}
+            },
+            "text_zJVWrX": {
+              "type": "_text",
+              "name": "text",
+              "settings": {
+                "textarea_or_richtext": "textarea",
+                "text": "Another advantage of oval diamond engagement rings is their versatile style. The elongated shape of the oval cut is flattering on any finger, creating the illusion of length and slenderness. This makes oval engagement rings an excellent choice for those with shorter fingers or wider hands. Additionally, oval diamonds have a larger surface area than round diamonds of the same carat weight, giving the impression of a more substantial stone.",
+                "rich_text": "<p>Text</p>",
+                "text_url": "",
+                "open_link": "_blank",
+                "remove_br_tag": false,
+                "tag": "div",
+                "fontf": "inherit",
+                "text_cl": "#282828",
+                "text_fs": 16,
+                "text_lh": 22,
+                "text_fw": 400,
+                "text_mgb": 16,
+                "font_italic": false,
+                "text_shadow": false,
+                "hidden_mobile": false,
+                "text_fs_mb": 14,
+                "text_lh_mb": 20,
+                "text_mgb_mobile": 8
+              },
+              "blocks": {}
+            },
+            "text_TNtktE": {
+              "type": "_text",
+              "name": "text",
+              "settings": {
+                "textarea_or_richtext": "textarea",
+                "text": "Our exquisite collection of oval engagement rings features a wide array of designs to suit every taste and budget. From classic solitaire settings that showcase the oval diamond's beauty to intricate halo designs that enhance the stone's brilliance, our oval cut engagement rings are crafted with the utmost attention to detail and quality. Whether you prefer a vintage-inspired style or a sleek, modern aesthetic, you'll find the perfect oval engagement ring to symbolize your eternal love and commitment.",
+                "rich_text": "<p>Text</p>",
+                "text_url": "",
+                "open_link": "_blank",
+                "remove_br_tag": false,
+                "tag": "div",
+                "fontf": "inherit",
+                "text_cl": "#282828",
+                "text_fs": 16,
+                "text_lh": 22,
+                "text_fw": 400,
+                "text_mgb": 0,
+                "font_italic": false,
+                "text_shadow": false,
+                "hidden_mobile": false,
+                "text_fs_mb": 14,
+                "text_lh_mb": 20,
+                "text_mgb_mobile": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_TdiK86",
+            "text_A9aHTB",
+            "text_zJVWrX",
+            "text_TNtktE"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_WXDALq"
+      ],
+      "disabled": true,
+      "name": "Oval Engagement Rings",
+      "settings": {}
+    },
+    "lg_section_BemBX7": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_MTdTB9": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Oval Cut Engagement Rings FAQs",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "faqs_g6YPfW": {
+              "type": "_faqs",
+              "name": "Faqs",
+              "settings": {
+                "faqs": [
+                  "what-is-an-oval-cut-engagement-ring",
+                  "what-should-i-look-for-in-terms-of-length-to-width-ratio-for-oval-diamonds",
+                  "what-is-the-bow-tie-effect-in-oval-diamonds",
+                  "how-do-oval-diamonds-compare-to-other-shapes-in-terms-of-sparkle-and-perceived-size",
+                  "do-oval-diamonds-show-color-or-inclusions-more-easily",
+                  "are-oval-cut-diamonds-more-durable-than-other-shapes"
+                ]
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faqs_g6YPfW"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_MTdTB9"
+      ],
+      "disabled": true,
+      "name": "FAQs",
+      "settings": {}
+    },
+    "category_NRGbYt": {
+      "type": "category",
+      "blocks": {
+        "item_WC97fE": {
+          "type": "item",
+          "settings": {
+            "title": "",
+            "btn_title": "",
+            "btn_link": ""
+          }
+        },
+        "item_MnKYRJ": {
+          "type": "item",
+          "settings": {
+            "title": "Exceptional Designers",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_i4hyPh": {
+          "type": "item",
+          "settings": {
+            "title": "Flawless Lab Diamond",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_pRHkVK": {
+          "type": "item",
+          "settings": {
+            "title": "Eco-Friendly Mission",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_dYFCjM": {
+          "type": "item",
+          "settings": {
+            "title": "Recycled Brilliance",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_xG3wzB": {
+          "type": "item",
+          "settings": {
+            "title": "Recycled Brilliance",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_WC97fE",
+        "item_MnKYRJ",
+        "item_i4hyPh",
+        "item_pRHkVK",
+        "item_dYFCjM",
+        "item_xG3wzB"
+      ],
+      "name": "Category",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "col_dk": "5",
+        "col_tb": "4",
+        "col_mb": "2",
+        "show_pagination_pc": false,
+        "show_navigation_pc": false,
+        "show_pagination_mb": false,
+        "show_navigation_mb": false,
+        "media_align_mb": "between",
+        "color_scheme": "",
+        "title_type_preset": "rte",
+        "title_font": "var(--font-body--family)",
+        "title_font_size": "1rem",
+        "title_weight": "",
+        "title_line_height": "normal",
+        "title_letter_spacing": "normal",
+        "title_case": "none",
+        "title_wrap": "pretty",
+        "title_color": "var(--color-foreground)",
+        "link_type_preset": "rte",
+        "link_font": "var(--font-body--family)",
+        "link_font_size": "0.75rem",
+        "link_weight": "",
+        "link_line_height": "normal",
+        "link_letter_spacing": "normal",
+        "link_case": "none",
+        "link_wrap": "pretty",
+        "link_color": "var(--color-primary)",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "More to Explore",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 60,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,30px,0px"
+      }
+    }
+  },
+  "order": [
+    "lg_section_NKNYVV",
+    "section_NwwmHy",
+    "collection_step_tzcFRW",
+    "main",
+    "lg_section_4GnnBA",
+    "lg_section_BemBX7",
+    "category_NRGbYt"
+  ]
+}

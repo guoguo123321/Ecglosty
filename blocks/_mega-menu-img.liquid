@@ -1,0 +1,27 @@
+{% render 'mega-menu-custom-image',
+  settings: block.settings,
+  shopify_attributes: block.shopify_attributes,
+%}
+
+{% schema %}
+{
+  "name": "image",
+  "tag": null,
+  "settings": [
+    {"type": "image_picker","id": "image","label": "image"},
+
+    {"type": "header","content": "button1"},
+    {"type": "text","id": "title1","label": "title1","default": "title1"},
+    {"type": "url","id": "link1","label": "link1"},
+
+    {"type": "header","content": "button2"},
+    {"type": "text","id": "title2","label": "title2","default": "title2"},
+    {"type": "url","id": "link2","label": "link2"},
+  ],
+  "presets": [
+    {
+      "name": "image"
+    }
+  ]
+}
+{% endschema %}

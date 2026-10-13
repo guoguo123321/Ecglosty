@@ -1,0 +1,44 @@
+{% liquid
+  assign breadcrumb_collection = collection
+
+  if breadcrumb_collection == blank
+    assign path_segments = request.path | split: '/'
+    assign read_collection_handle = false
+
+    for segment in path_segments
+      if read_collection_handle and segment != blank and segment != 'products'
+        assign breadcrumb_collection = collections[segment]
+        break
+      endif
+
+      if segment == 'collections'
+        assign read_collection_handle = true
+      endif
+    endfor
+  endif
+%}
+
+<nav class="lg-breadcrumb">
+  <a href="{{ routes.root_url }}" class="lgs-dib">Home</a>
+
+  {% if breadcrumb_collection != blank %}
+    <span> / </span>
+    <a href="{{ breadcrumb_collection.url }}" class="lgs-dib">{{ breadcrumb_collection.title }}</a>
+  {% endif %}
+
+  {% if product.title != blank %}
+    <span> / </span>
+    <span>{{ product.title }}</span>
+  {% endif %}
+
+  {% if page.title != blank %}
+    <span> / </span>
+    <span>{{ page.title }}</span>
+  {% endif %}
+
+  {% if blog.title != blank %}
+    <span> / </span>
+    <span>{{ blog.title }}</span>
+  {% endif %}
+
+</nav>

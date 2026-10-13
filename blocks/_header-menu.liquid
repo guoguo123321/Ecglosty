@@ -1,0 +1,1310 @@
+
+{%- doc -%}
+  Renders a header menu block.
+
+  @param {string} [variant] - What version of the menu to render. Defaults to header menu.
+  @param {string} [transparent] - Show a transparent menu
+{%- enddoc -%}
+
+{% liquid
+  assign block_settings = block.settings
+%}
+
+{% case variant %}
+  {% when 'mobile' %}
+    {%- comment -%}
+      Do not set data-hydration-key here.
+      Section hydration morphs this subtree and removes Hextom's JS-injected
+      selector from .menu-drawer__utility-links (intermittent empty drawer).
+      Featured drawer content is already hidden on mobile via customMe.css.
+    {%- endcomment -%}
+    <div
+      class="header__drawer"
+      ref="headerDrawerContainer"
+      {{ block.shopify_attributes }}
+    >
+      {% render 'header-drawer',
+        linklist: block_settings.menu,
+        data_header_drawer_type: 'mobile-drawer',
+        block: block,
+        section: section
+      %}
+    </div>
+
+  {% when 'navigation_bar' %}
+    {% if block_settings.navigation_bar == true %}
+      <div
+        class="menu-list menu-list--mobile{% if transparent == blank %} color-{{ block_settings.color_scheme_navigation_bar }}{% endif %}"
+        style="--menu-horizontal-gap: 15px; --mobile-nav-margin: auto;"
+        data-hydration-key="header-menu-mobile-navigation-bar"
+      >
+        <div class="menu-list__scroll-container">
+          <ul
+            class="menu-list__list list-unstyled"
+            role="list"
+          >
+            {% for link in block_settings.menu.links %}
+              <li>
+                <a
+                  href="{{ link.url }}"
+                  id="MenuItem-{{ link.handle }}"
+                  class="menu-list__item"
+                  {% if link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- link.title -}}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+  {% else %}
+    {% liquid
+      assign block_settings = block.settings
+      assign menu_content_type = block_settings.menu_style | default: 'text'
+      assign image_border_radius = block_settings.image_border_radius
+      assign color_scheme_classes = ''
+      assign color_scheme_setting_id = 'color_scheme_' | append: section.settings.menu_row
+      assign current_color_scheme = block_settings.color_scheme
+      assign parent_color_scheme = section.settings[color_scheme_setting_id]
+
+      if parent_color_scheme.id != current_color_scheme.id
+        assign color_scheme_classes = ' color-' | append: current_color_scheme
+      endif
+
+      # Check if header and menu colors match. This is used to apply different padding styles in css
+      if parent_color_scheme.settings.background.rgb == current_color_scheme.settings.background.rgb
+        assign color_scheme_classes = color_scheme_classes | append: ' color-scheme-matches-parent'
+      endif
+
+      if block_settings.menu_style == 'featured_collections'
+        assign ratio = block_settings.featured_collections_aspect_ratio
+      elsif block_settings.menu_style == 'featured_products'
+        assign ratio = block_settings.featured_products_aspect_ratio
+      endif
+
+      assign mega_menu_panel_ids = ''
+      for header_block in section.blocks
+        if header_block.type == '_mega-menu-panel'
+          if mega_menu_panel_ids != ''
+            assign mega_menu_panel_ids = mega_menu_panel_ids | append: ','
+          endif
+          assign mega_menu_panel_ids = mega_menu_panel_ids | append: header_block.id
+        endif
+      endfor
+    %}
+
+    {% capture children %}
+      {% for link in block_settings.menu.links %}
+        {% liquid
+          assign mega_panel = blank
+          assign link_handle = link.handle | downcase
+          assign link_index = forloop.index
+        %}
+
+        {% if mega_menu_panel_ids != blank %}
+          {% assign panel_id_list = mega_menu_panel_ids | split: ',' %}
+          {% for panel_id in panel_id_list %}
+            {% assign panel_id_stripped = panel_id | strip %}
+            {% if panel_id_stripped == blank %}
+              {% continue %}
+            {% endif %}
+            {% assign candidate = section.blocks[panel_id_stripped] %}
+            {% if candidate == blank %}
+              {% for section_block in section.blocks %}
+                {% if section_block.id == panel_id_stripped %}
+                  {% assign candidate = section_block %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+            {% if candidate == blank %}
+              {% continue %}
+            {% endif %}
+            {% capture mega_match_result %}
+              {% render 'mega-menu-panel-matches',
+                panel_title: candidate.settings.menu_title,
+                panel_handle: candidate.settings.menu_handle,
+                panel_index: candidate.settings.menu_item_index,
+                link_title: link.title,
+                link_handle: link_handle,
+                link_index: link_index
+              %}
+            {% endcapture %}
+            {% if mega_match_result contains '1' %}
+              {% assign mega_panel = candidate %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% if mega_panel == blank %}
+          {% for candidate in section.blocks %}
+            {% if candidate.type != '_mega-menu-panel' %}
+              {% continue %}
+            {% endif %}
+            {% capture mega_match_result %}
+              {% render 'mega-menu-panel-matches',
+                panel_title: candidate.settings.menu_title,
+                panel_handle: candidate.settings.menu_handle,
+                panel_index: candidate.settings.menu_item_index,
+                link_title: link.title,
+                link_handle: link_handle,
+                link_index: link_index
+              %}
+            {% endcapture %}
+            {% if mega_match_result contains '1' %}
+              {% assign mega_panel = candidate %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% assign list_id = 'MegaMenuList-' | append: forloop.index %}
+        {% liquid
+          comment
+            超级导航内容由 JS 从 header 面板仓库注入，不在 Liquid 预渲染空子菜单，避免首屏闪白。
+          endcomment
+          assign show_submenu = false
+          if link.links != blank
+            assign show_submenu = true
+          endif
+        %}
+        {% comment %} end 导航 {% endcomment %}
+        <li
+          role="presentation"
+          class="menu-list__list-item"
+          data-nav-index="{{ link_index }}"
+          data-nav-handle="{{ link.handle | escape }}"
+          data-nav-title="{{ link.title | escape }}"
+          {% if mega_panel != blank %}
+            data-mega-js-matched="true"
+            data-mega-await-js="true"
+            data-mega-panel-id="{{ mega_panel.id }}"
+          {% endif %}
+          data-mega-debug-ids="{{ mega_menu_panel_ids }}"
+          data-mega-debug-matched="{% if mega_panel != blank %}yes{% else %}liquid-no{% endif %}"
+          data-mega-debug-note="menu-block-cannot-read-panels-check-header-component"
+          on:focus="/activate"
+          on:blur="/deactivate"
+          on:pointerenter="/activate"
+          on:pointerleave="/deactivate"
+        >
+          <a
+            href="{{ link.url }}"
+            data-skip-node-update="true"
+            class="menu-list__link{% if link.active %} menu-list__link--active{% endif %}"
+            {%- if show_submenu -%}
+              aria-controls="submenu-{{ forloop.index }}"
+              aria-haspopup="true"
+              aria-expanded="false"
+            {%- endif -%}
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
+            ref="menuitem"
+          >
+            <span class="menu-list__link-title">{{- link.title -}}</span>
+          </a>
+          {%- if show_submenu -%}
+            <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
+              <div
+                id="submenu-{{ forloop.index }}"
+                class="menu-list__submenu-inner"
+                style="{% render 'submenu-font-styles', settings: block_settings %}"
+              >
+                <div class="mega-menu section section--full-width-margin section--{{ section.settings.section_width }}">
+                  {% if link.links != blank %}
+                    <div
+                      class="mega-menu__grid"
+                      data-menu-grid-id="{{ list_id }}"
+                    >
+                      {% render 'mega-menu-list',
+                        parent_link: link,
+                        id: list_id,
+                        section: section,
+                        grid_columns_count: 6,
+                        grid_columns_count_tablet: 4,
+                        grid_columns_count_collection_images: 8,
+                        menu_content_type: menu_content_type,
+                        content_aspect_ratio: ratio,
+                        image_border_radius: image_border_radius
+                      %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+          {% comment %} <a
+            href="{{ link.url }}"
+            data-skip-node-update="true"
+            class="menu-list__link{% if link.active %} menu-list__link--active{% endif %}"
+            {%- if link.links != blank -%}
+              aria-controls="submenu-{{ forloop.index }}"
+              aria-haspopup="true"
+              aria-expanded="false"
+            {%- endif -%}
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
+            ref="menuitem"
+          >
+            <span class="menu-list__link-title">{{- link.title -}}</span>
+          </a>
+          {%- if link.links != blank -%}
+            <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
+              <div
+                id="submenu-{{ forloop.index }}"
+                class="menu-list__submenu-inner"
+                style="{% render 'submenu-font-styles', settings: block_settings %}"
+              >
+                {% assign list_id = 'MegaMenuList-' | append: forloop.index %}
+                <div class="mega-menu section section--full-width-margin section--{{ section.settings.section_width }}">
+                  <div
+                    class="mega-menu__grid"
+                    data-menu-grid-id="{{ list_id }}"
+                  >
+                    {% render 'mega-menu-list',
+                      parent_link: link,
+                      id: list_id,
+                      section: section,
+                      grid_columns_count: 6,
+                      grid_columns_count_tablet: 4,
+                      grid_columns_count_collection_images: 8,
+                      menu_content_type: menu_content_type,
+                      content_aspect_ratio: ratio,
+                      image_border_radius: image_border_radius
+                    %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%} {% endcomment %}
+        </li>
+      {% endfor %}
+      <li
+        class="menu-list__list-item"
+        role="presentation"
+        slot="more"
+        on:focus="/activate"
+        on:blur="/deactivate"
+        on:pointerenter="/activate"
+        on:pointerleave="/deactivate"
+      >
+        <button role="listitem" class="menu-list__link button-unstyled">
+          <span class="menu-list__link-title">{{ 'actions.more' | t }}</span>
+        </button>
+      </li>
+    {% endcapture %}
+
+    <header-menu
+      ref="headerMenu"
+      class="header-menu"
+      {{ block.shopify_attributes }}
+    >
+      {% comment %}
+        不设 data-hydration-key：自定义超级导航由 JS 从 panel store 注入。
+        hydration morph 会冲掉注入内容与 data-mega-ready，导致偶发空白，且 /de /fr 等本地化页更不稳定。
+        移动端 drawer / navigation_bar 仍保留各自的 hydration-key。
+      {% endcomment %}
+      <div class="header-menu__inner">
+        <nav
+          class="menu-list"
+          aria-label="{{ 'accessibility.header_navigation_label' | t }}"
+          style="{% render 'menu-font-styles', settings: block_settings, menu_type: 'mega_menu' %}"
+        >
+          {% assign class = 'overflow-menu' | append: color_scheme_classes %}
+          {% comment %}
+            永久禁用 More：任意桌面宽度都展示全部一级导航，避免拉伸时项被藏进 overflow 或只剩 More。
+            窄屏仍由 data-menu-style=drawer 切换汉堡菜单。
+          {% endcomment %}
+          {% render 'overflow-list',
+            class: class,
+            ref: 'overflowMenu',
+            children: children,
+            data-testid: 'header-menu-overflow-list',
+            attributes: 'data-skip-node-update disabled="true"'
+          %}
+        </nav>
+      </div>
+
+      <script
+        src="{{ 'header-menu.js' | asset_url }}"
+        type="module"
+        fetchpriority="low"
+      ></script>
+    </header-menu>
+{% endcase %}
+
+{% style %}
+  .header__underlay {
+    --color-submenu: rgb({{ block_settings.color_scheme.settings.background.rgba }});
+  }
+{% endstyle %}
+{% stylesheet %}
+  .header__drawer {
+    --header-drawer-min-height: 60px;
+    display: flex;
+    min-height: var(--header-drawer-min-height);
+    align-items: center;
+  }
+
+  #header-component[data-menu-style='drawer'] .header__drawer {
+    display: flex;
+    min-height: var(--header-drawer-min-height);
+  }
+
+  #header-component[data-menu-style='menu'] .header__drawer {
+    display: none;
+    min-height: 0;
+  }
+
+  .header--compact .header__drawer {
+    min-height: var(--minimum-touch-target);
+  }
+
+  .menu-list--mobile {
+    &.menu-list {
+      display: grid;
+    }
+
+    & .menu-list__list {
+      width: max-content;
+      margin-inline: auto;
+      gap: var(--menu-horizontal-gap);
+    }
+
+    & li {
+      width: max-content;
+      padding-block: var(--padding-sm);
+    }
+
+    & li:first-of-type {
+      padding-inline-start: var(--menu-horizontal-gap);
+    }
+
+    & li:last-of-type {
+      padding-inline-end: var(--menu-horizontal-gap);
+    }
+
+    & a {
+      color: var(--color-foreground);
+    }
+  }
+
+  .menu-list__scroll-container {
+    position: relative;
+    overflow-x: auto;
+    mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+    padding-block: var(--padding-2xs);
+  }
+
+  .menu-list {
+    --menu-horizontal-gap: var(--gap-xl);
+    --menu-vertical-gap: var(--gap-xl);
+
+    display: flex;
+    height: 100%;
+  }
+
+  .menu-list__list {
+    display: flex;
+    justify-content: var(--grid-area-alignment);
+  }
+
+  .menu-list__list-item {
+    flex-shrink: 0;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    /* height: 100%; */
+  }
+
+  .menu-list__list-item[aria-hidden='true'] {
+    visibility: hidden;
+  }
+
+  .menu-list__link {
+    font-family: var(--menu-top-level-font-family);
+    font-style: var(--menu-top-level-font-style);
+    font-weight: var(--menu-top-level-font-weight);
+    font-size: var(--menu-top-level-font-size);
+    line-height: var(--menu-top-level-font-line-height);
+    text-transform: var(--menu-top-level-font-case);
+    color: var(--menu-top-level-font-color);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    height: 100%;
+    margin-block: 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      display: none;
+      top: var(--header-padding);
+      height: var(--box-height);
+      left: 0;
+      right: 0;
+    }
+
+    &[data-safety-box='true']::after {
+      display: block;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--color-primary-hover);
+    }
+
+    @media screen and (min-width: 750px) {
+      font-size: var(--menu-top-level-font-size-desktop);
+    }
+  }
+
+  .menu-list__link-title {
+    padding-inline: calc(var(--gap-xl) / 2);
+  }
+  [slot='overflow'] .menu-list__link-title {
+    padding-inline: 0;
+  }
+
+  .menu-list__list-item:not([slot='overflow']) {
+    flex-direction: column;
+  }
+  .menu-list__list-item:not([slot='overflow'])::after {
+    content: '';
+    width: 100%;
+    height: var(--header-padding);
+    margin-bottom: calc(-1 * var(--header-padding));
+    pointer-events: none;
+  }
+
+  [slot='overflow'] > .menu-list__link::after {
+    content: none;
+  }
+
+  /*
+    High specificity selectors to subdue non-hovered links without javascript.
+    If the need for js-generated `hovered` and `focused` classes arises for another reason we can simplify these.
+  */
+  .menu-list:where(:has(.menu-list__list-item:hover)),
+  .menu-list:where(:has(.menu-list__list-item:focus-within)),
+  .menu-list:where(:has(.menu-list__list-item:not([aria-hidden='true']) .menu-list__link--active)) {
+    .menu-list__link {
+      color: rgb(var(--menu-top-level-font-color-rgb) / var(--opacity-subdued-text));
+    }
+  }
+
+  /* stylelint-disable-next-line selector-max-specificity */
+  .menu-list:not(:has(.menu-list__list-item:hover)) .menu-list__link--active {
+    color: var(--menu-top-level-font-color);
+  }
+
+  .menu-list .menu-list__list-item:where(:hover, :focus-within) .menu-list__link,
+  .menu-list .menu-list__list-item[slot='overflow'] .menu-list__link[aria-expanded='true'] {
+    color: var(--color-primary-hover);
+  }
+
+  .overflow-menu::part(list) {
+    /* Make sure focus outline is not cut off by overflow hidden */
+    --focus-outline-size: calc(var(--focus-outline-offset) + var(--focus-outline-width));
+
+    gap: 0;
+    margin-inline: calc(-1 * var(--menu-horizontal-gap) / 2);
+  }
+
+  .overflow-menu {
+    background-color: transparent;
+    padding: var(--focus-outline-size);
+    margin: calc(-1 * var(--focus-outline-size));
+  }
+
+  /** mega menu **/
+  .menu-list__submenu,
+  .overflow-menu::part(overflow) {
+    --submenu-padding-block-start: var(--padding-3xl);
+    --submenu-padding-block-end: var(--padding-3xl);
+
+    background-color: transparent;
+  }
+
+  .header__row[style*='--border-bottom-width: 0px'] {
+    .menu-list__submenu.color-scheme-matches-parent,
+    .overflow-menu.color-scheme-matches-parent::part(overflow) {
+      --submenu-padding-block-start: 0px;
+    }
+  }
+
+  .menu-list__list-item:where(:not([slot='overflow'])) > .menu-list__submenu,
+  .overflow-menu::part(overflow) {
+    --submenu-content-opacity: 0;
+    --submenu-content-animation: opacity calc(var(--submenu-animation-speed) * 0.75) var(--animation-easing);
+
+    visibility: hidden;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: calc(100% - 1px + var(--border-bottom-width) - (var(--full-open-header-height) - var(--submenu-height)));
+    z-index: var(--layer-header-menu);
+    padding-inline: var(--padding-inline);
+    /* Clip path starts at header height so it doesn't mess with the pointer events in the header */
+    clip-path: rect(var(--header-height) 100% var(--full-open-header-height) 0); /* stylelint-disable-line */
+    transition: clip-path var(--submenu-animation-speed) var(--ease-out-cubic); /* stylelint-disable-line */
+  }
+
+  [data-submenu-overlap-bottom-row] {
+    .menu-list__list-item:where(:not([slot='overflow'])) > .menu-list__submenu,
+    .overflow-menu::part(overflow) {
+      clip-path: rect(var(--top-row-height) 100% var(--full-open-header-height) 0); /* stylelint-disable-line */
+    }
+  }
+
+  /* Show the submenus on hover */
+  .menu-list__list-item:has([aria-expanded='true']) > .menu-list__submenu,
+  /* Show the overflow menu when a menu item is hovered */
+  .overflow-menu:has([slot="overflow"] [aria-expanded='true'])::part(overflow-list),
+  /* Keep the submenus open when they are hovered */
+  .menu-list__submenu:is(:hover),
+  .overflow-menu::part(overflow):hover {
+    --submenu-content-opacity: 1;
+
+    visibility: visible;
+  }
+
+  .overflow-menu::part(overflow) {
+    display: grid;
+    grid-template-columns: var(--full-page-grid-with-margins);
+  }
+
+  .overflow-menu::part(overflow-list) {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(auto, 200px) 1fr;
+    grid-template-areas: 'left right';
+    grid-template-rows: max-content;
+    grid-gap: 0;
+    grid-column: 2;
+  }
+
+  .menu-list__list-item:is([slot='overflow']) {
+    --menu-top-level-font-color: var(--color-foreground);
+    --menu-top-level-font-color-rgb: var(--color-foreground-rgb);
+
+    display: contents;
+    white-space: normal;
+
+    .menu-list__link {
+      grid-area: left;
+      grid-row: auto;
+      height: min-content;
+      /* Keep same type as top-level header nav (do not bump to --font-size--xl) */
+      font-family: var(--menu-top-level-font-family);
+      font-style: var(--menu-top-level-font-style);
+      font-weight: var(--menu-top-level-font-weight);
+      font-size: var(--menu-top-level-font-size-desktop, var(--menu-top-level-font-size));
+      line-height: var(--menu-top-level-font-line-height);
+      text-transform: var(--menu-top-level-font-case);
+      color: var(--menu-top-level-font-color);
+      transition: var(--submenu-content-animation);
+    }
+
+    .menu-list__submenu {
+      visibility: hidden;
+      grid-row: 1;
+      grid-area: right;
+      grid-row-end: span calc(var(--overflow-count) + 1);
+      padding-inline-start: var(--menu-horizontal-gap);
+    }
+
+    .menu-list__submenu-inner {
+      transform: none;
+      grid-column: unset;
+      padding-block: 0;
+    }
+
+    .menu-list__link[aria-expanded='true'] + .menu-list__submenu {
+      visibility: visible;
+    }
+  }
+
+  .header-menu {
+    height: 100%;
+  }
+
+  .menu-list__submenu-inner {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .menu-list__submenu-inner,
+  .overflow-menu::part(overflow-list) {
+    padding-block-start: var(--submenu-padding-block-start);
+    padding-block-end: var(--submenu-padding-block-end);
+    padding-inline: var(--section-padding-inline);
+    opacity: var(--submenu-content-opacity);
+    transition: var(--submenu-content-animation);
+    transform: translateY(calc(var(--full-open-header-height) - var(--submenu-height)));
+
+    /* Make overflow menu scrollable when content exceeds viewport */
+    max-height: calc(80vh - var(--header-height));
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--color-foreground-rgb) / var(--opacity-40)) transparent;
+  }
+
+  .mega-menu__link {
+    font-family: var(--menu-child-font-family);
+    font-style: var(--menu-child-font-style);
+    font-weight: var(--menu-child-font-weight);
+    font-size: var(--menu-child-font-size);
+    line-height: var(--menu-child-font-line-height);
+    text-transform: var(--menu-child-font-case);
+    color: var(--menu-child-font-color);
+    white-space: normal;
+    text-decoration: none;
+    display: inline-flex;
+    padding: var(--padding-2xs) 0;
+
+    &:hover {
+      color: var(--menu-child-active-font-color);
+    }
+  }
+
+  .mega-menu__link--parent {
+    font-family: var(--menu-parent-font-family);
+    font-style: var(--menu-parent-font-style);
+    font-weight: var(--menu-parent-font-weight);
+    font-size: var(--menu-parent-font-size);
+    line-height: var(--menu-parent-font-line-height);
+    text-transform: var(--menu-parent-font-case);
+    color: var(--menu-parent-font-color);
+
+    &:hover {
+      color: var(--menu-parent-active-font-color);
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .mega-menu__content-list-item--hidden-tablet {
+      display: none;
+    }
+  }
+
+  .mega-menu__link:has(.mega-menu__link-image) {
+    display: flex;
+    flex-direction: column;
+    padding-inline: 0;
+    padding-block: var(--padding-sm) 0;
+  }
+
+  .mega-menu__link-image {
+    width: 100%;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--padding-sm);
+    object-fit: cover;
+    border-radius: var(--menu-image-border-radius);
+  }
+
+  /* Fix alignment for collection image mode links without images */
+
+  /* Target only top-level links (direct children of column > div) in collection image mode */
+  .mega-menu__grid:has(.mega-menu__link-image)
+    .mega-menu__column
+    > div
+    > .mega-menu__link:not(:has(.mega-menu__link-image)) {
+    display: flex;
+    flex-direction: column;
+    padding-inline: 0;
+    padding-block: var(--padding-sm) 0;
+  }
+
+  .mega-menu__grid:has(.mega-menu__link-image)
+    .mega-menu__column
+    > div
+    > .mega-menu__link:not(:has(.mega-menu__link-image))::before {
+    content: '';
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--padding-sm);
+    background-color: var(--color-foreground-muted);
+    opacity: 0.1;
+    border-radius: var(--menu-image-border-radius);
+  }
+
+  .mega-menu__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--menu-columns-tablet), minmax(0, 1fr));
+    gap: var(--menu-vertical-gap) var(--menu-horizontal-gap);
+    width: 100%;
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: repeat(var(--menu-columns-desktop), minmax(0, 1fr));
+    }
+  }
+
+  .mega-menu__column {
+    grid-column: span 1;
+  }
+
+  .mega-menu__column--span-2 {
+    grid-column: span 2;
+  }
+
+  .mega-menu__column--span-3 {
+    grid-column: span 3;
+  }
+
+  .mega-menu__column--span-4 {
+    grid-column: span 4;
+  }
+
+  .mega-menu__column--wide-collection-image {
+    grid-column: span 1;
+
+    @media screen and (min-width: 990px) {
+      grid-column: span 2;
+    }
+  }
+
+  .mega-menu__submenu .mega-menu__column--wide-collection-image {
+    grid-column: span 1;
+  }
+
+  .mega-menu__content-list {
+    display: grid;
+    justify-content: end;
+    gap: var(--menu-vertical-gap) var(--menu-horizontal-gap);
+  }
+
+  .mega-menu__content-list--products {
+    grid-template-columns: repeat(var(--menu-content-columns-tablet), minmax(0, 1fr));
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: repeat(var(--menu-content-columns-desktop), minmax(0, 1fr));
+    }
+  }
+
+  .mega-menu__content-list--collections {
+    grid-template-columns: repeat(var(--menu-content-columns-tablet), minmax(0, 300px));
+
+    @media screen and (min-width: 990px) {
+      grid-template-columns: repeat(var(--menu-content-columns-desktop), minmax(0, 300px));
+    }
+  }
+
+  .mega-menu__list {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: span var(--menu-columns-tablet);
+    gap: var(--menu-vertical-gap) var(--menu-horizontal-gap);
+
+    @media screen and (min-width: 990px) {
+      grid-column: span var(--menu-columns-desktop);
+    }
+  }
+
+  .mega-menu__content {
+    grid-column: span var(--menu-content-columns-tablet) / -1;
+
+    @media screen and (min-width: 990px) {
+      grid-column: span var(--menu-content-columns-desktop) / -1;
+    }
+  }
+
+  .menu-list__list-item[slot='overflow'] .section {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-list__list-item[slot='overflow'] .section .mega-menu__grid {
+    grid-column: 1;
+  }
+
+  .mega-menu__content-list li {
+    white-space: normal;
+  }
+
+  /* mega more menu */
+  .mega-menu__more-list {
+    --menu-child-font-size: var(--font-size--xl);
+
+    width: 200px;
+  }
+
+  .mega-menu__submenu {
+    /* preserves the inherited grid layout when this submenu wrapper is used */
+    display: contents;
+  }
+  /* 超级导航：仅隐藏未就绪项。已就绪后走主题原生显隐，避免自写 pointer-events/visibility 和 :hover 打架。 */
+  .menu-list__list-item[data-mega-js-matched]:has([aria-expanded='true']):not([data-mega-ready='true']) > .menu-list__submenu,
+  .menu-list__list-item[data-mega-await-js='true']:not([data-mega-ready='true']) > .menu-list__submenu,
+  .menu-list__list-item[data-mega-pending='true'] > .menu-list__submenu {
+    visibility: hidden !important;
+    pointer-events: none !important;
+    --submenu-content-opacity: 0 !important;
+  }
+
+  .menu-list__list-item[data-mega-js-matched][data-mega-ready='true'] > .menu-list__submenu {
+    z-index: calc(var(--layer-header-menu) + 5);
+  }
+
+  .menu-list__list-item[data-mega-js-matched][data-mega-ready='true']:has(
+      > .menu-list__link[aria-expanded='true']
+    ) > .menu-list__submenu,
+  .menu-list__list-item[data-mega-js-matched][data-mega-ready='true'] > .menu-list__submenu:hover {
+    pointer-events: auto;
+  }
+
+  .menu-list__list-item[data-mega-js-matched][data-mega-ready='true'] > .menu-list__submenu .mega-menu-custom__link {
+    pointer-events: auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* overflow 里的自定义超级导航：提到全宽下拉，避免挤在 More 侧栏里 */
+  .menu-list__list-item[slot='overflow'][data-mega-js-matched][data-mega-ready='true'] {
+    display: list-item;
+  }
+
+  .menu-list__list-item[slot='overflow'][data-mega-js-matched][data-mega-ready='true'] > .menu-list__submenu {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: calc(100% - 1px + var(--border-bottom-width, 0px));
+    z-index: var(--layer-header-menu);
+    grid-area: unset;
+    grid-row: unset;
+    padding-inline: var(--padding-inline, 0);
+  }
+  .mega-menu__grid--custom {
+    display: block;
+    width: 100%;
+  }
+
+  .mega-menu__grid--columns {
+    max-width: 100%;
+  }
+
+  .mega-menu-columns {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: clamp(12px,1.7647058vw,24px) clamp(10px,5.882352941176471vw,80px);
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+  }
+
+  .mega-menu-column__heading {
+    margin: 0 0 clamp(16px,2.352941vw,32px);
+    font-family:var(--font-family-1);
+    font-style: var(--font-heading--style);
+    font-weight: bold;
+    font-size: clamp(14px,0.8888vw,16px);
+    line-height: 1.5;
+  }
+
+  .mega-menu-column__list {
+    display: grid;
+    gap: clamp(12px,1.5vw,24px) clamp(20px,2.8125vw,45px);
+    margin: 0;
+    padding: 0;
+  }
+
+  .mega-menu-column__list[data-sub-columns='2'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mega-menu-column__list[data-sub-columns='1'] {
+    grid-template-columns: 1fr;
+  }
+
+  .mega-menu-column__list .mega-menu-custom__link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--color-primary);
+    transition: color 0.15s ease;
+    font-size:clamp(12px,0.77777vw,14px);
+  }
+
+  .mega-menu-column__list .mega-menu-custom__link:hover,
+  .mega-menu-column__list .mega-menu-custom__link:hover .mega-menu-custom__title {
+    color: var(--color-primary-hover);
+    opacity: 1;
+  }
+
+  .mega-menu-column__list .mega-menu-custom__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .mega-menu-column__list--icon-square .mega-menu-custom__icon,
+  .mega-menu-column__list--icon-square .mega-menu-custom__icon--placeholder {
+    border: 1px dashed rgb(var(--color-foreground-rgb) / 0.22);
+    border-radius: 2px;
+    background: rgb(var(--color-background-rgb));
+  }
+
+  .mega-menu-column__list--icon-circle .mega-menu-custom__image {
+    border-radius: 50%;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .mega-menu-column__list .mega-menu-custom__image {
+    object-fit: contain;
+    border-radius: 2px;
+  }
+
+  .mega-menu-column__list--icon-circle .mega-menu-custom__icon--placeholder {
+    border-radius: 50%;
+    background: rgb(var(--color-foreground-rgb) / 0.08);
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .mega-menu-column__list .mega-menu-custom__title {
+    font-family: var(--menu-child-font-family);
+    font-size: var(--font-size--sm);
+    font-weight: var(--menu-child-font-weight);
+    line-height: 1.35;
+    text-align: start;
+    white-space: normal;
+    color: var(--color-primary);
+  }
+
+  .mega-menu-column-footer {
+    padding-top: clamp(16px,2.352941vw,32px);
+  }
+
+  .mega-menu-column-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0px;
+    font-size: clamp(12px,0.77777vw,14px);
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-primary);
+    line-height: 1.571428;
+  }
+
+  .mega-menu-column-more:hover {
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+  }
+
+  .mega-menu-column-more__chevron {
+    font-size: 0.9em;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+  }
+
+  .mega-menu-column-more__chevron svg {
+    display: block;
+    fill: currentColor;
+  }
+
+  .mega-menu-column-more__chevron svg path {
+    fill: currentColor;
+  }
+
+  .mega-menu-custom {
+    display: grid;
+    grid-template-columns: repeat(var(--mega-menu-custom-columns, 4), minmax(0, 1fr));
+    gap: var(--menu-vertical-gap) var(--menu-horizontal-gap);
+    width: 100%;
+  }
+
+  .mega-menu-custom__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-sm);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .mega-menu-custom__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--menu-image-border-radius);
+  }
+
+  .mega-menu-custom__title {
+    font-family: var(--menu-child-font-family);
+    font-size: var(--menu-child-font-size);
+    font-weight: var(--menu-child-font-weight);
+    line-height: var(--menu-child-font-line-height);
+    text-align: center;
+  }
+
+  @media screen and (max-width: 989px) {
+    .mega-menu-custom {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mega-menu-columns {
+      gap: var(--padding-lg);
+    }
+  }
+
+  .mega-menu-custom__hint {
+    margin: 0;
+    padding: var(--padding-md);
+    font-size: var(--font-size--sm);
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+  }
+
+  .mega-menu-custom__hint code {
+    font-size: 0.9em;
+  }
+  /* end 超级导航 Custom mega menu (metaobjects + theme blocks) */
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.menu",
+  "tag": null,
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:settings.menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "primary"
+    },
+    {
+      "type": "header",
+      "content": "t:content.typography"
+    },
+    {
+      "type": "select",
+      "id": "type_font_primary_size",
+      "label": "t:settings.top_level_size",
+      "options": [
+        {
+          "value": "0.625rem",
+          "label": "10px"
+        },
+        {
+          "value": "0.75rem",
+          "label": "12px"
+        },
+        {
+          "value": "0.875rem",
+          "label": "14px"
+        },
+        {
+          "value": "1rem",
+          "label": "16px"
+        },
+        {
+          "value": "1.125rem",
+          "label": "18px"
+        }
+      ],
+      "default": "1rem"
+    },
+    {
+      "type": "select",
+      "id": "menu_font_style",
+      "label": "t:settings.submenu_size",
+      "options": [
+        {
+          "value": "regular",
+          "label": "t:options.small"
+        },
+        {
+          "value": "inverse",
+          "label": "t:options.medium"
+        },
+        {
+          "value": "inverse_large",
+          "label": "t:options.large"
+        }
+      ],
+      "default": "inverse"
+    },
+    {
+      "type": "select",
+      "id": "type_font_primary_link",
+      "label": "t:settings.font",
+      "options": [
+        {
+          "value": "body",
+          "label": "t:options.body"
+        },
+        {
+          "value": "subheading",
+          "label": "t:options.subheading"
+        },
+        {
+          "value": "heading",
+          "label": "t:options.heading"
+        },
+        {
+          "value": "accent",
+          "label": "t:options.accent"
+        }
+      ],
+      "default": "heading"
+    },
+    {
+      "type": "select",
+      "id": "type_case_primary_link",
+      "label": "t:settings.text_case",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.default"
+        },
+        {
+          "value": "uppercase",
+          "label": "t:options.uppercase"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "t:content.submenu_feature"
+    },
+    {
+      "type": "select",
+      "id": "menu_style",
+      "label": "t:settings.media_type",
+      "info": "t:info.media_type_info",
+      "options": [
+        {
+          "value": "text",
+          "label": "t:options.none"
+        },
+        {
+          "value": "collection_images",
+          "label": "t:options.collection_images"
+        },
+        {
+          "value": "featured_products",
+          "label": "t:options.featured_products"
+        },
+        {
+          "value": "featured_collections",
+          "label": "t:options.featured_collections"
+        }
+      ],
+      "default": "collection_images"
+    },
+    {
+      "type": "select",
+      "id": "featured_products_aspect_ratio",
+      "label": "t:settings.image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.auto"
+        },
+        {
+          "value": "4 / 5",
+          "label": "t:options.portrait"
+        },
+        {
+          "value": "1 / 1",
+          "label": "t:options.square"
+        }
+      ],
+      "default": "4 / 5",
+      "visible_if": "{{ block.settings.menu_style == 'featured_products' }}"
+    },
+    {
+      "type": "select",
+      "id": "featured_collections_aspect_ratio",
+      "label": "t:settings.image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.auto"
+        },
+        {
+          "value": "16 / 9",
+          "label": "t:options.landscape"
+        },
+        {
+          "value": "1 / 1",
+          "label": "t:options.square"
+        }
+      ],
+      "default": "16 / 9",
+      "visible_if": "{{ block.settings.menu_style == 'featured_collections' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "t:settings.image_border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.menu_style != 'text' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "navigation_bar",
+      "label": "t:settings.navigation_bar"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_navigation_bar",
+      "label": "t:settings.navigation_bar_color_scheme",
+      "default": "primary",
+      "visible_if": "{{ block.settings.navigation_bar }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "drawer_accordion",
+      "label": "t:settings.accordion",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "drawer_accordion_expand_first",
+      "label": "t:settings.expand_first_group",
+      "default": false,
+      "visible_if": "{{ block.settings.drawer_accordion == true }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "drawer_dividers",
+      "label": "t:settings.dividers",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

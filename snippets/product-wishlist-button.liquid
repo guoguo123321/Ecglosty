@@ -1,0 +1,93 @@
+{%- doc -%}
+  Product detail wishlist button (stores into ecglosty_wishlist.others).
+  Styled like dpi-rp__btn-secondary on the ring product page.
+
+  @param {object} product - Shopify product
+  @param {string} [block_id] - Optional unique id suffix
+{%- enddoc -%}
+
+{%- liquid
+  assign wishlist_uid = block_id | default: section.id
+  assign wishlist_variant = product.selected_or_first_available_variant
+  assign wishlist_image = ''
+  if product.featured_image
+    assign wishlist_image = product.featured_image | image_url: width: 800
+  elsif wishlist_variant.image
+    assign wishlist_image = wishlist_variant.image | image_url: width: 800
+  endif
+  assign wishlist_price = wishlist_variant.price | times: 1.0 | divided_by: 100
+-%}
+
+<script
+  src="{{ 'product-wishlist.js' | asset_url }}"
+  defer
+></script>
+
+<button
+  class="product-wishlist-btn"
+  id="product-wishlist-btn-{{ wishlist_uid }}"
+  type="button"
+  data-product-wishlist
+  data-wishlist-uid="{{ wishlist_uid }}"
+  aria-label="Add to wishlist"
+  aria-pressed="false"
+>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </svg>
+  <span data-wishlist-label>ADD TO WISHLIST</span>
+</button>
+
+<script type="application/json" id="product-wishlist-data-{{ wishlist_uid }}">
+  {
+    "productId": {{ product.id | json }},
+    "id": {{ product.id | json }},
+    "urlHandle": {{ product.handle | json }},
+    "name": {{ product.title | json }},
+    "pictures": {{ wishlist_image | json }},
+    "minPrice": {{ wishlist_price | json }},
+    "maxPrice": {{ wishlist_price | json }},
+    "price": {{ wishlist_price | json }}
+  }
+</script>
+
+{% stylesheet %}
+  .product-form-buttons .product-wishlist-btn {
+    width: 100%;
+    height: auto;
+    min-height: var(--height-buy-buttons, 48px);
+    padding: 14px;
+    background: #fff;
+    color: var(--custom-font-color, #073746);
+    border: 1px solid #06374C;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+  }
+
+  .product-form-buttons .product-wishlist-btn:hover {
+    border-color: #1a3a4a;
+  }
+
+  .product-form-buttons .product-wishlist-btn svg {
+    flex-shrink: 0;
+  }
+
+  .product-form-buttons .product-wishlist-btn.wishlisted {
+    background: var(--button-active-bg);
+    color: var(--button-active-color);
+    border-color: var(--button-active-bg);
+  }
+
+  .product-form-buttons .product-wishlist-btn.wishlisted svg {
+    fill: var(--button-active-color);
+    stroke: var(--button-active-color);
+  }
+{% endstylesheet %}

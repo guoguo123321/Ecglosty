@@ -1,0 +1,588 @@
+{% liquid
+  assign se_stts = section.settings
+  assign stt_layout = se_stts.layout
+  if stt_layout == 'lgs-container'
+    assign html_layout = '<div class="lgs-container">__</div>' | split: '__'
+  elsif stt_layout == 'custom-container'
+    assign html_layout = '<div class="custom-container">__</div>' | split: '__'
+  else
+    assign html_layout = '__' | split: '__'
+  endif
+%}
+<style>
+  {%- if se_stts.layout == 'custom-container' -%}
+  .{{ section.id }} .custom-container{max-width:{{ se_stts.custom_container }};margin: 0 auto;}
+  {%- endif -%}
+  {%- liquid
+    assign heading_c = se_stts.color_scheme.settings.foreground_heading
+    assign subheading_c = se_stts.color_scheme.settings.foreground_subheading
+  -%}
+  {%- if heading_c != blank and heading_c.alpha != 0.0 -%}
+  .{{ section.id }} .lgs-title{--color:var(--color-foreground-heading);color:var(--color-foreground-heading);}
+  {%- endif -%}
+  {%- if subheading_c != blank and subheading_c.alpha != 0.0 -%}
+  .{{ section.id }} .lgs-subtitle{--color:var(--color-foreground-subheading);color:var(--color-foreground-subheading);}
+  {%- endif -%}
+  .{{ section.id }} .wl-page__count,
+  .{{ section.id }} .wl-page__tab,
+  .{{ section.id }} .wl-page__empty,
+  .{{ section.id }} .wl-card__type,
+  .{{ section.id }} .wl-card__sub,
+  .{{ section.id }} .wl-card__remove{color:var(--color-foreground-muted);}
+  .{{ section.id }} .wl-page__tabs{border-bottom-color:rgb(var(--color-foreground-rgb) / 0.12);}
+  .{{ section.id }} .wl-page__tab.is-active{color:var(--color-foreground);border-bottom-color:var(--color-primary);}
+  .{{ section.id }} .wl-page__browse,
+  .{{ section.id }} .wl-card__cta{
+    background:var(--color-primary-button-background);
+    color:var(--color-primary-button-text);
+    border:1px solid var(--color-primary-button-border);
+  }
+  .{{ section.id }} .wl-page__browse:hover,
+  .{{ section.id }} .wl-card__cta:hover{
+    background:var(--color-primary-button-hover-background);
+    color:var(--color-primary-button-hover-text);
+    border-color:var(--color-primary-button-hover-border);
+  }
+  .{{ section.id }} .wl-card__media{background:rgb(var(--color-foreground-rgb) / 0.04);}
+  .{{ section.id }} .wl-card__title,
+  .{{ section.id }} .wl-card__price{color:var(--color-foreground);}
+  .{{ section.id }} .wl-card__remove:hover{color:var(--color-primary-hover);}
+</style>
+<div class="{{ section.id }} wishlist-page-box lgs-section-inner color-{{ se_stts.color_scheme }}" id="wl-page-{{ section.id }}" {% render 'section_style', se_stts: se_stts -%}>
+  {{-html_layout[0]-}}
+  {%- render 'section_tophead', se_stts: se_stts -%}
+
+  <div class="wl-page {{ se_stts.box_align }}">
+    <p class="wl-page__count" id="wl-page-count-{{ section.id }}"></p>
+
+    <div class="wl-page__tabs" role="tablist">
+      <button type="button" class="wl-page__tab is-active" data-wl-tab="all" role="tab" aria-selected="true">
+        All <span data-wl-tab-count="all">(0)</span>
+      </button>
+      <button type="button" class="wl-page__tab" data-wl-tab="diamonds" role="tab" aria-selected="false">
+        Diamonds <span data-wl-tab-count="diamonds">(0)</span>
+      </button>
+      <button type="button" class="wl-page__tab" data-wl-tab="others" role="tab" aria-selected="false">
+        Rings &amp; Settings <span data-wl-tab-count="others">(0)</span>
+      </button>
+    </div>
+
+    <div class="wl-page__empty" id="wl-page-empty-{{ section.id }}" hidden>
+      <svg width="40" height="40" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25" d="M10 16.667S3.75 12.5 3.75 8.333a3.333 3.333 0 0 1 5.833-2.167L10 6.667l.417-.5A3.333 3.333 0 0 1 16.25 8.333C16.25 12.5 10 16.667 10 16.667Z"/>
+      </svg>
+      <p>{{ se_stts.empty_text | default: 'Your wishlist is empty.' }}</p>
+      {% if se_stts.empty_link != blank %}
+        <a class="wl-page__browse" href="{{ se_stts.empty_link }}">
+          {{ se_stts.empty_cta | default: 'Continue Shopping' }}
+        </a>
+      {% else %}
+        <a class="wl-page__browse" href="/collections/all">
+          {{ se_stts.empty_cta | default: 'Continue Shopping' }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="wl-page__grid" id="wl-page-grid-{{ section.id }}"></div>
+  </div>
+
+  {{-html_layout[1]-}}
+</div>
+
+<script>
+  (function () {
+    const SID = {{ section.id | json }};
+    const WISHLIST_KEY = 'ecglosty_wishlist';
+    const root = document.getElementById('wl-page-' + SID);
+    if (!root) return;
+
+    const grid = document.getElementById('wl-page-grid-' + SID);
+    const emptyEl = document.getElementById('wl-page-empty-' + SID);
+    const countEl = document.getElementById('wl-page-count-' + SID);
+    let activeTab = 'all';
+
+    function getWishlist() {
+      try {
+        const raw = localStorage.getItem(WISHLIST_KEY);
+        if (!raw) return { diamonds: [], others: [] };
+        const parsed = JSON.parse(raw);
+        return {
+          diamonds: Array.isArray(parsed?.diamonds) ? parsed.diamonds : [],
+          others: Array.isArray(parsed?.others) ? parsed.others : [],
+        };
+      } catch (e) {
+        return { diamonds: [], others: [] };
+      }
+    }
+
+    function saveWishlist(wl) {
+      localStorage.setItem(WISHLIST_KEY, JSON.stringify(wl));
+      window.dispatchEvent(new CustomEvent('ecglosty:wishlist-updated'));
+    }
+
+    function diamondKey(d) {
+      // 必须转成 String：dataset.key 始终是字符串，否则 number !== string 导致 Remove 无效
+      return String(
+        d.id || d.sku || d.productId || d.urlHandle ||
+        (String(d.title || d.name || '') + '_' + String(d.carat || ''))
+      );
+    }
+
+    function otherKey(p) {
+      return String(p.productId || p.id || p.urlHandle || '');
+    }
+
+    function formatPrice(item) {
+      if (typeof item.price === 'number') return '$' + item.price.toLocaleString();
+      if (item.minPrice != null) {
+        if (item.maxPrice != null && item.minPrice !== item.maxPrice) {
+          return '$' + Number(item.minPrice).toFixed(2) + ' – $' + Number(item.maxPrice).toFixed(2);
+        }
+        return '$' + Number(item.minPrice).toFixed(2);
+      }
+      return item.price_display || item.price || '';
+    }
+
+    function getImage(item, type) {
+      if (type === 'diamond') {
+        if (item.medias && item.medias.length) {
+          const img = item.medias.find((m) => m.mediaType === 1 && m.url);
+          if (img) return img.url.split(',')[0].trim();
+        }
+        if (item.pictures) return item.pictures.split(',')[0].trim();
+        return '';
+      }
+      if (item.pictures) return String(item.pictures).split(',')[0].trim();
+      const skus = item.skuCombination?.productSkuList || [];
+      for (const sku of skus) {
+        const img = (sku.medias || [])
+          .filter((m) => m.mediaType === 1)
+          .sort((a, b) => a.sortOrder - b.sortOrder)[0];
+        if (img?.url) return img.url.split(',')[0].trim();
+      }
+      const medias = item.attribute?.medias || item.medias || [];
+      const m = medias.find((x) => x.mediaType === 1 && x.url);
+      return m ? m.url.split(',')[0].trim() : '';
+    }
+
+    function getTitle(item, type) {
+      if (type === 'diamond') {
+        return (
+          item.name ||
+          item.title ||
+          [item.carat ? item.carat + ' ct.' : '', item.shape, 'Diamond'].filter(Boolean).join(' ')
+        );
+      }
+      return item.name || item.title || 'Ring Setting';
+    }
+
+    function getSubtitle(item, type) {
+      if (type === 'diamond') {
+        return [item.carat && item.carat + ' ct', item.color, item.clarity, item.cut]
+          .filter(Boolean)
+          .join(' · ');
+      }
+      return '';
+    }
+
+    function getHref(item, type) {
+      if (item.urlHandle) return '/products/' + item.urlHandle;
+      if (type === 'diamond' && item.id) return '/products/' + item.id;
+      return '';
+    }
+
+    function removeItem(type, key) {
+      const wl = getWishlist();
+      const matchKey = String(key || '');
+      if (type === 'diamond') {
+        wl.diamonds = wl.diamonds.filter((d) => diamondKey(d) !== matchKey);
+      } else {
+        wl.others = wl.others.filter((p) => otherKey(p) !== matchKey);
+      }
+      saveWishlist(wl);
+      render();
+    }
+
+    function escapeAttr(value) {
+      return String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    }
+
+    function renderCard(item, type) {
+      const key = type === 'diamond' ? diamondKey(item) : otherKey(item);
+      const img = getImage(item, type);
+      const title = getTitle(item, type);
+      const subtitle = getSubtitle(item, type);
+      const price = formatPrice(item);
+      const href = getHref(item, type);
+      const typeLabel = type === 'diamond' ? 'Diamond' : 'Ring';
+      const safeKey = escapeAttr(key);
+      const safeTitle = escapeAttr(title);
+
+      const mediaHtml = img
+        ? `<img src="${escapeAttr(img)}" alt="${safeTitle}" loading="lazy">`
+        : `<div class="wl-card__placeholder" aria-hidden="true"></div>`;
+
+      const linkOpen = href ? `<a class="wl-card__media" href="${escapeAttr(href)}">` : `<div class="wl-card__media">`;
+      const linkClose = href ? `</a>` : `</div>`;
+      const cta = href
+        ? `<a class="wl-card__cta" href="${escapeAttr(href)}">View Details</a>`
+        : '';
+
+      return `
+        <article class="wl-card" data-wl-type="${type}" data-wl-key="${safeKey}">
+          ${linkOpen}${mediaHtml}${linkClose}
+          <div class="wl-card__body">
+            <span class="wl-card__type">${typeLabel}</span>
+            <h2 class="wl-card__title">${title}</h2>
+            ${subtitle ? `<p class="wl-card__sub">${subtitle}</p>` : ''}
+            ${price ? `<p class="wl-card__price">${price}</p>` : ''}
+            <div class="wl-card__actions">
+              ${cta}
+              <button type="button" class="wl-card__remove" data-wl-remove data-type="${type}" data-key="${safeKey}">
+                Remove
+              </button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function render() {
+      const wl = getWishlist();
+      const diamonds = wl.diamonds;
+      const others = wl.others;
+      const total = diamonds.length + others.length;
+
+      root.querySelectorAll('[data-wl-tab-count]').forEach((el) => {
+        const tab = el.getAttribute('data-wl-tab-count');
+        const n = tab === 'all' ? total : tab === 'diamonds' ? diamonds.length : others.length;
+        el.textContent = `(${n})`;
+      });
+
+      if (countEl) {
+        countEl.textContent = total === 1 ? '1 item saved' : `${total} items saved`;
+      }
+
+      let list = [];
+      if (activeTab === 'all' || activeTab === 'diamonds') {
+        list = list.concat(diamonds.map((d) => ({ item: d, type: 'diamond' })));
+      }
+      if (activeTab === 'all' || activeTab === 'others') {
+        list = list.concat(others.map((p) => ({ item: p, type: 'other' })));
+      }
+
+      if (list.length === 0) {
+        grid.innerHTML = '';
+        if (emptyEl) emptyEl.hidden = false;
+        return;
+      }
+
+      if (emptyEl) emptyEl.hidden = true;
+      grid.innerHTML = list.map(({ item, type }) => renderCard(item, type)).join('');
+
+      grid.querySelectorAll('[data-wl-remove]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          removeItem(btn.dataset.type, btn.dataset.key);
+        });
+      });
+    }
+
+    root.querySelectorAll('[data-wl-tab]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        activeTab = tab.dataset.wlTab;
+        root.querySelectorAll('[data-wl-tab]').forEach((t) => {
+          const on = t === tab;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        render();
+      });
+    });
+
+    window.addEventListener('ecglosty:wishlist-updated', render);
+    window.addEventListener('storage', (e) => {
+      if (e.key === WISHLIST_KEY) render();
+    });
+
+    render();
+  })();
+</script>
+
+{% stylesheet %}
+  .wishlist-page-box .wl-page__count {
+    margin: 0 0 clamp(16px, 2vw, 24px);
+    color: #6b7c82;
+    font-size: 14px;
+  }
+
+  .wishlist-page-box .wl-page__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px clamp(10px,1.42857142vw,20px);
+    border-bottom: 1px solid #e8ecee;
+    margin-bottom: clamp(24px, 3vw, 36px);
+  }
+
+  .wishlist-page-box .wl-page__tab {
+    appearance: none;
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    padding: 10px 2px 12px;
+    font: inherit;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: #6b7c82;
+    cursor: pointer;
+  }
+
+  .wishlist-page-box .wl-page__tab.is-active {
+    color: #073746;
+    border-bottom-color: #073746;
+  }
+
+  .wishlist-page-box .wl-page__empty {
+    text-align: center;
+    padding: clamp(48px, 8vw, 96px) 16px;
+    color: #6b7c82;
+  }
+
+  .wishlist-page-box .wl-page__empty svg {
+    display: none;
+    margin: 0 auto 16px;
+    opacity: 0.55;
+  }
+
+  @media (max-width: 767px) {
+    .wishlist-page-box .wl-page__empty svg {
+      display: block;
+    }
+  }
+
+  .wishlist-page-box .wl-page__empty p {
+    margin: 0 0 20px;
+    font-size: 16px;
+  }
+
+  .wishlist-page-box .wl-page__browse {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 24px;
+    background: #073746;
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .wishlist-page-box .wl-page__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2.5vw, 28px);
+  }
+
+  @media screen and (min-width: 750px) {
+    .wishlist-page-box .wl-page__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    .wishlist-page-box .wl-page__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .wishlist-page-box .wl-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    text-align: start;
+  }
+
+  .wishlist-page-box .wl-card__media {
+    display: block;
+    aspect-ratio: 1;
+    background: #f5f7f8;
+    overflow: hidden;
+    text-decoration: none;
+  }
+
+  .wishlist-page-box .wl-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .wishlist-page-box .wl-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #eef2f3, #f8fafa);
+  }
+
+  .wishlist-page-box .wl-card__body {
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .wishlist-page-box .wl-card__type {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6b7c82;
+  }
+
+  .wishlist-page-box .wl-card__title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: #073746;
+  }
+
+  .wishlist-page-box .wl-card__sub,
+  .wishlist-page-box .wl-card__price {
+    margin: 0;
+    font-size: 13px;
+    color: #6b7c82;
+  }
+
+  .wishlist-page-box .wl-card__price {
+    color: #073746;
+    font-weight: 500;
+  }
+
+  .wishlist-page-box .wl-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    margin-top: 12px;
+    align-items: center;
+  }
+
+  .wishlist-page-box .wl-card__cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 14px;
+    background: #073746;
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .wishlist-page-box .wl-card__remove {
+    appearance: none;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: #6b7c82;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .wishlist-page-box .wl-card__remove:hover {
+    color: #073746;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Wishlist Page",
+  "class": "shopify-wishlist-page",
+  "tag": "section",
+  "settings": [
+    {"type": "select","id": "layout","label": "layout","default":"lgs-container",
+      "options": [
+        {"label":"lgs-container","value": "lgs-container"},
+        {"label":"wrapped container","value": "wrapped-container"},
+        {"label":"custom container","value": "custom-container"}
+      ]
+    },
+    {"type": "text","id": "custom_container","label": "custom container","default": "1200px"},
+
+    {"type": "select","id": "box_align","label": "+ box align","default": "lgs-text-start",
+      "options": [
+        {"value": "lgs-text-start","label": "Left"},
+        {"value": "lgs-text-center","label": "Center"},
+        {"value": "lgs-text-end","label": "Right"}
+      ]
+    },
+
+    {"type": "header","content": "Colors"},
+    {"type": "color_scheme","id": "color_scheme","label": "t:settings.color_scheme","default": "scheme-1","info": "Count / tabs / empty text (Text muted), titles & active tab (Text), buttons (Primary button), and hover states. Section heading uses Headings / Sub heading when set; otherwise Config Header"},
+
+    {"type": "header","content": "1. Heading options"},
+    {"type": "select","id": "design_heading","label": "+ Design heading","default": "1",
+      "options": [
+        {"value": "1","label": "Design 01"},
+        {"value": "2","label": "Design 02"},
+        {"value": "3","label": "Design 03"},
+        {"value": "4","label": "Design 04"},
+        {"value": "5","label": "Design 05"},
+        {"value": "6","label": "Design 06 (width line-awesome)"},
+        {"value": "7","label": "Design 07"},
+        {"value": "8","label": "Design 08"},
+        {"value": "9","label": "Design 09"},
+        {"value": "10","label": "Design 10"},
+        {"value": "11","label": "Design 11"},
+        {"value": "12","label": "Design 12"},
+        {"value": "13","label": "Design 13"},
+        {"value": "14","label": "Design 14"},
+        {"value": "15","label": "Design 15"},
+        {"value": "16","label": "Design 16"}
+      ]
+    },
+    {"type": "select","id": "heading_align","label": "+ Heading align","default": "lgs-text-center",
+      "options": [
+        {"value": "lgs-text-start","label": "Left"},
+        {"value": "lgs-text-center","label": "Center"},
+        {"value": "lgs-text-end","label": "Right"}
+      ]
+    },
+    {"type": "html","id": "top_heading","label": "+ Heading","default": "Wishlist"},
+    {"type": "text","id": "icon_heading","label": "Enter a icon name on heading","info": "Only used for design 6 [LineAwesome]()","default": "las la-gem"},
+    {"type": "textarea","id": "top_subheading","label": "+ Subheading"},
+    {"type": "number","id": "tophead_mb","label": "+ Space bottom (px)","info": "The vertical spacing between heading and content","default": 30},
+
+    {"type": "header","content": "Wishlist content"},
+    {"type": "text","id": "empty_text","label": "Empty state text","default": "Your wishlist is empty."},
+    {"type": "text","id": "empty_cta","label": "Empty state button label","default": "Continue Shopping"},
+    {"type": "url","id": "empty_link","label": "Empty state button link"},
+
+    {"type":"color","id":"cl_bg","label":"bg_color","default":"#ffffff"},
+    {"type": "color_background","id": "cl_bg_gradient","label": "Background gradient"},
+
+    {"type": "header","content": "+ Design pc options"},
+    {"type": "text","id": "mg","label": "Margin","info":"Margin top, margin right, margin bottom, margin left. If you not use to blank","default": "0px,0px,0px,0px"},
+    {"type": "text","id": "pd","label": "Padding","info":"Padding top, padding right, padding bottom, padding left. If you not use to blank","default": "60px,0px,80px,0px"},
+
+    {"type": "header","content": "+ Design Tablet Options"},
+    {"type": "text","id": "mg_tb","label": "Margin","default": "0px,0px,0px,0px"},
+    {"type": "text","id": "pd_tb","label": "Padding","default": "40px,0px,60px,0px"},
+
+    {"type": "header","content": "+ Design mobile options"},
+    {"type": "text","id": "mg_mb","label": "Margin","default": "0px,0px,0px,0px"},
+    {"type": "text","id": "pd_mb","label": "Padding","default": "30px,0px,50px,0px"}
+  ],
+  "presets": [
+    {
+      "name": "Wishlist Page",
+      "category": "t:categories.lg"
+    }
+  ]
+}
+{% endschema %}

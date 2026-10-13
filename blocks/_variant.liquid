@@ -1,0 +1,46 @@
+{% liquid
+  assign blo_setts = block.settings
+%}
+<div class="variant-box">
+  <div class="variant-header">{{ blo_setts.header }}</div>
+  {% if blo_setts.type =="metal" %}
+    <div class="variant-items variant-item-metal">
+      <img class="active" src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/metal1.png?v=1780986565" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/metal1.png?v=1780986565" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/metal2.png?v=1780986564" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/metal2.png?v=1780986564" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/metal3.png?v=1780986565" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/metal1.png?v=1780986565" width="32" height="32">
+    </div>
+  {% elsif blo_setts.type == "setting-type" %}
+    <div class="variant-items variant-item-setting-type">
+      <img class="active" src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/setting-type1.png?v=1780986564" width="32" height="32">
+      <img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/setting-type1.png?v=1780986564" width="32" height="32">
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "variant",
+    "settings": [
+      {"type": "html","id": "header","label": "header"},
+      {
+        "type": "select",
+        "id": "type",
+        "label": "type",
+        "default": "metal",
+        "options": [
+          {"value": "metal","label": "metal"},
+          {"value": "setting-type","label": "setting type"},
+        ],
+      },
+    ],
+    "presets":[
+      {
+        "name":"variant",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

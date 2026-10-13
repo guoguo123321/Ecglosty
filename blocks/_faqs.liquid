@@ -1,0 +1,18 @@
+{% render 'faqs',
+  settings: block.settings,
+  shopify_attributes: block.shopify_attributes,
+%}
+{% schema %}
+  {
+    "name": "faq",
+    "settings":[
+      {"type": "metaobject_list","id": "faqs","label": "faqs","metaobject_type": "faqs"},
+    ],
+    "presets":[
+      {
+        "name":"Faqs",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

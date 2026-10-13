@@ -1,0 +1,172 @@
+{% liquid
+  assign set_set = section.settings
+  assign set_blo = section.blocks
+  assign stt_layout = set_set.layout
+  if stt_layout == 'lgs-container'
+    assign html_layout = '<div class="lgs-container">__</div>' | split: '__'
+  elsif stt_layout == 'custom-container'
+    assign html_layout = '<div class="custom-container">__</div>' | split: '__'
+  else
+    assign html_layout = '__' | split: '__'
+  endif
+  assign pictures = set_blo | where:"type","image"
+  assign shippings = set_blo | where:"type","shipping"
+%}
+<style>
+  {%- if set_set.layout == 'custom-container' -%}
+  .{{ section.id }} .custom-container{max-width:{{ set_set.custom_container }};margin: 0 auto;}
+  {%- endif -%}
+  {%- liquid
+    assign heading_c = set_set.color_scheme.settings.foreground_heading
+    assign subheading_c = set_set.color_scheme.settings.foreground_subheading
+  -%}
+  {%- if heading_c != blank and heading_c.alpha != 0.0 -%}
+  .{{ section.id }} .lgs-title{--color:var(--color-foreground-heading);color:var(--color-foreground-heading);}
+  {%- endif -%}
+  {%- if subheading_c != blank and subheading_c.alpha != 0.0 -%}
+  .{{ section.id }} .lgs-subtitle{--color:var(--color-foreground-subheading);color:var(--color-foreground-subheading);}
+  {%- endif -%}
+  .{{ section.id }} .index-shipping-title{color:var(--color-foreground-heading);}
+  .{{ section.id }} .index-shipping-content{color:var(--color-foreground);}
+</style>
+<div class="index-shipping-box lgs-section-inner {{ section.id }} color-{{ set_set.color_scheme }}" {% render 'section_style', se_stts: set_set -%}>
+  {{- html_layout[0] -}}
+    {%- render 'section_tophead', se_stts: set_set -%}
+    <div class="index-shipping-container {{ set_set.box_align }}">
+      {% for block in section.blocks %}
+        {% assign blo_setts = block.settings %}
+        <div class="index-shipping-item" hdt-reveal="slide-in">
+          {% if blo_setts.image_svg == 'image' %}
+            <!-- picture -->
+            <img src="{{ blo_setts.icon | image_url }}" width="{{ blo_setts.icon.width }}" height="{{ blo_setts.icon.height }}">
+          {% elsif blo_setts.image_svg == 'svg'%}
+            <div class="index-shipping-svg">{{ blo_setts.svg }}</div>
+          {% else %}
+            <div class="index-shipping-svg" style="width:56px;height:56px;">{{ 'image' | placeholder_svg_tag: 'lgs-placeholder-svg' }}</div>
+          {% endif %}
+          <div class="index-shipping-info">
+            <div class="index-shipping-title">{{ blo_setts.title }}</div>
+            {% if blo_setts.content != blank %}<div class="index-shipping-content">{{ blo_setts.content }}</div>{% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {{- html_layout[1] -}}
+</div>
+{% schema %}
+  {
+    "name": "index-shipping",
+    "class": "shopify-index-shipping",
+    "tag": "section",
+    "settings": [
+      {"type": "select","id": "layout","label": "layout","default":"lgs-container",
+        "options": [
+          {"label":"lgs-container","value": "lgs-container"},
+          {"label":"wrapped container","value": "wrapped-container"},
+          {"label":"custom container","value": "custom-container"},
+        ]
+      },
+      {"type": "text","id": "custom_container","label": "custom container","default": "1200px"},
+
+      {"type": "select","id": "box_align","label": "+ box align","default": "lgs-text-center",
+        "options": [
+            {"value": "lgs-text-start","label": "Left"},
+            {"value": "lgs-text-center","label": "Center"},
+            {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+
+      {"type": "header","content": "Line"},
+      {"type": "select","id": "pc_mobile_selected_line","label": "pc mobile selected line","default":"none",
+        "options": [
+          {"label":"show pc and mobile","value": "show-pc-mb"},
+          {"label":"pc line","value": "show-pc-line"},
+          {"label":"mobile","value": "hide-mb-line"},
+          {"label":"none","value": "none"},
+        ]
+      },
+
+      {"type": "header","content": "Colors"},
+      {"type": "color_scheme","id": "color_scheme","label": "t:settings.color_scheme","default": "scheme-1","info": "Title and content. Section heading uses Headings / Sub heading when set; otherwise Config Header"},
+
+      {"type": "header","content": "1. Heading options"},
+      {"type": "select","id": "design_heading","label": "+ Design heading","default": "1",
+          "options": [
+              {"value": "1","label": "Design 01"},
+              {"value": "2","label": "Design 02"},
+              {"value": "3","label": "Design 03"},
+              {"value": "4","label": "Design 04"},
+              {"value": "5","label": "Design 05"},
+              {"value": "6","label": "Design 06 (width line-awesome)"},
+              {"value": "7","label": "Design 07"},
+              {"value": "8","label": "Design 08"},
+              {"value": "9","label": "Design 09"},
+              {"value": "10","label": "Design 10"},
+              {"value": "11","label": "Design 11"},
+              {"value": "12","label": "Design 12"},
+              {"value": "13","label": "Design 13"},
+              {"value": "14","label": "Design 14"},
+              {"value": "15","label": "Design 15"},
+              {"value": "16","label": "Design 16"}
+          ]
+      },
+      {"type": "select","id": "heading_align","label": "+ Heading align","default": "lgs-text-center",
+        "options": [
+            {"value": "lgs-text-start","label": "Left"},
+            {"value": "lgs-text-center","label": "Center"},
+            {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+      {"type": "html","id": "top_heading","label": "+ Heading","default": "Heading"},
+      {"type": "text","id": "icon_heading","label": "Enter a icon name on heading","info": "Only used for design 6 [LineAwesome]()","default": "las la-gem"},
+      {"type": "textarea","id": "top_subheading","label": "+ Subheading"},
+      {"type": "number","id": "tophead_mb","label": "+ Space bottom (px)","info": "The vertical spacing between heading and content","default": 30},
+
+      {"type":"color","id":"cl_bg","label":"bg_color","default":"#ffffff"},
+      {"type": "color_background","id": "cl_bg_gradient","label": "Background gradient"},
+    
+      {"type": "header","content": "+ Design pc options"},
+      {"type": "text","id": "mg","label": "Margin","info":"Margin top, margin right, margin bottom, margin left. If you not use to blank","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd","label": "Padding","info":"Padding top, padding right, padding bottom, padding left. If you not use to blank","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design Tablet Options"},
+      {"type": "text","id": "mg_tb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_tb","label": "Padding","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design mobile options"},
+      {"type": "text","id": "mg_mb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_mb","label": "Padding","default": "0px,0px,0px,0px"},
+    ],
+    "blocks":[
+      {
+        "name":"item",
+        "type":"item",
+        "settings":[
+          {"type": "select","id": "image_svg",
+              "options": [
+                {"value": "image","label": "image"},
+                {"value": "svg","label": "svg"},
+                {"value": "none","label": "none"},
+              ],
+              "default": "none",
+              "label": "Select image or svg"
+          },
+          {"type": "image_picker","id":"icon","label":"icon"},
+          {"type": "html","id":"svg","label":"svg"},
+          {"type":"text","id":"title","label":"title","default":"title"},
+
+          {"type":"html","id":"content","label":"content","default":"title"},
+        ]
+      },
+    ],
+    "presets":[
+      {
+        "name":"Index Shipping",
+        "category": "t:categories.lg",
+        "blocks":[
+          {"type":"item"},{"type":"item"},{"type":"item"},{"type":"item"}
+        ]
+      }
+    ]
+  }
+{% endschema %}

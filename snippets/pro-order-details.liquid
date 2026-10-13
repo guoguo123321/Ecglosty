@@ -1,0 +1,33 @@
+{% liquid
+  assign blo_setts = block.settings
+%}
+<div class="pro-order-details-box">
+  {% comment %} left {% endcomment %}
+  <div class="pro-order-details-left">
+    <div class="pro-order-details-header">{{ blo_setts.header }}</div>
+
+    <div class="pro-order-details-info type1">
+      <div class="pro-order-details-title">{{ blo_setts.title1 }}</div>
+      <div class="pro-order-details-content">{{ blo_setts.content1 }}</div>
+    </div>
+
+    <div class="pro-order-details-info type2">
+      {% if blo_setts.title2 != blank %}
+        <div class="pro-order-details-title">
+          <span>{{ blo_setts.title2 }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="11px" height="6px" viewBox="0 0 14.6666667 8" version="1.1">
+            <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="1.-选戒托-戒托列表页" transform="translate(-1568.000000, -2587.000000)" fill="#000000" fill-rule="nonzero">
+                  <polygon id="路径备份" points="1568 2588.19999 1569.29411 2587 1575.33333 2592.60002 1581.37256 2587 1582.66667 2588.19999 1575.33333 2595 1568 2588.1998"></polygon>
+              </g>
+            </g>
+          </svg>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  {% comment %} right {% endcomment %}
+  <div class="pro-order-details-right">
+    <img src="{{ blo_setts.image | image_url }}" width="{{ blo_setts.image.width }}" height="{{ blo_setts.image.height }}">
+  </div>
+</div>

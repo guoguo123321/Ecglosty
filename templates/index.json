@@ -1,0 +1,2917 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner_show_cHnwYR": {
+      "type": "banner-show",
+      "blocks": {
+        "image_PPeMJD": {
+          "type": "image",
+          "settings": {
+            "image_pc": "shopify://shop_images/banner.jpg",
+            "image_mb": "shopify://shop_images/banner_mobile.jpg",
+            "pc_position": "top: 85%;left: 50%;transform: translate(-50%, -85%);",
+            "mb_position": "top: 85%;left: 50%;transform: translate(-50%, -85%);"
+          }
+        },
+        "custom_text_9CAMC7": {
+          "type": "custom_text",
+          "settings": {
+            "text": "Jewelry Made for What Matters",
+            "remove_br_tag": false,
+            "tag": "div",
+            "text_cl": "#fff",
+            "text_fs": 46,
+            "text_lh": 66,
+            "text_fw": 400,
+            "text_mgb": 12,
+            "font_italic": false,
+            "text_shadow": false,
+            "hidden_mobile": false,
+            "text_fs_mb": 26,
+            "text_lh_mb": 30,
+            "text_mgb_mobile": 10
+          }
+        },
+        "custom_text_4qFymJ": {
+          "type": "custom_text",
+          "settings": {
+            "text": "Meaningful designs, brilliant lab-grown diamonds, and fine craftsmanship",
+            "remove_br_tag": false,
+            "tag": "div",
+            "text_cl": "#fff",
+            "text_fs": 14,
+            "text_lh": 0,
+            "text_fw": 400,
+            "text_mgb": 34,
+            "font_italic": false,
+            "text_shadow": false,
+            "hidden_mobile": false,
+            "text_fs_mb": 16,
+            "text_lh_mb": 20,
+            "text_mgb_mobile": 18
+          }
+        },
+        "button_X7nTM9": {
+          "type": "button",
+          "settings": {
+            "button_title": "SHOP JEWELRY",
+            "button_link": "shopify://collections/engagement-rings"
+          }
+        },
+        "image_yGgA8f": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "image_pc": "shopify://shop_images/banner.jpg",
+            "image_mb": "shopify://shop_images/banner_mobile.jpg",
+            "pc_position": "top: 85%;left: 50%;transform: translate(-50%, -85%);",
+            "mb_position": "top: 85%;left: 50%;transform: translate(-50%, -85%);"
+          }
+        },
+        "custom_text_kz4HVQ": {
+          "type": "custom_text",
+          "disabled": true,
+          "settings": {
+            "text": "Mother's Day Sale Extended",
+            "remove_br_tag": false,
+            "tag": "div",
+            "text_cl": "#fff",
+            "text_fs": 46,
+            "text_lh": 66,
+            "text_fw": 600,
+            "text_mgb": 12,
+            "font_italic": false,
+            "text_shadow": false,
+            "hidden_mobile": false,
+            "text_fs_mb": 26,
+            "text_lh_mb": 30,
+            "text_mgb_mobile": 10
+          }
+        },
+        "custom_text_VwRWTK": {
+          "type": "custom_text",
+          "disabled": true,
+          "settings": {
+            "text": "Up to 25% OFF",
+            "remove_br_tag": false,
+            "tag": "div",
+            "text_cl": "#fff",
+            "text_fs": 18,
+            "text_lh": 22,
+            "text_fw": 400,
+            "text_mgb": 34,
+            "font_italic": false,
+            "text_shadow": false,
+            "hidden_mobile": false,
+            "text_fs_mb": 16,
+            "text_lh_mb": 20,
+            "text_mgb_mobile": 18
+          }
+        },
+        "button_PWcEqD": {
+          "type": "button",
+          "disabled": true,
+          "settings": {
+            "button_title": "SHOP JEWELRY",
+            "button_link": ""
+          }
+        },
+        "image_8EwzHM": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "image_pc": "shopify://shop_images/banner.jpg",
+            "image_mb": "shopify://shop_images/banner_mobile.jpg",
+            "pc_position": "top: 85%;left: 50%;transform: translate(-50%, -85%);",
+            "mb_position": "top: 85%;left: 50%;transform: translate(-50%, -85%);"
+          }
+        },
+        "custom_text_Xbkfif": {
+          "type": "custom_text",
+          "disabled": true,
+          "settings": {
+            "text": "Mother's Day Sale Extended",
+            "remove_br_tag": false,
+            "tag": "div",
+            "text_cl": "#fff",
+            "text_fs": 46,
+            "text_lh": 66,
+            "text_fw": 600,
+            "text_mgb": 12,
+            "font_italic": false,
+            "text_shadow": false,
+            "hidden_mobile": false,
+            "text_fs_mb": 26,
+            "text_lh_mb": 30,
+            "text_mgb_mobile": 10
+          }
+        }
+      },
+      "block_order": [
+        "image_PPeMJD",
+        "custom_text_9CAMC7",
+        "custom_text_4qFymJ",
+        "button_X7nTM9",
+        "image_yGgA8f",
+        "custom_text_kz4HVQ",
+        "custom_text_VwRWTK",
+        "button_PWcEqD",
+        "image_8EwzHM",
+        "custom_text_Xbkfif"
+      ],
+      "disabled": true,
+      "name": "Banner Show",
+      "settings": {
+        "layout": "wrapped-container",
+        "banner_interval": 5,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "pc_color": "",
+        "mobile_color": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,0px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,0px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,0px,0px"
+      }
+    },
+    "hero_XHKyyU": {
+      "type": "hero",
+      "blocks": {
+        "group_xwnnYm": {
+          "type": "group",
+          "name": "t:names.group",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "flex-end",
+            "align_baseline": true,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 18,
+            "width": "custom",
+            "custom_width": 90,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "group_mDbKcm": {
+              "type": "group",
+              "name": "t:names.group",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 10,
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "text_W67hiM": {
+                  "type": "text",
+                  "name": "t:names.heading",
+                  "settings": {
+                    "text": "<p>Jewelry Made for What Matters</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "h3",
+                    "font": "var(--font-body--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "text_EYP7mH": {
+                  "type": "text",
+                  "name": "t:names.text",
+                  "settings": {
+                    "text": "<p>Meaningful designs, brilliant lab-grown diamonds, and fine craftsmanship — created to become part of your story.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "paragraph",
+                    "font": "var(--font-accent--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "button_aEfhbe": {
+                  "type": "button",
+                  "name": "t:names.button",
+                  "settings": {
+                    "label": "SHOP FINE JEWELRY",
+                    "link": "shopify://collections/all",
+                    "open_in_new_tab": false,
+                    "style_class": "button",
+                    "width": "fit-content",
+                    "custom_width": 100,
+                    "width_mobile": "fit-content",
+                    "custom_width_mobile": 100
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_W67hiM",
+                "text_EYP7mH",
+                "button_aEfhbe"
+              ]
+            }
+          },
+          "block_order": [
+            "group_mDbKcm"
+          ]
+        }
+      },
+      "block_order": [
+        "group_xwnnYm"
+      ],
+      "name": "t:names.hero_bottom_aligned",
+      "settings": {
+        "media_type_1": "image",
+        "image_1": "shopify://shop_images/banner.jpg",
+        "media_type_2": "image",
+        "stack_media_on_mobile": false,
+        "custom_mobile_media": true,
+        "media_type_1_mobile": "image",
+        "image_1_mobile": "shopify://shop_images/banner_mobile.jpg",
+        "media_type_2_mobile": "image",
+        "link": "",
+        "open_in_new_tab": false,
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "flex-end",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "full-screen",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-ee7ae4eb-fae8-4fd3-a1ad-4e4f348cd5b5",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "gradient",
+        "gradient_direction": "to top",
+        "blurred_reflection": false,
+        "reflection_opacity": 75,
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
+    "section_jfNQfC": {
+      "type": "section",
+      "blocks": {
+        "group_XAcT9F": {
+          "type": "group",
+          "name": "t:names.column",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 0,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "text_C3t7we": {
+              "type": "text",
+              "name": "t:names.description",
+              "settings": {
+                "text": "<p>♕ Certified Diamonds</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_C3t7we"
+          ]
+        },
+        "group_ED9ztk": {
+          "type": "group",
+          "name": "t:names.column",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 0,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "text_a3HwBb": {
+              "type": "text",
+              "name": "t:names.description",
+              "settings": {
+                "text": "<p>⚒︎ Lifetime Warranty</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_a3HwBb"
+          ]
+        },
+        "group_LkTwax": {
+          "type": "group",
+          "name": "t:names.column",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 0,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "text_agq4ty": {
+              "type": "text",
+              "name": "t:names.description",
+              "settings": {
+                "text": "<p>⟳ 30 Days Returns</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_agq4ty"
+          ]
+        }
+      },
+      "block_order": [
+        "group_XAcT9F",
+        "group_ED9ztk",
+        "group_LkTwax"
+      ],
+      "name": "t:names.multicolumn",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "center",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 2,
+        "section_width": "page-width",
+        "custom_page_width": "1200px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-bf98fe81-fb96-40fd-a2c2-b2c072d066f7",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 10,
+        "padding-block-end": 10
+      }
+    },
+    "collection_diamonds_8Ubj4W": {
+      "type": "collection-diamonds",
+      "blocks": {
+        "item_AWpNXh": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Oval_Diamond.webp",
+            "title": "Oval",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=oval"
+          }
+        },
+        "item_Mpgiei": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Round_Diamond.jpg",
+            "title": "Round",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=round"
+          }
+        },
+        "item_NKTJMB": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Emerald_Diamond.jpg",
+            "title": "Emerald",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=emerald"
+          }
+        },
+        "item_7RhGDJ": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Marquise_Diamond.png",
+            "title": "Marquise",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=marquise"
+          }
+        },
+        "item_q3wHQr": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Radiant_Diamond.webp",
+            "title": "Radiant",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=radiant"
+          }
+        },
+        "item_mmxJQt": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Pear-Shaped_Diamond.jpg",
+            "title": "Pear",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=pear"
+          }
+        },
+        "item_bVPQXw": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglostyheartdiamond.png",
+            "title": "Heart",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=heart"
+          }
+        },
+        "item_adqUep": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_cushion_diamond.jpg",
+            "title": "Cushion",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=cushion"
+          }
+        },
+        "item_KCKjJy": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Princess_Diamond.webp",
+            "title": "Princess",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=princess"
+          }
+        },
+        "item_CRRLNG": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Asscher_Diamond.jpg",
+            "title": "Asscher",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=asscher"
+          }
+        }
+      },
+      "block_order": [
+        "item_AWpNXh",
+        "item_Mpgiei",
+        "item_NKTJMB",
+        "item_7RhGDJ",
+        "item_q3wHQr",
+        "item_mmxJQt",
+        "item_bVPQXw",
+        "item_adqUep",
+        "item_KCKjJy",
+        "item_CRRLNG"
+      ],
+      "name": "Collection Diamonds",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "box_align": "lgs-text-center",
+        "col_dk": "10",
+        "col_tb": "5",
+        "col_mb": "3",
+        "show_pagination_pc": false,
+        "show_navigation_pc": false,
+        "show_pagination_mb": true,
+        "show_navigation_mb": false,
+        "media_align_mb": "center",
+        "color_scheme": "scheme-c8bfd322-28f8-47fb-a40f-86f2a9921104",
+        "type_preset": "rte",
+        "font": "var(--font-heading--family)",
+        "font_size": "1rem",
+        "weight": "700",
+        "line_height": "normal",
+        "letter_spacing": "normal",
+        "case": "none",
+        "wrap": "pretty",
+        "color": "var(--color-foreground)",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Shop Diamonds By Shape",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 60,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "70px,0px,0px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "50px,0px,30px,0px"
+      }
+    },
+    "category_GFVVdQ": {
+      "type": "category",
+      "blocks": {
+        "item_3eTaTN": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/category-1.jpg",
+            "image_hover": "shopify://shop_images/category-2.jpg",
+            "title": "Engagement Rings",
+            "btn_title": "SHOP NOW",
+            "btn_link": ""
+          }
+        },
+        "item_Vx6L9x": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/category-2.jpg",
+            "title": "Diamond Rings",
+            "btn_title": "SHOP NOW",
+            "btn_link": ""
+          }
+        },
+        "item_AJRBda": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/category-3.jpg",
+            "title": "Earrings",
+            "btn_title": "SHOP NOW",
+            "btn_link": ""
+          }
+        },
+        "item_krwt94": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/category-4.jpg",
+            "title": "Necklaces",
+            "btn_title": "SHOP NOW",
+            "btn_link": ""
+          }
+        },
+        "item_wnjPNf": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/category-5.jpg",
+            "title": "Bracelets",
+            "btn_title": "SHOP NOW",
+            "btn_link": ""
+          }
+        },
+        "item_7WFQ4K": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/category-5.jpg",
+            "title": "Gifts",
+            "btn_title": "SHOP NOW",
+            "btn_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_3eTaTN",
+        "item_Vx6L9x",
+        "item_AJRBda",
+        "item_krwt94",
+        "item_wnjPNf",
+        "item_7WFQ4K"
+      ],
+      "name": "Category",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "col_dk": "5",
+        "col_tb": "2",
+        "col_mb": "2",
+        "show_pagination_pc": false,
+        "show_navigation_pc": false,
+        "show_pagination_mb": false,
+        "show_navigation_mb": false,
+        "media_align_mb": "center",
+        "color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
+        "title_type_preset": "rte",
+        "title_font": "var(--font-body--family)",
+        "title_font_size": "1rem",
+        "title_weight": "",
+        "title_line_height": "normal",
+        "title_letter_spacing": "normal",
+        "title_case": "none",
+        "title_wrap": "pretty",
+        "title_color": "var(--color-foreground)",
+        "link_type_preset": "rte",
+        "link_font": "var(--font-body--family)",
+        "link_font_size": "0.75rem",
+        "link_weight": "",
+        "link_line_height": "normal",
+        "link_letter_spacing": "normal",
+        "link_case": "none",
+        "link_wrap": "pretty",
+        "link_color": "var(--color-primary)",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Shop By Category",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 55,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "70px,0px,50px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "30px,0px,30px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "hero_Kw3fcF": {
+      "type": "hero",
+      "blocks": {
+        "text_68fAVn": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Made for Everyday</p>",
+            "width": "fit-content",
+            "max_width": "narrow",
+            "alignment": "left",
+            "type_preset": "h3",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_D9MXte": {
+          "type": "text",
+          "settings": {
+            "text": "<p>From everyday rituals to unforgettable nights, designed to move beautifully with your life.</p>",
+            "width": "fit-content",
+            "max_width": "narrow",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "button_KidHgj": {
+          "type": "button",
+          "name": "t:names.button",
+          "settings": {
+            "label": "Explore Everyday Jewelry",
+            "link": "shopify://collections/all",
+            "open_in_new_tab": false,
+            "style_class": "button",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_68fAVn",
+        "text_D9MXte",
+        "button_KidHgj"
+      ],
+      "name": "t:names.hero",
+      "settings": {
+        "media_type_1": "image",
+        "image_1": "shopify://shop_images/0825pcbanner.webp",
+        "media_type_2": "image",
+        "stack_media_on_mobile": false,
+        "custom_mobile_media": true,
+        "media_type_1_mobile": "image",
+        "image_1_mobile": "shopify://shop_images/0825banner.webp",
+        "media_type_2_mobile": "image",
+        "link": "",
+        "open_in_new_tab": false,
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 16,
+        "section_width": "page-width",
+        "section_height": "large",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-ee7ae4eb-fae8-4fd3-a1ad-4e4f348cd5b5",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "gradient",
+        "gradient_direction": "to top",
+        "blurred_reflection": false,
+        "reflection_opacity": 75,
+        "padding-block-start": 24,
+        "padding-block-end": 24
+      }
+    },
+    "index_collections_fDKXjY": {
+      "type": "index-collections",
+      "name": "Best Sellers",
+      "settings": {
+        "collection": "lab-grown-diamond-necklaces",
+        "collection_number": 12,
+        "color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
+        "brand_color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
+        "title_type_preset": "rte",
+        "title_font": "var(--font-body--family)",
+        "title_font_size": "1.125rem",
+        "title_weight": "700",
+        "title_line_height": "normal",
+        "title_letter_spacing": "normal",
+        "title_case": "none",
+        "title_wrap": "pretty",
+        "title_color": "var(--color-foreground)",
+        "price_type_preset": "rte",
+        "price_font": "var(--font-body--family)",
+        "price_font_size": "1rem",
+        "price_weight": "700",
+        "price_line_height": "normal",
+        "price_letter_spacing": "normal",
+        "price_case": "none",
+        "price_wrap": "pretty",
+        "price_color": "var(--color-primary)",
+        "show_pagination_pc": false,
+        "show_navigation_pc": true,
+        "show_pagination_mb": true,
+        "show_navigation_mb": false,
+        "media_align_mb": "center",
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "New Arrivals",
+        "icon_heading": "las la-gem",
+        "top_subheading": "Discover our most-loved pieces - timeless, meaningful, and worn by thousands.",
+        "tophead_mb": 24,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "60px,0px,0px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "section_FBYWcU": {
+      "type": "section",
+      "blocks": {
+        "image_HHEKX8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/a085cbf0-2c12-43a1-85ce-ed834f954053.png",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "custom",
+            "custom_width": 43,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 0,
+            "border_opacity": 0,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "group_EWf7Gp": {
+          "type": "group",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 15,
+            "width": "custom",
+            "custom_width": 32,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "text_bXWmpy": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<p>For Every Moment Worth Remembering</p>",
+                "width": "100%",
+                "max_width": "narrow",
+                "alignment": "center",
+                "type_preset": "h3",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 10,
+                "padding-inline-end": 10
+              },
+              "blocks": {}
+            },
+            "text_4fXTPg": {
+              "type": "text",
+              "settings": {
+                "text": "<p>For the love you celebrate, the milestones you reach, and the moments that become part of your story.</p>",
+                "width": "fit-content",
+                "max_width": "narrow",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "button_8CJRCj": {
+              "type": "button",
+              "settings": {
+                "label": "Celebrate Your Moment",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_bXWmpy",
+            "text_4fXTPg",
+            "button_8CJRCj"
+          ]
+        }
+      },
+      "block_order": [
+        "image_HHEKX8",
+        "group_EWf7Gp"
+      ],
+      "name": "t:names.image_with_text",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "center",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 100,
+        "section_width": "custom-width",
+        "custom_page_width": "1730px",
+        "section_height": "custom",
+        "section_height_custom": 0,
+        "color_scheme": "scheme-b0b6c6df-26fa-4b2e-87bc-05b9a110f914",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 50,
+        "padding-block-end": 50
+      }
+    },
+    "section_9HPEz8": {
+      "type": "section",
+      "blocks": {
+        "group_GBMY8P": {
+          "type": "group",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 16,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "icon_3wR4iR": {
+              "type": "icon",
+              "settings": {
+                "icon": "none",
+                "image_upload": "shopify://shop_images/freeshipping.webp",
+                "width": 40,
+                "link": "",
+                "open_in_new_tab": false
+              },
+              "blocks": {}
+            },
+            "group_qVLXFy": {
+              "type": "group",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 4,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "text_3XCHdT": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Free Shipping</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "center",
+                    "type_preset": "h4",
+                    "font": "var(--font-body--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "text_4k7yFR": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Delivered in 7–14 business days.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "center",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_3XCHdT",
+                "text_4k7yFR"
+              ]
+            }
+          },
+          "block_order": [
+            "icon_3wR4iR",
+            "group_qVLXFy"
+          ]
+        },
+        "group_YFVgKp": {
+          "type": "group",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 16,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "icon_NJawLh": {
+              "type": "icon",
+              "settings": {
+                "icon": "none",
+                "image_upload": "shopify://shop_images/WarrantyDiamonds.webp",
+                "width": 40,
+                "link": "",
+                "open_in_new_tab": false
+              },
+              "blocks": {}
+            },
+            "group_hTqfLa": {
+              "type": "group",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 4,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "text_CrbJp4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Lifetime Warranty</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "center",
+                    "type_preset": "h4",
+                    "font": "var(--font-body--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "text_9cQfUB": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Crafted to last for generations.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "center",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_CrbJp4",
+                "text_9cQfUB"
+              ]
+            }
+          },
+          "block_order": [
+            "icon_NJawLh",
+            "group_hTqfLa"
+          ]
+        },
+        "group_cmU4Dj": {
+          "type": "group",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 16,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "icon_EEhrWw": {
+              "type": "icon",
+              "settings": {
+                "icon": "none",
+                "image_upload": "shopify://shop_images/CertifiedDiamonds.webp",
+                "width": 40,
+                "link": "",
+                "open_in_new_tab": false
+              },
+              "blocks": {}
+            },
+            "group_cafRwN": {
+              "type": "group",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 4,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "text_twFE4q": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Competitive Pricing</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "center",
+                    "type_preset": "h4",
+                    "font": "var(--font-body--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "text_4yiwfX": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Exceptional quality without traditional markups.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "center",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_twFE4q",
+                "text_4yiwfX"
+              ]
+            }
+          },
+          "block_order": [
+            "icon_EEhrWw",
+            "group_cafRwN"
+          ]
+        },
+        "group_pncxCT": {
+          "type": "group",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 16,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "icon_aBpXXg": {
+              "type": "icon",
+              "settings": {
+                "icon": "none",
+                "image_upload": "shopify://shop_images/ReturnedDiamonds.webp",
+                "width": 40,
+                "link": "",
+                "open_in_new_tab": false
+              },
+              "blocks": {}
+            },
+            "group_GhNCDD": {
+              "type": "group",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 4,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "text_9GQrjd": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Free Returns</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "center",
+                    "type_preset": "h4",
+                    "font": "var(--font-body--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "text_jAcWnX": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Easy returns within 30 days.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "center",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_9GQrjd",
+                "text_jAcWnX"
+              ]
+            }
+          },
+          "block_order": [
+            "icon_aBpXXg",
+            "group_GhNCDD"
+          ]
+        }
+      },
+      "block_order": [
+        "group_GBMY8P",
+        "group_YFVgKp",
+        "group_cmU4Dj",
+        "group_pncxCT"
+      ],
+      "name": "t:names.icons_with_text",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "center",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 24,
+        "section_width": "custom-width",
+        "custom_page_width": "1500px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
+    "reviews_q8Dmxr": {
+      "type": "reviews",
+      "blocks": {
+        "item_3Up8R4": {
+          "type": "item",
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/UGC_Photo_Result_3-result-2.webp",
+            "video_url": "",
+            "date": "7/20/2026",
+            "star": 5,
+            "title": "",
+            "content": "I was a little nervous ordering fine jewelry online, but this ring completely exceeded my expectations. The diamond is incredibly bright and looks even more beautiful in person.",
+            "name": "Emily R."
+          }
+        },
+        "item_JabP7W": {
+          "type": "item",
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/ugc-photo-1.webp",
+            "video_url": "",
+            "date": "7/25/2026",
+            "star": 5,
+            "title": "",
+            "content": "Absolutely love this necklace. It’s delicate without feeling too fragile, and the diamond catches the light beautifully. I’ve been wearing it almost every day since it arrived.",
+            "name": "Hannah Mitchell"
+          }
+        },
+        "item_QNKPVW": {
+          "type": "item",
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/ugc-photo-1_2.png",
+            "video_url": "",
+            "date": "8/2/2026",
+            "star": 5,
+            "title": "",
+            "content": "The ring is even prettier in person than it was online. The setting feels very well made, and the diamond has so much sparkle. I’m genuinely impressed with the quality.",
+            "name": "Grace Anderson"
+          }
+        },
+        "item_h9K88K": {
+          "type": "item",
+          "disabled": true,
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/review-1.jpg",
+            "video_url": "",
+            "date": "8/24/2026",
+            "star": 5,
+            "title": "",
+            "content": "This was my first lab-grown diamond purchase, so I wasn’t sure what to expect. The ring arrived beautifully packaged and the diamond looks absolutely stunning on my hand.",
+            "name": "Claire Morgan"
+          }
+        }
+      },
+      "block_order": [
+        "item_3Up8R4",
+        "item_JabP7W",
+        "item_QNKPVW",
+        "item_h9K88K"
+      ],
+      "name": "Reviews",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "col_dk": "3",
+        "col_tb": "3",
+        "col_mb": "2",
+        "show_pagination_pc": false,
+        "show_navigation_pc": true,
+        "show_pagination_mb": false,
+        "show_navigation_mb": false,
+        "media_align_mb": "center",
+        "autoplay": true,
+        "autoplay_speed": 3,
+        "image_ratio": "landscape",
+        "info_align": "left",
+        "color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
+        "date_type_preset": "custom",
+        "date_font": "var(--font-body--family)",
+        "date_font_size": "0.875rem",
+        "date_weight": "500",
+        "date_line_height": "normal",
+        "date_letter_spacing": "normal",
+        "date_case": "none",
+        "date_wrap": "pretty",
+        "date_color": "var(--color-foreground)",
+        "content_type_preset": "rte",
+        "content_font": "var(--font-body--family)",
+        "content_font_size": "0.875rem",
+        "content_weight": "",
+        "content_line_height": "normal",
+        "content_letter_spacing": "normal",
+        "content_case": "none",
+        "content_wrap": "pretty",
+        "content_color": "var(--color-foreground)",
+        "name_type_preset": "rte",
+        "name_font": "var(--font-body--family)",
+        "name_font_size": "0.875rem",
+        "name_weight": "",
+        "name_line_height": "normal",
+        "name_letter_spacing": "normal",
+        "name_case": "none",
+        "name_wrap": "pretty",
+        "name_color": "var(--color-foreground)",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Made to Be Loved. Made to Be Kept.",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 60,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "60px,0px,50px,0px",
+        "mg_tb": "00px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "50px,0px,30px,0px"
+      }
+    },
+    "index_blog_mELwxy": {
+      "type": "index-blog",
+      "name": "Index Blog",
+      "settings": {
+        "blog": "news",
+        "blog_number": 20,
+        "image_ratio": "landscape",
+        "title_align": "center",
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "show_pagination_pc": false,
+        "show_navigation_pc": true,
+        "show_pagination_mb": false,
+        "show_navigation_mb": false,
+        "media_align_mb": "center",
+        "autoplay": false,
+        "autoplay_speed": 4,
+        "color_scheme": "scheme-c8bfd322-28f8-47fb-a40f-86f2a9921104",
+        "title_type_preset": "rte",
+        "title_font": "var(--font-heading--family)",
+        "title_font_size": "1.25rem",
+        "title_weight": "",
+        "title_line_height": "normal",
+        "title_letter_spacing": "normal",
+        "title_case": "none",
+        "title_wrap": "pretty",
+        "title_color": "var(--color-foreground-heading)",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "The Ecglosty Edit",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 60,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,0px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,0px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,0px,0px"
+      }
+    },
+    "178833772802821a55": {
+      "type": "_blocks",
+      "blocks": {
+        "button_jWaFMN": {
+          "type": "button",
+          "name": "t:names.button",
+          "settings": {
+            "label": "Read All",
+            "link": "shopify://blogs/news",
+            "open_in_new_tab": false,
+            "style_class": "button-secondary",
+            "width": "fit-content",
+            "custom_width": 15,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "button_jWaFMN"
+      ],
+      "custom_css": [],
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "center",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-8f416c7b-886a-490d-bf6f-b8880519380f",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "category_NRGbYt": {
+      "type": "category",
+      "blocks": {
+        "item_MnKYRJ": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/carats-1.jpg",
+            "image_hover": "shopify://shop_images/d4.jpg",
+            "title": "Exceptional Designers",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_i4hyPh": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/carats-2.jpg",
+            "title": "Flawless Lab Diamond",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_pRHkVK": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/carats-3.jpg",
+            "title": "Eco-Friendly Mission",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_dYFCjM": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/carats-4.jpg",
+            "title": "Recycled Brilliance",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_xG3wzB": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/carats-5.jpg",
+            "title": "Recycled Brilliance",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_MnKYRJ",
+        "item_i4hyPh",
+        "item_pRHkVK",
+        "item_dYFCjM",
+        "item_xG3wzB"
+      ],
+      "disabled": true,
+      "name": "Category",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "col_dk": "4",
+        "col_tb": "2",
+        "col_mb": "2",
+        "show_pagination_pc": false,
+        "show_navigation_pc": false,
+        "show_pagination_mb": true,
+        "show_navigation_mb": false,
+        "media_align_mb": "center",
+        "color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
+        "title_type_preset": "rte",
+        "title_font": "var(--font-body--family)",
+        "title_font_size": "1rem",
+        "title_weight": "",
+        "title_line_height": "normal",
+        "title_letter_spacing": "normal",
+        "title_case": "none",
+        "title_wrap": "pretty",
+        "title_color": "var(--color-foreground)",
+        "link_type_preset": "rte",
+        "link_font": "var(--font-body--family)",
+        "link_font_size": "0.75rem",
+        "link_weight": "",
+        "link_line_height": "normal",
+        "link_letter_spacing": "normal",
+        "link_case": "none",
+        "link_wrap": "pretty",
+        "link_color": "var(--color-primary)",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "About Brilliant Carats",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 55,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "60px,0px,0px,0px",
+        "pd": "0px,0px,90px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,30px,0px"
+      }
+    },
+    "gallery_7nG4P6": {
+      "type": "gallery",
+      "blocks": {
+        "item_NfJz69": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial10.webp",
+            "use_link": false,
+            "url": ""
+          }
+        },
+        "item_HPiFpg": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial9.webp",
+            "use_link": false,
+            "url": ""
+          }
+        },
+        "item_DF9wYW": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial1.webp",
+            "use_link": false,
+            "url": ""
+          }
+        },
+        "item_Rt4jcy": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial8.webp",
+            "use_link": false,
+            "url": ""
+          }
+        },
+        "item_CfmELr": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial.webp",
+            "use_link": false,
+            "url": ""
+          }
+        },
+        "item_3HeXxU": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial4.webp",
+            "use_link": false,
+            "url": ""
+          }
+        },
+        "item_EPCDHk": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial5.webp",
+            "use_link": false,
+            "url": ""
+          }
+        },
+        "item_WA8pHN": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial3.webp",
+            "use_link": false,
+            "url": ""
+          }
+        },
+        "item_X8E9Xa": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial2.webp",
+            "use_link": false,
+            "url": ""
+          }
+        },
+        "item_4RPVw9": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial13.webp",
+            "use_link": false,
+            "url": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_NfJz69",
+        "item_HPiFpg",
+        "item_DF9wYW",
+        "item_Rt4jcy",
+        "item_CfmELr",
+        "item_3HeXxU",
+        "item_EPCDHk",
+        "item_WA8pHN",
+        "item_X8E9Xa",
+        "item_4RPVw9"
+      ],
+      "name": "gallery",
+      "settings": {
+        "layout": "wrapped-container",
+        "custom_container": "1200px",
+        "col_dk": "6",
+        "col_tb": "4",
+        "col_mb": "2",
+        "show_pagination_pc": false,
+        "show_navigation_pc": false,
+        "show_pagination_mb": false,
+        "show_navigation_mb": false,
+        "media_align_mb": "between",
+        "scroll_mode": "continuous",
+        "autoplay_speed": 5000,
+        "scroll_dir": "left",
+        "color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Worn Your Way",
+        "icon_heading": "las la-gem",
+        "top_subheading": "See ECGLOSTY in real life, from everyday moments to milestones worth celebrating.",
+        "tophead_mb": 0,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "60px,0px,50px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "50px,0px,30px,0px"
+      }
+    },
+    "section_RKqE8L": {
+      "type": "section",
+      "blocks": {
+        "accordion_Nr78Le": {
+          "type": "accordion",
+          "name": "t:names.accordion",
+          "settings": {
+            "icon": "caret",
+            "dividers": true,
+            "type_preset": "h6",
+            "inherit_color_scheme": false,
+            "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 20,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "accordion_row_GUcURR": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Lab Grown Diamonds: Redefining Modern Luxury",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_4TbydN": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>For us, it comes down to a few things you can’t see in a photo. How a ring sits next to another band. How a necklace moves when you walk. How a pair of earrings becomes so familiar you forget they’re there—until someone else notices.<br/><br/>We make fine jewelry with lab-grown diamonds and solid gold. Not because it’s trendy, but because these materials let us focus on what actually matters: cut, proportion, weight, and the way every detail works together over time.<br/></p><h3>What are Lab Grown Diamonds?</h3><p>lab grown diamonds are 100% authentic diamonds created in controlled laboratory environments rather than being mined from the earth. By replicating the natural geological process of intense heat and pressure, these gemstones possess the identical chemical, physical, and optical properties of mined diamonds. </p><p>Think of a lab grown diamond as a modern marvel of science. Instead of forming over billions of years beneath the earth’s surface, they are created with precision using two advanced, industry-standard methods:</p><ul><li>CVD (Chemical Vapor Deposition): A high-tech process where carbon atoms are deposited onto a diamond \"seed\" inside a vacuum chamber, allowing the crystal to grow layer by layer.</li><li>HPHT (High Pressure, High Temperature): A method that subjects carbon to the extreme heat and crushing pressure found deep within the Earth’s mantle to form a rough diamond.</li></ul><p>Whether created via CVD or HPHT, the result is a real diamond that is indistinguishable from a mined stone, even under a professional jeweler’s loupe. At Lucenjuri, we provide the full brilliance of a genuine diamond, grown through modern innovation rather than traditional mining.</p><h3>Are Lab Grown Diamonds Real? Understanding Their Composition</h3><p>This is one of the most common questions we hear, and the answer is a definitive yes. In fact, the Federal Trade Commission (FTC) officially classifies lab-created diamonds as real diamonds, recognizing that they are chemically, physically, and optically identical to those found in the earth.</p><p>When you look at a Lucenjuri diamond, you are looking at a 100% genuine carbon crystal. These stones share the exact same internal crystal structure as mined diamonds, along with the legendary 10/10 hardness on the Mohs scale. This means they offer the same fire, brilliance, and enduring sparkle that has made diamonds the ultimate symbol of love for centuries.</p><h3>Lab Grown Diamonds vs. Earth-Mined: Key Differences & Similarities</h3><p>The true difference is not found in the diamond, but in the journey. While both lab grown and mined diamonds offer identical brilliance and durability, lab grown diamonds avoid the environmental and ethical challenges often tied to traditional mining. When you choose a Lucenjuri diamond, you are choosing a conflict-free, transparent origin with a significantly lighter environmental footprint.<br/><br/>Lab-grown and mined diamonds share the same physical properties—100% carbon composition, 10/10 hardness, and identical brilliance. However, they are worlds apart in origin and impact: lab diamonds are conflict-free, low-carbon, and minimally disruptive to land, whereas mined diamonds involve complex supply chains, heavy land displacement, and a high ecological footprint.</p><h3>Value and Savings: Why Lab Grown Diamonds Cost Less</h3><p>One of the most practical benefits of this modern innovation is its accessibility. Lab diamonds generally cost 30% to 50% less than mined diamonds of the same quality.</p><p>Why the price difference? It is not a difference in quality. Instead, it is a difference in the supply chain. Mined diamonds have a long, expensive journey from deep within the earth through a global network of middle men. Lab grown diamonds have a shorter, more efficient path.</p><p>At Ecglosty, we pass these supply chain savings directly to you. This means you have the freedom to choose a larger carat size, higher clarity, or superior cut. We are making fine diamond jewelry accessible across a wider range of budgets, while still investing in a piece designed to be cherished for a lifetime.</p><h3>Why Choose ECGLOSTY for Jewelry That Speaks Without Saying a Word?</h3><p>At ECGLOSTY, we quietly obsess over the things you can't see in a photo—how a ring sits next to another band, how a necklace moves when you walk, how a pair of earrings becomes so familiar you forget they're there. We craft every piece in solid gold with lab-grown diamonds, spending our time not on trends or marketing claims, but on the proportions and finishes that make jewelry feel like an extension of you, not an announcement.</p><p>We invite you to set aside the usual jewelry rules. No expensive status signals. No waiting for permission to wear something special. Just well-made, thoughtfully designed pieces that earn their place in your daily life.</p><p>Because in the end, luxury is simpler than it's often made to seem. It's not about owning more. It's about knowing what's worth keeping.</p>",
+                    "width": "100%",
+                    "max_width": "none",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_4TbydN"
+              ]
+            },
+            "accordion_row_iyMGe8": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "FAQs",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "accordion_qfYaYE": {
+                  "type": "accordion",
+                  "name": "t:names.accordion",
+                  "settings": {
+                    "icon": "caret",
+                    "dividers": false,
+                    "type_preset": "",
+                    "inherit_color_scheme": false,
+                    "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 12,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "accordion_row_xnTnhV": {
+                      "type": "_accordion-row",
+                      "name": "t:names.accordion_row",
+                      "settings": {
+                        "heading": "Are lab grown diamonds real diamonds?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_nNbWCq": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Yes. Lab grown diamonds are 100% real diamonds. They are chemically, physically, and optically identical to earth-mined diamonds. The only difference is their origin. Instead of forming deep within the earth over billions of years, they are created in controlled environments using advanced technology that mirrors natural diamond formation.</p>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_nNbWCq"
+                      ]
+                    },
+                    "accordion_row_jEewpz": {
+                      "type": "_accordion-row",
+                      "name": "t:names.accordion_row",
+                      "settings": {
+                        "heading": "Can a jeweler tell the difference between a lab grown and a mined diamond?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_xyKGHd": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Not by sight alone. To the naked eye, or even under a jeweler’s loupe, lab grown and mined diamonds look exactly the same. Both are pure carbon crystals and display identical brilliance and fire. Only specialized laboratory equipment can detect the subtle growth patterns that indicate a diamond was grown in a lab.</p>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_xyKGHd"
+                      ]
+                    },
+                    "accordion_row_DrCnnX": {
+                      "type": "_accordion-row",
+                      "name": "t:names.accordion_row",
+                      "settings": {
+                        "heading": "Do lab grown diamonds get cloudy or change color over time?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_iFeXJq": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Never. Unlike diamond simulants like cubic zirconia, lab grown diamonds are permanent gemstones. They do not cloud, fade, or change color. A lab grown diamond will remain as brilliant decades from now as it was on the day you first wore it.</p>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_iFeXJq"
+                      ]
+                    },
+                    "accordion_row_RDjmAy": {
+                      "type": "_accordion-row",
+                      "name": "t:names.accordion_row",
+                      "settings": {
+                        "heading": "Are lab grown diamonds as hard and durable as mined diamonds?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_Rk99hA": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Yes. Diamonds are the hardest material on earth, and lab grown diamonds share that exact property. They rank 10/10 on the Mohs hardness scale. This makes them extremely resistant to scratches and perfectly suited for everyday wear, including engagement rings.</p>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_Rk99hA"
+                      ]
+                    },
+                    "accordion_row_4X8kzq": {
+                      "type": "_accordion-row",
+                      "name": "t:names.accordion_row",
+                      "settings": {
+                        "heading": "Do lab grown diamonds come with certifications?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_HVHezi": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Yes. At Ecglosty, our diamonds are professionally graded and certified by leading gemological laboratories such as IGI or GIA. These certificates verify the diamond’s 4Cs: Cut, Color, Clarity, and Carat weight, ensuring you know exactly what you are purchasing.</p>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_HVHezi"
+                      ]
+                    },
+                    "accordion_row_gKAcyw": {
+                      "type": "_accordion-row",
+                      "name": "t:names.accordion_row",
+                      "settings": {
+                        "heading": "Why are lab grown diamonds more affordable than mined diamonds?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_NpymNq": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Lab grown diamonds are more accessible because they have a shorter and more efficient supply chain. By removing the high costs of traditional mining and multiple middle-men, we can pass those savings directly to you. This allows you to choose a larger or higher-quality diamond for your budget.</p>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_NpymNq"
+                      ]
+                    },
+                    "accordion_row_6nBCKR": {
+                      "type": "_accordion-row",
+                      "name": "t:names.accordion_row",
+                      "settings": {
+                        "heading": "What is the difference between CVD and HPHT growth methods?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_YritFp": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Both are advanced, proven methods for growing high-quality diamonds. HPHT (High Pressure, High Temperature) recreates the extreme conditions found deep within the earth, while CVD (Chemical Vapor Deposition) grows diamonds layer by layer from a carbon-rich gas. Both methods produce diamonds that are identical in quality, beauty, and structure.</p>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_YritFp"
+                      ]
+                    },
+                    "accordion_row_YhfkrE": {
+                      "type": "_accordion-row",
+                      "name": "t:names.accordion_row",
+                      "settings": {
+                        "heading": "Are lab grown diamonds considered ethical and sustainable?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_KnTdg4": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Definitely. lab grown diamonds are widely considered a more ethical and sustainable alternative to traditional mining. Because they are created above ground, their production avoids the large-scale land disruption and complex ethical concerns often associated with diamond mining.</p>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_KnTdg4"
+                      ]
+                    },
+                    "accordion_row_CCRRkw": {
+                      "type": "_accordion-row",
+                      "settings": {
+                        "heading": "Do lab grown diamonds have flaws or inclusions?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_THg6Qj": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>They can, just like mined diamonds. Because lab grown diamonds form over time using natural carbon, internal inclusions or surface blemishes may occur during the growth process. These characteristics are graded using the same strict standards as mined stones. At Ecglosty, we carefully hand-select \"eye-clean\" diamonds only. This ensures that even if a diamond has a tiny inclusion visible under a microscope, it will have no visible flaws to the naked eye.</p>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_THg6Qj"
+                      ]
+                    },
+                    "accordion_row_Ft7pUt": {
+                      "type": "_accordion-row",
+                      "settings": {
+                        "heading": "What lab grown diamond shapes are available?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_Ay6bjt": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>We offer a full range of diamond shapes, each precision-cut to maximize brilliance and light performance:</p><ul><li>The Classics: Round Brilliant, Princess, and Cushion</li><li>The Elongated: Oval, Pear, and Marquise</li><li>The Architectural: Emerald, Radiant, and Asscher</li><li>The Romantic: The symbolic Heart shape</li></ul>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_Ay6bjt"
+                      ]
+                    },
+                    "accordion_row_apFQCt": {
+                      "type": "_accordion-row",
+                      "settings": {
+                        "heading": "Can lab grown diamonds be resized or reset like mined diamonds?",
+                        "open_by_default": false,
+                        "icon": "none",
+                        "width": 20
+                      },
+                      "blocks": {
+                        "text_PXUNDW": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Absolutely. Because lab grown diamonds are physically identical to mined diamonds, they can be resized, reset, engraved, or redesigned by master jewelers in exactly the same way. They can withstand the heat and pressure of a jeweler's torch just like a natural stone. Years down the line, your diamond can evolve with you without ever compromising its integrity or brilliance.</p>",
+                            "width": "100%",
+                            "max_width": "none",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "text_PXUNDW"
+                      ]
+                    }
+                  },
+                  "block_order": [
+                    "accordion_row_xnTnhV",
+                    "accordion_row_jEewpz",
+                    "accordion_row_DrCnnX",
+                    "accordion_row_RDjmAy",
+                    "accordion_row_4X8kzq",
+                    "accordion_row_gKAcyw",
+                    "accordion_row_6nBCKR",
+                    "accordion_row_YhfkrE",
+                    "accordion_row_CCRRkw",
+                    "accordion_row_Ft7pUt",
+                    "accordion_row_apFQCt"
+                  ]
+                }
+              },
+              "block_order": [
+                "accordion_qfYaYE"
+              ]
+            }
+          },
+          "block_order": [
+            "accordion_row_GUcURR",
+            "accordion_row_iyMGe8"
+          ]
+        }
+      },
+      "block_order": [
+        "accordion_Nr78Le"
+      ],
+      "custom_css": [
+        ".section--page-width {max-width: 1450px !important; margin-left: auto !important; margin-right: auto !important;}"
+      ],
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "custom_page_width": "1200px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-1",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "banner_show_cHnwYR",
+    "hero_XHKyyU",
+    "section_jfNQfC",
+    "collection_diamonds_8Ubj4W",
+    "category_GFVVdQ",
+    "hero_Kw3fcF",
+    "index_collections_fDKXjY",
+    "section_FBYWcU",
+    "section_9HPEz8",
+    "reviews_q8Dmxr",
+    "index_blog_mELwxy",
+    "178833772802821a55",
+    "category_NRGbYt",
+    "gallery_7nG4P6",
+    "section_RKqE8L"
+  ]
+}

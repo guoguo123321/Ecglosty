@@ -1,0 +1,551 @@
+{% doc %}
+  @prompt
+    生成一个博客分区，可以控制图片为正方形或者长方形，可以轮播。, 增加一个可以居中的功能。轮播功能需要内置。, 增加一个控制页面宽度的功能, 页面宽度新增功能：可以自己编辑，比如1500px, 博客标题增加控制字体大小功能, 再增加一个控制文章标题大小的功能
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+{% assign blo_setts = block.settings %}
+{% capture heading_base_class %}ai-blog-carousel-{{ ai_gen_id }}__title{% endcapture %}
+{% capture article_base_class %}ai-blog-carousel-{{ ai_gen_id }}__article-title{% endcapture %}
+{% style %}
+  .ai-blog-carousel-{{ ai_gen_id }} {
+    display: block;
+    width: {{ blo_setts.desktop_width_percent }}%;
+    max-width: {{ blo_setts.page_width }}px;
+    margin: 0 auto;
+    padding: 32px 0;
+    background: {{ blo_setts.background_color }};
+    color: {{ blo_setts.text_color }};
+  }
+  .ai-blog-carousel-{{ ai_gen_id }}__track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .ai-blog-carousel-{{ ai_gen_id }}__track::-webkit-scrollbar {
+    display: none;
+  }
+  .ai-blog-carousel-{{ ai_gen_id }}__card {
+    flex: 0 0 calc((100% - 40px) / 3);
+    scroll-snap-align: start;
+  }
+  .ai-blog-carousel-{{ ai_gen_id }}__image {
+    aspect-ratio: {{ blo_setts.image_ratio }};
+    overflow: hidden;
+    border-radius: {{ blo_setts.card_radius }}px;
+    background: {{ blo_setts.image_background }};
+  }
+  .ai-blog-carousel-{{ ai_gen_id }}__image img,
+  .ai-blog-carousel-{{ ai_gen_id }}__image svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ai-blog-carousel-{{ ai_gen_id }}__title {
+    margin: 0 0 24px;
+    text-align: {{ blo_setts.content_alignment }};
+  }
+  .ai-blog-carousel-{{ ai_gen_id }}__meta {
+    margin-top: {{ blo_setts.image_title_gap }}px;
+    text-align: {{ blo_setts.content_alignment }};
+  }
+  .ai-blog-carousel-{{ ai_gen_id }}__article-title {
+    margin: {% if blo_setts.show_date %}8px 0 0{% else %}0{% endif %};
+  }
+  .ai-blog-carousel-{{ ai_gen_id }}__meta p {
+    margin: 0;
+    font-size: 14px;
+  }
+  @media (max-width: 749px) {
+    .ai-blog-carousel-{{ ai_gen_id }} {
+      width: 100%;
+      max-width: none;
+    }
+    .ai-blog-carousel-{{ ai_gen_id }}__card {
+      flex-basis: 82%;
+    }
+  }
+{% endstyle %}
+
+<blog-carousel-{{ ai_gen_id }}
+  class="ai-blog-carousel-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <h2
+    class="{% render 'lg-typography-classes', settings: blo_setts, prefix: 'heading_', base_class: heading_base_class %}"
+    style="{% render 'lg-typography-style', settings: blo_setts, prefix: 'heading_' %}"
+  >
+    {{ blo_setts.heading | escape }}
+  </h2>
+
+  {% if blo_setts.blog != blank %}
+    <div class="ai-blog-carousel-{{ ai_gen_id }}__track" data-track>
+      {% for article in blo_setts.blog.articles limit: blo_setts.article_limit %}
+        <article class="ai-blog-carousel-{{ ai_gen_id }}__card">
+          <a href="{{ article.url }}">
+            <div class="ai-blog-carousel-{{ ai_gen_id }}__image">
+              {% if article.image %}
+                <img
+                  src="{{ article.image | image_url: width: 900 }}"
+                  alt="{{ article.image.alt | default: article.title | escape }}"
+                  loading="lazy"
+                >
+              {% else %}
+                {{ 'image' | placeholder_svg_tag }}
+              {% endif %}
+            </div>
+            <div class="ai-blog-carousel-{{ ai_gen_id }}__meta">
+              {% if blo_setts.show_date %}
+                <p>{{ article.published_at | date: '%Y年%m月%d日' }}</p>
+              {% endif %}
+              <h3
+                class="{% render 'lg-typography-classes', settings: blo_setts, prefix: 'article_', base_class: article_base_class %}"
+                style="{% render 'lg-typography-style', settings: blo_setts, prefix: 'article_' %}"
+              >
+                {{ article.title | escape }}
+              </h3>
+            </div>
+          </a>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="ai-blog-carousel-{{ ai_gen_id }}__image">{{ 'image' | placeholder_svg_tag }}</div>
+  {% endif %}
+</blog-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function () {
+    class C{{ ai_gen_id }} extends HTMLElement {
+      connectedCallback() {
+        this.t = this.querySelector('[data-track]');
+        if (!this.t) return;
+        {% if blo_setts.autoplay %}
+        this.i = setInterval(() => this.m(), {{ blo_setts.autoplay_speed | times: 1000 }});
+        {% endif %}
+      }
+      m() {
+        let c = this.t.querySelector('.ai-blog-carousel-{{ ai_gen_id }}__card');
+        if (!c) return;
+        let d = c.getBoundingClientRect().width + 20;
+        let e = this.t.scrollWidth - this.t.clientWidth;
+        this.t.scrollTo({
+          left: this.t.scrollLeft + d >= e ? 0 : this.t.scrollLeft + d,
+          behavior: 'smooth'
+        });
+      }
+    }
+    if (!customElements.get('blog-carousel-{{ ai_gen_id }}')) {
+      customElements.define('blog-carousel-{{ ai_gen_id }}', C{{ ai_gen_id }});
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "博客轮播",
+  "tag": null,
+  "class": "blog-carousel-block",
+  "settings": [
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "选择博客"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "标题",
+      "default": "最新文章"
+    },
+    {
+      "type": "range",
+      "id": "article_limit",
+      "label": "文章数量",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "显示日期",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "区块标题 Typography"
+    },
+    {
+      "type": "select",
+      "id": "heading_type_preset",
+      "label": "t:settings.preset",
+      "options": [
+        { "value": "rte", "label": "t:options.default" },
+        { "value": "paragraph", "label": "t:options.paragraph" },
+        { "value": "h1", "label": "t:options.h1" },
+        { "value": "h2", "label": "t:options.h2" },
+        { "value": "h3", "label": "t:options.h3" },
+        { "value": "h4", "label": "t:options.h4" },
+        { "value": "h5", "label": "t:options.h5" },
+        { "value": "h6", "label": "t:options.h6" },
+        { "value": "custom", "label": "t:options.custom" }
+      ],
+      "default": "h3",
+      "info": "t:info.edit_presets_in_theme_settings"
+    },
+    {
+      "type": "select",
+      "id": "heading_font",
+      "label": "t:settings.font",
+      "options": [
+        { "value": "var(--font-body--family)", "label": "t:options.body" },
+        { "value": "var(--font-subheading--family)", "label": "t:options.subheading" },
+        { "value": "var(--font-heading--family)", "label": "t:options.heading" },
+        { "value": "var(--font-accent--family)", "label": "t:options.accent" }
+      ],
+      "default": "var(--font-heading--family)",
+      "visible_if": "{{ block.settings.heading_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "", "label": "t:options.default" },
+        { "value": "0.625rem", "label": "10px" },
+        { "value": "0.75rem", "label": "12px" },
+        { "value": "0.875rem", "label": "14px" },
+        { "value": "1rem", "label": "16px" },
+        { "value": "1.125rem", "label": "18px" },
+        { "value": "1.25rem", "label": "20px" },
+        { "value": "1.5rem", "label": "24px" },
+        { "value": "2rem", "label": "32px" },
+        { "value": "2.5rem", "label": "40px" },
+        { "value": "3rem", "label": "48px" },
+        { "value": "3.5rem", "label": "56px" },
+        { "value": "4.5rem", "label": "72px" },
+        { "value": "5.5rem", "label": "88px" },
+        { "value": "7.5rem", "label": "120px" },
+        { "value": "9.5rem", "label": "152px" },
+        { "value": "11.5rem", "label": "184px" }
+      ],
+      "default": "2rem",
+      "visible_if": "{{ block.settings.heading_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "t:settings.font_weight",
+      "options": [
+        { "value": "", "label": "t:options.default" },
+        { "value": "300", "label": "300" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.heading_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "heading_line_height",
+      "label": "t:settings.line_height",
+      "options": [
+        { "value": "tight", "label": "t:options.tight" },
+        { "value": "normal", "label": "t:options.normal" },
+        { "value": "loose", "label": "t:options.loose" }
+      ],
+      "default": "normal",
+      "visible_if": "{{ block.settings.heading_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "heading_letter_spacing",
+      "label": "t:settings.letter_spacing",
+      "options": [
+        { "value": "tight", "label": "t:options.tight" },
+        { "value": "normal", "label": "t:options.normal" },
+        { "value": "loose", "label": "t:options.loose" }
+      ],
+      "default": "normal",
+      "visible_if": "{{ block.settings.heading_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "heading_case",
+      "label": "t:settings.case",
+      "options": [
+        { "value": "none", "label": "t:options.default" },
+        { "value": "uppercase", "label": "t:options.uppercase" }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.heading_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "heading_wrap",
+      "label": "t:settings.wrap",
+      "options": [
+        { "value": "pretty", "label": "t:options.pretty" },
+        { "value": "balance", "label": "t:options.balance" },
+        { "value": "nowrap", "label": "t:options.none" }
+      ],
+      "visible_if": "{{ block.settings.heading_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "heading_color",
+      "label": "t:settings.color",
+      "options": [
+        { "value": "var(--color-foreground)", "label": "t:options.text" },
+        { "value": "var(--color-foreground-heading)", "label": "t:options.heading" },
+        { "value": "var(--color-primary)", "label": "t:options.link" }
+      ],
+      "default": "var(--color-foreground-heading)",
+      "visible_if": "{{ block.settings.heading_type_preset != 'rte' }}"
+    },
+    {
+      "type": "header",
+      "content": "文章标题 Typography"
+    },
+    {
+      "type": "select",
+      "id": "article_type_preset",
+      "label": "t:settings.preset",
+      "options": [
+        { "value": "rte", "label": "t:options.default" },
+        { "value": "paragraph", "label": "t:options.paragraph" },
+        { "value": "h1", "label": "t:options.h1" },
+        { "value": "h2", "label": "t:options.h2" },
+        { "value": "h3", "label": "t:options.h3" },
+        { "value": "h4", "label": "t:options.h4" },
+        { "value": "h5", "label": "t:options.h5" },
+        { "value": "h6", "label": "t:options.h6" },
+        { "value": "custom", "label": "t:options.custom" }
+      ],
+      "default": "h5",
+      "info": "t:info.edit_presets_in_theme_settings"
+    },
+    {
+      "type": "select",
+      "id": "article_font",
+      "label": "t:settings.font",
+      "options": [
+        { "value": "var(--font-body--family)", "label": "t:options.body" },
+        { "value": "var(--font-subheading--family)", "label": "t:options.subheading" },
+        { "value": "var(--font-heading--family)", "label": "t:options.heading" },
+        { "value": "var(--font-accent--family)", "label": "t:options.accent" }
+      ],
+      "default": "var(--font-heading--family)",
+      "visible_if": "{{ block.settings.article_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "article_font_size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "", "label": "t:options.default" },
+        { "value": "0.625rem", "label": "10px" },
+        { "value": "0.75rem", "label": "12px" },
+        { "value": "0.875rem", "label": "14px" },
+        { "value": "1rem", "label": "16px" },
+        { "value": "1.125rem", "label": "18px" },
+        { "value": "1.25rem", "label": "20px" },
+        { "value": "1.5rem", "label": "24px" },
+        { "value": "2rem", "label": "32px" },
+        { "value": "2.5rem", "label": "40px" },
+        { "value": "3rem", "label": "48px" },
+        { "value": "3.5rem", "label": "56px" },
+        { "value": "4.5rem", "label": "72px" },
+        { "value": "5.5rem", "label": "88px" },
+        { "value": "7.5rem", "label": "120px" },
+        { "value": "9.5rem", "label": "152px" },
+        { "value": "11.5rem", "label": "184px" }
+      ],
+      "default": "1.125rem",
+      "visible_if": "{{ block.settings.article_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "article_weight",
+      "label": "t:settings.font_weight",
+      "options": [
+        { "value": "", "label": "t:options.default" },
+        { "value": "300", "label": "300" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.article_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "article_line_height",
+      "label": "t:settings.line_height",
+      "options": [
+        { "value": "tight", "label": "t:options.tight" },
+        { "value": "normal", "label": "t:options.normal" },
+        { "value": "loose", "label": "t:options.loose" }
+      ],
+      "default": "normal",
+      "visible_if": "{{ block.settings.article_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "article_letter_spacing",
+      "label": "t:settings.letter_spacing",
+      "options": [
+        { "value": "tight", "label": "t:options.tight" },
+        { "value": "normal", "label": "t:options.normal" },
+        { "value": "loose", "label": "t:options.loose" }
+      ],
+      "default": "normal",
+      "visible_if": "{{ block.settings.article_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "article_case",
+      "label": "t:settings.case",
+      "options": [
+        { "value": "none", "label": "t:options.default" },
+        { "value": "uppercase", "label": "t:options.uppercase" }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.article_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "article_wrap",
+      "label": "t:settings.wrap",
+      "options": [
+        { "value": "pretty", "label": "t:options.pretty" },
+        { "value": "balance", "label": "t:options.balance" },
+        { "value": "nowrap", "label": "t:options.none" }
+      ],
+      "visible_if": "{{ block.settings.article_type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "article_color",
+      "label": "t:settings.color",
+      "options": [
+        { "value": "var(--color-foreground)", "label": "t:options.text" },
+        { "value": "var(--color-foreground-heading)", "label": "t:options.heading" },
+        { "value": "var(--color-primary)", "label": "t:options.link" }
+      ],
+      "default": "var(--color-foreground-heading)",
+      "visible_if": "{{ block.settings.article_type_preset != 'rte' }}"
+    },
+    {
+      "type": "header",
+      "content": "布局"
+    },
+    {
+      "type": "range",
+      "id": "page_width",
+      "label": "页面宽度",
+      "min": 600,
+      "max": 1600,
+      "step": 10,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "桌面宽度",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "内容对齐",
+      "options": [
+        { "value": "left", "label": "左对齐" },
+        { "value": "center", "label": "居中" },
+        { "value": "right", "label": "右对齐" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "图片比例",
+      "options": [
+        { "value": "1 / 1", "label": "正方形" },
+        { "value": "3 / 2", "label": "长方形" }
+      ],
+      "default": "1 / 1"
+    },
+    {
+      "type": "range",
+      "id": "image_title_gap",
+      "label": "图片与标题间距",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "自动轮播",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "轮播间隔",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "秒",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "卡片圆角",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "背景",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "正文颜色",
+      "default": "#282828"
+    },
+    {
+      "type": "color",
+      "id": "image_background",
+      "label": "图片占位背景",
+      "default": "#F5F5F5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "博客轮播"
+    }
+  ]
+}
+{% endschema %}

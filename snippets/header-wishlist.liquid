@@ -1,0 +1,64 @@
+{%- doc -%}
+  Header wishlist heart icon (rendered inside header-actions, before cart).
+  Reads count from localStorage key `ecglosty_wishlist`.
+
+  @param {string} [display_style] - 'icon' or 'text'
+{%- enddoc -%}
+
+<a
+  href="/pages/wishlist"
+  class="header-actions__action header-actions__wishlist{% if display_style == 'text' %} header-actions__wishlist--text header-actions__text-style{% endif %}"
+  data-header-wishlist
+  aria-label="Wishlist"
+>
+  <span class="{% if display_style == 'icon' %}hidden{% else %}mobile:hidden{% endif %}">
+    Wishlist
+  </span>
+
+  <span class="svg-wrapper header-actions__wishlist-icon {% if display_style != 'icon' %}desktop:hidden{% endif %}" aria-hidden="true">
+    {{ 'icon-heart.svg' | inline_asset_content }}
+    <span class="wishlist-dot visually-hidden" data-wishlist-dot></span>
+  </span>
+</a>
+
+{% stylesheet %}
+  .header-actions__wishlist {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+    flex-shrink: 0;
+  }
+
+  .header-actions__wishlist:hover,
+  .header-actions__wishlist:focus-visible {
+    color: inherit;
+    opacity: 1;
+  }
+
+  .header-actions__wishlist-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wishlist-dot {
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-foreground);
+    pointer-events: none;
+  }
+
+  .header__row--top .header-actions__wishlist .svg-wrapper,
+  .header__row--top .header-actions__wishlist svg {
+    width: var(--header-action-size, 20px);
+    height: var(--header-action-size, 20px);
+  }
+{% endstylesheet %}

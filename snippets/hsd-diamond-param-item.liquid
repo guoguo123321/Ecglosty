@@ -1,0 +1,87 @@
+{% doc %}
+  Renders a reusable diamond parameter card.
+  @param {object} block - Card block with title, content, description and image settings.
+{% enddoc %}
+{%- liquid
+  assign item = block.settings
+  assign block_id = block.id
+-%}
+<div
+            class="hsd-dp-item"
+            id="hsd-dp-item-{{ block_id }}"
+            {{ block.shopify_attributes }}
+            data-block-id="{{ block_id }}"
+          >
+
+            <h3 class="hsd-dp-item__title">
+              <span class="hsd-dp-item__title-label">{{ item.title | default: 'Diamond Size' | escape }}</span>
+              {%- if item.content != blank -%}
+                <span class="hsd-dp-item__title-sep">:</span>
+                {% comment %} <span class="hsd-dp-item__title-value">{{ item.content | escape }}</span> {% endcomment %}
+                 {%- liquid
+                    assign diamond_param_key = ''
+
+                    case item.content
+                      when '{carat}'
+                        assign diamond_param_key = 'carat'
+                      when '{color}'
+                        assign diamond_param_key = 'color'
+                      when '{cut}'
+                        assign diamond_param_key = 'cut'
+                      when '{clarity}'
+                        assign diamond_param_key = 'clarity'
+                    endcase
+                  -%}
+
+                  <span
+                    class="hsd-dp-item__title-value"
+                    {% if diamond_param_key != blank %}
+                      data-hsd-diamond-param="{{ diamond_param_key }}"
+                    {% endif %}
+                  >
+                    {%- if diamond_param_key != blank -%}
+                      —
+                    {%- else -%}
+                      {{ item.content | escape }}
+                    {%- endif -%}
+                  </span>
+
+              {%- endif -%}
+            </h3>
+
+            {%- if item.description != blank -%}
+              <div
+                class="hsd-dp-item__desc"
+              >
+                {{ item.description }}
+              </div>
+            {%- endif -%}
+
+            {%- if item.learn_more_link != blank -%}
+              <a
+                class="hsd-dp-item__link"
+                href="{{ item.learn_more_link }}"
+              >
+                {{ item.learn_more_text | default: 'Learn More' | escape }}
+              </a>
+            {%- endif -%}
+
+            {%- if item.intro != blank -%}
+              <div
+                class="hsd-dp-item__intro"
+                style=" --indicator-position: {{ item.intro_position_left | default: 10 }}%;"
+              >{{ item.intro | escape }}</div>
+            {%- endif -%}
+            {%- if item.image != blank -%}
+              <div class="hsd-dp-item__media">
+                <img
+                  src="{{ item.image | image_url: width: 1400 }}"
+                  alt="{{ item.image.alt | escape }}"
+                  class="hsd-dp-item__image"
+                  width="{{ item.image.width }}"
+                  height="{{ item.image.height }}"
+                  loading="lazy"
+                >
+              </div>
+            {%- endif -%}
+          </div>

@@ -1,0 +1,59 @@
+{% liquid
+  assign blo_setts = block.settings
+%}
+<div class="prod-shipping color-{{ blo_setts.color_scheme }}" {{ block.shopify_attributes }}>
+  <div class="prod-shipping-header"><span>{{ blo_setts.header }}</span><img src="https://cdn.shopify.com/s/files/1/0707/6003/8515/files/question.png?v=1780902248" width="12px" height="12px"></div>
+  <div class="prod-shipping-items">
+    <div class="prod-shipping-item">
+      <img src="{{ blo_setts.image1 | image_url }}" width="{{ blo_setts.image1.width }}" height="{{ blo_setts.image1.height }}">
+      <div class="prod-shipping-title">{{ blo_setts.title1 }}</div>
+    </div>
+
+    <div class="prod-shipping-item">
+      <img src="{{ blo_setts.image2 | image_url }}" width="{{ blo_setts.image2.width }}" height="{{ blo_setts.image2.height }}">
+      <div class="prod-shipping-title">{{ blo_setts.title2 }}</div>
+    </div>
+
+    <div class="prod-shipping-item">
+      <img src="{{ blo_setts.image3 | image_url }}" width="{{ blo_setts.image3.width }}" height="{{ blo_setts.image3.height }}">
+      <div class="prod-shipping-title">{{ blo_setts.title3 }}</div>
+    </div>
+
+    <div class="prod-shipping-item">
+      <img src="{{ blo_setts.image4 | image_url }}" width="{{ blo_setts.image4.width }}" height="{{ blo_setts.image4.height }}">
+      <div class="prod-shipping-title">{{ blo_setts.title4 }}</div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "product-shipping",
+    "settings": [
+      {"type": "color_scheme","id": "color_scheme","label": "t:settings.color_scheme","default": "scheme-1"},
+      {"type": "text","id": "header","label": "header"},
+
+      {"type": "header","content": "one"},
+      {"type": "image_picker","id": "image1","label": "image1"},
+      {"type": "text","id": "title1","label": "title1"},
+
+      {"type": "header","content": "two"},
+      {"type": "image_picker","id": "image2","label": "image2"},
+      {"type": "text","id": "title2","label": "title2"},
+
+      {"type": "header","content": "three"},
+      {"type": "image_picker","id": "image3","label": "image3"},
+      {"type": "text","id": "title3","label": "title3"},
+
+      {"type": "header","content": "fouth"},
+      {"type": "image_picker","id": "image4","label": "image4"},
+      {"type": "text","id": "title4","label": "title4"},
+    ],
+    "presets":[
+      {
+        "name":"product-shipping",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

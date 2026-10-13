@@ -1,0 +1,125 @@
+{%- liquid
+  assign blo_setts = block.settings
+-%}
+{% render 'swiper-assets' %}
+<div class="common-swiper-box">
+  <div class="swiper common-swiper-swiper common-swiper-item-{{ block.id }}">
+    <div class="swiper-wrapper">
+      {% if blo_setts.type =='collection' %}
+        {% for product in blo_setts.collection.products limit:blo_setts.collection_number %}
+            <div class="swiper-slide">
+              <a class="index-collection-item" href="{{ product.url }}">
+                  {% comment %} 图片 {% endcomment %}
+                  {% if product.media[0] != blank %}
+                    <img src="{{ product.media[0] | image_url }}" width="{{ product.media[0].width }}" height="{{ product.media[0].height }}">
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'lgs-placeholder-svg lgs-obj-eff'}}
+                  {% endif %}
+                  <div class="index-collection-info">
+                    <div class="index-collection-title">{{ product.title }}</div>
+                    <div class="index-collection-price"><span translate="no">{{ product.price | money }}</span></div>
+                  </div>
+                  <div class="index-collection-brand">{{ product.metafields.custom.brand.value }}</div>
+              </a>
+            </div>
+        {% endfor %}
+      {% else %}
+        {% content_for 'blocks' %}
+      {% endif %}
+    </div>
+    <div class="index-collection-media common-swiper-media">
+      <!-- 如果需要分页器 -->
+      {% comment %} <div class="swiper-pagination index-collection-pagination common-swiper-pagination"></div> {% endcomment %}
+      <div class="common-swiper-direction">
+        <!-- 如果需要导航按钮 -->
+        <div class="common-prev swiper-button-prev common-swiper-prev">
+          <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+            <rect x="0.5" y="0.5" width="33" height="33" rx="16.5" fill="none" stroke="#000"/>
+            <path fill="#000" d="M20 21.257 19.248 22 14 17l5.248-5 .752.743L15.587 17z"/>
+          </svg>
+        </div>
+        <div class="common-next swiper-button-next common-swiper-next">
+          <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+            <rect x="0.5" y="0.5" width="33" height="33" rx="16.5" fill="none" stroke="#000"/>
+            <path fill="#000" d="M14 12.743 14.752 12 20 17l-5.248 5-.752-.743L18.413 17z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+themeSwiperReady(function () {
+
+    {% comment %} document
+    .querySelectorAll('.common-swiper-item-{{ block.id }} .shopify-block')
+    .forEach(el => {
+      el.classList.add('swiper-slide');
+    }); {% endcomment %}
+    new Swiper('.common-swiper-item-{{ block.id }}.common-swiper-swiper', {
+      {% if blo_setts.type !='collection' %}slideClass: 'shopify-block',{% endif %}
+      //autoplay: true,//可选选项，自动滑动
+       slidesPerView : 2,  
+      // spaceBetween: 0,
+      //autoplay: {
+      //  delay:5000,
+      //  pauseOnMouseEnter:true,
+      //  disableOnInteraction:false,
+      //},
+      //loop: true, // 循环模式选项
+      
+      // 如果需要分页器
+      //pagination: {
+      //  el: '.common-swiper-item-pagination',
+      //  clickable: true
+      //},
+      on: {
+        init() {
+          this.slides.forEach(slide => {
+            slide.classList.add('swiper-slide');
+          });
+        }
+      },
+      // 如果需要前进后退按钮
+      navigation: {
+        nextEl: '.common-swiper-next',
+        prevEl: '.common-swiper-prev',
+      },
+       breakpointsBase: 'container',
+      {{ blo_setts.swiper-breakpoints }}
+    });
+   {% comment %} document
+  .querySelectorAll('.common-swiper-item-{{ block.id }} .shopify-block')
+  .forEach(item => {
+    item.classList.add('swiper-slide');
+  }); {% endcomment %}
+});
+</script>
+{% schema %}
+  {
+    "name": "Swiper",
+    "settings":[
+      {"type": "html","id": "swiper-breakpoints","label": "swiper-breakpoints"},
+      {"type": "select","id": "type","label": "type","default":"none",
+        "options": [
+          {"label":"collection","value": "collection"},
+          {"label":"none","value": "none"},
+        ]
+      },
+      {"type": "collection","id": "collection","label": "collection"},
+      {"type": "range","id": "collection_number","label": "collection number","min": 1,"max": 50,"step": 1,"default": 20},
+    ],
+    "blocks": [
+      {
+        "type": "swiper-single-img"
+      },
+    ],
+    "presets":[
+      {
+        "name":"Swiper",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

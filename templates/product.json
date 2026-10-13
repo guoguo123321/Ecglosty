@@ -1,0 +1,2175 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "lg_section_NKNYVV": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_pAn7pt": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 0,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,0px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,0px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,0px,0px"
+          },
+          "blocks": {
+            "ai_gen_block_90afb54_6WBPfb": {
+              "type": "ai_gen_block_90afb54",
+              "settings": {
+                "show_home": true,
+                "home_text": "Ecglosty",
+                "show_level_1": true,
+                "show_level_2": true,
+                "show_level_3": false,
+                "text_color": "#666666",
+                "font_size": 14,
+                "desktop_width_percent": 100
+              },
+              "blocks": {}
+            },
+            "brc_nav_M3aBEq": {
+              "type": "_brc-nav",
+              "name": "breadcrumbs",
+              "disabled": true,
+              "settings": {},
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "ai_gen_block_90afb54_6WBPfb",
+            "brc_nav_M3aBEq"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_pAn7pt"
+      ],
+      "name": "Breadcrumbs",
+      "settings": {}
+    },
+    "collection_step_UQaxND": {
+      "type": "collection-step",
+      "disabled": true,
+      "name": "Collection Step",
+      "settings": {
+        "layout": "custom-container",
+        "custom_container": "1230px",
+        "box_align": "lgs-text-center",
+        "color_scheme": "",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 40,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "60px,0px,40px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "40px,0px,40px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "20px,0px,20px,0px",
+        "design_title": "Design Your Ring",
+        "step1_title": "Setting",
+        "step1_content": "Nadia - $1,290",
+        "step1_btn": "View",
+        "step1_url": "",
+        "step1_image": "shopify://shop_images/c_step1.png",
+        "step2_title": "Diamond",
+        "step2_content": "1.02 Carat Oval - $4,110",
+        "step2_btn": "View",
+        "step2_url": "",
+        "step2_btn2": "Change",
+        "step2_url2": "",
+        "step2_image": "shopify://shop_images/c_step2.png",
+        "step3_title": "Complete Ring",
+        "step3_content": "Select Ring Size",
+        "step3_btn": "",
+        "step3_url": "",
+        "step3_image": "shopify://shop_images/c_step3.png"
+      }
+    },
+    "main": {
+      "type": "product-information",
+      "blocks": {
+        "media-gallery": {
+          "type": "_product-media-gallery",
+          "static": true,
+          "settings": {
+            "media_presentation": "grid",
+            "media_columns": "two",
+            "image_gap": 10,
+            "large_first_image": false,
+            "icons_style": "none",
+            "slideshow_controls_style": "counter",
+            "slideshow_mobile_controls_style": "thumbnails",
+            "thumbnail_position": "right",
+            "thumbnail_width": 44,
+            "thumbnail_radius": 2,
+            "aspect_ratio": "adapt",
+            "constrain_to_viewport": true,
+            "media_fit": "contain",
+            "media_radius": 0,
+            "extend_media": false,
+            "zoom": true,
+            "video_loop": false,
+            "hide_variants": true,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "product-details": {
+          "type": "_product-details",
+          "static": true,
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "details_position": "flex-start",
+            "gap": 0,
+            "sticky_details_desktop": true,
+            "inherit_color_scheme": true,
+            "color_scheme": "scheme-1",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 24,
+            "padding-block-end": 24,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "group_icgrde": {
+              "type": "group",
+              "name": "Header",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "flex-start",
+                "gap": 0,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 0,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 12,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "product_title_m6FVaW": {
+                  "type": "product-title",
+                  "name": "t:names.title",
+                  "settings": {
+                    "width": "100%",
+                    "max_width": "none",
+                    "alignment": "left",
+                    "type_preset": "h4",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "weight": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 10,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "text_mrUDHE": {
+                  "type": "_text",
+                  "name": "text",
+                  "disabled": true,
+                  "settings": {
+                    "textarea_or_richtext": "textarea",
+                    "text": "SIGNATURE COLLECTIONS",
+                    "rich_text": "<p>Text</p>",
+                    "text_url": "shopify://collections/engagement-rings",
+                    "open_link": "_self",
+                    "remove_br_tag": false,
+                    "tag": "a",
+                    "fontf": "inherit",
+                    "text_cl": "#3f4a5c",
+                    "text_fs": 12,
+                    "text_lh": 18,
+                    "text_fw": 400,
+                    "text_mgb": 7,
+                    "font_italic": false,
+                    "text_shadow": false,
+                    "hidden_mobile": false,
+                    "text_fs_mb": 12,
+                    "text_lh_mb": 14,
+                    "text_mgb_mobile": 7
+                  },
+                  "blocks": {}
+                },
+                "text_e6QzL7": {
+                  "type": "_text",
+                  "name": "Product title",
+                  "disabled": true,
+                  "settings": {
+                    "textarea_or_richtext": "richtext",
+                    "text": "SIGNATURE COLLECTIONS",
+                    "rich_text": "<p>{{ closest.product.title }}</p>",
+                    "text_url": "shopify://collections/engagement-rings",
+                    "open_link": "_blank",
+                    "remove_br_tag": false,
+                    "tag": "div",
+                    "fontf": "1",
+                    "text_cl": "#232323",
+                    "text_fs": 24,
+                    "text_lh": 0,
+                    "text_fw": 700,
+                    "text_ls": 0,
+                    "text_mgb": 0,
+                    "font_italic": false,
+                    "text_shadow": false,
+                    "hidden_mobile": false,
+                    "text_fs_mb": 24,
+                    "text_lh_mb": 20,
+                    "text_mgb_mobile": 4
+                  },
+                  "blocks": {}
+                },
+                "judge_me_reviews_preview_badge_Mh6zfc": {
+                  "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+                  "settings": {}
+                },
+                "price_tVjtKg": {
+                  "type": "price",
+                  "settings": {
+                    "show_sale_price_first": true,
+                    "show_installments": false,
+                    "show_tax_info": false,
+                    "show_igi_certified": true,
+                    "type_preset": "h4",
+                    "width": "fit-content",
+                    "alignment": "center",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "color": "var(--color-foreground)",
+                    "padding-block-start": 10,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "product_title_m6FVaW",
+                "text_mrUDHE",
+                "text_e6QzL7",
+                "judge_me_reviews_preview_badge_Mh6zfc",
+                "price_tVjtKg"
+              ]
+            },
+            "divider_VJhene": {
+              "type": "_divider",
+              "name": "t:names.divider",
+              "disabled": true,
+              "settings": {
+                "thickness_cl": "#000000",
+                "thickness": 1,
+                "corner_radius": "square",
+                "width_percent": 100,
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              },
+              "blocks": {}
+            },
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "show_variants": true,
+                "show_color_option": false,
+                "variant_style": "buttons",
+                "show_swatches": true,
+                "alignment": "left",
+                "option_vertical_gap": 10,
+                "option_horizontal_gap": 10,
+                "show_browse_diamonds": false,
+                "browse_diamonds_label": "Browse All Diamonds",
+                "browse_diamonds_link": "shopify://collections/lab-grown-diamond",
+                "padding-block-start": 0,
+                "padding-block-end": 15,
+                "padding-inline-start": 3,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "buy_buttons_eYQEYi": {
+              "type": "buy-buttons",
+              "settings": {
+                "stacking": true,
+                "show_pickup_availability": false,
+                "gift_card_form": false,
+                "padding-block-start": 0,
+                "padding-block-end": 12,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "quantity": {
+                  "type": "quantity",
+                  "static": true,
+                  "settings": {},
+                  "blocks": {}
+                },
+                "add-to-cart": {
+                  "type": "add-to-cart",
+                  "static": true,
+                  "settings": {
+                    "style_class": "button"
+                  },
+                  "blocks": {}
+                },
+                "accelerated-checkout": {
+                  "type": "accelerated-checkout",
+                  "disabled": true,
+                  "static": true,
+                  "settings": {},
+                  "blocks": {}
+                }
+              },
+              "block_order": []
+            },
+            "order_details_Rw8nAy": {
+              "type": "order-details",
+              "name": "Order Details",
+              "settings": {
+                "color_scheme": "scheme-4df12b91-c5d4-406e-a832-2a7395c6df9e",
+                "heading": "Order Details",
+                "delivery_text": "Delivery by:",
+                "ship_days": 10,
+                "date_format": "%b %d, %Y",
+                "shipping_text": "Free Express Shipping",
+                "returns_text": "Free 60-Day Returns",
+                "warranty_text": "Free Lifetime Warranty",
+                "image": "shopify://shop_images/17.jpg",
+                "padding": 12,
+                "heading_size": 18,
+                "text_size": 14
+              },
+              "blocks": {}
+            },
+            "pro_form_YG6bKM": {
+              "type": "_proform",
+              "name": "product form",
+              "disabled": true,
+              "settings": {},
+              "blocks": {
+                "fold_UBTkJz": {
+                  "type": "_fold",
+                  "name": "variant-fold",
+                  "settings": {
+                    "color_scheme": "",
+                    "content_or_recommended": "variant",
+                    "show": true,
+                    "header": "Wiew with Diamond Shape: Ova",
+                    "content": "",
+                    "icon": false,
+                    "header_icon_url": "",
+                    "pc_margin": "0 0 24px 0",
+                    "mb_margin": "0 0 12px 0",
+                    "pc_padding": "0",
+                    "mb_padding": "0",
+                    "use_line": false
+                  },
+                  "blocks": {}
+                },
+                "fold_gBDxyc": {
+                  "type": "_fold",
+                  "name": "variant-fold",
+                  "settings": {
+                    "color_scheme": "",
+                    "content_or_recommended": "variant",
+                    "show": true,
+                    "header": "Centerstone - Browse All Diamonds",
+                    "content": "",
+                    "icon": false,
+                    "header_icon_url": "",
+                    "pc_margin": "0 0 24px 0",
+                    "mb_margin": "0 0 12px 0",
+                    "pc_padding": "0",
+                    "mb_padding": "0",
+                    "use_line": false
+                  },
+                  "blocks": {}
+                },
+                "fold_xtymVQ": {
+                  "type": "_fold",
+                  "name": "variant-fold",
+                  "settings": {
+                    "color_scheme": "",
+                    "content_or_recommended": "variant",
+                    "show": true,
+                    "header": "Diamond Origin: Natural",
+                    "content": "",
+                    "icon": true,
+                    "header_icon": "shopify://shop_images/question.png",
+                    "header_icon_url": "",
+                    "pc_margin": "0 0 24px 0",
+                    "mb_margin": "0 0 12px 0",
+                    "pc_padding": "0",
+                    "mb_padding": "0",
+                    "use_line": false
+                  },
+                  "blocks": {}
+                },
+                "variant_kzXTbb": {
+                  "type": "_variant",
+                  "name": "variant",
+                  "settings": {
+                    "header": "<b>Metal:</b> 14K White Gol",
+                    "type": "metal"
+                  },
+                  "blocks": {}
+                },
+                "variant_EKbQYD": {
+                  "type": "_variant",
+                  "name": "variant",
+                  "settings": {
+                    "header": "<b>Setting Type:</b> Perfec",
+                    "type": "setting-type"
+                  },
+                  "blocks": {}
+                },
+                "choose_setting_Vt4Cmx": {
+                  "type": "_choose-setting",
+                  "name": "choose-setting",
+                  "settings": {
+                    "button1": "CHOOSE THIS SETTING",
+                    "button2": "ADD TO WISHLIST",
+                    "content": "Order now and your order ships by <b>Fri, May 29.</b>"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "fold_UBTkJz",
+                "fold_gBDxyc",
+                "fold_xtymVQ",
+                "variant_kzXTbb",
+                "variant_EKbQYD",
+                "choose_setting_Vt4Cmx"
+              ]
+            },
+            "product_shipping_3Wi4yb": {
+              "type": "_product-shipping",
+              "name": "product-shipping",
+              "disabled": true,
+              "settings": {
+                "color_scheme": "scheme-1",
+                "header": "We've Got You Covered",
+                "image1": "shopify://shop_images/p-shipping1.png",
+                "title1": "Global Delivery",
+                "image2": "shopify://shop_images/p-shipping2.png",
+                "title2": "Free Shipping",
+                "image3": "shopify://shop_images/p-shipping3.png",
+                "title3": "45-days Return",
+                "image4": "shopify://shop_images/p-shipping4.png",
+                "title4": "1year Warranty"
+              },
+              "blocks": {}
+            },
+            "accordion_ikbRDg": {
+              "type": "accordion",
+              "name": "t:names.accordion",
+              "settings": {
+                "icon": "plus",
+                "dividers": true,
+                "type_preset": "",
+                "inherit_color_scheme": true,
+                "color_scheme": "scheme-1",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 12,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "accordion_row_J3TpA4": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Product Details",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "image_upload": "shopify://shop_images/WarrantyDiamonds.webp",
+                    "width": 32
+                  },
+                  "blocks": {
+                    "text_JAhi3B": {
+                      "type": "text",
+                      "settings": {
+                        "text": "{{ closest.product.description }}",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_JAhi3B"
+                  ]
+                },
+                "accordion_row_H77FGV": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Shipping Information",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "image_upload": "shopify://shop_images/freeshipping.webp",
+                    "width": 32
+                  },
+                  "blocks": {
+                    "text_xdMhkW": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Free Express Shipping</p><p>We proudly offer free DHL/UPS/FedEx Express Shipping for all items. Most of our jewelry is Made-to-Order, you can check the product detail page once you've configured your jewelry to determine the shipping date. Once your order is completed and ready for shipment, it will be sent via DHL/UPS/FedEx Express at no extra cost. Please note: All orders require a signature upon delivery.</p><p>Find out more about our <a href=\"/pages/shipping-policy\" title=\"Shipping Policy\">Shipping Policies</a>.</p>",
+                        "width": "fit-content",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_xdMhkW"
+                  ]
+                },
+                "accordion_row_bQHVwz": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Returns Information",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "image_upload": "shopify://shop_images/ReturnedDiamonds.webp",
+                    "width": 32
+                  },
+                  "blocks": {
+                    "text_kw4kNi": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Free 30-Day Returns</p><p>Our commitment to you does not end at delivery. We offer a complimentary, hassle-free 30-day return policy with FREE return shipping, ensuring your purchase is perfect. If you are not satisfied with your purchase for any reason, simply return or exchange it within 30 days. Please note: Our return and exchange policy timelines begin when your purchase is available for shipment.</p><p>Find out more about our <a href=\"/pages/returns-and-refund-policy\" title=\"Returns & Refund Policy\">Return Policies</a>.</p>",
+                        "width": "fit-content",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_kw4kNi"
+                  ]
+                },
+                "accordion_row_Fi8HDB": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Lifetime Warranty",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "image_upload": "shopify://shop_images/CertifiedDiamonds.webp",
+                    "width": 32
+                  },
+                  "blocks": {
+                    "text_AUrxVx": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Our lifetime warranty guarantees your jewelry remains as brilliant as the day you received it. We stand behind the quality and craftsmanship of our jewelry. If a warranty issue is found, we will repair the warrantied damage or replace the item at no charge.</p>",
+                        "width": "fit-content",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_AUrxVx"
+                  ]
+                }
+              },
+              "block_order": [
+                "accordion_row_J3TpA4",
+                "accordion_row_H77FGV",
+                "accordion_row_bQHVwz",
+                "accordion_row_Fi8HDB"
+              ]
+            },
+            "fold_Rqyp7h": {
+              "type": "_fold",
+              "name": "fold",
+              "disabled": true,
+              "settings": {
+                "color_scheme": "",
+                "content_or_recommended": "content",
+                "show": false,
+                "header": "Product Details",
+                "content": "{{ product.description }}",
+                "icon": false,
+                "header_icon_url": "",
+                "pc_margin": "0 0 15px 0",
+                "mb_margin": "0 0 8px 0",
+                "pc_padding": "0 0 16px 0",
+                "mb_padding": "0 0 8px 0",
+                "use_line": true
+              },
+              "blocks": {}
+            },
+            "fold_FHQrUL": {
+              "type": "_fold",
+              "name": "fold",
+              "disabled": true,
+              "settings": {
+                "color_scheme": "",
+                "content_or_recommended": "content",
+                "show": false,
+                "header": "Shipping Information",
+                "content": "<p>Free Express Shipping</p>\n<p>We proudly offer free DHL/UPS/FedEx Express Shipping for all items. Most of our jewelry is Made-to-Order, you can check the product detail page once you've configured your jewelry to determine the shipping date. Once your order is completed and ready for shipment, it will be sent via DHL/UPS/FedEx Express at no extra cost. Please note: All orders require a signature upon delivery.</p>\n<p>\nFind out more about our Shipping Policies.</p>",
+                "icon": false,
+                "header_icon_url": "",
+                "pc_margin": "0 0 15px 0",
+                "mb_margin": "0 0 8px 0",
+                "pc_padding": "0 0 16px 0",
+                "mb_padding": "0 0 8px 0",
+                "use_line": true
+              },
+              "blocks": {}
+            },
+            "fold_KN3AQj": {
+              "type": "_fold",
+              "name": "fold",
+              "disabled": true,
+              "settings": {
+                "color_scheme": "",
+                "content_or_recommended": "recommended",
+                "show": false,
+                "header": "Recommended Wedding Bands",
+                "content": "{{ product.description }}",
+                "icon": false,
+                "header_icon_url": "",
+                "pc_margin": "0 0 24px 0",
+                "mb_margin": "0 0 12px 0",
+                "pc_padding": "0 0 16px 0",
+                "mb_padding": "0 0 8px 0",
+                "use_line": true
+              },
+              "blocks": {}
+            },
+            "block_service_yF7mig": {
+              "type": "_block-service",
+              "name": "block-service",
+              "settings": {
+                "color_scheme": "scheme-900f7f66-909a-42a5-a147-d2130dfd52db",
+                "show_drop_hint": true,
+                "show_email_us": true,
+                "show_phone": true,
+                "show_live_chat": true,
+                "drop_hint_label": "Drop a Hint",
+                "drop_hint_icon_type": "svg",
+                "drop_hint_svg": "",
+                "email_us_label": "Email Us",
+                "email_us_icon_type": "svg",
+                "email_us_svg": "",
+                "phone": "(+1)21 4939 0410",
+                "phone_icon_type": "svg",
+                "phone_svg": "",
+                "live_chat_label": "Live Chat",
+                "live_chat_icon_type": "svg",
+                "live_chat_svg": "",
+                "live_chat_url": "#chatty-chat",
+                "submit_label": "Submit",
+                "drop_hint_title": "Drop a Hint",
+                "drop_hint_desc": "Enter the email address where you would like this to be sent.",
+                "drop_hint_subject": "Drop a Hint",
+                "drop_hint_newsletter": "Sign me up for updates.",
+                "drop_hint_success": "Your hint has been successfully sent!",
+                "email_us_title": "Need Help?",
+                "email_us_desc": "Get expert answers! Our jewelry specialists can help with all your inquiries.",
+                "email_us_subject": "Need Help",
+                "email_us_newsletter": "Send me updates on new styles and special offers.",
+                "email_us_success": "Thank you for reaching out! Our team has received your inquiry and will be in touch shortly."
+              },
+              "blocks": {}
+            },
+            "product_sharing_b3w9LD": {
+              "type": "product-sharing",
+              "name": "t:names.product_sharing",
+              "disabled": true,
+              "settings": {
+                "title": "Sharing:",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "group_icgrde",
+            "divider_VJhene",
+            "variant_picker_R3rGDr",
+            "buy_buttons_eYQEYi",
+            "order_details_Rw8nAy",
+            "pro_form_YG6bKM",
+            "product_shipping_3Wi4yb",
+            "accordion_ikbRDg",
+            "fold_Rqyp7h",
+            "fold_FHQrUL",
+            "fold_KN3AQj",
+            "block_service_yF7mig",
+            "product_sharing_b3w9LD"
+          ]
+        }
+      },
+      "settings": {
+        "content_width": "content-center-aligned",
+        "desktop_media_position": "left",
+        "equal_columns": false,
+        "limit_details_width": false,
+        "gap": 48,
+        "enable_sticky_add_to_cart": true,
+        "enable_image_zoom": false,
+        "color_scheme": "scheme-b0b6c6df-26fa-4b2e-87bc-05b9a110f914",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "lg_section_BemBX7": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_MTdTB9": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1450px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 30,
+            "cl_bg": "rgba(0,0,0,0)",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "60px,0px,30px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "50px,0px,0px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "30px,0px,30px,0px"
+          },
+          "blocks": {
+            "pro_img_text_rWW8bk": {
+              "type": "pro-img-text",
+              "name": "Product Image Text",
+              "settings": {
+                "header": "Order Details",
+                "icon1": "shopify://shop_images/ring_diamond.svg",
+                "title1": "Your Order Includes",
+                "content1": "<p>Professional Appraisal</p><p><a href=\"/pages/warranty-policy\" title=\"Warranty Policy\">Free Lifetime Warranty</a></p><p>IGI Certified</p>",
+                "title2": "",
+                "content2": "",
+                "image": "shopify://shop_images/Why_You_ll_Love_It.jpg",
+                "popup1_title": "",
+                "popup1_content": "",
+                "popup2_title": "",
+                "popup2_content": "",
+                "popup3_title": "",
+                "popup3_content": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "pro_img_text_rWW8bk"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_MTdTB9"
+      ],
+      "name": "Image with text",
+      "settings": {}
+    },
+    "hsd_section_diamond_params_mJkdbd": {
+      "type": "hsd-section-diamond-params",
+      "blocks": {
+        "hsd_4c_item_CHTByC": {
+          "type": "hsd-4c-item",
+          "settings": {
+            "title": "Color",
+            "content": "3.08 Ct",
+            "intro": "Colorless. Only minute traces of color that are only detectable to a trained gemologist.",
+            "learn_more_link": "",
+            "learn_more_text": "Learn More",
+            "description": "<p>Color in a diamond refers to its inherent hue, which remains unchanged over time. Diamonds with less color, known as colorless diamonds, permit more light to pass through them, resulting in increased sparkle and fire. When light enters a diamond, it refracts and disperses, creating colorful flashes known as fire, which adds to the diamond's allure.</p>",
+            "intro_position_left": 10
+          }
+        },
+        "hsd_4c_item_N3RNaz": {
+          "type": "hsd-4c-item",
+          "settings": {
+            "title": "Color",
+            "content": "E",
+            "intro": "Colorless. Only minute traces of color that are only detectable to a trained gemologist.",
+            "learn_more_link": "",
+            "learn_more_text": "Learn More",
+            "description": "<p>Color in a diamond refers to its inherent hue, which remains unchanged over time. Diamonds with less color, known as colorless diamonds, permit more light to pass through them, resulting in increased sparkle and fire. When light enters a diamond, it refracts and disperses, creating colorful flashes known as fire, which adds to the diamond's allure.</p>",
+            "intro_position_left": 10
+          }
+        },
+        "hsd_4c_item_h8dq7Y": {
+          "type": "hsd-4c-item",
+          "settings": {
+            "title": "Cut",
+            "content": "Ideal",
+            "intro": "Crafted to the highest standards of precision, these diamonds boast optimal proportions and dimensions to maximize light return and brilliance.",
+            "learn_more_link": "",
+            "learn_more_text": "Learn More",
+            "description": "<p>The cut of a diamond encompasses its angles, proportions, depth, and width, along with the uniformity of its facets. This intricate aspect of a diamond influences its overall beauty, as it dictates how effectively the diamond reflects and refracts light. The craftsmanship involved in cutting a diamond significantly impacts its brilliance and sparkle.</p>",
+            "intro_position_left": 10
+          }
+        },
+        "hsd_4c_item_9W8UaK": {
+          "type": "hsd-4c-item",
+          "settings": {
+            "title": "Clarity",
+            "content": "VVS2",
+            "intro": "Very very slightly included 2. Extremely difficult to see at 10x magnification. Slightly more inclusions than VVS1.",
+            "learn_more_link": "",
+            "learn_more_text": "Learn More",
+            "description": "<p>Clarity in a diamond refers to the presence of imperfections within the stone, stemming from the crystallization process in the controlled laboratory environment. As lab-grown diamonds are formed, they may occasionally contain minute traces of natural elements, known as inclusions, which can affect their clarity.</p>",
+            "intro_position_left": 10
+          }
+        }
+      },
+      "block_order": [
+        "hsd_4c_item_CHTByC",
+        "hsd_4c_item_N3RNaz",
+        "hsd_4c_item_h8dq7Y",
+        "hsd_4c_item_9W8UaK"
+      ],
+      "disabled": true,
+      "name": "Diamonds 4Cs Params",
+      "settings": {
+        "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "Understanding Your Diamond's 4Cs",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 30,
+        "mg": "0px,0px,0px,0px",
+        "pd": "50px,0px,50px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "30px,0px,30px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    },
+    "lg_section_byYB7N": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_iMdbAx": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Recommended related products",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 0,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,60px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "lg_groub_iMdbAx"
+      ],
+      "disabled": true,
+      "name": "Recommended products header",
+      "settings": {}
+    },
+    "lg_section_HEEMrd": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_q7PNQQ": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1500px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 30,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,0px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,0px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "30px,0px,30px,0px"
+          },
+          "blocks": {
+            "judge_me_reviews_review_widget_GpYCHU": {
+              "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+              "settings": {
+                "review_data": "sample_data",
+                "max_width": 1200,
+                "show_shop_reviews": false,
+                "empty_state": "hide_widget"
+              }
+            }
+          },
+          "block_order": [
+            "judge_me_reviews_review_widget_GpYCHU"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_q7PNQQ"
+      ],
+      "disabled": true,
+      "custom_css": [],
+      "name": "Review",
+      "settings": {}
+    },
+    "section_dUzFn7": {
+      "type": "section",
+      "blocks": {
+        "lg_groub_CViCVk": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1200px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "FAQs",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 30,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,0px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,0px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,0px,0px"
+          },
+          "blocks": {
+            "faqs_CpM8kb": {
+              "type": "_faqs",
+              "name": "Faqs",
+              "settings": {
+                "faqs": []
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faqs_CpM8kb"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_CViCVk"
+      ],
+      "disabled": true,
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "custom-width",
+        "custom_page_width": "1500px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "lg_section_yft7Mz": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_QMXcVp": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "FAQ",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 37,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "faqs_ReGVwp": {
+              "type": "_faqs",
+              "name": "Faqs",
+              "settings": {
+                "faqs": [
+                  "ls-this-engagement-ring-durable-enough-for-everyday-wear",
+                  "can-this-engagement-ring-be-resized",
+                  "how-does-the-nadia-rings-cluster-and-tapering-band-affect-its-style",
+                  "which-center-stone-shapes-and-stone-types-can-this-ring-be-set-in",
+                  "what-wedding-bands-pair-well-with-the-nadia-ring"
+                ]
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faqs_ReGVwp"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_QMXcVp"
+      ],
+      "disabled": true,
+      "name": "FAQs",
+      "settings": {}
+    },
+    "product_list_zM8WCj": {
+      "type": "product-list",
+      "blocks": {
+        "static-header": {
+          "type": "_product-list-content",
+          "name": "t:names.header",
+          "static": true,
+          "settings": {
+            "content_direction": "row",
+            "vertical_on_mobile": false,
+            "horizontal_alignment": "space-between",
+            "vertical_alignment": "flex-end",
+            "align_baseline": true,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "product_list_text_UYYmEX": {
+              "type": "_product-list-text",
+              "name": "t:names.collection_title",
+              "settings": {
+                "text": "<h4>You May Also Like</h4>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h4",
+                "font": "var(--font-body--family)",
+                "font_size": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "product_list_button_AQYE3K": {
+              "type": "_product-list-button",
+              "name": "t:names.product_list_button",
+              "settings": {
+                "label": "View all",
+                "open_in_new_tab": false,
+                "style_class": "link",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "product_list_text_UYYmEX",
+            "product_list_button_AQYE3K"
+          ]
+        },
+        "static-product-card": {
+          "type": "_product-card",
+          "name": "t:names.product_card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 4,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "product_card_gallery_KA3QQw": {
+              "type": "_product-card-gallery",
+              "name": "t:names.product_card_media",
+              "settings": {
+                "image_ratio": "adapt",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "product_title_nBd73f": {
+              "type": "product-title",
+              "name": "t:names.product_title",
+              "settings": {
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "weight": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 4,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "price_HPBn3A": {
+              "type": "price",
+              "name": "t:names.product_price",
+              "settings": {
+                "show_sale_price_first": true,
+                "show_installments": false,
+                "show_tax_info": false,
+                "show_igi_certified": false,
+                "type_preset": "h6",
+                "width": "100%",
+                "alignment": "left",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "color": "var(--color-primary)",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "product_card_gallery_KA3QQw",
+            "product_title_nBd73f",
+            "price_HPBn3A"
+          ]
+        }
+      },
+      "custom_css": [
+        ".section--page-width {max-width: 1500px !important; margin-left: auto !important; margin-right: auto !important;}"
+      ],
+      "name": "t:names.products_carousel",
+      "settings": {
+        "collection": "jewelry-gifts",
+        "layout_type": "carousel",
+        "carousel_on_mobile": false,
+        "max_products": 16,
+        "columns": 4,
+        "mobile_columns": "2",
+        "mobile_card_size": "60cqw",
+        "columns_gap": 8,
+        "rows_gap": 24,
+        "icons_style": "arrow",
+        "icons_shape": "circle",
+        "section_width": "page-width",
+        "horizontal_alignment": "flex-start",
+        "gap": 28,
+        "color_scheme": "scheme-b0b6c6df-26fa-4b2e-87bc-05b9a110f914",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "product_recommendations_qggXJq": {
+      "type": "product-recommendations",
+      "blocks": {
+        "text_UfBRh6": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<h4>You May Also Like</h4>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "static-product-card": {
+          "type": "_product-card",
+          "name": "t:names.product_card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 5,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 8,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "product_card_gallery_DNizbJ": {
+              "type": "_product-card-gallery",
+              "name": "t:names.product_card_media",
+              "settings": {
+                "image_ratio": "adapt",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "product_title_M7MJkb": {
+              "type": "product-title",
+              "name": "t:names.product_title",
+              "settings": {
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "weight": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "price_gLWgA6": {
+              "type": "price",
+              "settings": {
+                "show_sale_price_first": true,
+                "show_installments": false,
+                "show_tax_info": false,
+                "show_igi_certified": false,
+                "type_preset": "h6",
+                "width": "100%",
+                "alignment": "left",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "color": "var(--color-foreground)",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "product_card_gallery_DNizbJ",
+            "product_title_M7MJkb",
+            "price_gLWgA6"
+          ]
+        }
+      },
+      "block_order": [
+        "text_UfBRh6"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".section--page-width {max-width: 1500px !important; margin-left: auto !important; margin-right: auto !important;}"
+      ],
+      "name": "t:names.product_recommendations",
+      "settings": {
+        "product": "{{ product }}",
+        "recommendation_type": "complementary",
+        "layout_type": "carousel",
+        "carousel_on_mobile": false,
+        "max_products": 10,
+        "columns": 4,
+        "mobile_columns": "2",
+        "columns_gap": 10,
+        "rows_gap": 24,
+        "icons_style": "arrow",
+        "icons_shape": "circle",
+        "section_width": "page-width",
+        "gap": 28,
+        "color_scheme": "scheme-4df12b91-c5d4-406e-a832-2a7395c6df9e",
+        "padding-block-start": 0,
+        "padding-block-end": 24
+      }
+    },
+    "section_DCKpb6": {
+      "type": "section",
+      "blocks": {
+        "text_QBMcnn": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<h4>Why Ecglosty</h4>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_QBMcnn"
+      ],
+      "custom_css": [
+        ".section--page-width {max-width: 1500px !important; margin-left: auto !important; margin-right: auto !important;}"
+      ],
+      "name": "t:names.rich_text_section",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "custom_page_width": "1200px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 48,
+        "padding-block-end": 0
+      }
+    },
+    "section_bdkiWN": {
+      "type": "section",
+      "blocks": {
+        "group_b4VkXw": {
+          "type": "group",
+          "name": "t:names.column",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 10,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "image_XCTbnz": {
+              "type": "image",
+              "name": "t:names.image",
+              "settings": {
+                "image": "shopify://shop_images/ecglosty_Memorial3.webp",
+                "link": "",
+                "image_ratio": "adapt",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_wMAzig": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<p>More Than a Diamond. It's Your Story.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "h6",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_jb7yMm": {
+              "type": "text",
+              "name": "t:names.description",
+              "settings": {
+                "text": "<p>At ECGLOSTY, we believe fine jewelry should feel personal—not out of reach. We create lab-grown diamond jewelry for the moments that matter, the everyday moments that become memories, and the moments you choose to celebrate yourself.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "image_XCTbnz",
+            "text_wMAzig",
+            "text_jb7yMm"
+          ]
+        },
+        "group_dAe6Rb": {
+          "type": "group",
+          "name": "t:names.column",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 10,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "image_neaJdp": {
+              "type": "image",
+              "name": "t:names.image",
+              "settings": {
+                "image": "shopify://shop_images/ecglosty_Memorial14.webp",
+                "link": "",
+                "image_ratio": "adapt",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_imn4EY": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<p>Real Diamonds, Made Differently</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "h6",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_Vw8Hi7": {
+              "type": "text",
+              "name": "t:names.description",
+              "settings": {
+                "text": "<p>Our lab-grown diamonds are real diamonds, created through advanced technology rather than mined from the earth. The result is the brilliance and beauty you expect from a diamond, with a modern approach to how it's made.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "image_neaJdp",
+            "text_imn4EY",
+            "text_Vw8Hi7"
+          ]
+        },
+        "group_VQ778y": {
+          "type": "group",
+          "name": "t:names.column",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 10,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "image_JJqfLw": {
+              "type": "image",
+              "name": "t:names.image",
+              "settings": {
+                "image": "shopify://shop_images/ecglosty_Memorial12.webp",
+                "link": "",
+                "image_ratio": "adapt",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_6AWcnW": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<p>Luxury Without the Traditional Markup</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "h6",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_YqYaBN": {
+              "type": "text",
+              "name": "t:names.description",
+              "settings": {
+                "text": "<p>We believe more of your money should go into the jewelry itself. By offering lab-grown diamonds and thoughtfully designed pieces, we make elevated jewelry accessible without unnecessary traditional markups.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "image_JJqfLw",
+            "text_6AWcnW",
+            "text_YqYaBN"
+          ]
+        },
+        "group_agrTQY": {
+          "type": "group",
+          "name": "t:names.column",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 8,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 10,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "image_VQTmYb": {
+              "type": "image",
+              "name": "t:names.image",
+              "settings": {
+                "image": "shopify://shop_images/ecglosty_Memorial4.webp",
+                "link": "",
+                "image_ratio": "adapt",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_YJkqn4": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<p>Made to Mean Something</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "h6",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_PyJ8TX": {
+              "type": "text",
+              "name": "t:names.description",
+              "settings": {
+                "text": "<p>A first anniversary. A new chapter. A gift to someone you love. Or simply a reminder to celebrate yourself. Whatever the moment means to you, we're here to make it shine.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "image_VQTmYb",
+            "text_YJkqn4",
+            "text_PyJ8TX"
+          ]
+        }
+      },
+      "block_order": [
+        "group_b4VkXw",
+        "group_dAe6Rb",
+        "group_VQ778y",
+        "group_agrTQY"
+      ],
+      "custom_css": [
+        ".section--page-width {max-width: 1500px !important; margin-left: auto !important; margin-right: auto !important;}"
+      ],
+      "name": "t:names.multicolumn",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "center",
+        "vertical_alignment": "flex-start",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 10,
+        "section_width": "page-width",
+        "custom_page_width": "1200px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 48
+      }
+    }
+  },
+  "order": [
+    "lg_section_NKNYVV",
+    "collection_step_UQaxND",
+    "main",
+    "lg_section_BemBX7",
+    "hsd_section_diamond_params_mJkdbd",
+    "lg_section_byYB7N",
+    "lg_section_HEEMrd",
+    "section_dUzFn7",
+    "lg_section_yft7Mz",
+    "product_list_zM8WCj",
+    "product_recommendations_qggXJq",
+    "section_DCKpb6",
+    "section_bdkiWN"
+  ]
+}

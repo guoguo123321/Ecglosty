@@ -1,0 +1,47 @@
+{%- assign blo_setts = block.settings -%}
+{% capture accordion_row_children %}
+  <details
+    class="details"
+    data-testid="accordion-details"
+    {% if blo_setts.open_by_default %}open{% endif %}
+    {{ block.shopify_attributes }}
+  >
+    <summary class="details__header dpi-rp__accordion-header">
+      {%- if blo_setts.icon_image != blank -%}
+        <img
+          class="dpi-rp__accordion-icon-img"
+          src="{{ blo_setts.icon_image | image_url: width: 64 }}"
+          alt="{{ blo_setts.heading | escape }}"
+          width="32"
+          height="32"
+          loading="lazy"
+          style="width:32px;height:32px;max-width:none;flex-shrink:0;object-fit:contain;"
+        >
+      {%- elsif blo_setts.icon_svg != blank -%}
+        <span class="dpi-rp__accordion-icon-img svg-wrapper">{{ blo_setts.icon_svg }}</span>
+      {%- endif -%}
+      <span class="details__header-label">{{ blo_setts.heading }}</span>
+      <span class="svg-wrapper icon-plus">
+        {{- 'icon-plus.svg' | inline_asset_content -}}
+      </span>
+    </summary>
+    <div class="details-content">
+      {%- case blo_setts.content_type -%}
+        {%- when 'text' -%}
+          {{ blo_setts.text_content }}
+        {%- when 'page' -%}
+          {%- if blo_setts.page_content != blank -%}
+            {%- assign page_ref = pages[blo_setts.page_content] -%}
+            {{ page_ref.content }}
+          {%- endif -%}
+        {%- when 'richtext' -%}
+          {{ blo_setts.richtext_content }}
+      {%- endcase -%}
+    </div>
+  </details>
+{% endcapture %}
+{% render 'accordion-custom-component',
+  children: accordion_row_children,
+  open_by_default_on_desktop: blo_setts.open_by_default,
+  open_by_default_on_mobile: blo_setts.open_by_default
+%}

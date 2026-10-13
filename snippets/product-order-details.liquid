@@ -1,0 +1,205 @@
+{% liquid
+  assign blo_setts = block.settings
+%}
+{% assign block_id = block.id | replace: '_', '' | downcase %}
+
+{% assign days = block.settings.ship_days %}
+
+{% assign seconds_in_day = 86400 %}
+{% assign extra_seconds = days | times: seconds_in_day %}
+
+{% assign delivery_date = 'now'
+  | date: '%s'
+  | plus: extra_seconds
+  | date: blo_setts.date_format
+%}
+
+{% comment %} 
+{% style %}
+  .prod-order-details-{{ block_id }} {
+    display: block;
+    width: {{ blo_setts.desktop_width_percent }}%;
+    max-width: 100%;
+  }
+
+  .prod-order-details-container-{{ block_id }} {
+    display: flex;
+    justify-content: space-between;
+    padding: {{ blo_setts.padding }}px;
+    background-color: {{ blo_setts.background_color }};
+   
+  }
+
+  .prod-order-details-text-{{ block_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .prod-order-details-heading-{{ block_id }} {
+    font-size: {{ blo_setts.heading_size }}px;
+    font-weight: 700;
+    color: {{ blo_setts.text_color }};
+    margin: 0 0 8px 0;
+  }
+
+  .prod-order-details-line-{{ block_id }} {
+    font-size: {{ blo_setts.text_size }}px;
+    color: {{ blo_setts.text_color }};
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .prod-order-details-image-wrapper-{{ block_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width:150px;
+  }
+
+  .prod-order-details-image-{{ block_id }} {
+    width: 100%;
+    height: auto;
+    border-radius: {{ blo_setts.image_border_radius }}px;
+    object-fit: cover;
+  }
+
+  .prod-order-details-image-placeholder-{{ block_id }} {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #f4f4f4;
+    border-radius: {{ blo_setts.image_border_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .prod-order-details-image-placeholder-{{ block_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .prod-order-details-empty-state-{{ block_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .prod-order-details-container-{{ block_id }} {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .prod-order-details-image-wrapper-{{ block_id }} {
+      order: -1;
+    }
+  }
+{% endstyle %}
+
+<div class="prod-order-details-{{ block_id }}" {{ block.shopify_attributes }}>
+  <div class="prod-order-details-container-{{ block_id }}">
+    <div class="prod-order-details-text-{{ block_id }}">
+      {% if blo_setts.heading != blank %}
+        <h3 class="prod-order-details-heading-{{ block_id }}">{{ blo_setts.heading }}</h3>
+      {% endif %}
+
+      {% if blo_setts.delivery_text != blank %}
+        <p class="prod-order-details-line-{{ block_id }}">
+          {{ blo_setts.delivery_text }} {{ delivery_date }}
+        </p>
+      {% endif %}
+
+      {% if blo_setts.shipping_text != blank %}
+        <p class="prod-order-details-line-{{ block_id }}">{{ blo_setts.shipping_text }}</p>
+      {% endif %}
+
+      {% if blo_setts.returns_text != blank %}
+        <p class="prod-order-details-line-{{ block_id }}">{{ blo_setts.returns_text }}</p>
+      {% endif %}
+
+      {% if blo_setts.warranty_text != blank %}
+        <p class="prod-order-details-line-{{ block_id }}">{{ blo_setts.warranty_text }}</p>
+      {% endif %}
+    </div>
+
+    <div class="prod-order-details-image-wrapper-{{ block_id }}">
+      {% if blo_setts.image %}
+        <img
+          src="{{ blo_setts.image | image_url: width: 800 }}"
+          alt="{{ blo_setts.image.alt | escape }}"
+          class="prod-order-details-image-{{ block_id }}"
+          loading="lazy"
+          width="{{ blo_setts.image.width }}"
+          height="{{ blo_setts.image.height }}"
+        >
+      {% else %}
+        <div class="prod-order-details-image-placeholder-{{ block_id }}">
+          {{ 'product-1' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div> {% endcomment %}
+
+
+<div
+  class="order-details-box color-{{ blo_setts.color_scheme }}"
+  {{ block.shopify_attributes }}
+  style="
+    --order-details-padding: {{ blo_setts.padding }}px;
+    --order-details-heading-size: {{ blo_setts.heading_size }}px;
+    --order-details-text-size: {{ blo_setts.text_size }}px;
+  "
+>
+  {% comment %} left {% endcomment %}
+  <div class="order-details-left">
+    {% if blo_setts.heading != blank %}
+      <h3 class="order-details-header">{{ blo_setts.heading }}</h3>
+    {% endif %}
+
+    {% if blo_setts.delivery_text != blank %}
+      <p class="order-details-line">
+        {{ blo_setts.delivery_text }}
+        <span class="order-details-date">{{ delivery_date }}</span>
+      </p>
+    {% endif %}
+
+    {% if blo_setts.shipping_text != blank %}
+      <p class="order-details-line">{{ blo_setts.shipping_text }}</p>
+    {% endif %}
+
+    {% if blo_setts.returns_text != blank %}
+      <p class="order-details-line">{{ blo_setts.returns_text }}</p>
+    {% endif %}
+
+    {% if blo_setts.warranty_text != blank %}
+      <p class="order-details-line">{{ blo_setts.warranty_text }}</p>
+    {% endif %}
+  </div>
+
+  {% comment %} right {% endcomment %}
+  <div class="order-details-right">
+    {% if blo_setts.image != blank %}
+      <img
+        class="order-details-image"
+        src="{{ blo_setts.image | image_url: width: 800 }}"
+        alt="{{ blo_setts.image.alt | default: blo_setts.heading | escape }}"
+        width="{{ blo_setts.image.width }}"
+        height="{{ blo_setts.image.height }}"
+        loading="lazy"
+      >
+    {% else %}
+      <div class="order-details-image-placeholder">
+        {{ 'product-1' | placeholder_svg_tag }}
+      </div>
+    {% endif %}
+  </div>
+</div>

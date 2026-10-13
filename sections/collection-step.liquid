@@ -1,0 +1,466 @@
+{% liquid
+  assign se_stts = section.settings
+  assign set_blo = section.blocks
+  assign stt_layout = se_stts.layout
+  if stt_layout == 'lgs-container'
+    assign html_layout = '<div class="lgs-container">__</div>' | split: '__'
+  elsif stt_layout == 'custom-container'
+    assign html_layout = '<div class="custom-container">__</div>' | split: '__'
+  else
+    assign html_layout = '__' | split: '__'
+  endif
+  assign image = set_blo | where:"type","image"
+  assign text = set_blo | where:"type","text"
+%}
+<style>
+  {%- if se_stts.layout == 'custom-container' -%}
+  .{{ section.id }} .custom-container{max-width:{{ se_stts.custom_container }};margin: 0 auto;}
+  {%- endif -%}
+  {%- liquid
+    assign heading_c = se_stts.color_scheme.settings.foreground_heading
+    assign subheading_c = se_stts.color_scheme.settings.foreground_subheading
+  -%}
+  {%- if heading_c != blank and heading_c.alpha != 0.0 -%}
+  .{{ section.id }} .lgs-title{--color:var(--color-foreground-heading);color:var(--color-foreground-heading);}
+  {%- endif -%}
+  {%- if subheading_c != blank and subheading_c.alpha != 0.0 -%}
+  .{{ section.id }} .lgs-subtitle{--color:var(--color-foreground-subheading);color:var(--color-foreground-subheading);}
+  {%- endif -%}
+  .{{ section.id }}.collection-step-box{background:var(--bg-gradient);background-color:var(--bg-color);}
+  .{{ section.id }} .collection-design .design_title,
+  .{{ section.id }} .collection-step .num,
+  .{{ section.id }} .info .heading,
+  .{{ section.id }} .info .content{color:var(--color-foreground);}
+  .{{ section.id }} .info .steplink a{color:var(--color-primary);}
+  .{{ section.id }} .info .steplink a:hover{color:var(--color-primary-hover);}
+  .{{ section.id }} .collection-step-container{border-color:var(--color-border);background-color:var(--color-border);}
+  .{{ section.id }} .collection-step.active-step .node,
+  .{{ section.id }} .collection-step:hover .node{background:var(--color-background);}
+  .{{ section.id }} .collection-step.active-step .node:before,
+  .{{ section.id }} .collection-step:hover .node:before{border-top-color:var(--color-background);border-bottom-color:var(--color-background);}
+  .{{ section.id }} .collection-step.active-step .node:after,
+  .{{ section.id }} .collection-step:hover .node:after{border-left-color:var(--color-background);}
+</style>
+<div class="{{ section.id }} collection-step-box lgs-section-inner color-{{ se_stts.color_scheme }}"
+     data-template-name="{{ template.name }}"
+     data-template-suffix="{{ template.suffix }}"
+  {% render 'section_style', se_stts: se_stts -%}>
+  {{-html_layout[0]-}}
+  {%- render 'section_tophead', se_stts: se_stts -%}
+  <div class="collection-step-container {{ se_stts.box_align }}">
+    {% comment %} 设计 {% endcomment %}
+    <div class="collection-step collection-design">
+      <div class="node">
+        <div class="node-skin">
+          <div class="design_title">{{ se_stts.design_title }}</div>
+        </div>
+      </div>
+    </div>
+    
+    {% comment %} 步骤一 {% endcomment %}
+    <div class="collection-step collection-step-1 active-step">
+      <div class="node">
+        <div class="node-skin">
+          <div class="num">1</div>
+          <div class="info">
+            <div class="heading">{{ se_stts.step1_title }}</div>
+            <div class="content">{{ se_stts.step1_content }}</div>
+            <div class="steplink"><a href="{{ se_stts.step1_url }}">{{ se_stts.step1_btn }}</a></div>
+          </div>
+          <div class="photo"><img src="{{ se_stts.step1_image | image_url }}" width="{{ se_stts.step1_image.width | default:50 }}" height="{{ se_stts.step1_image.height | default:50 }}"></div>
+        </div>
+      </div>
+    </div>
+
+    {% comment %} 步骤二 {% endcomment %}
+    <div class="collection-step collection-step-2">
+      <div class="node">
+        <div class="node-skin">
+          <div class="num">2</div>
+          <div class="info">
+            <div class="heading">{{ se_stts.step2_title }}</div>
+            <div class="content">{{ se_stts.step2_content }}</div>
+            <div class="steplink">
+              <a href="{{ se_stts.step2_url }}">{{ se_stts.step2_btn }}</a>
+              <a href="{{ se_stts.step2_url2 }}">{{ se_stts.step2_btn2 }}</a>
+            </div>
+          </div>
+          <div class="photo"><img src="{{ se_stts.step2_image | image_url }}" width="{{ se_stts.step2_image.width | default:50 }}" height="{{ se_stts.step2_image.height | default:50 }}"></div>
+        </div>
+      </div>
+    </div>
+
+    {% comment %} 步骤三 {% endcomment %}
+    <div class="collection-step collection-step-3">
+      <div class="node">
+        <div class="node-skin">
+          <div class="num">3</div>
+          <div class="info">
+            <div class="heading">{{ se_stts.step3_title }}</div>
+            <div class="content">{{ se_stts.step3_content }}</div>
+            {% if se_stts.step3_btn != blank %}<div class="steplink"><a href="{{ se_stts.step3_url }}">{{ se_stts.step3_btn }}</a></div>{% endif %}
+          </div>
+          <div class="photo"><img src="{{ se_stts.step3_image | image_url }}" width="{{ se_stts.step3_image.width | default:50 }}" height="{{ se_stts.step3_image.height | default:50 }}"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  {{-html_layout[1]-}}
+</div>
+{% if se_stts.step1_image %}
+  {% assign step1_img_url = se_stts.step1_image | image_url %}
+{% else %}
+  {% assign step1_img_url = '' %}
+{% endif %}
+{% if se_stts.step2_image %}
+  {% assign step2_img_url = se_stts.step2_image | image_url %}
+{% else %}
+  {% assign step2_img_url = '' %}
+{% endif %}
+
+<script>
+(function() {
+  const DEFAULTS = {
+    ringSetting: {
+      step1: {
+        heading: {{ se_stts.step1_title | json }},
+        content: {{ se_stts.step1_content | json }},
+        btn:     {{ se_stts.step1_btn | json }},
+        url:     {{ se_stts.step1_url | json }},
+        img:     {{ step1_img_url | json }}
+      },
+      step2: {
+        heading: {{ se_stts.step2_title | json }},
+        content: {{ se_stts.step2_content | json }},
+        btn:     {{ se_stts.step2_btn | json }},
+        url:     {{ se_stts.step2_url | json }},
+        img:     {{ step2_img_url | json }}
+      }
+    }
+  };
+  DEFAULTS.diamond = {
+    step1: DEFAULTS.ringSetting.step2,
+    step2: DEFAULTS.ringSetting.step1
+  };
+
+  function getFirstImage(obj) {
+    if (!obj) return '';
+    if (obj.medias && obj.medias.length > 0) {
+      const img = obj.medias.find(m => m.mediaType === 1 && m.url);
+      if (img) return img.url;
+    }
+    if (obj.pictures) {
+      return obj.pictures.split(',')[0].trim();
+    }
+    return '';
+  }
+function applyToStep(stepEl, d) {
+    if (!stepEl || !d) return;
+
+    const h = stepEl.querySelector('.info .heading');
+    if (h && d.heading) h.textContent = d.heading;
+
+    const c = stepEl.querySelector('.info .content');
+    if (c && d.content) c.textContent = d.content;
+
+    // steplink 根据 heading 决定按钮文字和链接
+    const steplinkEl = stepEl.querySelector('.info .steplink');
+    if (steplinkEl) {
+      let btnText = '';
+      let btnUrl = '';
+      if (d.heading === 'Choose Setting') {
+        btnText = 'Browse Setting';
+        btnUrl = '/collections/start-with-a-setting';
+        let current_collections_ringsetting = localStorage.getItem('current_collections_ringsetting');
+        if(current_collections_ringsetting){
+          btnUrl = current_collections_ringsetting;
+        }
+      } else if (d.heading === 'Choose Diamond') {
+        btnText = 'Browse Diamonds';
+        btnUrl = '/collections/lab-grown-diamond';
+        let current_collections_diamond = localStorage.getItem('current_collections_diamond');
+        if(current_collections_diamond){
+          btnUrl = current_collections_diamond;
+        }
+        
+      } else {
+        // fallback：使用 schema 配置的 btn/url
+        btnText = d.btn || '';
+        btnUrl = d.url || '';
+      }
+
+      if (btnText) {
+        steplinkEl.innerHTML = '<a href="' + btnUrl + '">' + btnText + '</a>';
+      } else {
+        steplinkEl.innerHTML = '';
+      }
+    }
+
+    const img = stepEl.querySelector('.photo img');
+    if (img && d.img) img.src = d.img;
+  }
+  function applyDefaults() {
+    const box = document.querySelector('.{{ section.id }}.collection-step-box');
+    if (!box) return;
+
+    const purchaseNumber = localStorage.getItem('select_purchase_number');
+    const isRingFirst = !purchaseNumber || purchaseNumber === 'ringsetting';
+    const defaults = isRingFirst ? DEFAULTS.ringSetting : DEFAULTS.diamond;
+    applyToStep(box.querySelector('.collection-step-1'), defaults.step1);
+    applyToStep(box.querySelector('.collection-step-2'), defaults.step2);
+  }
+
+  // 配置：各类型对应的列表页
+let LIST_URLS = {
+  ringSetting: '/collections/start-with-a-setting',  
+  diamond: '/collections/lab-grown-diamond'             
+};
+let current_collections_diamond = localStorage.getItem('current_collections_diamond');
+if(current_collections_diamond){
+  LIST_URLS.diamond = current_collections_diamond;
+}
+let current_collections_ringsetting = localStorage.getItem('current_collections_ringsetting');
+if(current_collections_ringsetting){
+  LIST_URLS.ringSetting = current_collections_ringsetting;
+}
+
+function fillStep(stepEl, data, dataType) {
+  if (!stepEl || !data) return;
+
+  // heading：固定值，由 dataType 决定
+  const headingEl = stepEl.querySelector('.info .heading');
+  if (headingEl) {
+    headingEl.textContent = dataType === 'ringSetting' ? 'Setting' : 'Diamond';
+  }
+
+  // content：格式由 dataType 决定
+  const contentEl = stepEl.querySelector('.info .content');
+  if (contentEl) {
+    if (dataType === 'ringSetting') {
+      // 取 data.name 前两个单词 + 价格
+      const shortName = (data.name || '').split(' ').slice(0, 2).join(' ');
+      const price = data.price != null ? '$' + parseFloat(data.price).toLocaleString() : '';
+      contentEl.textContent = shortName + (price ? ' - ' + price : '');
+    } else {
+      // diamond：carat + shape + price
+      const attr = data || {};
+      const carat = attr.carat != null ? attr.carat : '';
+      const shape = attr.shape || '';
+      const price = data.price != null ? '$' + parseFloat(data.price).toLocaleString() : '';
+      contentEl.textContent = carat + ' carat ' + shape + ' - ' + price;
+    }
+  }
+
+  // steplink：view + change
+  const steplinkEl = stepEl.querySelector('.info .steplink');
+  if (steplinkEl && data.urlHandle) {
+    const viewUrl = '/products/' + data.urlHandle;
+    const listUrl = LIST_URLS[dataType] || '/';
+    const storageKey = dataType === 'ringSetting' ? 'current_ringsetting' : 'current_diamond';
+
+    steplinkEl.innerHTML =
+      '<a href="' + viewUrl + '" class="steplink-view">View</a>' +
+      '<a href="' + listUrl + '" class="steplink-change" data-clear="' + storageKey + '">Change</a>';
+
+    const changeBtn = steplinkEl.querySelector('.steplink-change');
+    if (changeBtn) {
+      changeBtn.addEventListener('click', function() {
+        localStorage.removeItem(storageKey);
+      });
+    }
+  }
+
+  // 图片
+  {% comment %} const imgEl = stepEl.querySelector('.photo img');
+  const imgUrl = getFirstImage(data);
+  if (imgEl && imgUrl) {
+    imgEl.src = imgUrl;
+    imgEl.alt = data.name || '';
+  } 去掉替换图片功能{% endcomment %}
+}
+
+
+
+  function fillSteps() {
+    const purchaseNumber = localStorage.getItem('select_purchase_number');
+    if (!purchaseNumber) return;
+
+    let ringSetting = null;
+    let diamond = null;
+
+    try {
+      const rawRing = localStorage.getItem('current_ringsetting');
+      if (rawRing) ringSetting = JSON.parse(rawRing);
+    } catch(e) { console.warn('current_ringsetting parse error', e); }
+
+    try {
+      const rawDiamond = localStorage.getItem('current_diamond');
+      if (rawDiamond) diamond = JSON.parse(rawDiamond);
+    } catch(e) { console.warn('current_diamond parse error', e); }
+
+    const box = document.querySelector('.{{ section.id }}.collection-step-box');
+    if (!box) return;
+
+    const step1 = box.querySelector('.collection-step-1');
+    const step2 = box.querySelector('.collection-step-2');
+
+    if (purchaseNumber === 'ringsetting') {
+      fillStep(step1, ringSetting, 'ringSetting');
+      fillStep(step2, diamond, 'diamond');
+    } else if (purchaseNumber === 'diamond') {
+      fillStep(step1, diamond, 'diamond');
+      fillStep(step2, ringSetting, 'ringSetting');
+    }
+
+  }
+
+  function updateActiveStep() {
+    const box = document.querySelector('.{{ section.id }}.collection-step-box');
+    if (!box) return;
+
+    box.querySelectorAll('.collection-step').forEach(el => el.classList.remove('active-step'));
+
+    
+    const purchaseNumber = localStorage.getItem('select_purchase_number');
+    const isRingFirst = !purchaseNumber || purchaseNumber === 'ringsetting';
+
+    const templateName = box.dataset.templateName;
+    const templateSuffix = box.dataset.templateSuffix;
+
+    let activeStep = 1;
+
+    if (templateName === 'page' && templateSuffix === 'purchase-review') {
+      activeStep = 3;
+    } else if (
+      templateSuffix === 'ring-setting' ||
+      templateSuffix === 'engagement-rings'
+    ) {
+      activeStep = isRingFirst ? 1 : 2;
+    } else if (
+      templateSuffix === 'diamond' ||
+      templateSuffix === 'engagement-diamonds'
+    ) {
+      activeStep = isRingFirst ? 2 : 1;
+    }
+
+    box.querySelector('.collection-step-' + activeStep)?.classList.add('active-step');
+  }
+
+  applyDefaults();
+  fillSteps();
+  updateActiveStep();
+})();
+</script>
+
+
+
+
+{% schema %}
+  {
+    "name": "collection-step",
+    "class": "shopify-collection-step",
+    "tag": "section",
+    "settings": [
+      {"type": "select","id": "layout","label": "layout","default":"lgs-container",
+        "options": [
+          {"label":"lgs-container","value": "lgs-container"},
+          {"label":"wrapped container","value": "wrapped-container"},
+          {"label":"custom container","value": "custom-container"}
+        ]
+      },
+      {"type": "text","id": "custom_container","label": "custom container","default": "1200px"},
+
+      {"type": "select","id": "box_align","label": "+ box align","default": "lgs-text-center",
+        "options": [
+            {"value": "lgs-text-start","label": "Left"},
+            {"value": "lgs-text-center","label": "Center"},
+            {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+
+      {"type": "header","content": "Colors"},
+      {"type": "color_scheme","id": "color_scheme","label": "t:settings.color_scheme","default": "scheme-1","info": "Section title (Headings), subtitle (Sub heading), design_title/.heading/content/num (Text), link (Links), hover bg (Background), border (Borders). Section background still uses bg_color below."},
+
+      {"type": "header","content": "1. Heading options"},
+      {"type": "select","id": "design_heading","label": "+ Design heading","default": "1",
+          "options": [
+              {"value": "1","label": "Design 01"},
+              {"value": "2","label": "Design 02"},
+              {"value": "3","label": "Design 03"},
+              {"value": "4","label": "Design 04"},
+              {"value": "5","label": "Design 05"},
+              {"value": "6","label": "Design 06 (width line-awesome)"},
+              {"value": "7","label": "Design 07"},
+              {"value": "8","label": "Design 08"},
+              {"value": "9","label": "Design 09"},
+              {"value": "10","label": "Design 10"},
+              {"value": "11","label": "Design 11"},
+              {"value": "12","label": "Design 12"},
+              {"value": "13","label": "Design 13"},
+              {"value": "14","label": "Design 14"},
+              {"value": "15","label": "Design 15"},
+              {"value": "16","label": "Design 16"}
+          ]
+      },
+      {"type": "select","id": "heading_align","label": "+ Heading align","default": "lgs-text-center",
+        "options": [
+            {"value": "lgs-text-start","label": "Left"},
+            {"value": "lgs-text-center","label": "Center"},
+            {"value": "lgs-text-end","label": "Right"}
+        ]
+      },
+      {"type": "html","id": "top_heading","label": "+ Heading","default": "Heading"},
+      {"type": "text","id": "icon_heading","label": "Enter a icon name on heading","info": "Only used for design 6 [LineAwesome]()","default": "las la-gem"},
+      {"type": "textarea","id": "top_subheading","label": "+ Subheading"},
+      {"type": "number","id": "tophead_mb","label": "+ Space bottom (px)","info": "The vertical spacing between heading and content","default": 30},
+
+      {"type":"color","id":"cl_bg","label":"bg_color","default":"#ffffff"},
+      {"type": "color_background","id": "cl_bg_gradient","label": "Background gradient"},
+    
+      {"type": "header","content": "+ Design pc options"},
+      {"type": "text","id": "mg","label": "Margin","info":"Margin top, margin right, margin bottom, margin left. If you not use to blank","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd","label": "Padding","info":"Padding top, padding right, padding bottom, padding left. If you not use to blank","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design Tablet Options"},
+      {"type": "text","id": "mg_tb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_tb","label": "Padding","default": "0px,0px,0px,0px"},
+    
+      {"type": "header","content": "+ Design mobile options"},
+      {"type": "text","id": "mg_mb","label": "Margin","default": "0px,0px,0px,0px"},
+      {"type": "text","id": "pd_mb","label": "Padding","default": "0px,0px,0px,0px"},
+
+      {"type": "header","content": "+ Design Your Ring"},
+      {"type": "text","id": "design_title","label": "Design Title","default": "Design Your Ring"},
+
+      {"type": "header","content": "+ Step1"},
+      {"type": "text","id": "step1_title","label": "Step1 Title","default": "Choose Setting"},
+      {"type": "text","id": "step1_content","label": "Step1 Content"},
+      {"type": "text","id": "step1_btn","label": "Step1 Button"},
+      {"type": "url","id": "step1_url","label": "Step1 Button Link"},
+      {"type": "image_picker","id": "step1_image","label": "Step1 Image"},
+
+      {"type": "header","content": "+ Step2"},
+      {"type": "text","id": "step2_title","label": "Step2 Title","default": "Choose Diamond"},
+      {"type": "text","id": "step2_content","label": "Step2 Content"},
+      {"type": "text","id": "step2_btn","label": "Step2 Button","default": "Browse Diamonds"},
+      {"type": "url","id": "step2_url","label": "Step2 Button Link"},
+      {"type": "text","id": "step2_btn2","label": "Step2 Button 2"},
+      {"type": "url","id": "step2_url2","label": "Step2 Button Link 2"},
+      {"type": "image_picker","id": "step2_image","label": "Step2 Image"},
+
+      {"type": "header","content": "+ Step3"},
+      {"type": "text","id": "step3_title","label": "Step3 Title","default": "Complete Ring"},
+      {"type": "text","id": "step3_content","label": "Step3 Content","default": "Select Ring Size"},
+      {"type": "text","id": "step3_btn","label": "Step3 Button"},
+      {"type": "url","id": "step3_url","label": "Step3 Button Link"},
+      {"type": "image_picker","id": "step3_image","label": "Step3 Image"}
+    ],
+    "presets":[
+      {
+        "name":"Collection Step",
+        "category": "t:categories.lg"
+      }
+    ]
+  }
+{% endschema %}

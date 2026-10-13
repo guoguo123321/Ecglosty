@@ -1,0 +1,27 @@
+{% render 'pro-order-details',
+  blo_setts: block.settings,
+  shopify_attributes: block.shopify_attributes,
+%}
+{% schema %}
+  {
+    "name": "Product Order Details",
+    "settings":[
+      {"type": "header","content": "+ Left"},
+      {"type": "text","id": "header","label": "header","default":"Header"},
+
+      {"type": "text","id": "title1","label": "title1","default":"title"},
+      {"type": "richtext","id": "content1","label": "content1"},
+
+      {"type": "html","id": "title2","label": "title2","default":"title"},
+
+      {"type": "header","content": "+ Right"},
+      {"type": "image_picker","id": "image","label": "image"},
+    ],
+    "presets":[
+      {
+        "name":"Product Order Details",
+        "category": "t:categories.lg",
+      }
+    ]
+  }
+{% endschema %}

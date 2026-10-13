@@ -1,0 +1,438 @@
+
+
+<script
+  src="{{ 'results-list.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+
+{% javascript %}
+  const url = new URL(window.location.href);
+  if (url.hash) {
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
+        const card = document.getElementById(url.hash.slice(1));
+        if (card) {
+          card.scrollIntoView({ behavior: 'instant' });
+        }
+      },
+      { once: true }
+    );
+  }
+{% endjavascript %}
+
+{% liquid
+  # products_display_mode: infinite | pagination
+  # Falls back to the legacy enable_infinite_scroll checkbox when needed.
+  assign enable_infinite_scroll = false
+  if section.settings.products_display_mode == 'infinite'
+    assign enable_infinite_scroll = true
+  elsif section.settings.products_display_mode == 'pagination'
+    assign enable_infinite_scroll = false
+  elsif section.settings.enable_infinite_scroll
+    assign enable_infinite_scroll = true
+  endif
+
+  assign products_per_page = 24
+  if enable_infinite_scroll == false
+    assign products_per_page = section.settings.products_per_page
+  endif
+
+  assign is_custom_width = false
+  if section.settings.product_grid_width == 'custom-width'
+    assign is_custom_width = true
+  endif
+
+  assign enable_grid_posters = section.settings.enable_collection_grid_posters
+
+  # Infer desktop columns from the same minmax card size + container width the CSS grid uses.
+  # (card-size presets alone are wrong for custom-width layouts — e.g. large @ 1500px ≈ 4 cols, not 3.)
+  assign grid_poster_columns = 4
+  case section.settings.product_card_size
+    when 'small'
+      assign grid_poster_columns = 5
+    when 'medium'
+      assign grid_poster_columns = 4
+    when 'large'
+      assign grid_poster_columns = 3
+    when 'extra-large'
+      assign grid_poster_columns = 2
+  endcase
+
+  capture product_card_size_value
+    render 'util-product-grid-card-size', section: section
+  endcapture
+  assign card_size_px = product_card_size_value | strip | replace: 'px', '' | plus: 0
+  assign gap_h = section.settings.columns_gap_horizontal | default: 16 | plus: 0
+  assign page_width_px = 1200
+  if section.settings.product_grid_width == 'custom-width'
+    assign page_width_px = section.settings.custom_page_width | default: '1200px' | replace: 'px', '' | plus: 0
+  elsif section.settings.product_grid_width == 'full-width'
+    assign page_width_px = 1600
+  endif
+  if card_size_px > 0 and page_width_px > 0
+    assign cell_pitch = card_size_px | plus: gap_h
+    if cell_pitch > 0
+      assign grid_poster_columns = page_width_px | plus: gap_h | divided_by: cell_pitch
+      if grid_poster_columns < 2
+        assign grid_poster_columns = 2
+      endif
+    endif
+  endif
+
+  assign grid_posters = blank
+  if enable_grid_posters
+    # Prefer singular key (Shopify often auto-generates from "Collection Grid Poster")
+    assign grid_posters = collection.metafields.custom.collection_grid_poster.value
+    if grid_posters == blank
+      assign grid_posters = collection.metafields.custom.collection_grid_posters.value
+    endif
+    if grid_posters == blank
+      assign grid_posters = collection.metafields.custom.grid_posters.value
+    endif
+  endif
+%}
+
+{% comment %} We always render this full-width, as the child blocks have width: page/full settings {% endcomment %}
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<results-list
+  class="section product-grid-container color-{{ section.settings.color_scheme }}"
+  style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
+  section-id="{{ section.id }}"
+  infinite-scroll="{{ enable_infinite_scroll }}"
+>
+  {% render 'skip-to-content-link', href: '#ResultsList', text: 'accessibility.skip_to_results_list' %}
+
+  <div
+    class="collection-wrapper grid gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}{% if is_custom_width %} collection-wrapper--custom-width{% endif %}"
+    {% if is_custom_width %}
+      style="--page-content-width: {{ section.settings.custom_page_width }}; --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));"
+    {% endif %}
+  >
+    {% content_for 'block',
+      type: 'filters',
+      id: 'filters',
+      results: collection,
+      results_size: collection.products_count
+    %}
+
+    {% paginate collection.products by products_per_page %}
+      {% liquid
+        assign show_grid_posters_this_page = enable_grid_posters
+        if enable_grid_posters and section.settings.grid_posters_all_pages == false and paginate.current_page > 1
+          assign show_grid_posters_this_page = false
+        endif
+      %}
+      {% capture children %}
+        {% liquid
+          assign seen_product_groups = ''
+          assign has_vm_color_filter = false
+          if request.query_string contains 'vm_color='
+            assign has_vm_color_filter = true
+          endif
+        %}
+        {% for product in collection.products %}
+          {% liquid
+            assign product_group_value = product.metafields.custom.product_group.value | default: product.metafields.custom.product_group | default: '' | strip
+            assign is_group_duplicate = false
+            if has_vm_color_filter == false and product_group_value != blank
+              assign group_token = '|' | append: product_group_value | append: '|'
+              if seen_product_groups contains group_token
+                assign is_group_duplicate = true
+              else
+                assign seen_product_groups = seen_product_groups | append: group_token
+              endif
+            endif
+          %}
+          {% if show_grid_posters_this_page and grid_posters != blank and forloop.first %}
+            {% for poster in grid_posters %}
+              {% liquid
+                assign insert_rows_raw = poster.insert_after_rows
+                if insert_rows_raw == blank
+                  assign insert_rows_raw = poster['insert_after_rows']
+                endif
+                if insert_rows_raw.value != blank
+                  assign insert_rows_raw = insert_rows_raw.value
+                endif
+                assign insert_rows = insert_rows_raw | plus: 0
+                assign insert_at = insert_rows | times: grid_poster_columns
+              %}
+              {% if insert_at == 0 %}
+                {% render 'collection-grid-poster', poster: poster, index: forloop.index, page: paginate.current_page %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          <li
+            id="{{ section.id }}-{{ product.id }}"
+            class="product-grid__item product-grid__item--{{ forloop.index0 }}{% if is_group_duplicate %} product-grid__item--group-duplicate{% endif %}"
+            data-page="{{ paginate.current_page }}"
+            data-product-id="{{ product.id }}"
+            {% if product_group_value != blank %}
+              data-product-group="{{ product_group_value | escape }}"
+            {% endif %}
+            {% if is_group_duplicate %}
+              data-group-duplicate="true"
+              hidden
+            {% endif %}
+            ref="cards[]"
+          >
+            {% # theme-check-disable %}
+            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+            {% # theme-check-enable %}
+          </li>
+
+          {% if show_grid_posters_this_page and grid_posters != blank %}
+            {% for poster in grid_posters %}
+              {% liquid
+                assign insert_rows_raw = poster.insert_after_rows
+                if insert_rows_raw == blank
+                  assign insert_rows_raw = poster['insert_after_rows']
+                endif
+                if insert_rows_raw.value != blank
+                  assign insert_rows_raw = insert_rows_raw.value
+                endif
+                assign insert_rows = insert_rows_raw | plus: 0
+                assign insert_at = insert_rows | times: grid_poster_columns
+              %}
+              {% if insert_at > 0 and forloop.parentloop.index == insert_at %}
+                {% render 'collection-grid-poster', poster: poster, index: forloop.index, page: paginate.current_page %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      {% endcapture %}
+
+      {% render 'product-grid',
+        section: section,
+        children: children,
+        products: collection.products,
+        paginate: paginate,
+        enable_infinite_scroll: enable_infinite_scroll
+      %}
+    {% endpaginate %}
+  </div>
+</results-list>
+
+{% schema %}
+{
+  "name": "t:names.collection_container",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout_type",
+      "label": "t:settings.type",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:options.grid"
+        },
+        {
+          "value": "organic",
+          "label": "t:options.editorial"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "select",
+      "id": "product_card_size",
+      "label": "t:settings.card_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:options.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:options.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:options.large"
+        },
+        {
+          "value": "extra-large",
+          "label": "t:options.extra_large"
+        }
+      ],
+      "default": "medium",
+      "visible_if": "{{ section.settings.layout_type == 'grid' }}"
+    },
+    {
+      "type": "select",
+      "id": "mobile_product_card_size",
+      "label": "t:settings.mobile_card_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:options.small"
+        },
+        {
+          "value": "large",
+          "label": "t:options.large"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "header",
+      "content": "t:content.collection_grid_posters"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_collection_grid_posters",
+      "label": "t:settings.enable_collection_grid_posters",
+      "info": "t:info.collection_grid_posters",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "grid_posters_all_pages",
+      "label": "t:settings.grid_posters_all_pages",
+      "info": "t:info.grid_posters_all_pages",
+      "default": true,
+      "visible_if": "{{ section.settings.enable_collection_grid_posters == true }}"
+    },
+    {
+      "type": "select",
+      "id": "products_display_mode",
+      "label": "t:settings.products_display_mode",
+      "options": [
+        {
+          "value": "infinite",
+          "label": "t:options.infinite_scroll"
+        },
+        {
+          "value": "pagination",
+          "label": "t:options.pagination"
+        }
+      ],
+      "default": "pagination"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "t:settings.products_per_page",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "default": 50,
+      "visible_if": "{{ section.settings.products_display_mode == 'pagination' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "product_grid_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "centered",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        },
+        {
+          "value": "custom-width",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "centered"
+    },
+    {
+      "type": "text",
+      "id": "custom_page_width",
+      "label": "t:settings.custom_width",
+      "default": "1200px",
+      "visible_if": "{{ section.settings.product_grid_width == 'custom-width' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width_on_mobile",
+      "label": "t:settings.full_width_on_mobile",
+      "default": true,
+      "visible_if": "{{ section.settings.product_grid_width != 'full-width' }}"
+    },
+    {
+      "type": "range",
+      "id": "columns_gap_horizontal",
+      "label": "t:settings.horizontal_gap",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "columns_gap_vertical",
+      "label": "t:settings.vertical_gap",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left_padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right_padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.section_layout"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top_padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom_padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": []
+}
+{% endschema %}

@@ -1,0 +1,1006 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "lg_section_NKNYVV": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_pAn7pt": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "lgs-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 40,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "20px,0px,20px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "20px,0px,20px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "20px,0px,20px,0px"
+          },
+          "blocks": {
+            "brc_nav_M3aBEq": {
+              "type": "_brc-nav",
+              "name": "breadcrumbs",
+              "settings": {},
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "brc_nav_M3aBEq"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_pAn7pt"
+      ],
+      "name": "Breadcrumbs",
+      "settings": {}
+    },
+    "section_Ar4AKR": {
+      "type": "section",
+      "blocks": {
+        "text_zA6kCD": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<p>{{ closest.collection.title }}</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h3",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_rJwDTX": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>{{ closest.collection.metafields.custom.CollectionCopywriting.value }}</p>",
+            "width": "100%",
+            "max_width": "none",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_zA6kCD",
+        "text_rJwDTX"
+      ],
+      "name": "t:names.rich_text_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "custom-width",
+        "custom_page_width": "1200px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 12
+      }
+    },
+    "collection_step_LQwR6w": {
+      "type": "collection-step",
+      "name": "Collection Step",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1500px",
+        "box_align": "lgs-text-center",
+        "color_scheme": "",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 12,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "0px,0px,0px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "0px,0px,0px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "0px,0px,0px,0px",
+        "design_title": "Design Your Ring",
+        "step1_title": "Choose Setting",
+        "step1_content": "",
+        "step1_btn": "",
+        "step1_url": "",
+        "step1_image": "shopify://shop_images/setting.svg",
+        "step2_title": "Choose Diamond",
+        "step2_content": "",
+        "step2_btn": "Browse Diamonds",
+        "step2_url": "",
+        "step2_btn2": "",
+        "step2_url2": "",
+        "step2_image": "shopify://shop_images/diamond.svg",
+        "step3_title": "Complete Ring",
+        "step3_content": "Select Ring Size",
+        "step3_btn": "",
+        "step3_url": "",
+        "step3_image": "shopify://shop_images/ring.svg"
+      }
+    },
+    "collection_category_X8gJPx": {
+      "type": "collection-category",
+      "blocks": {
+        "item_UhQMxC": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/EGDR0001-2ct_Emerald-_7.5_-3.png",
+            "title": "Solitaire",
+            "link": "shopify://collections/solitaire-engagement-rings"
+          }
+        },
+        "item_WG3yPY": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial14.webp",
+            "title": "Accents",
+            "link": ""
+          }
+        },
+        "item_xtNkqN": {
+          "type": "item",
+          "settings": {
+            "title": "Three Stone",
+            "link": ""
+          }
+        },
+        "item_KTm6Ua": {
+          "type": "item",
+          "settings": {
+            "title": "Halo",
+            "link": ""
+          }
+        },
+        "item_KJTp94": {
+          "type": "item",
+          "settings": {
+            "title": "Hidden Halo",
+            "link": ""
+          }
+        },
+        "item_JYDqMc": {
+          "type": "item",
+          "settings": {
+            "title": "Toi et Moi",
+            "link": ""
+          }
+        },
+        "item_y3ABhG": {
+          "type": "item",
+          "settings": {
+            "title": "Bezel",
+            "link": ""
+          }
+        },
+        "item_MF7PWt": {
+          "type": "item",
+          "settings": {
+            "title": "Classic",
+            "link": ""
+          }
+        },
+        "item_ABA8Ha": {
+          "type": "item",
+          "settings": {
+            "title": "Luxe",
+            "link": ""
+          }
+        },
+        "item_r99KyJ": {
+          "type": "item",
+          "settings": {
+            "title": "Classic",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_UhQMxC",
+        "item_WG3yPY",
+        "item_xtNkqN",
+        "item_KTm6Ua",
+        "item_KJTp94",
+        "item_JYDqMc",
+        "item_y3ABhG",
+        "item_MF7PWt",
+        "item_ABA8Ha",
+        "item_r99KyJ"
+      ],
+      "name": "collection-category",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1550px",
+        "col_dk": "6.5",
+        "col_tb": "5.5",
+        "col_mb": "2.5",
+        "color_scheme": "",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 30,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "12px,0px,12px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "12px,0px,12x,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "12px,0px,12px,0px"
+      }
+    },
+    "section_WQDATX": {
+      "type": "section",
+      "blocks": {
+        "divider_9tbNwj": {
+          "type": "_divider",
+          "name": "t:names.divider",
+          "settings": {
+            "thickness_cl": "#f0f0f0",
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "divider_9tbNwj"
+      ],
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "custom-width",
+        "custom_page_width": "1400px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "main": {
+      "type": "main-collection",
+      "blocks": {
+        "filters": {
+          "type": "filters",
+          "static": true,
+          "settings": {
+            "enable_filtering": true,
+            "show_filter_button": true,
+            "filter_style": "horizontal",
+            "filter_width": "centered",
+            "text_label_case": "default",
+            "show_swatch_label": true,
+            "show_filter_label": true,
+            "enable_diamond_shape": true,
+            "enable_metal": true,
+            "enable_items": true,
+            "show_results_filters": true,
+            "enable_sorting": true,
+            "enable_grid_density": false,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "facets_margin_bottom": 16,
+            "facets_margin_bottom_mobile": 8,
+            "facets_margin_right": 20
+          },
+          "blocks": {}
+        },
+        "product-card": {
+          "type": "_product-card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 0,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "card-gallery": {
+              "type": "_product-card-gallery",
+              "settings": {
+                "image_ratio": "adapt",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "swatches_card": {
+              "type": "swatches",
+              "settings": {
+                "product_swatches_alignment": "center",
+                "product_swatches_alignment_mobile": "center",
+                "hide_padding": false,
+                "product_swatches_padding_top": 8,
+                "product_swatches_padding_bottom": 4,
+                "product_swatches_padding_left": 0,
+                "product_swatches_padding_right": 0
+              },
+              "blocks": {}
+            },
+            "product_title_4nY4eT": {
+              "type": "product-title",
+              "name": "t:names.product_title",
+              "settings": {
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "weight": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 4,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "price_EzJzMm": {
+              "type": "price",
+              "settings": {
+                "show_sale_price_first": true,
+                "show_installments": false,
+                "show_tax_info": false,
+                "show_igi_certified": false,
+                "type_preset": "h6",
+                "width": "100%",
+                "alignment": "left",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "color": "var(--color-foreground)",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "card-gallery",
+            "swatches_card",
+            "product_title_4nY4eT",
+            "price_EzJzMm"
+          ]
+        }
+      },
+      "disabled": true,
+      "settings": {
+        "layout_type": "grid",
+        "product_card_size": "medium",
+        "mobile_product_card_size": "small",
+        "enable_collection_grid_posters": true,
+        "grid_posters_all_pages": true,
+        "products_display_mode": "pagination",
+        "products_per_page": 24,
+        "product_grid_width": "centered",
+        "custom_page_width": "1200px",
+        "full_width_on_mobile": true,
+        "columns_gap_horizontal": 15,
+        "columns_gap_vertical": 24,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "section_tA7hjQ": {
+      "type": "section",
+      "blocks": {
+        "divider_GnRnnR": {
+          "type": "_divider",
+          "name": "t:names.divider",
+          "settings": {
+            "thickness_cl": "#f0f0f0",
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "divider_GnRnnR"
+      ],
+      "disabled": true,
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "custom-width",
+        "custom_page_width": "1400px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "collection_rings_list_WX4iXF": {
+      "type": "collection-rings-list",
+      "blocks": {
+        "metal_LMxYkC": {
+          "type": "metal",
+          "settings": {
+            "label": "14K",
+            "api_value": "14K White Gold",
+            "swatch_image": "shopify://shop_images/round4.png"
+          }
+        },
+        "metal_mn3QKM": {
+          "type": "metal",
+          "settings": {
+            "label": "14K",
+            "api_value": "14K Yellow Gold",
+            "swatch_image": "shopify://shop_images/color2.png"
+          }
+        },
+        "metal_3VFAfh": {
+          "type": "metal",
+          "settings": {
+            "label": "14K",
+            "api_value": "14K Rose Gold",
+            "swatch_image": "shopify://shop_images/round3.png"
+          }
+        },
+        "metal_RD7z4X": {
+          "type": "metal",
+          "settings": {
+            "label": "18K",
+            "api_value": "18K White Gold",
+            "swatch_image": "shopify://shop_images/color1.png"
+          }
+        },
+        "metal_EHTiWF": {
+          "type": "metal",
+          "settings": {
+            "label": "18K",
+            "api_value": "18K Yellow Gold",
+            "swatch_image": "shopify://shop_images/round1.png"
+          }
+        },
+        "metal_bAHWp9": {
+          "type": "metal",
+          "settings": {
+            "label": "18K",
+            "api_value": "18K Rose Gold",
+            "swatch_image": "shopify://shop_images/color3.png"
+          }
+        },
+        "metal_NJcxJH": {
+          "type": "metal",
+          "settings": {
+            "label": "PT",
+            "api_value": "Platinum",
+            "swatch_image": "shopify://shop_images/color1.png"
+          }
+        },
+        "prong_type_7endaW": {
+          "type": "prong_type",
+          "disabled": true,
+          "settings": {
+            "label": "4 Prong",
+            "api_value": "4 Prong"
+          }
+        },
+        "width_VdQmRK": {
+          "type": "width",
+          "disabled": true,
+          "settings": {
+            "label": "Under 2mm",
+            "api_value": "Under 2mm"
+          }
+        },
+        "diamond_shape_tDNHHN": {
+          "type": "diamond_shape",
+          "settings": {
+            "label": "Round",
+            "api_value": "Round",
+            "icon": "shopify://shop_images/round.webp"
+          }
+        },
+        "diamond_shape_iW3HLW": {
+          "type": "diamond_shape",
+          "settings": {
+            "label": "Oval",
+            "api_value": "Oval",
+            "icon": "shopify://shop_images/oval.webp"
+          }
+        },
+        "diamond_shape_d7dTcT": {
+          "type": "diamond_shape",
+          "settings": {
+            "label": "Cushion",
+            "api_value": "Cushion",
+            "icon": "shopify://shop_images/cushion.webp"
+          }
+        },
+        "diamond_shape_gWhhwa": {
+          "type": "diamond_shape",
+          "settings": {
+            "label": "Pear",
+            "api_value": "Pear",
+            "icon": "shopify://shop_images/pear.webp"
+          }
+        },
+        "diamond_shape_yaD3YX": {
+          "type": "diamond_shape",
+          "settings": {
+            "label": "Princess",
+            "api_value": "Princess",
+            "icon": "shopify://shop_images/princess.webp"
+          }
+        },
+        "diamond_shape_xCT69c": {
+          "type": "diamond_shape",
+          "settings": {
+            "label": "Emerald",
+            "api_value": "Emerald",
+            "icon": "shopify://shop_images/emerald.webp"
+          }
+        },
+        "diamond_shape_RWgfWF": {
+          "type": "diamond_shape",
+          "settings": {
+            "label": "Marquise",
+            "api_value": "Marquise",
+            "icon": "shopify://shop_images/marquise.webp"
+          }
+        },
+        "diamond_shape_qatBmc": {
+          "type": "diamond_shape",
+          "settings": {
+            "label": "Asscher",
+            "api_value": "Asscher",
+            "icon": "shopify://shop_images/asscher.webp"
+          }
+        },
+        "diamond_shape_aX6r8d": {
+          "type": "diamond_shape",
+          "settings": {
+            "label": "Radiant",
+            "api_value": "Radiant",
+            "icon": "shopify://shop_images/radiant.webp"
+          }
+        },
+        "diamond_shape_aPVn64": {
+          "type": "diamond_shape",
+          "settings": {
+            "label": "Heart",
+            "api_value": "Heart",
+            "icon": "shopify://shop_images/heart.webp"
+          }
+        },
+        "setting_style_PhrxJd": {
+          "type": "setting_style",
+          "settings": {
+            "label": "Classic",
+            "api_value": "Classic",
+            "icon": "shopify://shop_images/classic.webp"
+          }
+        },
+        "setting_style_xJmNNN": {
+          "type": "setting_style",
+          "settings": {
+            "label": "Halo",
+            "api_value": "Hidden Halo",
+            "icon": "shopify://shop_images/hiddenhalo.webp"
+          }
+        }
+      },
+      "block_order": [
+        "metal_LMxYkC",
+        "metal_mn3QKM",
+        "metal_3VFAfh",
+        "metal_RD7z4X",
+        "metal_EHTiWF",
+        "metal_bAHWp9",
+        "metal_NJcxJH",
+        "prong_type_7endaW",
+        "width_VdQmRK",
+        "diamond_shape_tDNHHN",
+        "diamond_shape_iW3HLW",
+        "diamond_shape_d7dTcT",
+        "diamond_shape_gWhhwa",
+        "diamond_shape_yaD3YX",
+        "diamond_shape_xCT69c",
+        "diamond_shape_RWgfWF",
+        "diamond_shape_qatBmc",
+        "diamond_shape_aX6r8d",
+        "diamond_shape_aPVn64",
+        "setting_style_PhrxJd",
+        "setting_style_xJmNNN"
+      ],
+      "name": "Ring Setting List",
+      "settings": {
+        "api_endpoint": "https://api.ecglosty.com/20204/store/product/ring/list",
+        "shop_domain": "",
+        "page_size": 40,
+        "card_name_use_theme_font": true,
+        "card_name_font": "assistant_n4",
+        "card_name_size": 13,
+        "card_name_weight": "400",
+        "card_price_use_theme_font": true,
+        "card_price_font": "assistant_n4",
+        "card_price_size": 14,
+        "card_price_weight": "400"
+      }
+    },
+    "lg_section_BemBX7": {
+      "type": "lg-section",
+      "blocks": {
+        "lg_groub_MTdTB9": {
+          "type": "lg-groub",
+          "name": "lg group",
+          "settings": {
+            "layout": "custom-container",
+            "custom_container": "1230px",
+            "design_heading": "1",
+            "heading_align": "lgs-text-center",
+            "top_heading": "Oval Cut Engagement Rings FAQs",
+            "icon_heading": "las la-gem",
+            "top_subheading": "",
+            "tophead_mb": 60,
+            "cl_bg": "#ffffff",
+            "cl_bg_gradient": "",
+            "color_scheme": "",
+            "mg": "0px,0px,0px,0px",
+            "pd": "0px,0px,90px,0px",
+            "mg_tb": "0px,0px,0px,0px",
+            "pd_tb": "0px,0px,50px,0px",
+            "mg_mb": "0px,0px,0px,0px",
+            "pd_mb": "0px,0px,30px,0px"
+          },
+          "blocks": {
+            "faqs_g6YPfW": {
+              "type": "_faqs",
+              "name": "Faqs",
+              "settings": {
+                "faqs": [
+                  "what-is-an-oval-cut-engagement-ring",
+                  "what-should-i-look-for-in-terms-of-length-to-width-ratio-for-oval-diamonds",
+                  "what-is-the-bow-tie-effect-in-oval-diamonds",
+                  "how-do-oval-diamonds-compare-to-other-shapes-in-terms-of-sparkle-and-perceived-size",
+                  "do-oval-diamonds-show-color-or-inclusions-more-easily",
+                  "are-oval-cut-diamonds-more-durable-than-other-shapes"
+                ]
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "faqs_g6YPfW"
+          ]
+        }
+      },
+      "block_order": [
+        "lg_groub_MTdTB9"
+      ],
+      "disabled": true,
+      "name": "FAQs",
+      "settings": {}
+    },
+    "section_qJUfwE": {
+      "type": "section",
+      "blocks": {
+        "text_kbPDrQ": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "{{ closest.collection.description }}",
+            "width": "fit-content",
+            "max_width": "none",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_kbPDrQ"
+      ],
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "custom-width",
+        "custom_page_width": "1200px",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "category_NRGbYt": {
+      "type": "category",
+      "blocks": {
+        "item_QHaPpf": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/ecglosty_Memorial14.webp",
+            "title": "",
+            "btn_title": "",
+            "btn_link": ""
+          }
+        },
+        "item_MnKYRJ": {
+          "type": "item",
+          "settings": {
+            "title": "Exceptional Designers",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_i4hyPh": {
+          "type": "item",
+          "settings": {
+            "title": "Flawless Lab Diamond",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_pRHkVK": {
+          "type": "item",
+          "settings": {
+            "title": "Eco-Friendly Mission",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_dYFCjM": {
+          "type": "item",
+          "settings": {
+            "title": "Recycled Brilliance",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        },
+        "item_xG3wzB": {
+          "type": "item",
+          "settings": {
+            "title": "Recycled Brilliance",
+            "btn_title": "shop Now",
+            "btn_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_QHaPpf",
+        "item_MnKYRJ",
+        "item_i4hyPh",
+        "item_pRHkVK",
+        "item_dYFCjM",
+        "item_xG3wzB"
+      ],
+      "name": "Category",
+      "settings": {
+        "layout": "lgs-container",
+        "custom_container": "1200px",
+        "col_dk": "5",
+        "col_tb": "4",
+        "col_mb": "2",
+        "show_pagination_pc": false,
+        "show_navigation_pc": false,
+        "show_pagination_mb": false,
+        "show_navigation_mb": false,
+        "media_align_mb": "between",
+        "color_scheme": "",
+        "title_type_preset": "rte",
+        "title_font": "var(--font-body--family)",
+        "title_font_size": "1rem",
+        "title_weight": "",
+        "title_line_height": "normal",
+        "title_letter_spacing": "normal",
+        "title_case": "none",
+        "title_wrap": "pretty",
+        "title_color": "var(--color-foreground)",
+        "link_type_preset": "rte",
+        "link_font": "var(--font-body--family)",
+        "link_font_size": "0.75rem",
+        "link_weight": "",
+        "link_line_height": "normal",
+        "link_letter_spacing": "normal",
+        "link_case": "none",
+        "link_wrap": "pretty",
+        "link_color": "var(--color-primary)",
+        "design_heading": "1",
+        "heading_align": "lgs-text-center",
+        "top_heading": "More to Explore",
+        "icon_heading": "las la-gem",
+        "top_subheading": "",
+        "tophead_mb": 0,
+        "cl_bg": "#ffffff",
+        "cl_bg_gradient": "",
+        "mg": "0px,0px,0px,0px",
+        "pd": "50px,0px,50px,0px",
+        "mg_tb": "0px,0px,0px,0px",
+        "pd_tb": "50px,0px,50px,0px",
+        "mg_mb": "0px,0px,0px,0px",
+        "pd_mb": "30px,0px,30px,0px"
+      }
+    }
+  },
+  "order": [
+    "lg_section_NKNYVV",
+    "section_Ar4AKR",
+    "collection_step_LQwR6w",
+    "collection_category_X8gJPx",
+    "section_WQDATX",
+    "main",
+    "section_tA7hjQ",
+    "collection_rings_list_WX4iXF",
+    "lg_section_BemBX7",
+    "section_qJUfwE",
+    "category_NRGbYt"
+  ]
+}
