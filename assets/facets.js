@@ -1,3 +1,4 @@
+import { stripCollectionTitle } from '@theme/collection-title';
 import { sectionRenderer } from '@theme/section-renderer';
 import { Component } from '@theme/component';
 import { FilterUpdateEvent, ThemeEvents } from '@theme/events';
@@ -71,7 +72,7 @@ class FacetsFormComponent extends Component {
     if (preservedShape) url.searchParams.set('vm_shape', preservedShape);
     if (preservedColor) url.searchParams.set('vm_color', preservedColor);
 
-    history.pushState({ urlParameters: urlParameters.toString() }, '', url.toString());
+    history.pushState({ ...history.state, urlParameters: urlParameters.toString() }, '', url.toString());
   }
 
   /**
@@ -88,11 +89,17 @@ class FacetsFormComponent extends Component {
    */
   async #updateSection() {
     const viewTransition = !this.closest('dialog');
+    const container = this.closest('results-list');
+    if (container instanceof HTMLElement) VariantMetaobjectStripComponent.setLoading(container, true);
 
-    if (viewTransition) {
-      await startViewTransition(() => sectionRenderer.renderSection(this.sectionId), ['product-grid']);
-    } else {
-      await sectionRenderer.renderSection(this.sectionId);
+    try {
+      if (viewTransition) {
+        await startViewTransition(() => sectionRenderer.renderSection(this.sectionId), ['product-grid']);
+      } else {
+        await sectionRenderer.renderSection(this.sectionId);
+      }
+    } finally {
+      if (container instanceof HTMLElement) VariantMetaobjectStripComponent.setLoading(container, false);
     }
 
     // Section morph replaces strip markup (server has no vm_* active state).
@@ -104,7 +111,7 @@ class FacetsFormComponent extends Component {
    * @param {string} url - The URL to update filters with
    */
   async updateFiltersByURL(url) {
-    history.pushState('', '', url);
+    history.pushState({ ...history.state }, '', url);
     const nextUrl = new URL(url, window.location.origin);
     this.dispatchEvent(new FilterUpdateEvent(nextUrl.searchParams));
     await this.#updateSection();
@@ -1032,7 +1039,7 @@ class VariantMetaobjectStripComponent extends Component {
   }
 
   #syncHeadingFromActive() {
-    const labels = [...this.querySelectorAll('[data-strip-filter][data-filter-active="true"]')]
+    const labels = VariantMetaobjectStripComponent.#getOrderedSelections(this)
       .map((item) => item.getAttribute('data-label') || item.getAttribute('data-filter-value') || '');
     this.#defaultLabel = labels.join(', ') || this.dataset.allLabel || 'All';
     this.dataset.defaultLabel = this.#defaultLabel;
@@ -1327,6 +1334,7 @@ class VariantMetaobjectStripComponent extends Component {
     /** @type {HTMLElement[]} */
     const matched = [];
     const seenIds = new Set();
+    const groupRepresentatives = new Map();
 
     const items = await VariantMetaobjectStripComponent.#getCollectionItems(ctx);
     if (generation !== VariantMetaobjectStripComponent.#applyGeneration) return [];
@@ -1343,12 +1351,32 @@ class VariantMetaobjectStripComponent extends Component {
         )
       );
       if (!matches) continue;
+      const productGroup = VariantMetaobjectStripComponent.#normalize(
+        card.dataset.productGroup || source.dataset.productGroup || ''
+      );
+      // Prefer the actual product for the top-level selection over a sibling
+      // that merely offers that selection as a variant. Preserve group order.
+      const title = VariantMetaobjectStripComponent.#normalize(card.dataset.productTitle);
+      const handle = VariantMetaobjectStripComponent.#normalize(card.dataset.productHandle);
+      const score = groups.reduce((total, group) => total + Number(activeFilters.some((filter) => {
+        if (filter.group !== group) return false;
+        const value = VariantMetaobjectStripComponent.#normalize(filter.value);
+        return title.includes(value) || handle.includes(value.replace(/\s+/g, '-'));
+      })), 0);
+      const previous = productGroup ? groupRepresentatives.get(productGroup) : null;
+      if (previous && previous.score >= score) continue;
       const item = /** @type {HTMLElement} */ (source.cloneNode(true));
       item.hidden = false;
       item.removeAttribute('data-group-duplicate');
       item.removeAttribute('data-vm-filtered-out');
       item.classList.remove('product-grid__item--group-duplicate');
-      matched.push(item);
+      if (previous) {
+        matched[previous.index] = item;
+        groupRepresentatives.set(productGroup, { index: previous.index, score });
+      } else {
+        if (productGroup) groupRepresentatives.set(productGroup, { index: matched.length, score });
+        matched.push(item);
+      }
     }
 
     return matched;
@@ -1488,7 +1516,7 @@ class VariantMetaobjectStripComponent extends Component {
         grid.appendChild(empty);
         VariantMetaobjectStripComponent.#updateClientPagination(0, 1, 1);
         VariantMetaobjectStripComponent.#updateProductCount(0);
-        container.removeAttribute('data-vm-filter-loading');
+        VariantMetaobjectStripComponent.setLoading(container, false);
         return;
       }
 
@@ -1516,7 +1544,7 @@ class VariantMetaobjectStripComponent extends Component {
 
       VariantMetaobjectStripComponent.#updateClientPagination(items.length, page, totalPages);
       VariantMetaobjectStripComponent.#updateProductCount(items.length);
-      container.removeAttribute('data-vm-filter-loading');
+      VariantMetaobjectStripComponent.setLoading(container, false);
     } finally {
       VariantMetaobjectStripComponent.#isApplying = false;
     }
@@ -1560,30 +1588,14 @@ class VariantMetaobjectStripComponent extends Component {
   }
 
   /**
-   * Strip leading/trailing metal labels from a collection product title.
+   * Remove the configured metal/color phrases anywhere in a collection product title.
    * @param {string} title
+   * @param {string | undefined} metalsJson - Metal metaobject titles as JSON.
    * @returns {string}
    */
-  static #stripMetalFromCollectionTitle(title) {
+  static #stripMetalFromCollectionTitle(title, metalsJson) {
     if (!title) return '';
-    let result = String(title).trim();
-
-    result = result
-      .replace(
-        /^(?:(?:\d+\s*k(?:t)?\s+)?(?:white|yellow|rose|pink)\s+gold|platinum|palladium|sterling\s+silver|silver)\s+/i,
-        ''
-      )
-      .trim();
-
-    const parts = result.split(' in ');
-    if (parts.length >= 2) {
-      const metalTail = parts[parts.length - 1].trim().toLowerCase();
-      if (/gold|platinum|silver|palladium|白金|黄金|玫瑰金|白银/.test(metalTail)) {
-        result = parts.slice(0, -1).join(' in ').trim();
-      }
-    }
-
-    return result;
+    return stripCollectionTitle(title, metalsJson);
   }
 
   /**
@@ -1600,7 +1612,8 @@ class VariantMetaobjectStripComponent extends Component {
       const visible =
         card.querySelector('[ref="productCardTitle"]')?.textContent?.trim() || '';
       const next = VariantMetaobjectStripComponent.#stripMetalFromCollectionTitle(
-        fullTitle || existing || visible
+        fullTitle || existing || visible,
+        card.dataset.productTitleMetals
       );
 
       if (!next) return;
@@ -1621,17 +1634,30 @@ class VariantMetaobjectStripComponent extends Component {
     });
   }
 
+  /**
+   * @param {HTMLElement} container
+   * @param {boolean} loading
+   */
+  static setLoading(container, loading) {
+    container.toggleAttribute('data-vm-filter-loading', loading);
+    const results = container.querySelector('.main-collection-grid');
+    if (results instanceof HTMLElement) results.setAttribute('aria-busy', String(loading));
+    const indicator = container.querySelector('[data-vm-loading-indicator]');
+    if (indicator instanceof HTMLElement) indicator.hidden = !loading;
+  }
+
   static async applyCollectionWideFilter() {
     const activeFilters = VariantMetaobjectStripComponent.#getActiveClientFilters();
     const ctx = VariantMetaobjectStripComponent.#getSectionContext();
 
-    if (activeFilters.length === 0) {
+    if (activeFilters.length === 0 && ctx?.container.dataset.productGroupPagination !== 'true') {
       const grid = document.querySelector('[ref="grid"], .product-grid');
       if (grid instanceof HTMLElement && grid.dataset.vmFilterMode === 'true') {
         const url = new URL(window.location.href);
         url.searchParams.delete('vm_shape');
         url.searchParams.delete('vm_color');
         url.searchParams.delete('page');
+        if (ctx) VariantMetaobjectStripComponent.setLoading(ctx.container, true);
         window.location.assign(url.toString());
       } else {
         VariantMetaobjectStripComponent.applyClientFiltersFromDom();
@@ -1644,7 +1670,7 @@ class VariantMetaobjectStripComponent extends Component {
       return;
     }
 
-    const cacheKey = `${window.location.pathname}|${JSON.stringify(activeFilters)}`;
+    const cacheKey = `${VariantMetaobjectStripComponent.#buildPageFetchUrl(1)}|${JSON.stringify(activeFilters)}`;
     const page = parseInt(new URL(window.location.href).searchParams.get('page') || '1', 10) || 1;
 
     // Cache hit with completed data — just re-render.
@@ -1661,7 +1687,7 @@ class VariantMetaobjectStripComponent extends Component {
       VariantMetaobjectStripComponent.#filterCacheKey === cacheKey &&
       VariantMetaobjectStripComponent.#fetchPromise
     ) {
-      ctx.container.setAttribute('data-vm-filter-loading', 'true');
+      VariantMetaobjectStripComponent.setLoading(ctx.container, true);
       try {
         const matched = await VariantMetaobjectStripComponent.#fetchPromise;
         if (VariantMetaobjectStripComponent.#filterCacheKey === cacheKey && matched) {
@@ -1677,7 +1703,7 @@ class VariantMetaobjectStripComponent extends Component {
     // Bump generation so any in-flight older fetch is ignored when it finishes.
     const generation = ++VariantMetaobjectStripComponent.#applyGeneration;
     VariantMetaobjectStripComponent.#filterCacheKey = cacheKey;
-    ctx.container.setAttribute('data-vm-filter-loading', 'true');
+    VariantMetaobjectStripComponent.setLoading(ctx.container, true);
 
     // Disable strip clicks while fetching to avoid stacked races.
     document.querySelectorAll('variant-metaobject-strip-component').forEach((strip) => {
@@ -1702,13 +1728,14 @@ class VariantMetaobjectStripComponent extends Component {
     } catch (error) {
       if (generation === VariantMetaobjectStripComponent.#applyGeneration) {
         console.error('[variant-metaobject] filter failed', error);
-        ctx.container.removeAttribute('data-vm-filter-loading');
+        VariantMetaobjectStripComponent.setLoading(ctx.container, false);
       }
     } finally {
       if (VariantMetaobjectStripComponent.#fetchPromise === fetchPromise) {
         VariantMetaobjectStripComponent.#fetchPromise = null;
       }
       if (generation === VariantMetaobjectStripComponent.#applyGeneration) {
+        VariantMetaobjectStripComponent.setLoading(ctx.container, false);
         document.querySelectorAll('variant-metaobject-strip-component').forEach((strip) => {
           if (strip instanceof HTMLElement) strip.style.pointerEvents = '';
         });
@@ -1765,12 +1792,23 @@ class VariantMetaobjectStripComponent extends Component {
       color: (url.searchParams.get('vm_color') || '').split(',').filter(Boolean),
     };
 
+    const activeKeys = VariantMetaobjectStripComponent.#getWantedFiltersFromUrl()
+      .map(({ group, value }) => JSON.stringify([group, VariantMetaobjectStripComponent.#normalize(value)]));
+    const savedOrder = history.state?.vmSelectionOrder;
+    const previousOrder = Array.isArray(savedOrder) ? savedOrder : [];
+    const order = [...new Set([
+      ...previousOrder.filter((key) => activeKeys.includes(key)),
+      ...activeKeys,
+    ])];
+    if (JSON.stringify(savedOrder) !== JSON.stringify(order)) {
+      history.replaceState({ ...history.state, vmSelectionOrder: order }, '', url.toString());
+    }
+
     document
       .querySelectorAll('variant-metaobject-strip-component')
       .forEach((strip) => {
         if (!(strip instanceof HTMLElement)) return;
 
-        const activeLabels = [];
         strip.querySelectorAll('[data-strip-filter]').forEach((el) => {
           if (!(el instanceof HTMLElement)) return;
           const group = el.dataset.filterGroup || '';
@@ -1787,12 +1825,13 @@ class VariantMetaobjectStripComponent extends Component {
           el.classList.toggle('variant-metaobject-strip__link--active', active);
           if (active) {
             el.setAttribute('aria-current', 'true');
-            activeLabels.push(el.dataset.label || value);
           } else {
             el.removeAttribute('aria-current');
           }
         });
 
+        const activeLabels = VariantMetaobjectStripComponent.#getOrderedSelections(strip)
+          .map((item) => item.dataset.label || item.dataset.filterValue || '');
         const activeLabel = activeLabels.join(', ') || strip.dataset.allLabel || 'All';
         strip.dataset.defaultLabel = activeLabel;
         const labelEl = strip.querySelector('.variant-metaobject-strip__heading .all');
@@ -1806,12 +1845,27 @@ class VariantMetaobjectStripComponent extends Component {
     VariantMetaobjectStripComponent.#syncSelectedFilters();
   }
 
+  /**
+   * @param {Element} root
+   * @returns {HTMLElement[]}
+   */
+  static #getOrderedSelections(root) {
+    const order = history.state?.vmSelectionOrder || [];
+    const selections = [...root.querySelectorAll('[data-strip-filter][data-filter-active="true"]')]
+      .filter((item) => item instanceof HTMLElement);
+    const index = (item) => order.indexOf(JSON.stringify([
+      item.dataset.filterGroup,
+      VariantMetaobjectStripComponent.#normalize(item.dataset.filterValue),
+    ]));
+    return selections.sort((first, second) => index(first) - index(second));
+  }
+
   static #syncSelectedFilters() {
     document.querySelectorAll('[data-vm-selected-filters]').forEach((container) => {
       if (!(container instanceof HTMLElement)) return;
       const form = container.closest('facets-form-component');
       if (!form) return;
-      const selections = form.querySelectorAll('[data-strip-filter][data-filter-active="true"]');
+      const selections = VariantMetaobjectStripComponent.#getOrderedSelections(form);
       const signature = JSON.stringify([window.location.search, [...selections].map((item) => item.getAttribute('data-label'))]);
       if (container.dataset.selectionSignature === signature) return;
       container.dataset.selectionSignature = signature;
@@ -1943,7 +1997,7 @@ document.addEventListener(ThemeEvents.FilterUpdate, () => {
   const hasVm =
     new URL(window.location.href).searchParams.has('vm_color') ||
     new URL(window.location.href).searchParams.has('vm_shape');
-  if (!hasVm) return;
+  if (!hasVm && !document.querySelector('results-list[data-product-group-pagination="true"]')) return;
   VariantMetaobjectStripComponent.scheduleApplyClientFilters();
 });
 
@@ -1971,7 +2025,7 @@ document.addEventListener(
     const grid = document.querySelector('[ref="grid"], .product-grid');
     const inFilterMode = grid instanceof HTMLElement && grid.dataset.vmFilterMode === 'true';
 
-    if (vmActive && inFilterMode) {
+    if (inFilterMode) {
       event.preventDefault();
       const next = new URL(link.href, window.location.origin);
       const page = parseInt(next.searchParams.get('page') || '1', 10) || 1;

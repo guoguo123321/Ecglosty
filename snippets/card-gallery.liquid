@@ -20,6 +20,13 @@
     assign card_gallery_product_url = card_gallery_product_url | strip
   endif
   assign image_sizes = '(min-width: 750px) 50vw, 100vw'
+  assign fallback_hover_image = blank
+  for image in product.images
+    if forloop.first == false and image.src != product.featured_media.preview_image.src and image.src != product.featured_image.src and image.attached_to_variant? == false
+      assign fallback_hover_image = image
+      break
+    endif
+  endfor
 
   # Check if product has badges and determine position
   assign has_badges = false
@@ -80,9 +87,12 @@
     --gallery-aspect-ratio: {{ ratio }};
   "
   data-product-id="{{ product.id }}"
+  {% if fallback_hover_image != blank %}
+    data-fallback-hover-image="{{ fallback_hover_image | image_url: width: 800 | escape }}"
+  {% endif %}
   {% if settings.show_second_image_on_hover %}
-    on:pointerenter="/previewImage"
-    on:pointerleave="/resetImage"
+    on:pointerenter="product-card/previewImage"
+    on:pointerleave="product-card/resetImage"
   {% endif %}
   {% if settings.transition_to_main_product %}
     data-view-transition-to-main-product
@@ -211,7 +221,18 @@
 </div>
 
 {% stylesheet %}
+  .card-gallery__hover-image {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
   .card-gallery {
+    position: relative;
     overflow: hidden;
     container-type: inline-size; /* Make card-gallery a container */
     container-name: card-gallery-container; /* Optional: name the container */

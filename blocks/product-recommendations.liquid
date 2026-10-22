@@ -40,7 +40,7 @@
 <product-recommendations
   id="product-recommendations-{{ block.id }}"
   class="product-recommendations"
-  data-url="{{ routes.product_recommendations_url }}?limit={{ block_settings.max_products }}"
+  data-url="{{ routes.product_recommendations_url }}?limit=10"
   data-section-id="{{ section.id }}"
   data-product-id="{{ closest.product.id }}"
   data-intent="{{ block_settings.recommendation_type }}"
@@ -94,8 +94,26 @@
           assign products = recommendations.products
         endif
       %}
+      {% liquid
+        assign seen_product_groups = ''
+        assign rendered_product_count = 0
+      %}
       {% capture list_items %}
-        {% for product in products limit: block_settings.max_products %}
+        {% for product in products %}
+          {% liquid
+            if rendered_product_count >= block_settings.max_products
+              break
+            endif
+            assign product_group_value = product.metafields.custom.product_group.value | default: product.metafields.custom.product_group | default: '' | strip
+            if product_group_value != blank
+              assign group_token = product_group_value | json | prepend: '|' | append: '|'
+              if seen_product_groups contains group_token
+                continue
+              endif
+              assign seen_product_groups = seen_product_groups | append: group_token
+            endif
+          %}
+          {% if rendered_product_count > 0 %}<!--@list/split-->{% endif %}
           <div class="resource-list__item">
             {% content_for 'block',
               type: '_product-card',
@@ -103,11 +121,7 @@
               closest.product: product
             %}
           </div>
-          {% if block_settings.layout_type == 'carousel' or block_settings.carousel_on_mobile %}
-            {% unless forloop.last %}
-              <!--@list/split-->
-            {% endunless %}
-          {% endif %}
+          {% assign rendered_product_count = rendered_product_count | plus: 1 %}
         {% endfor %}
       {% endcapture %}
 
@@ -116,7 +130,7 @@
         assign slide_content = list_items | strip
         assign slides = slide_content | split: '<!--@list/split-->'
 
-        if products != blank and products.size > 0
+        if rendered_product_count > 0
           assign has_recommendations = 'true'
         else
           assign has_recommendations = 'false'
@@ -143,7 +157,7 @@
             {% render 'resource-list-carousel',
               ref: 'resourceListCarousel',
               slides: slides,
-              slide_count: recommendations.products.size,
+              slide_count: rendered_product_count,
               settings: block_settings
             %}
         {% endcase %}
@@ -164,7 +178,7 @@
           {% render 'resource-list-carousel',
             ref: 'resourceListCarouselMobile',
             slides: slides,
-            slide_count: recommendations.products.size,
+            slide_count: rendered_product_count,
             settings: block_settings
           %}
         </div>

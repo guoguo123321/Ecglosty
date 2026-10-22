@@ -648,9 +648,26 @@
     <script type="application/json" data-product-variants-json>
       [
         {%- for variant in product_resource.variants -%}
+          {% liquid
+            assign card_hover_image = blank
+            assign card_hover_images = product_resource.metafields.custom.card_hover_image.value
+            if metal_option_ref != blank
+              assign metal_key = 'option' | append: metal_option_ref.position
+              assign variant_metal = variant[metal_key]
+              for metal_value in metal_option_ref.values
+                if metal_value.name == variant_metal
+                  assign card_hover_image = card_hover_images[forloop.index0]
+                  break
+                endif
+              endfor
+            elsif card_hover_images != blank
+              assign card_hover_image = card_hover_images.first
+            endif
+          %}
           {
             "id": {{ variant.id }},
             "variant_title": {{ variant.metafields.custom.variant_title.value | json }},
+            "card_hover_image": {{ card_hover_image | json }},
             "option1": {{ variant.option1 | json }},
             "option2": {{ variant.option2 | json }},
             "option3": {{ variant.option3 | json }},

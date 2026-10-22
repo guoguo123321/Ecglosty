@@ -1,3 +1,4 @@
+import { stripCollectionTitle } from '@theme/collection-title';
 import { OverflowList } from '@theme/overflow-list';
 import VariantPicker from '@theme/variant-picker';
 import { Component } from '@theme/component';
@@ -237,6 +238,9 @@ export class ProductCard extends ProductCardLink {
     super.disconnectedCallback();
     this.removeEventListener('click', this.navigateToProduct);
     this.removeEventListener('click', this.#storeBreadcrumbCollection);
+    this.#restoreHoverImage();
+    this.#galleryHovered = false;
+    this.resetVariant.cancel();
   }
 
   /**
@@ -471,6 +475,21 @@ export class ProductCard extends ProductCardLink {
    * @param {VariantUpdateEvent} [event]
    */
   #updateVariantImages(event) {
+    if (this.#usesCardHoverImages()) {
+      this.#restoreHoverImage();
+      const selectedVariant = this.#getSelectedVariant() || event?.detail?.resource;
+      const imageUrl = selectedVariant?.preview_image_url || selectedVariant?.featured_media_url ||
+        selectedVariant?.featured_media?.preview_image?.src;
+      const image = this.#getActiveCardImage();
+      if (imageUrl && image instanceof HTMLImageElement) {
+        image.src = imageUrl;
+        image.srcset = imageUrl + ' 800w';
+        this.#savedImageState = null;
+      }
+      if (this.#galleryHovered) this.#showHoverImage(selectedVariant);
+      return;
+    }
+
     const { slideshow } = this.refs;
     if (!slideshow) return;
 
@@ -529,6 +548,42 @@ export class ProductCard extends ProductCardLink {
 
   /** @type {boolean} */
   #isPreviewingVariant = false;
+
+  /** @type {HTMLImageElement | null} */
+  #hoverImageElement = null;
+
+  #galleryHovered = false;
+
+  /** Collection cards use a separate hover layer over the selected color image. */
+  #usesCardHoverImages() {
+    return this.#isCollectionCard() ||
+      this.#getProductVariants().some((variant) => Boolean(variant.card_hover_image));
+  }
+
+  /**
+   * Shows the color's URL while retaining the original responsive image attributes.
+   * @param {Record<string, any> | null} variant
+   */
+  #showHoverImage(variant) {
+    this.#restoreHoverImage();
+    const gallery = this.refs.cardGallery || this.querySelector('[ref="cardGallery"]');
+    if (!(gallery instanceof HTMLElement)) return;
+    const hoverUrl = variant?.card_hover_image || gallery.dataset.fallbackHoverImage;
+    if (!hoverUrl) return;
+    const image = document.createElement('img');
+    image.className = 'card-gallery__hover-image';
+    image.alt = '';
+    image.setAttribute('aria-hidden', 'true');
+    image.src = hoverUrl;
+    gallery.append(image);
+    this.#hoverImageElement = image;
+  }
+
+  /** Removes only the hover layer, leaving the original responsive image intact. */
+  #restoreHoverImage() {
+    this.#hoverImageElement?.remove();
+    this.#hoverImageElement = null;
+  }
 
   /**
    * Previews a variant from swatch hover.
@@ -1014,6 +1069,11 @@ export class ProductCard extends ProductCardLink {
    * @param {Record<string, any>} variant
    */
   #previewVariantMedia(variant) {
+    if (this.#usesCardHoverImages()) {
+      if (this.#galleryHovered) this.#showHoverImage(variant);
+      return;
+    }
+
     const mediaId = variant.featured_media_id || variant.featured_media?.id;
 
     if (mediaId) {
@@ -1055,7 +1115,11 @@ export class ProductCard extends ProductCardLink {
     const activeSlide = slideshow?.slides?.[slideshow.current];
     const slideImage = activeSlide?.querySelector('img');
 
-    return slideImage instanceof HTMLImageElement ? slideImage : null;
+    if (slideImage instanceof HTMLImageElement) return slideImage;
+    const gallery = this.refs.cardGallery || this.querySelector('[ref="cardGallery"]');
+    const visibleImage = gallery?.querySelector('slideshow-slide[aria-hidden="false"] img') ||
+      gallery?.querySelector('slideshow-slide:not([hidden]) img');
+    return visibleImage instanceof HTMLImageElement ? visibleImage : null;
   }
 
   /**
@@ -1216,7 +1280,7 @@ export class ProductCard extends ProductCardLink {
   }
 
   /**
-   * Removes leading/trailing metal from a product title for collection display.
+   * Removes the configured metal/color phrases anywhere in a collection product title.
    * Examples:
    * - "18K Rose Gold Radiant Bezel..." → "Radiant Bezel..."
    * - "Platinum Radiant Bezel..." → "Radiant Bezel..."
@@ -1228,26 +1292,7 @@ export class ProductCard extends ProductCardLink {
     if (!title) return '';
     if (!this.#isCollectionCard()) return title;
 
-    let result = String(title).trim();
-
-    // Leading metal: "18K Rose Gold …" / "Platinum …"
-    result = result
-      .replace(
-        /^(?:(?:\d+\s*k(?:t)?\s+)?(?:white|yellow|rose|pink)\s+gold|platinum|palladium|sterling\s+silver|silver)\s+/i,
-        ''
-      )
-      .trim();
-
-    // Trailing " in <metal>"
-    const parts = result.split(' in ');
-    if (parts.length >= 2) {
-      const metalTail = parts[parts.length - 1].trim().toLowerCase();
-      if (/gold|platinum|silver|palladium|白金|黄金|玫瑰金|白银/.test(metalTail)) {
-        result = parts.slice(0, -1).join(' in ').trim();
-      }
-    }
-
-    return result;
+    return stripCollectionTitle(title, this.dataset.productTitleMetals);
   }
 
   /**
@@ -1372,6 +1417,12 @@ export class ProductCard extends ProductCardLink {
    */
   previewImage(event) {
     if (event.pointerType !== 'mouse') return;
+    if (this.#usesCardHoverImages()) {
+      this.#galleryHovered = true;
+      this.resetVariant.cancel();
+      this.#showHoverImage(this.#getSelectedVariant());
+      return;
+    }
 
     const { slideshow } = this.refs;
 
@@ -1396,6 +1447,11 @@ export class ProductCard extends ProductCardLink {
    */
   resetImage(event) {
     if (event.pointerType !== 'mouse') return;
+    this.#galleryHovered = false;
+    if (this.#usesCardHoverImages()) {
+      this.#restoreHoverImage();
+      return;
+    }
 
     const { slideshow } = this.refs;
 
@@ -1415,6 +1471,7 @@ export class ProductCard extends ProductCardLink {
    * Resets the image to the variant image.
    */
   #resetVariant = () => {
+    this.#restoreHoverImage();
     const { slideshow } = this.refs;
 
     if (!slideshow) return;
@@ -1436,6 +1493,11 @@ export class ProductCard extends ProductCardLink {
     }
 
     this.#restoreCardImage();
+
+    if (this.#usesCardHoverImages()) {
+      if (this.#galleryHovered) this.#showHoverImage(selectedVariant);
+      return;
+    }
 
     const mediaId =
       selectedVariant?.featured_media_id ||
@@ -1602,6 +1664,21 @@ class SwatchesVariantPickerComponent extends VariantPicker {
     const clickedSwatch = event.target;
     const availableCount = parseInt(clickedSwatch.dataset.availableCount || '0');
     const firstAvailableVariantId = clickedSwatch.dataset.firstAvailableOrFirstVariantId;
+
+    // Collection cards already contain the full variant data. Keep their swatch
+    // list stable instead of replacing it with a differently ordered response.
+    if (isSwatchInput && this.parentProductCard instanceof ProductCard &&
+        this.closest('results-list')) {
+      const value = clickedSwatch.dataset.optionValueName || clickedSwatch.getAttribute('value') || '';
+      const isMetal = Boolean(clickedSwatch.closest('.variant-option--metal-row'));
+      const isShape = Boolean(clickedSwatch.closest('.variant-option--shape-row'));
+      if ((isMetal || isShape) && this.parentProductCard.applyCollectionFilterOptions(
+        isMetal ? { color: value } : { shape: value }
+      )) {
+        event.stopPropagation();
+        return;
+      }
+    }
 
     if (isSwatchInput && availableCount > 0 && firstAvailableVariantId) {
       event.stopPropagation();

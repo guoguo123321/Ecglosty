@@ -14,7 +14,15 @@
         <div class="rpr-label">SETTING</div>
         <div class="rpr-setting-row">
           <span class="rpr-setting-name" id="rpr-setting-name"></span>
-          <span class="rpr-setting-price" id="rpr-setting-price"></span>
+          <div class="rpr-setting-actions">
+            <span class="rpr-setting-price" id="rpr-setting-price"></span>
+            <a
+              class="rpr-setting-change"
+              id="rpr-setting-change"
+              href="/collections/start-with-a-setting"
+            >Change</a>
+          </div>
+
         </div>
         {% comment %} <div class="rpr-stars">★★★★★</div> {% endcomment %}
       </div>
@@ -22,10 +30,21 @@
       <div class="rpr-section-block">
         <div class="rpr-label">DIAMOND</div>
         <div class="rpr-diamond-row">
-          <span class="rpr-diamond-title" id="rpr-diamond-title"></span>
-          <span class="rpr-diamond-price" id="rpr-diamond-price"></span>
+          <div class="rpr-diamond-info">
+            <div class="rpr-diamond-title" id="rpr-diamond-title"></div>
+            <div class="rpr-diamond-specs" id="rpr-diamond-specs"></div>
+          </div>
+
+          <div class="rpr-diamond-actions">
+            <span class="rpr-diamond-price" id="rpr-diamond-price"></span>
+            <a
+              class="rpr-diamond-change"
+              id="rpr-diamond-change"
+              href="/collections/lab-grown-diamond"
+            >Change</a>
+          </div>
         </div>
-        <div class="rpr-diamond-specs" id="rpr-diamond-specs"></div>
+
       </div>
 
       <div class="rpr-section-block">
@@ -280,6 +299,51 @@
 .rpr-diamond-title { flex: 1; line-height: 1.4; }
 .rpr-setting-price,
 .rpr-diamond-price { white-space: nowrap; font-weight: 500; }
+.rpr-setting-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.rpr-setting-change {
+  color: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.rpr-setting-change:hover {
+  opacity: 0.7;
+}
+
+.rpr-diamond-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.rpr-diamond-change {
+  color: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.rpr-diamond-change:hover {
+  opacity: 0.7;
+}
+
+
 .rpr-stars { color: #f5a623; font-size: 13px; margin-top: 4px; }
 .rpr-diamond-specs { font-size: 12px; color: #666; margin-top: 4px; }
 
@@ -530,6 +594,22 @@
   background: #1a3a4a;
   color: #fff;
 }
+.rpr-diamond-row {
+  align-items: flex-start;
+}
+
+.rpr-diamond-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.rpr-diamond-info .rpr-diamond-title {
+  line-height: 1.4;
+}
+
+.rpr-diamond-info .rpr-diamond-specs {
+  margin-top: 4px;
+}
 
 
 /* ── Responsive ── */
@@ -562,6 +642,52 @@
   const modelOverlay   = document.getElementById('rpr-model-overlay');
   const accordionHeader= document.getElementById('rpr-accordion-header');
   const accordionBody  = document.getElementById('rpr-accordion-body');
+  // Shared Change action: clear the selected item and return to its list.
+  function bindChangeAction(buttonId, selectionKey, listUrlKey, defaultUrl) {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+
+    let listUrl = defaultUrl;
+
+    try {
+      const savedListUrl = localStorage.getItem(listUrlKey);
+      if (savedListUrl) listUrl = savedListUrl;
+    } catch (e) {
+      console.warn('Unable to read the list URL:', listUrlKey, e);
+    }
+
+    button.setAttribute('href', listUrl);
+
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      try {
+        localStorage.removeItem(selectionKey);
+      } catch (e) {
+        console.error('Unable to clear the selection:', selectionKey, e);
+        return;
+      }
+
+      window.location.assign(listUrl);
+    });
+  }
+
+  bindChangeAction(
+    'rpr-setting-change',
+    'current_ringsetting',
+    'current_collections_ringsetting',
+    '/collections/start-with-a-setting'
+  );
+
+  bindChangeAction(
+    'rpr-diamond-change',
+    'current_diamond',
+    'current_collections_diamond',
+    '/collections/lab-grown-diamond'
+  );
+
+
+
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   function fmt(n) {
@@ -855,7 +981,15 @@
     const attr = cd;
    
     document.getElementById('rpr-total-price').textContent = fmt(total);
-    document.getElementById('rpr-setting-name').textContent = sku.specSkuValue.replaceAll("::"," ");
+    //document.getElementById('rpr-setting-name').textContent = sku.specSkuValue.replaceAll("::"," ");
+    const selectedSpecValues = String(sku.specSkuValue || '').split('::').map(value => value.trim()).filter(Boolean);
+    const metalSpec = (rs.skuCombination?.productSpecTrees || []).find(spec => spec.specName === 'Metal');
+    const matchedMetal = (metalSpec?.specValues || []).find(option =>selectedSpecValues.includes(String(option.specValue).trim()));
+    document.getElementById('rpr-setting-name').textContent = [
+      rs.name,
+      matchedMetal ? String(matchedMetal.specValue).trim() : ''
+    ].filter(Boolean).join(' ');
+
     document.getElementById('rpr-setting-price').textContent = fmt(settingPrice);
     document.getElementById('rpr-diamond-title').textContent = `${attr.carat} Carat ${attr.shape} Diamond`;
     document.getElementById('rpr-diamond-price').textContent = fmt(diamondPrice);

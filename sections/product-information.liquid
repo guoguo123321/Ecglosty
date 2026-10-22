@@ -4,6 +4,8 @@
   {{ closest.product | structured_data }}
 </script>
 
+{% render 'product-switch-data', product: closest.product %}
+
 {% comment %} <div class="lgs-container product-breadcrumbs">
   {% render 'breadcrumbs' %}
 </div> {% endcomment %}

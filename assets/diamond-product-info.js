@@ -1856,32 +1856,138 @@ function populateMediaFallback() {
     populateMedia(medias);
   }
   
-  // === Choose Diamond Button ===
-if (chooseBtnEl && !chooseBtnEl.disabled) {
-  chooseBtnEl.addEventListener('click', () => {
-    if (!currentProductData) {
-      console.warn('[DPI] Diamond data not loaded yet');
-      return;
-    }
-    const keysToCopy = ['shape', 'carat', 'color','fancyColor', 'clarity', 'cut','pol','symm','flo','lab','diamondLength','diamondWidth','diamondHeight','depth','diamondTable','pricePerCarat','pdf','medias'];
-    const transformedData = mergePartialAttributes(currentProductData,keysToCopy);
-
-    localStorage.setItem('current_diamond', JSON.stringify(transformedData));
-
-    const ringSetting = localStorage.getItem('current_ringsetting');
-    if (ringSetting) {
-      window.location.href = '/pages/purchase-review';
-    } else {
-      localStorage.setItem('select_purchase_number', 'diamond');
-      let current_collections_ringsetting = localStorage.getItem('current_collections_ringsetting');
-      if(!current_collections_ringsetting){
-        current_collections_ringsetting = '/collections/start-with-a-setting';
-        localStorage.setItem('current_collections_ringsetting',current_collections_ringsetting);
+    // === Choose Diamond Button ===
+  if (chooseBtnEl && !chooseBtnEl.disabled) {
+    chooseBtnEl.addEventListener('click', () => {
+      if (!currentProductData) {
+        console.warn('[DPI] Diamond data not loaded yet');
+        return;
       }
-      window.location.href = current_collections_ringsetting;
-    }
-  });
-}
+
+      const keysToCopy = [
+        'shape', 'carat', 'color', 'fancyColor', 'clarity', 'cut',
+        'pol', 'symm', 'flo', 'lab',
+        'diamondLength', 'diamondWidth', 'diamondHeight',
+        'depth', 'diamondTable', 'pricePerCarat', 'pdf', 'medias'
+      ];
+
+      const transformedData = mergePartialAttributes(
+        currentProductData,
+        keysToCopy
+      );
+
+      const ringSettingRaw = localStorage.getItem('current_ringsetting');
+
+      if (ringSettingRaw) {
+        try {
+          const ringSetting = JSON.parse(ringSettingRaw);
+
+          if (!ringSetting || typeof ringSetting !== 'object') {
+            throw new Error('Invalid current_ringsetting');
+          }
+
+          const selectedShape = ringSetting.selectedShape;
+          const diamondShape = transformedData.shape;
+
+          const hasSelectedShape =
+            typeof selectedShape === 'string' &&
+            selectedShape.trim() !== '';
+
+          // selectedShape 不存在或为空时，不修改戒托，继续原流程。
+          if (hasSelectedShape && selectedShape !== diamondShape) {
+            if (!diamondShape) {
+              throw new Error('Missing diamond shape');
+            }
+
+            const specSkuValue = ringSetting.selectedSku?.specSkuValue;
+
+            if (typeof specSkuValue !== 'string' || !specSkuValue) {
+              throw new Error('Missing selectedSku.specSkuValue');
+            }
+
+            // 找到原形状的位置，只替换这一项，保留其他规格。
+            const specValues = specSkuValue.split('::');
+            const shapeIndex = specValues.indexOf(selectedShape);
+
+            if (shapeIndex === -1) {
+              throw new Error(
+                'selectedShape was not found in selectedSku.specSkuValue'
+              );
+            }
+
+            specValues[shapeIndex] = diamondShape;
+            const nextSpecSkuValue = specValues.join('::');
+
+            // 匹配新规格对应的 Shopify variant。
+            const variantId =
+              ringSetting.variantSpecSkuMap?.[nextSpecSkuValue];
+
+            // 匹配新规格对应的完整 productSku。
+            const productSkuList =
+              ringSetting.skuCombination?.productSkuList;
+
+            const productSku = Array.isArray(productSkuList)
+              ? productSkuList.find(
+                  item => item.specSkuValue === nextSpecSkuValue
+                )
+              : null;
+
+            // 两者都匹配成功后，再一起更新戒托数据。
+            if (!variantId || !productSku) {
+              throw new Error(
+                'No matching variant or productSku: ' + nextSpecSkuValue
+              );
+            }
+
+            ringSetting.selectedVariantId = variantId;
+            ringSetting.selectedSku = productSku;
+            ringSetting.selectedShape = diamondShape;
+
+            localStorage.setItem(
+              'current_ringsetting',
+              JSON.stringify(ringSetting)
+            );
+          }
+        } catch (error) {
+          console.error('[DPI] 戒托规格同步失败:', error);
+          alert('当前戒托无法匹配所选钻石形状，请重新选择戒托或钻石。');
+          return;
+        }
+
+        // 戒托同步完成，或无需同步时，继续原来的购买确认流程。
+        localStorage.setItem(
+          'current_diamond',
+          JSON.stringify(transformedData)
+        );
+
+        window.location.href = '/pages/purchase-review';
+      } else {
+        // 没有戒托，保留原来的选择戒托流程。
+        localStorage.setItem(
+          'current_diamond',
+          JSON.stringify(transformedData)
+        );
+
+        localStorage.setItem('select_purchase_number', 'diamond');
+
+        let current_collections_ringsetting =
+          localStorage.getItem('current_collections_ringsetting');
+
+        if (!current_collections_ringsetting) {
+          current_collections_ringsetting =
+            '/collections/start-with-a-setting';
+
+          localStorage.setItem(
+            'current_collections_ringsetting',
+            current_collections_ringsetting
+          );
+        }
+
+        window.location.href = current_collections_ringsetting;
+      }
+    });
+  }
+
 
 
   // ── Init ──────────────────────────────────────────────────────────────────

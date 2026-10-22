@@ -118,6 +118,7 @@
         "layout": "lgs-container",
         "custom_container": "1200px",
         "box_align": "lgs-text-center",
+        "active_step_bg": "#d9d9d9",
         "color_scheme": "",
         "design_heading": "1",
         "heading_align": "lgs-text-center",
@@ -156,14 +157,14 @@
     "ring_purchase_review_hhgxAU": {
       "type": "ring-purchase-review",
       "blocks": {
-        "fold_cMQRnq": {
+        "fold_R3PW7A": {
           "type": "fold",
           "settings": {
             "content_or_recommended": "content",
             "type": "shape",
             "show": false,
-            "header": "",
-            "content": "",
+            "header": "Product Details",
+            "content": "{{ product.description }}",
             "icon": false,
             "header_icon_url": "",
             "pc_margin": "0",
@@ -180,7 +181,7 @@
             "option_horizontal_gap": 8,
             "heading": "Order Details",
             "delivery_text": "Delivery by",
-            "ship_days": 10,
+            "ship_days": 18,
             "date_format": "%b %d, %Y",
             "shipping_text": "Free Express Shipping",
             "returns_text": "Free 60-Day Returns",
@@ -197,7 +198,7 @@
         }
       },
       "block_order": [
-        "fold_cMQRnq",
+        "fold_R3PW7A",
         "product_order_details_CRx4qV"
       ],
       "name": "Ring Purchase Review",

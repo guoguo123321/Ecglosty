@@ -33,13 +33,49 @@
   .{{ section.id }} .info .content{color:var(--color-foreground);}
   .{{ section.id }} .info .steplink a{color:var(--color-primary);}
   .{{ section.id }} .info .steplink a:hover{color:var(--color-primary-hover);}
+    .{{ section.id }} .info .steplink .steplink-reset {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  .{{ section.id }} .info .steplink .steplink-reset:hover {
+    color: var(--color-primary-hover);
+  }
+
   .{{ section.id }} .collection-step-container{border-color:var(--color-border);background-color:var(--color-border);}
-  .{{ section.id }} .collection-step.active-step .node,
-  .{{ section.id }} .collection-step:hover .node{background:var(--color-background);}
-  .{{ section.id }} .collection-step.active-step .node:before,
-  .{{ section.id }} .collection-step:hover .node:before{border-top-color:var(--color-background);border-bottom-color:var(--color-background);}
-  .{{ section.id }} .collection-step.active-step .node:after,
-  .{{ section.id }} .collection-step:hover .node:after{border-left-color:var(--color-background);}
+    /* 非当前步骤：保留原有悬停效果 */
+  .{{ section.id }} .collection-step:hover .node {
+    background: var(--color-background);
+  }
+
+  .{{ section.id }} .collection-step:hover .node:before {
+    border-top-color: var(--color-background);
+    border-bottom-color: var(--color-background);
+  }
+
+  .{{ section.id }} .collection-step:hover .node:after {
+    border-left-color: var(--color-background);
+  }
+
+  /* 当前步骤：应用可配置背景色，包括箭头连接部分 */
+  .{{ section.id }} .collection-step.active-step .node {
+    background: {{ se_stts.active_step_bg | default: '#D9D9D9' }};
+  }
+
+  .{{ section.id }} .collection-step.active-step .node:before {
+    border-top-color: {{ se_stts.active_step_bg | default: '#D9D9D9' }};
+    border-bottom-color: {{ se_stts.active_step_bg | default: '#D9D9D9' }};
+  }
+
+  .{{ section.id }} .collection-step.active-step .node:after {
+    border-left-color: {{ se_stts.active_step_bg | default: '#D9D9D9' }};
+  }
+
 </style>
 <div class="{{ section.id }} collection-step-box lgs-section-inner color-{{ se_stts.color_scheme }}"
      data-template-name="{{ template.name }}"
@@ -239,8 +275,9 @@ function fillStep(stepEl, data, dataType) {
   if (contentEl) {
     if (dataType === 'ringSetting') {
       // 取 data.name 前两个单词 + 价格
-      const shortName = (data.name || '').split(' ').slice(0, 2).join(' ');
-      const price = data.price != null ? '$' + parseFloat(data.price).toLocaleString() : '';
+      //const shortName = (data.name || '').split(' ').slice(0, 2).join(' ');
+      const shortName = data.name || '';
+      const price = data.selectedSku.productPrice != null ? '$' + parseFloat(data.selectedSku.productPrice).toLocaleString() : '';
       contentEl.textContent = shortName + (price ? ' - ' + price : '');
     } else {
       // diamond：carat + shape + price
@@ -305,51 +342,124 @@ function fillStep(stepEl, data, dataType) {
     const step1 = box.querySelector('.collection-step-1');
     const step2 = box.querySelector('.collection-step-2');
 
-    if (purchaseNumber === 'ringsetting') {
+    if (purchaseNumber && purchaseNumber.toLowerCase() === 'ringsetting') {
       fillStep(step1, ringSetting, 'ringSetting');
       fillStep(step2, diamond, 'diamond');
-    } else if (purchaseNumber === 'diamond') {
+    } else if (purchaseNumber && purchaseNumber.toLowerCase() === 'diamond') {
       fillStep(step1, diamond, 'diamond');
       fillStep(step2, ringSetting, 'ringSetting');
     }
 
   }
 
-  function updateActiveStep() {
-    const box = document.querySelector('.{{ section.id }}.collection-step-box');
-    if (!box) return;
+    function updateActiveStep() {
+      const box = document.querySelector('.{{ section.id }}.collection-step-box');
+      if (!box) return;
 
-    box.querySelectorAll('.collection-step').forEach(el => el.classList.remove('active-step'));
+      box.querySelectorAll('.collection-step').forEach(function(el) {
+        el.classList.remove('active-step');
+      });
 
-    
-    const purchaseNumber = localStorage.getItem('select_purchase_number');
-    const isRingFirst = !purchaseNumber || purchaseNumber === 'ringsetting';
+      const purchaseNumber = localStorage.getItem('select_purchase_number');
+      const isRingFirst = !purchaseNumber || purchaseNumber === 'ringsetting';
 
-    const templateName = box.dataset.templateName;
-    const templateSuffix = box.dataset.templateSuffix;
+      const templateSuffix = (box.dataset.templateSuffix || '')
+        .trim()
+        .toLowerCase();
 
-    let activeStep = 1;
+      let activeStep = null;
 
-    if (templateName === 'page' && templateSuffix === 'purchase-review') {
-      activeStep = 3;
-    } else if (
-      templateSuffix === 'ring-setting' ||
-      templateSuffix === 'engagement-rings'
-    ) {
-      activeStep = isRingFirst ? 1 : 2;
-    } else if (
-      templateSuffix === 'diamond' ||
-      templateSuffix === 'engagement-diamonds'
-    ) {
-      activeStep = isRingFirst ? 2 : 1;
+      if (templateSuffix === 'purchase-review') {
+        // 确认页面：固定为第三步。
+        activeStep = 3;
+      } else if (
+        templateSuffix === 'diamond' ||
+        templateSuffix === 'diamonds'
+      ) {
+        // 钻石模板：高亮钻石所在步骤。
+        activeStep = isRingFirst ? 2 : 1;
+      } else if (
+        templateSuffix === 'rings-setting' ||
+        templateSuffix === 'ring-setting'
+      ) {
+        // 戒托模板：高亮戒托所在步骤。
+        activeStep = isRingFirst ? 1 : 2;
+      }
+
+      if (activeStep !== null) {
+        const stepEl = box.querySelector('.collection-step-' + activeStep);
+        if (stepEl) {
+          stepEl.classList.add('active-step');
+        }
+      }
     }
 
-    box.querySelector('.collection-step-' + activeStep)?.classList.add('active-step');
-  }
 
-  applyDefaults();
-  fillSteps();
-  updateActiveStep();
+    function updateStep3Reset() {
+      const box = document.querySelector('.{{ section.id }}.collection-step-box');
+      if (!box) return;
+
+      const step3 = box.querySelector('.collection-step-3');
+      if (!step3) return;
+
+      const hasSelection =
+        localStorage.getItem('current_ringsetting') !== null ||
+        localStorage.getItem('current_diamond') !== null;
+
+      if (!hasSelection) return;
+
+      // 任意一个已选数据存在时，隐藏 Select Ring Size。
+      const contentEl = step3.querySelector('.info .content');
+      if (contentEl) {
+        contentEl.style.display = 'none';
+      }
+
+      const infoEl = step3.querySelector('.info');
+      if (!infoEl) return;
+
+      // 第三步原本可能没有配置按钮，因此按需创建按钮容器。
+      let steplinkEl = infoEl.querySelector('.steplink');
+      if (!steplinkEl) {
+        steplinkEl = document.createElement('div');
+        steplinkEl.className = 'steplink';
+        infoEl.appendChild(steplinkEl);
+      }
+
+      if (steplinkEl.querySelector('.steplink-reset')) return;
+
+      const purchaseNumber = localStorage.getItem('select_purchase_number');
+      const firstStepUrl = purchaseNumber === 'diamond'
+        ? LIST_URLS.diamond
+        : LIST_URLS.ringSetting;
+
+      const resetBtn = document.createElement('a');
+      resetBtn.href = firstStepUrl;
+      resetBtn.className = 'steplink-reset';
+      resetBtn.textContent = 'Reset';
+
+
+      resetBtn.addEventListener('click', function() {
+        event.preventDefault();
+        const purchaseNumber = localStorage.getItem('select_purchase_number');
+
+        const firstStepUrl = purchaseNumber === 'diamond'
+          ? LIST_URLS.diamond
+          : LIST_URLS.ringSetting;
+
+        localStorage.removeItem('current_ringsetting');
+        localStorage.removeItem('current_diamond');
+
+        window.location.assign(firstStepUrl);
+      });
+
+      steplinkEl.appendChild(resetBtn);
+    }
+
+    applyDefaults();
+    fillSteps();
+    updateActiveStep();
+    updateStep3Reset();
+
 })();
 </script>
 
@@ -380,6 +490,12 @@ function fillStep(stepEl, data, dataType) {
       },
 
       {"type": "header","content": "Colors"},
+      {
+        "type": "color",
+        "id": "active_step_bg",
+        "label": "当前步骤背景色",
+        "default": "#D9D9D9"
+      },
       {"type": "color_scheme","id": "color_scheme","label": "t:settings.color_scheme","default": "scheme-1","info": "Section title (Headings), subtitle (Sub heading), design_title/.heading/content/num (Text), link (Links), hover bg (Background), border (Borders). Section background still uses bg_color below."},
 
       {"type": "header","content": "1. Heading options"},

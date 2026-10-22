@@ -1898,7 +1898,7 @@ deferred-media[class] :is(.deferred-media__poster-button img, .deferred-media__p
   background: var(--swatch-background);
   background-position: var(--swatch-focal-point, center);
   border-radius: var(--variant-picker-swatch-radius);
-  border: var(--style-border-swatch-width) var(--style-border-swatch-style) var(--color-border);
+  /* border: var(--style-border-swatch-width) var(--style-border-swatch-style) var(--color-border); */
   width: var(--swatch-width);
   height: var(--swatch-height);
 

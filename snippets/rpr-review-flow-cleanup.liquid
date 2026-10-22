@@ -1,0 +1,86 @@
+{% unless request.design_mode %}
+  <script>
+    (function () {
+      'use strict';
+
+      const templateKey =
+        {{ template.name | append: '.' | append: template.suffix | json }};
+
+      const allowedTemplates = new Set([
+        'product.diamond',
+        'collection.diamonds',
+        'collection.rings-setting',
+        'product.ring-setting',
+        'page.purchase-review'
+      ]);
+
+      const isReviewPage = templateKey === 'page.purchase-review';
+      const isAllowedPage = allowedTemplates.has(templateKey);
+
+      // Persistent marker: a review flow has started.
+      const FLOW_KEY = 'rpr_review_flow_active';
+
+      // Tab-session marker: survives refresh and same-tab navigation.
+      const SESSION_KEY = 'rpr_review_flow_session';
+
+      function clearSelections() {
+        localStorage.removeItem('current_diamond');
+        localStorage.removeItem('current_ringsetting');
+      }
+
+      function resetFlow() {
+        clearSelections();
+        localStorage.removeItem(FLOW_KEY);
+        sessionStorage.removeItem(SESSION_KEY);
+      }
+
+      function checkReviewFlow() {
+        try {
+          const hasFlow = localStorage.getItem(FLOW_KEY) === '1';
+          const hasSession = sessionStorage.getItem(SESSION_KEY) === '1';
+
+          // An old review flow exists, but this tab has no matching session.
+          if (hasFlow && !hasSession) {
+            resetFlow();
+          }
+
+          // Only arm cleanup once the customer reaches purchase-review.
+          if (isReviewPage) {
+            localStorage.setItem(FLOW_KEY, '1');
+            sessionStorage.setItem(SESSION_KEY, '1');
+            return;
+          }
+
+          // Keep selections on the five allowed templates.
+          if (isAllowedPage) return;
+
+          // Outside the flow: clear both selections and the flow markers.
+          const flowIsActive =
+            localStorage.getItem(FLOW_KEY) === '1' ||
+            sessionStorage.getItem(SESSION_KEY) === '1';
+
+          if (flowIsActive) {
+            resetFlow();
+          }
+        } catch (error) {
+          console.warn('[RPR] Unable to manage review flow data:', error);
+        }
+      }
+
+      // Run before section scripts read the selections.
+      checkReviewFlow();
+
+      // Back/forward navigation may restore a page without rerunning scripts.
+      window.addEventListener('pageshow', function (event) {
+        if (!event.persisted) return;
+
+        checkReviewFlow();
+
+        // Rebuild the review UI instead of showing cached selection details.
+        if (isReviewPage) {
+          window.location.reload();
+        }
+      });
+    })();
+  </script>
+{% endunless %}

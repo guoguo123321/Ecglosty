@@ -319,7 +319,70 @@
             "facets_margin_bottom_mobile": 0,
             "facets_margin_right": 20
           },
-          "blocks": {}
+          "blocks": {
+            "filter_image_C3BaWB": {
+              "type": "_filter-image",
+              "name": "t:style_filter_images.block_name",
+              "disabled": true,
+              "settings": {
+                "filter_label": "Style",
+                "title": "Choker",
+                "image": "shopify://shop_images/EGDR0001-2ct_Emerald-_7.5_-6.png"
+              },
+              "blocks": {}
+            },
+            "filter_image_rhnEwY": {
+              "type": "_filter-image",
+              "name": "t:style_filter_images.block_name",
+              "disabled": true,
+              "settings": {
+                "filter_label": "Style",
+                "title": "Cord",
+                "image": "shopify://shop_images/EGDR0001-2ct_Emerald-_7.5_-6.png"
+              },
+              "blocks": {}
+            },
+            "filter_image_qnww8L": {
+              "type": "_filter-image",
+              "name": "t:style_filter_images.block_name",
+              "disabled": true,
+              "settings": {
+                "filter_label": "Style",
+                "title": "Cuff",
+                "image": "shopify://shop_images/EGDR0001-2ct_Emerald-_7.5_-6.png"
+              },
+              "blocks": {}
+            },
+            "filter_image_NVyYBP": {
+              "type": "_filter-image",
+              "name": "t:style_filter_images.block_name",
+              "disabled": true,
+              "settings": {
+                "filter_label": "Style",
+                "title": "Halo",
+                "image": "shopify://shop_images/EGDR0001-2ct_Emerald-_7.5_-6.png"
+              },
+              "blocks": {}
+            },
+            "filter_image_fbbF3k": {
+              "type": "_filter-image",
+              "name": "t:style_filter_images.block_name",
+              "disabled": true,
+              "settings": {
+                "filter_label": "Style",
+                "title": "Pendant",
+                "image": "shopify://shop_images/EGDR0001-2ct_Emerald-_7.5_-6.png"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "filter_image_C3BaWB",
+            "filter_image_rhnEwY",
+            "filter_image_qnww8L",
+            "filter_image_NVyYBP",
+            "filter_image_fbbF3k"
+          ]
         },
         "product-card": {
           "type": "_product-card",
@@ -431,7 +494,7 @@
         "enable_collection_grid_posters": true,
         "grid_posters_all_pages": true,
         "products_display_mode": "pagination",
-        "products_per_page": 32,
+        "products_per_page": 50,
         "product_grid_width": "custom-width",
         "custom_page_width": "1500px",
         "full_width_on_mobile": false,

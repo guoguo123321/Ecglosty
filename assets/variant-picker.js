@@ -4,6 +4,37 @@ import { morph, MORPH_OPTIONS } from '@theme/morph';
 import { OverflowList } from '@theme/overflow-list';
 import { yieldToMainThread, getViewParameterValue, ResizeNotifier } from '@theme/utilities';
 
+// Keep response text immutable: variant event consumers move nodes out of parsed documents.
+const variantResponseCache = new Map();
+function getVariantResponse(requestUrl, priority = 'high') {
+  const normalizedUrl = new URL(requestUrl, window.location.origin);
+  normalizedUrl.searchParams.sort();
+  const key = `${window.Shopify?.currency?.active || ''}:${normalizedUrl}`;
+  const cached = variantResponseCache.get(key);
+  if (cached && cached.expires > Date.now()) return cached.promise;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  const entry = { expires: Infinity, promise: null };
+  entry.promise = fetch(requestUrl, { signal: controller.signal, priority })
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`Variant request failed: ${response.status}`);
+      const text = await response.text();
+      if (!new DOMParser().parseFromString(text, 'text/html').querySelector('variant-picker script[type="application/json"]')) {
+        throw new Error('Variant response missing');
+      }
+      entry.expires = Date.now() + 30000;
+      return text;
+    })
+    .catch((error) => {
+      if (variantResponseCache.get(key) === entry) variantResponseCache.delete(key);
+      throw error;
+    })
+    .finally(() => clearTimeout(timeout));
+  variantResponseCache.set(key, entry);
+  while (variantResponseCache.size > 24) variantResponseCache.delete(variantResponseCache.keys().next().value);
+  return entry.promise;
+}
+
 /**
  * @typedef {object} VariantPickerRefs
  * @property {HTMLFieldSetElement[]} fieldsets - The fieldset elements.
@@ -22,6 +53,8 @@ export default class VariantPicker extends Component {
 
   /** @type {AbortController | undefined} */
   #abortController;
+  #listenerController;
+  #prefetching = false;
 
   /** @type {number[][]} */
   #checkedIndices = [];
@@ -33,6 +66,25 @@ export default class VariantPicker extends Component {
 
   connectedCallback() {
     super.connectedCallback();
+    this.#initializeFieldsets();
+    this.#listenerController?.abort();
+    this.#listenerController = new AbortController();
+    const { signal } = this.#listenerController;
+    this.addEventListener('change', this.variantChanged.bind(this), { signal });
+    this.addEventListener('pointerover', this.#prefetchVariant, { signal, passive: true });
+    this.addEventListener('focusin', this.#prefetchVariant, { signal });
+    this.addEventListener('touchstart', this.#prefetchVariant, { signal, passive: true });
+    this.#resizeObserver.observe(this);
+  }
+
+  updatedCallback() {
+    super.updatedCallback();
+    this.#initializeFieldsets();
+  }
+
+  #initializeFieldsets() {
+    this.#radios = [];
+    this.#checkedIndices = [];
     const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
 
     fieldsets.forEach((fieldset) => {
@@ -40,19 +92,34 @@ export default class VariantPicker extends Component {
       this.#radios.push(radios);
 
       const initialCheckedIndex = radios.findIndex((radio) => radio.dataset.currentChecked === 'true');
-      if (initialCheckedIndex !== -1) {
-        this.#checkedIndices.push([initialCheckedIndex]);
-      }
+      this.#checkedIndices.push(initialCheckedIndex === -1 ? [] : [initialCheckedIndex]);
     });
-
-    this.addEventListener('change', this.variantChanged.bind(this));
-    this.#resizeObserver.observe(this);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.#abortController?.abort();
+    this.#listenerController?.abort();
     this.#resizeObserver.disconnect();
   }
+
+  /** @param {Event} event */
+  #prefetchVariant = (event) => {
+    if (this.#prefetching || navigator.connection?.saveData || /^(slow-)?2g$/.test(navigator.connection?.effectiveType || '')) return;
+    if (!(event.target instanceof Element)) return;
+    const input = event.target.closest('label')?.querySelector('input[type="radio"]') || event.target;
+    if (!(input instanceof HTMLInputElement) || input.checked) return;
+    if (input.dataset.connectedProductUrl && input.dataset.connectedProductUrl !== this.dataset.productUrl) return;
+    const checked = input.closest('fieldset')?.querySelector('input:checked');
+    if (!(checked instanceof HTMLInputElement) || !input.dataset.optionValueId) return;
+    const url = new URL(this.buildRequestUrl(input), window.location.origin);
+    if (!url.searchParams.has('variant')) {
+      url.searchParams.set('option_values', this.selectedOptionsValues
+        .map((value) => value === checked.dataset.optionValueId ? input.dataset.optionValueId : value).join(','));
+    }
+    this.#prefetching = true;
+    getVariantResponse(`${url.pathname}${url.search}`, 'low').catch(() => {}).finally(() => { this.#prefetching = false; });
+  };
 
   /**
    * Handles the variant change event.
@@ -89,11 +156,13 @@ export default class VariantPicker extends Component {
       ? 'featured-product-information'
       : undefined;
 
-    this.fetchUpdatedSection(this.buildRequestUrl(selectedOption), morphElementSelector);
+    const requestUrl = this.buildRequestUrl(selectedOption);
+    if (!morphElementSelector && isOnProductPage) this.#applyLocalVariant(requestUrl);
+    this.fetchUpdatedSection(requestUrl, morphElementSelector);
 
     const url = new URL(window.location.href);
 
-    const variantId = selectedOption.dataset.variantId || null;
+    const variantId = new URL(requestUrl, window.location.origin).searchParams.get('variant') || selectedOption.dataset.variantId || null;
 
     if (isOnProductPage) {
       if (variantId) {
@@ -112,6 +181,53 @@ export default class VariantPicker extends Component {
       yieldToMainThread().then(() => {
         history.replaceState({}, '', url.toString());
       });
+    }
+  }
+
+  /**
+   * Immediately apply a simple variant using Liquid-formatted prices already on the page.
+   * Complex availability, media, quantity, subscription and inventory changes use server HTML.
+   * The normal section request still reconciles the result with the server.
+   * @param {string} requestUrl
+   * @returns {boolean}
+   */
+  #applyLocalVariant(requestUrl) {
+    const section = this.closest('.shopify-section');
+    const stateText = section?.querySelector('script[data-product-switch-state]')?.textContent;
+    const variantScript = this.querySelector('script[type="application/json"]');
+    const id = new URL(requestUrl, window.location.origin).searchParams.get('variant');
+    if (!section || !stateText || !variantScript?.textContent || !id) return false;
+    try {
+      const product = JSON.parse(stateText);
+      const previous = JSON.parse(variantScript.textContent);
+      const variant = product.variants.find((variant) => String(variant.id) === id);
+      if (String(product.id) !== this.dataset.productId || !variant?.available || !previous?.available ||
+          product.requires_selling_plan || product.has_volume_pricing ||
+          !product.variants.every((variant) => variant.available) || variant.unit_price || previous.unit_price ||
+          !variant.formatted_price || typeof variant.formatted_compare_at_price !== 'string' ||
+          JSON.stringify(variant.quantity_rule) !== JSON.stringify(previous.quantity_rule) ||
+          (variant.featured_media_id || null) !== (previous.featured_media?.id || null) ||
+          section.querySelector('product-inventory, local-pickup, volume-pricing, price-per-item, .quantity-rules')) return false;
+      const resource = {
+        ...previous, ...variant,
+        option1: variant.options[0], option2: variant.options[1] || null, option3: variant.options[2] || null,
+        public_title: variant.title, name: `${product.title} - ${variant.title}`,
+      };
+      const html = new DOMParser().parseFromString(section.outerHTML, 'text/html');
+      const sale = Number(variant.compare_at_price) > Number(variant.price);
+      for (const root of html.querySelectorAll('product-price, sticky-add-to-cart')) {
+        for (const price of root.querySelectorAll('.price')) price.innerHTML = variant.formatted_price;
+        for (const price of root.querySelectorAll('.compare-at-price')) price.innerHTML = variant.formatted_compare_at_price;
+        root.querySelector('.price__regular')?.classList.toggle('price__hidden', sale);
+        root.querySelector('.price__sale')?.classList.toggle('price__hidden', !sale);
+      }
+      variantScript.textContent = JSON.stringify(resource);
+      this.dispatchEvent(new VariantUpdateEvent(resource, this.selectedOptionId || '', {
+        html, productId: this.dataset.productId || '',
+      }));
+      return true;
+    } catch {
+      return false;
     }
   }
 
@@ -269,7 +385,29 @@ export default class VariantPicker extends Component {
     // preserve view parameter, if it exists, for alternative product view testing
     if (viewParamValue) params.push(`view=${viewParamValue}`);
 
-    if (this.selectedOptionsValues.length && !source) {
+    const sameProduct = !selectedOption.dataset.connectedProductUrl || selectedOption.dataset.connectedProductUrl === this.dataset.productUrl;
+    let exactVariant;
+    if (!source && sameProduct) {
+      const text = this.closest('.shopify-section')?.querySelector('script[data-product-switch-state]')?.textContent;
+      if (text) {
+        try {
+          const product = JSON.parse(text);
+          const fields = Array.from(this.querySelectorAll('fieldset.variant-option, .variant-option--dropdowns'));
+          const values = fields.map((field) => {
+            if (field.contains(selectedOption)) return selectedOption instanceof HTMLOptionElement ? selectedOption.value : selectedOption.getAttribute('value');
+            return field.querySelector('input:checked')?.getAttribute('value') || field.querySelector('select')?.value;
+          });
+          if (String(product.id) === this.dataset.productId && values.length === product.options.length) {
+            exactVariant = product.variants.find((variant) => variant.options.every((value, index) => value === values[index]));
+          }
+        } catch {
+          // Keep Shopify's option_values resolver for unavailable or unsupported combinations.
+        }
+      }
+    }
+    if (exactVariant) {
+      params.push(`variant=${exactVariant.id}`);
+    } else if (this.selectedOptionsValues.length && !source) {
       params.push(`option_values=${this.selectedOptionsValues.join(',')}`);
     } else if (source === 'product-card') {
       if (this.selectedOptionsValues.length) {
@@ -297,6 +435,10 @@ export default class VariantPicker extends Component {
       return `${productUrl}?section_id=${SECTION_ID_MAP[closestSectionId]}&${params.join('&')}`;
     }
 
+    const section = this.closest('.shopify-section');
+    if (this.dataset.templateProductMatch === 'true' && sameProduct && section?.id && !this.closest('product-card, quick-add-dialog')) {
+      params.push(`section_id=${encodeURIComponent(section.id.replace(/^shopify-section-/, ''))}`);
+    }
     return `${productUrl}?${params.join('&')}`;
   }
 
@@ -309,10 +451,12 @@ export default class VariantPicker extends Component {
     // We use this to abort the previous fetch request if it's still pending.
     this.#abortController?.abort();
     this.#abortController = new AbortController();
+    const controller = this.#abortController;
+    const productId = this.dataset.productId;
 
-    fetch(requestUrl, { signal: this.#abortController.signal })
-      .then((response) => response.text())
+    getVariantResponse(requestUrl)
       .then((responseText) => {
+        if (controller.signal.aborted || !this.isConnected || productId !== this.dataset.productId) return;
         this.#pendingRequestUrl = undefined;
         const html = new DOMParser().parseFromString(responseText, 'text/html');
         // Defer is only useful for the initial rendering of the page. Remove it here.
@@ -404,6 +548,7 @@ export default class VariantPicker extends Component {
         return key;
       },
     });
+    this.updatedCallback();
     this.updateVariantPickerCss();
 
     return newProduct;

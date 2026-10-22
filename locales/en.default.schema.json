@@ -8,6 +8,31 @@
  * ------------------------------------------------------------
  */
 {
+  "style_filter_images": {
+    "heading": "Style filter images",
+    "block_name": "Filter option image",
+    "value_label": "Filter option value",
+    "image_label": "Option image",
+    "filter_label": "Filter label to match",
+    "filter_info": "Match the visible filter name, such as Style. Images change only the appearance; existing product filter values are preserved.",
+    "value_1": "Option 1 value",
+    "image_1": "Option 1 image",
+    "value_2": "Option 2 value",
+    "image_2": "Option 2 image",
+    "value_3": "Option 3 value",
+    "image_3": "Option 3 image",
+    "value_4": "Option 4 value",
+    "image_4": "Option 4 image",
+    "value_5": "Option 5 value",
+    "image_5": "Option 5 image",
+    "value_6": "Option 6 value",
+    "image_6": "Option 6 image",
+    "value_7": "Option 7 value",
+    "image_7": "Option 7 image",
+    "value_8": "Option 8 value",
+    "image_8": "Option 8 image",
+    "value_info": "Enter the filter value exactly as shown on the storefront. Matching ignores letter case and spaces at the start or end."
+  },
   "categories": {
     "banners": "Banners",
     // Category for fundamental content blocks (text, images, buttons)
@@ -446,6 +471,16 @@
     "star": "Star"
   },
   "options": {
+    "collection_row_counts": {
+      "one": "1",
+      "two": "2",
+      "three": "3",
+      "four": "4",
+      "five": "5",
+      "six": "6"
+    },
+    "collection_slide_one": "one",
+    "collection_slide_row": "row",
     "above_carousel": "Above carousel",
     "accent": "Accent",
     "all": "All",
@@ -760,6 +795,10 @@
     "below_media": "Below media"
   },
   "settings": {
+    "collection_items_per_row": "Items per row",
+    "collection_items_per_row_tablet": "Items per row (Tablet)",
+    "collection_items_per_row_mobile": "Items per row (Mobile)",
+    "collection_slide_mode": "Slide mode",
     "accordion": "Accordion",
     "account": "Account",
     "actions_display_style": "Menu style",

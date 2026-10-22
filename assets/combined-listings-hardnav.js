@@ -2,10 +2,9 @@
  * Soft-navigate Combined Listings (Grouptify / mpg) product switches.
  * Updates the product URL + #MainContent while reusing the .mpg-swatch DOM.
  *
- * Fixes:
- * - Resolve target product by full option combination (not first match on one value)
- * - Preserve theme variant choice (e.g. Size) across soft-nav when values match
- * - Reduce layout jump: keep scroll + temporary min-height, avoid double reinit/resize
+ * Prefetch reachable products and primary images; reuse parsed responses for 30s.
+ * Resolve full group combinations and render the exact persisted Shopify variant.
+ * Only the latest navigation may commit; preserve the live swatch and its focus.
  */
 (function () {
   const NAV_CLASS = 'mpg-soft-navigating';
@@ -13,7 +12,7 @@
   /**
    * Soft DOM updates (even URL-only + swatch class) still cause visible CSS jitter
    * with Shop Pay / sticky / Grouptify. Prefer preserve-swatch body swap.
-   * Hard-nav is only a fallback when fetch/swap fails.
+   * Request failures keep the current product visible; hard navigation is opt-in.
    */
   const HARD_NAV_ONLY = false;
 
@@ -21,8 +20,270 @@
   let activeController = null;
   /** @type {boolean} */
   let navigating = false;
-  /** @type {{ productHandle: string, clickedOption: Element | null, options: object } | null} */
-  let pendingNav = null;
+  let navigationId = 0;
+  const CACHE_TTL = 30000;
+  const CACHE_LIMIT = 40;
+  const responseCache = new Map();
+  let prefetchQueue = [];
+  let prefetchCount = 0;
+  let prefetchTimer;
+  let prefetchSignature = '';
+  let prefetchPausedUntil = 0;
+  let requestPausedUntil = 0;
+  let prefetchPumpTimer;
+  let renderedUrl = window.location.href;
+  const busyElements = new Map();
+  const warmedDocuments = new WeakSet();
+  let secondaryRefreshTimer;
+
+  function getProductSection() {
+    return document.querySelector('#MainContent .product-information')?.closest('.shopify-section') || null;
+  }
+
+  function readProductState(root) {
+    const text = root.querySelector('script[data-product-switch-state]')?.textContent;
+    if (!text) return null;
+    try {
+      const product = JSON.parse(text);
+      return product?.id && product.handle && product.variants?.length ? product : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function resolveGroupSelections(handle, selections) {
+    const group = window.mpg?.group;
+    const target = group?.products?.find((product) => sameHandle(product.handle, handle));
+    if (!target || !Array.isArray(group.options)) return selections;
+    const next = [...selections];
+    for (const option of group.options) {
+      const value = option.values?.find((value) => target.options?.includes(value.id));
+      if (!value?.name || !option.name) continue;
+      const name = option.name.trim();
+      const index = next.findIndex((selection) => selection.name.trim().toLowerCase() === name.toLowerCase());
+      const selection = { name, value: value.name.trim() };
+      if (index >= 0) next[index] = selection;
+      else next.push(selection);
+    }
+    return next;
+  }
+
+  /** Warm the visible image, including the custom gallery's JSON-owned first image. */
+  function warmPrimaryImage(doc) {
+    if (warmedDocuments.has(doc)) return;
+    warmedDocuments.add(doc);
+    const nativeImage = doc.querySelector('media-gallery .product-media__image');
+    let customUrl = '';
+    if (!nativeImage) {
+      // This literal assignment is rendered by product-media-gallery-content.liquid.
+      // Parse only JSON; never execute scripts from a speculative response.
+      for (const script of doc.querySelectorAll('script:not([src])')) {
+        const match = script.textContent?.match(/\bvar rawData = ([^\r\n]+);/);
+        if (!match) continue;
+        try {
+          let data = JSON.parse(match[1]);
+          if (typeof data === 'string') data = JSON.parse(data.replace(/,\s*([}\]])/g, '$1'));
+          const media = [...(data?.medias || [])].sort((a, b) => a.sortOrder - b.sortOrder)
+            .find((item) => item.mediaType !== 5 && item.mediaType !== 6);
+          if (media?.mediaType === 1) customUrl = media.url || '';
+          if (media?.mediaType === 4 && media.url && media.imageName) {
+            customUrl = `${media.url}${media.imageName}1.${media.imageSuffix || 'webp'}`;
+          }
+        } catch {
+          // Invalid/unsupported media remains the gallery's responsibility.
+        }
+        break;
+      }
+    }
+    if (!nativeImage && !customUrl) return;
+    const image = new Image();
+    image.fetchPriority = 'low';
+    if (nativeImage?.sizes) image.sizes = nativeImage.sizes;
+    if (nativeImage?.srcset) image.srcset = nativeImage.srcset;
+    image.src = nativeImage?.src || customUrl;
+  }
+
+  /** Share pending requests as well as completed responses; failed responses are never cached. */
+  function cachedResponse(url, type, priority = 'high', productId = null) {
+    const key = `${window.Shopify?.currency?.active || ''}:${url}`;
+    const existing = responseCache.get(key);
+    if (existing && existing.expires > Date.now()) {
+      responseCache.delete(key);
+      responseCache.set(key, existing);
+      return existing.promise;
+    }
+    if (Date.now() < requestPausedUntil) return Promise.reject(new Error('Product requests are temporarily paused'));
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    const entry = { expires: Infinity, promise: null };
+    entry.promise = fetch(url, { credentials: 'same-origin', signal: controller.signal, priority })
+      .then(async (response) => {
+        if (!response.ok) {
+          const retryAfter = response.headers?.get('Retry-After');
+          const seconds = Number(retryAfter);
+          const retryAt = retryAfter && !Number.isFinite(seconds) ? Date.parse(retryAfter) : Date.now() + seconds * 1000;
+          if (response.status === 429 || response.status === 430 || retryAfter) {
+            requestPausedUntil = Math.max(requestPausedUntil, Date.now() + 30000, retryAt || 0);
+          }
+          const error = new Error(`Product request failed: ${response.status}`);
+          error.status = response.status;
+          throw error;
+        }
+        const result = type === 'json' ? await response.json() :
+          new DOMParser().parseFromString(await response.text(), 'text/html');
+        if (type !== 'json') {
+          const sectionId = new URL(url, window.location.origin).searchParams.get('section_id');
+          const main = sectionId ? result.getElementById(`shopify-section-${sectionId}`) : result.getElementById('MainContent');
+          if (!main) {
+            const error = new Error('MainContent missing');
+            error.code = 'missing-product-root';
+            throw error;
+          }
+          const productNode = main.querySelector('variant-picker[data-product-id], product-form-component[data-product-id]');
+          if (!productNode && !main.querySelector('.dpi-rp__info')) throw new Error('Product content missing');
+          if (productNode && productId != null && String(productNode.dataset.productId) !== String(productId)) {
+            throw new Error('Product content does not match target');
+          }
+        }
+        if (type === 'json' && (!result?.id || !Array.isArray(result.variants) || !result.variants.length)) {
+          throw new Error('Product data missing');
+        }
+        entry.expires = Date.now() + CACHE_TTL;
+        return result;
+      })
+      .catch((error) => {
+        prefetchPausedUntil = Math.max(prefetchPausedUntil, Date.now() + 30000, requestPausedUntil);
+        prefetchQueue = [];
+        if (responseCache.get(key) === entry) responseCache.delete(key);
+        throw error;
+      })
+      .finally(() => window.clearTimeout(timeout));
+    responseCache.set(key, entry);
+    while (responseCache.size > CACHE_LIMIT) responseCache.delete(responseCache.keys().next().value);
+    return entry.promise;
+  }
+
+  /** Cancel a navigation's wait without cancelling a request shared with prefetch/another click. */
+  function waitForResponse(promise, signal) {
+    return new Promise((resolve, reject) => {
+      const abort = () => reject(new DOMException('Superseded navigation', 'AbortError'));
+      if (signal.aborted) return abort();
+      signal.addEventListener('abort', abort, { once: true });
+      promise.then(resolve, reject).finally(() => signal.removeEventListener('abort', abort));
+    });
+  }
+
+  /** Request server-rendered state for the exact variant, including price, stock and checkout. */
+  async function loadProduct(handle, selections, priority = 'high', preferredVariantId = null) {
+    selections = resolveGroupSelections(handle, selections);
+    const section = getProductSection();
+    if (section && readProductState(section)) {
+      const sectionId = section.id.replace(/^shopify-section-/, '');
+      const requestUrl = buildProductUrl(handle, { variantId: preferredVariantId });
+      requestUrl.searchParams.set('section_id', sectionId);
+      let doc;
+      try {
+        doc = await cachedResponse(requestUrl.toString(), 'html', priority);
+      } catch (error) {
+        // Different product templates may not have this section ID; retain the full-page path.
+        if (error.status !== 404 && error.code !== 'missing-product-root') throw error;
+      }
+      const product = doc ? readProductState(doc) : null;
+      if (product && sameHandle(product.handle, handle)) {
+        const preferred = product.variants.find((variant) => String(variant.id) === preferredVariantId);
+        const variantId = preferred ? String(preferred.id) :
+          matchVariantId(product, selections) || String(product.selected_variant_id);
+        const finalUrl = buildProductUrl(handle, { variantId });
+        if (String(product.selected_variant_id) !== variantId) {
+          const exactUrl = new URL(finalUrl);
+          exactUrl.searchParams.set('section_id', sectionId);
+          doc = await cachedResponse(exactUrl.toString(), 'html', priority, product.id);
+        }
+        if (String(readProductState(doc)?.selected_variant_id) !== variantId) {
+          throw new Error('Product variant does not match target');
+        }
+        warmPrimaryImage(doc);
+        return { product, doc, finalUrl, variantId, sectionId };
+      }
+    }
+    const url = buildProductUrl(handle);
+    const jsonUrl = new URL(`${window.Shopify?.routes?.root || '/'}products/${encodeURIComponent(handle)}.js`, url.origin);
+    const product = await cachedResponse(jsonUrl.toString(), 'json', priority);
+    const preferred = product.variants?.find((variant) => String(variant.id) === preferredVariantId);
+    const defaultVariant = product.variants?.find((variant) => variant.available) || product.variants?.[0];
+    const variantId = preferred ? String(preferred.id) :
+      matchVariantId(product, selections) || (defaultVariant?.id != null ? String(defaultVariant.id) : null);
+    const finalUrl = buildProductUrl(handle, { variantId });
+    const doc = await cachedResponse(finalUrl.toString(), 'html', priority, product.id);
+    warmPrimaryImage(doc);
+    return { product, doc, finalUrl, variantId };
+  }
+
+  /** Keep stale purchase controls inactive while the swatch remains available for another choice. */
+  function setNavigationBusy(busy) {
+    if (!busy) {
+      for (const [element, inert] of busyElements) element.inert = inert;
+      busyElements.clear();
+      document.getElementById('MainContent')?.removeAttribute('aria-busy');
+      return;
+    }
+    document.getElementById('MainContent')?.setAttribute('aria-busy', 'true');
+    document.querySelectorAll('#MainContent product-form-component, #MainContent variant-picker, #MainContent sticky-add-to-cart').forEach((element) => {
+      if (!busyElements.has(element)) busyElements.set(element, element.inert);
+      element.inert = true;
+    });
+  }
+
+  function canPrefetch() {
+    const connection = navigator.connection;
+    return Date.now() >= prefetchPausedUntil && !connection?.saveData && !/^(slow-)?2g$/.test(connection?.effectiveType || '');
+  }
+
+  /** Warm a small set of reachable combinations; intent can prioritize other options. */
+  function schedulePrefetch() {
+    if (!canPrefetch() || document.readyState === 'loading' || navigating) return;
+    const swatch = getSwatchEl();
+    if (!swatch) return;
+    const selections = captureThemeOptionSelections();
+    const handles = [...new Set(Array.from(swatch.querySelectorAll('.mpg-swatch__option[v-id]'))
+      .filter((option) => !option.classList.contains('blocked') && option.getAttribute('aria-disabled') !== 'true')
+      .map(resolveHandleFromOption).filter(Boolean))]
+      .filter((handle) => !sameProductPath(buildProductUrl(handle).pathname, window.location.pathname)).slice(0, 4);
+    const signature = JSON.stringify([window.location.pathname, selections, handles]);
+    if (signature === prefetchSignature) return;
+    prefetchSignature = signature;
+    prefetchQueue = handles.map((handle) => ({ handle, selections }));
+    pumpPrefetch();
+  }
+
+  function pumpPrefetch() {
+    if (prefetchPumpTimer || !canPrefetch()) return;
+    if (!navigating && prefetchCount < 1 && prefetchQueue.length) {
+      const { handle, selections } = prefetchQueue.shift();
+      prefetchCount++;
+      loadProduct(handle, selections, 'low').catch(() => {
+        // Retry normally on click; speculative failures must never navigate the page.
+      }).finally(() => {
+        prefetchCount--;
+        prefetchPumpTimer = window.setTimeout(() => {
+          prefetchPumpTimer = undefined;
+          pumpPrefetch();
+        }, 750);
+      });
+    }
+  }
+
+  function prefetchOption(event) {
+    if (!canPrefetch() || !(event.target instanceof Element)) return;
+    const option = event.target.closest('.mpg-swatch:not(.mpg-card) .mpg-swatch__option[v-id]');
+    if (!option || option.classList.contains('blocked') || option.getAttribute('aria-disabled') === 'true') return;
+    const handle = resolveHandleFromOption(option);
+    if (!handle || sameProductPath(buildProductUrl(handle).pathname, window.location.pathname)) return;
+    prefetchQueue = prefetchQueue.filter((item) => item.handle !== handle);
+    prefetchQueue.unshift({ handle, selections: captureThemeOptionSelections() });
+    prefetchQueue.length = Math.min(prefetchQueue.length, 4);
+    pumpPrefetch();
+  }
 
   /**
    * FAQ/fold scripts bind on DOMContentLoaded. Soft-nav / morph re-run after that
@@ -819,13 +1080,14 @@
       }
 
       if (oldScript.src) {
-        try {
-          const src = new URL(oldScript.src, window.location.origin);
-          src.searchParams.set('mpgsoftnav', String(Date.now()));
-          next.src = src.toString();
-        } catch {
-          next.src = oldScript.src;
+        // The gallery initializer is shared; its inline call below owns each new instance.
+        if (new URL(oldScript.src, window.location.origin).pathname.endsWith('/custom-media-gallery.js') &&
+            typeof window.initCustomMediaGallery === 'function') {
+          oldScript.remove();
+          return;
         }
+        // Preserve Shopify's versioned URL so browser/module caches remain effective.
+        next.src = oldScript.src;
       } else if (oldScript.textContent) {
         const raw = oldScript.textContent;
         // faqs.liquid / fold.liquid bind via unfoldArrow — clicks are handled by
@@ -872,11 +1134,11 @@
   /**
    * Soft-nav replaces #MainContent via importNode. Re-bind inline scripts,
    * refresh Horizon components, and nudge third-party widgets.
-   * @param {{ scripts?: boolean, sections?: boolean, judgeme?: boolean, unfold?: boolean }} [options]
+   * @param {{ scripts?: boolean, sections?: boolean, judgeme?: boolean, unfold?: boolean, root?: Element }} [options]
    */
   function reinitAfterSoftNav(options = {}) {
     const { scripts = true, sections = false, judgeme = false, unfold = false } = options;
-    const main = document.getElementById('MainContent');
+    const main = options.root || document.getElementById('MainContent');
     if (!main) return;
 
     try {
@@ -920,21 +1182,109 @@
   }
 
   function clearNavLock() {
+    window.clearTimeout(secondaryRefreshTimer);
+    navigationId++;
+    activeController?.abort();
+    activeController = null;
     navigating = false;
+    setNavigationBusy(false);
     document.documentElement.classList.remove(NAV_CLASS);
   }
 
-  function flushPendingNav() {
-    if (!pendingNav) return;
-    const next = pendingNav;
-    pendingNav = null;
-    softNavigate(next.productHandle, next.clickedOption, next.options);
+  /** Offer an explicit retry without replacing a working product with an error document. */
+  function showNavigationError(handle, clickedOption) {
+    document.getElementById('mpg-navigation-error')?.remove();
+    const swatch = getSwatchEl();
+    const messages = document.getElementById('mpg-navigation-script')?.dataset;
+    if (!swatch || !messages?.loadError || !messages.retryLabel) return;
+    const notice = document.createElement('div');
+    notice.id = 'mpg-navigation-error';
+    notice.setAttribute('role', 'alert');
+    const message = document.createElement('p');
+    message.textContent = messages.loadError;
+    const retry = document.createElement('button');
+    retry.type = 'button';
+    retry.className = 'button button-secondary';
+    retry.textContent = messages.retryLabel;
+    retry.addEventListener('click', () => softNavigate(handle, clickedOption));
+    notice.append(message, retry);
+    swatch.after(notice);
+  }
+
+  /** Commit the server-rendered purchase region without rebuilding the rest of the page. */
+  async function swapProductSection(result, handle, clickedOption, options, requestId) {
+    const { morphSection } = await import('@theme/section-renderer');
+    if (requestId !== navigationId) return;
+    const { doc, sectionId, product, variantId, finalUrl } = result;
+    const oldSection = document.getElementById(`shopify-section-${sectionId}`);
+    const sourceSection = doc.getElementById(`shopify-section-${sectionId}`);
+    if (!oldSection || !sourceSection) throw new Error('Product section missing');
+    const nextSection = document.importNode(sourceSection, true);
+    const stylesheet = doc.querySelector('style[data-section-stylesheet]');
+    if (stylesheet && !nextSection.querySelector('style[data-section-stylesheet]')) {
+      nextSection.prepend(stylesheet.cloneNode(true));
+    }
+    const swatch = getSwatchEl();
+    const focused = swatch?.contains(document.activeElement) ? document.activeElement : null;
+    let oldAnchor;
+    const anchorId = `mpg-swatch-anchor-${sectionId}`;
+    if (swatch && oldSection.contains(swatch)) {
+      const anchor = document.createElement('span');
+      anchor.id = anchorId;
+      const replacement = nextSection.querySelector('.mpg-swatch:not(.mpg-card)');
+      const target = findThroneTarget(nextSection);
+      if (!replacement && !target) throw new Error('Product swatch target missing');
+      if (replacement) replacement.replaceWith(anchor);
+      else target.before(anchor);
+      oldAnchor = document.createElement('span');
+      oldAnchor.id = anchorId;
+      swatch.replaceWith(oldAnchor);
+    }
+    try {
+      await morphSection(sectionId, nextSection.outerHTML);
+    } finally {
+      const anchor = document.getElementById(anchorId) || (oldAnchor?.isConnected ? oldAnchor : null);
+      if (anchor && swatch) anchor.replaceWith(swatch);
+      if (focused instanceof HTMLElement) focused.focus({ preventScroll: true });
+    }
+    if (requestId !== navigationId) return;
+    syncMpgProduct(product, variantId);
+    optimisticallySelect(swatch, clickedOption);
+    updateGroupOptionSelected(handle);
+    const suffix = document.title.match(/\s+[–—-]\s+(.+)$/)?.[1];
+    document.title = suffix ? `${product.title} – ${suffix}` : product.title;
+    const state = { ...history.state, mpgSoftNav: true };
+    if (options.skipHistory) history.replaceState(state, document.title, finalUrl.toString());
+    else history.pushState(state, document.title, finalUrl.toString());
+    renderedUrl = finalUrl.toString();
+    hookMpg(true);
+    reinitAfterSoftNav({ root: oldSection, scripts: true, judgeme: true, unfold: true });
+    // Product-dependent content below the purchase region follows after the visible switch.
+    secondaryRefreshTimer = window.setTimeout(() => refreshOtherSections(result, requestId), 500);
+  }
+
+  async function refreshOtherSections(result, requestId) {
+    if (requestId !== navigationId) return;
+    try {
+      const doc = await cachedResponse(result.finalUrl.toString(), 'html', 'low', result.product.id);
+      const { morphSection } = await import('@theme/section-renderer');
+      for (const section of doc.querySelectorAll('#MainContent > .shopify-section')) {
+        if (requestId !== navigationId || window.location.href !== result.finalUrl.toString()) return;
+        const id = section.id.replace(/^shopify-section-/, '');
+        if (id === result.sectionId || !document.getElementById(section.id)) continue;
+        await morphSection(id, section.outerHTML);
+        reinitAfterSoftNav({ root: document.getElementById(section.id), scripts: true, unfold: true });
+      }
+    } catch (error) {
+      // A below-fold refresh must never undo a successful product selection.
+      if (requestId === navigationId) console.warn('[combined-listings] secondary content refresh failed', error);
+    }
   }
 
   /**
    * Swap #MainContent from fetched HTML while keeping the live Combined Listings
    * swatch node in the document (so that region barely "refreshes").
-   * @param {string} pageHtml
+   * @param {Document} doc - Cached server-rendered document, cloned before insertion.
    * @param {string} handle
    * @param {Element | null} clickedOption
    * @param {object | null} productJson
@@ -942,13 +1292,13 @@
    * @param {URL} finalUrl
    * @param {object} options
    */
-  function swapMainPreservingSwatch(pageHtml, handle, clickedOption, productJson, persistedVariantId, finalUrl, options) {
-    const doc = new DOMParser().parseFromString(pageHtml, 'text/html');
+  function swapMainPreservingSwatch(doc, handle, clickedOption, productJson, persistedVariantId, finalUrl, options) {
     const newMain = doc.getElementById('MainContent');
     const oldMain = document.getElementById('MainContent');
     if (!newMain || !oldMain) throw new Error('MainContent missing');
 
     const liveSwatch = getSwatchEl();
+    const focusedOption = liveSwatch?.contains(document.activeElement) ? document.activeElement : null;
     const importedMain = document.importNode(newMain, true);
     const importedSwatch = importedMain.querySelector('.mpg-swatch:not(.mpg-card)');
 
@@ -977,10 +1327,11 @@
 
     if (doc.title) document.title = doc.title;
     oldMain.replaceWith(importedMain);
+    renderedUrl = finalUrl.toString();
+    if (focusedOption instanceof HTMLElement) focusedOption.focus({ preventScroll: true });
 
     if (productJson) {
       syncMpgProduct(productJson, persistedVariantId);
-      applyPersistedVariant(persistedVariantId, productJson);
     }
     hookMpg(true);
     reinitAfterSoftNav({ scripts: true, judgeme: true, unfold: true });
@@ -996,8 +1347,10 @@
 
     const handle = safeDecode(productHandle);
     const url = buildProductUrl(handle);
+    document.getElementById('mpg-navigation-error')?.remove();
 
     if (sameProductPath(url.pathname, window.location.pathname) && !options.force) {
+      clearNavLock();
       optimisticallySelect(getSwatchEl(), clickedOption);
       updateGroupOptionSelected(handle);
       return;
@@ -1014,18 +1367,10 @@
       return;
     }
 
-    if (navigating) {
-      pendingNav = { productHandle, clickedOption, options };
-      try {
-        activeController?.abort();
-      } catch {
-        // ignore
-      }
-      return;
-    }
-
     const themeSelections = captureThemeOptionSelections();
-
+    const requestId = ++navigationId;
+    window.clearTimeout(secondaryRefreshTimer);
+    const startedAt = performance.now();
     navigating = true;
 
     try {
@@ -1035,6 +1380,7 @@
     }
     activeController = new AbortController();
     const { signal } = activeController;
+    setNavigationBusy(true);
 
     const swatch = getSwatchEl();
     optimisticallySelect(swatch, clickedOption);
@@ -1043,56 +1389,46 @@
     }
 
     try {
-      const productJsonUrl = `${url.origin}/products/${encodeURIComponent(handle)}.js`;
-      const [productJson, pageHtml] = await Promise.all([
-        fetch(productJsonUrl, { signal, credentials: 'same-origin' }).then((r) =>
-          r.ok ? r.json() : null
-        ),
-        fetch(url.toString(), { signal, credentials: 'same-origin' }).then((r) =>
-          r.ok ? r.text() : null
-        ),
-      ]);
+      const preferredVariantId = options.skipHistory ? new URL(window.location.href).searchParams.get('variant') : null;
+      const result = await waitForResponse(
+        loadProduct(handle, themeSelections, 'high', preferredVariantId), signal
+      );
+      if (signal.aborted || requestId !== navigationId) return;
 
-      if (!pageHtml) throw new Error('Product page HTML missing');
-
-      const persistedVariantId =
-        matchVariantId(productJson, themeSelections) ||
-        (productJson?.variants?.[0]?.id != null ? String(productJson.variants[0].id) : null);
-
-      const finalUrl = buildProductUrl(handle, { variantId: persistedVariantId });
-
-      const run = () =>
-        swapMainPreservingSwatch(
-          pageHtml,
-          handle,
-          clickedOption,
-          productJson,
-          persistedVariantId,
-          finalUrl,
-          options
-        );
-
-      if (typeof document.startViewTransition === 'function') {
-        const vt = document.startViewTransition(run);
-        try {
-          await vt.finished;
-        } catch {
-          // Transition may be skipped; swap already applied.
-        }
+      // Commit immediately. A view-transition snapshot/animation must not queue another click.
+      if (result.sectionId) {
+        await swapProductSection(result, handle, clickedOption, options, requestId);
       } else {
-        run();
+        swapMainPreservingSwatch(result.doc, handle, clickedOption, result.product, result.variantId, result.finalUrl, options);
       }
+      if (requestId !== navigationId) return;
+      window.__mpgSoftNav.lastNavigation = {
+        handle,
+        durationMs: Math.round(performance.now() - startedAt),
+        // DOM-ready timing; image downloads/paint must also be checked in the browser.
+      };
     } catch (error) {
-      if (error?.name === 'AbortError') return;
+      if (signal.aborted || requestId !== navigationId) return;
 
-      console.warn('[combined-listings-hardnav] soft nav fallback to hard load', error);
+      console.warn('[combined-listings-hardnav] product switch failed; current product retained', error);
       clearNavLock();
-      window.location.assign(url.toString());
+      // popstate changes the address before the request: restore the product still on screen.
+      if (window.location.href !== renderedUrl) history.replaceState(history.state, document.title, renderedUrl);
+      const currentHandle = new URL(renderedUrl).pathname.split('/products/')[1]?.split('/')[0];
+      if (currentHandle) updateGroupOptionSelected(safeDecode(currentHandle));
+      prefetchPausedUntil = Math.max(prefetchPausedUntil, Date.now() + 30000);
+      prefetchQueue = [];
+      showNavigationError(handle, clickedOption);
       return;
     } finally {
-      navigating = false;
-      document.documentElement.classList.remove(NAV_CLASS);
-      flushPendingNav();
+      if (requestId === navigationId) {
+        navigating = false;
+        activeController = null;
+        setNavigationBusy(false);
+        document.documentElement.classList.remove(NAV_CLASS);
+        schedulePrefetch();
+        pumpPrefetch();
+      }
     }
   }
 
@@ -1118,6 +1454,7 @@
     wrapped.__themeSoftNav = true;
     window.mpg.redirectToProductPage = wrapped;
     window.mpg.__themeSoftNavHooked = true;
+    schedulePrefetch();
     return true;
   }
 
@@ -1150,13 +1487,6 @@
       const handle = resolveHandleFromOption(option);
       if (!handle) return;
 
-      const nextUrl = buildProductUrl(handle);
-      if (sameProductPath(nextUrl.pathname, window.location.pathname)) {
-        optimisticallySelect(getSwatchEl(), option);
-        updateGroupOptionSelected(handle);
-        return;
-      }
-
       const now = Date.now();
       const prev = Number(option.getAttribute(HANDLED_ATTR) || 0);
       if (now - prev < 400) {
@@ -1174,6 +1504,15 @@
   );
 
   window.addEventListener('pagehide', clearNavLock);
+  window.addEventListener('load', schedulePrefetch, { once: true });
+  window.addEventListener('pageshow', schedulePrefetch);
+  document.addEventListener('pointerover', prefetchOption, { passive: true });
+  document.addEventListener('focusin', prefetchOption);
+  document.addEventListener('touchstart', prefetchOption, { passive: true });
+  document.addEventListener('variant:update', () => {
+    window.clearTimeout(prefetchTimer);
+    prefetchTimer = window.setTimeout(schedulePrefetch, 200);
+  });
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && !activeController) clearNavLock();
   });
@@ -1186,8 +1525,8 @@
   }, 200);
 
   Object.assign(window.__mpgSoftNav, {
-    /** Upload check: __mpgSoftNav.build === "20260814k" */
-    build: '20260814k',
+    /** Upload check: __mpgSoftNav.build === "20261019a" */
+    build: '20261019a',
     hardNav: HARD_NAV_ONLY,
     asset: 'combined-listings-hardnav.js',
     preserveSwatch: true,

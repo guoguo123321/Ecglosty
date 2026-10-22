@@ -9,6 +9,7 @@
  */
 {
   "accessibility": {
+    "loading_collection": "Loading products",
     "account": "Account",
     "active_filters": "Active filters:",
     "cart": "Cart",
@@ -367,7 +368,9 @@
       "quantity_maximum": "Maximum of {{ maximum }}",
       "in_cart": "in cart",
       "default_title": "Default Title",
-      "sticky_add_to_cart": "Quick add to cart bar"
+      "sticky_add_to_cart": "Quick add to cart bar",
+      "group_load_error": "This option could not be loaded. Your current product has been kept. Please try again shortly.",
+      "group_load_retry": "Try this option again"
     }
   }
 }

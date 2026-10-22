@@ -69,7 +69,7 @@
               data-value="{{ block.settings.api_value }}"
               data-label="{{ block.settings.label }}"
               data-filter="metal"
-              title="{{ block.settings.label }}">
+              title="{{ block.settings.api_value }}">
               {%- if block.settings.swatch_image != blank -%}
                 <img src="{{ block.settings.swatch_image | image_url: width: 200 }}" alt="{{ block.settings.label }}" class="jc-metal-swatch-img">
               {%- endif -%}
@@ -368,7 +368,6 @@
   assign card_price_variant = card_price_font | font_modify: 'weight', card_price_weight
   assign card_price_font = card_price_variant | default: card_price_font
 
- 
 %}
 
 
@@ -381,7 +380,7 @@
   --bg-pill: #f5f5f5;
   --text: #333;
   font-family: inherit;
-  padding: 40px 20px;
+  padding: 0px 20px;
   background: #fff;
 }
 
@@ -541,7 +540,7 @@
 .jc-filter-controls {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px var(--gap-md);
   margin-left: auto;
 }
 
@@ -581,7 +580,7 @@
 #jewelry-collection-{{ section.id }} .jc-clear-all-btn {
   display: none;
   box-sizing: border-box;
-  padding: 10px 14px;
+  padding: 11px 14px;
   border: 1px solid #D9D9D9;
   border-radius: 0;
   background: #FFFFFF;
@@ -1130,6 +1129,7 @@
   const API_URL = {{ section.settings.api_endpoint | json }};
   const SHOP_DOMAIN = {{ section.settings.shop_domain | json }};
   const PAGE_SIZE = {{ section.settings.page_size | default: 20 }};
+  let collection_handle= '{{ collection.handle }}';
 
   const METAL_BLOCKS = [
   {%- assign metal_blocks = section.blocks | where: 'type', 'metal' -%}
@@ -1231,7 +1231,9 @@
       loadMoreBtn.disabled = true;
       loadMoreBtn.textContent = 'Loading...';
     }
-
+    if(collection_handle=="start-with-a-setting"){
+      collection_handle = "";
+    }
     try {
         let shopDomain = SHOP_DOMAIN?SHOP_DOMAIN:(window.Shopify?.shop || location.hostname);
         shopDomain= "https://"+shopDomain
@@ -1249,7 +1251,8 @@
           maxPrice:  state.maxPrice,
           page:      state.page,
           size:      PAGE_SIZE,
-          sortBy:    state.sortBy
+          sortBy:    state.sortBy,
+          collections:collection_handle
         })
       });
       if (!res.ok) throw new Error('API error'); 
@@ -1295,42 +1298,72 @@
     const isWished = isWishlisted(p);
 
     // Main image
-    // Images: 优先取 pictures，空时从 SKU 图片媒体取
-    let cardImages = String(p.pictures || '')
-      .split(',')
-      .map(url => url.trim())
-      .filter(Boolean)
-      .slice(0, 2);
-
-    if (cardImages.length === 0) {
-      const skus = p.skuCombination?.productSkuList || [];
-
-      for (const sku of skus) {
-        const imageMedias = (Array.isArray(sku.medias) ? sku.medias : [])
-          .filter(m => m && m.mediaType === 1)
-          .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
-
-        for (const media of imageMedias) {
-          const urls = String(media.url || '')
-            .split(',')
-            .map(url => url.trim())
-            .filter(Boolean);
-
-          for (const url of urls) {
-            cardImages.push(url);
-            if (cardImages.length === 2) break;
-          }
-
-          if (cardImages.length === 2) break;
-        }
-
-        if (cardImages.length === 2) break;
-      }
+    // 首次渲染与选项切换共用同一套 SKU 匹配逻辑
+    function normalizeSpec(value) {
+      return String(value ?? '').trim().toLowerCase();
     }
 
-    const imgSrc = cardImages[0] || '';
-    const hoverImgSrc = cardImages[1] || '';
+    function getSkuImages(metal, shape) {
+      const skus = p.skuCombination?.productSkuList || [];
 
+      const selectedValues = [metal, shape]
+        .map(normalizeSpec)
+        .filter(Boolean);
+
+      function readSkuImages(sku) {
+        return [...new Set(
+          (Array.isArray(sku?.medias) ? sku.medias : [])
+            .filter(media => media && Number(media.mediaType) === 1)
+            .sort((a, b) =>
+              Number(a.sortOrder ?? 0) - Number(b.sortOrder ?? 0)
+            )
+            .flatMap(media =>
+              String(media.url || '')
+                .split(',')
+                .map(url => url.trim())
+                .filter(Boolean)
+            )
+        )].slice(0, 2);
+      }
+
+      function readProductImages() {
+        return [...new Set(
+          String(p.pictures || '')
+            .split(',')
+            .map(url => url.trim())
+            .filter(Boolean)
+        )].slice(0, 2);
+      }
+
+      // 没有 Metal、Shape：优先取 SKU 列表中第一组可用图片
+      if (!selectedValues.length) {
+        for (const sku of skus) {
+          const images = readSkuImages(sku);
+          if (images.length) return images;
+        }
+
+        // SKU 都没有图片，才使用产品通用图片
+        return readProductImages();
+      }
+
+      // 有选中属性：只匹配当前属性对应的 SKU
+      const matchedSkus = skus.filter(sku => {
+        const skuValues = String(sku.specSkuValue || '')
+          .split('::')
+          .map(normalizeSpec)
+          .filter(Boolean);
+
+        return selectedValues.every(value => skuValues.includes(value));
+      });
+
+      for (const sku of matchedSkus) {
+        const images = readSkuImages(sku);
+        if (images.length) return images;
+      }
+
+      // 当前组合没有可用 SKU 图片，回退到产品通用图片
+      return readProductImages();
+    }
 
     // Spec trees
     const trees      = p.skuCombination?.productSpecTrees || [];
@@ -1345,6 +1378,10 @@
     const defaultShape = state.shapes.length > 0
       ? (shapeVals.find(v => state.shapes.includes(v)) || shapeVals[0] || '')
       : (shapeVals[0] || '');
+    // 图片必须跟随当前默认选中的 Metal + Shape
+    const cardImages = getSkuImages(defaultMetal, defaultShape);
+    const imgSrc = cardImages[0] || '';
+    const hoverImgSrc = cardImages[1] || '';
 
     // Price
     const price = p.minPrice != null
@@ -1432,7 +1469,13 @@
         // 更新卡片的默认图和悬停图，保留徽章与收藏按钮
     function updateCardImages(images) {
       const wrap = card.querySelector('.jc-card-img-wrap');
-      if (!wrap || !images.length) return;
+      if (!wrap) return;
+
+      if (!images.length) {
+        wrap.querySelectorAll('.jc-card-img').forEach(img => img.remove());
+        wrap.classList.remove('jc-card-img-wrap--has-hover');
+        return;
+      }
 
       let mainImg = wrap.querySelector('.jc-card-img--main')
         || wrap.querySelector('.jc-card-img:not(.jc-card-img--hover)');
@@ -1503,35 +1546,10 @@
           });
         }
 
-        if (!selMetal || !selShape) return;
-
-        // 不限定属性顺序，匹配两种拼接方式
-        const specKeys = [
-          `${selMetal}::${selShape}`,
-          `${selShape}::${selMetal}`
-        ];
-        const skus = p.skuCombination?.productSkuList || [];
-        const matchedSku = skus.find(sku => {
-          const specSkuValue = String(sku.specSkuValue || '');
-          return specKeys.some(key => specSkuValue.includes(key));
-        });
-        // 没有匹配到 SKU 时，保留当前图片
-        if (!matchedSku) return;
-
-        const images = (
-          Array.isArray(matchedSku.medias) ? matchedSku.medias : []
-        )
-          .filter(media => media && media.mediaType === 1)
-          .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
-          .flatMap(media =>
-            String(media.url || '')
-              .split(',')
-              .map(url => url.trim())
-              .filter(Boolean)
-          )
-          .slice(0, 2);
-
+        // 按卡片当前实际选中的 Metal + Shape 获取 SKU 图片
+        const images = getSkuImages(selMetal, selShape);
         updateCardImages(images);
+
       });
     });
 
@@ -1566,6 +1584,84 @@
 
     return card;
   }
+    // 记录筛选项的操作顺序，仅用于 pills 展示
+  let pillClickOrder = [];
+
+  function pillOrderKey(type, value) {
+    return JSON.stringify([type, String(value)]);
+  }
+
+  function trackPillOrder(type, value, selected) {
+    const key = pillOrderKey(type, value);
+    const index = pillClickOrder.indexOf(key);
+
+    if (!selected) {
+      if (index !== -1) pillClickOrder.splice(index, 1);
+    } else if (index === -1) {
+      pillClickOrder.push(key);
+    }
+  }
+
+  const pillTypeMap = {
+    shape: 'shape',
+    shapes: 'shape',
+    metal: 'metal',
+    metals: 'metal',
+    widths: 'width',
+    prongType: 'prongType',
+    styles: 'styles'
+  };
+
+  const pillSectionRoot = $id(`jewelry-collection-${sid}`);
+  const pillEventRoots = [pillSectionRoot];
+
+  // 抽屉若位于 section 外部，也监听它
+  if (drawer && !pillSectionRoot.contains(drawer)) {
+    pillEventRoots.push(drawer);
+  }
+
+  pillEventRoots.forEach(root => {
+    // 捕获阶段先记录，之后原有点击逻辑再更新 state 和 pills
+    root.addEventListener('click', event => {
+      const button = event.target.closest(
+        '.jc-shape-btn, .jc-metal-btn, .jc-drawer-icon-btn'
+      );
+      if (!button || !root.contains(button)) return;
+
+      const type = pillTypeMap[button.dataset.filter];
+      if (!type) return;
+
+      trackPillOrder(
+        type,
+        button.dataset.value,
+        !button.classList.contains('active')
+      );
+    }, true);
+
+    root.addEventListener('change', event => {
+      const checkbox = event.target;
+      if (!checkbox.matches('.jc-drawer-check')) return;
+
+      const type = pillTypeMap[checkbox.dataset.filter];
+      if (!type) return;
+
+      trackPillOrder(type, checkbox.value, checkbox.checked);
+    }, true);
+
+    // 价格作为一个 pill，首次调整时记录位置
+    const trackPriceOrder = event => {
+      if (!event.target.matches(
+        '[id^="jc-range-min-"], [id^="jc-range-max-"], ' +
+        '[id^="jc-price-min-display-"], [id^="jc-price-max-display-"]'
+      )) return;
+
+      trackPillOrder('price', 'price', true);
+    };
+
+    root.addEventListener('input', trackPriceOrder, true);
+    root.addEventListener('change', trackPriceOrder, true);
+  });
+
 
   // Filter buttons
   document.querySelectorAll(`#jewelry-collection-${sid} .jc-shape-btn, #jewelry-collection-${sid} .jc-metal-btn`)
@@ -1693,25 +1789,75 @@
     updateRangeTrack();
   }
 
-  // 抽屉 pills
+    // 抽屉 pills：按照点击顺序展示
   function updateDrawerPills() {
     const bar = $id(`jc-drawer-pills-${sid}`);
     if (!bar) return;
+
     bar.innerHTML = '';
-    const allActive = [...document.querySelectorAll(`#jc-drawer-${sid} .jc-drawer-icon-btn.active, #jc-drawer-${sid} .jc-drawer-check:checked`)];
+
+    const allActive = [...document.querySelectorAll(
+      `#jc-drawer-${sid} .jc-drawer-icon-btn.active, ` +
+      `#jc-drawer-${sid} .jc-drawer-check:checked`
+    )];
+
+    const drawerPills = new Map();
+
     allActive.forEach(el => {
-      const label = el.dataset.label || el.closest('label')?.textContent.trim() || el.value;
+      const type = pillTypeMap[el.dataset.filter];
+      if (!type) return;
+
+      const value = el.classList.contains('jc-drawer-check')
+        ? el.value
+        : el.dataset.value;
+
+      const key = pillOrderKey(type, value);
+
+      // Metal 显示 api_value，其他选项保持原有文字
+      const label = type === 'metal'
+        ? value
+        : (
+            el.dataset.label ||
+            el.closest('label')?.textContent.trim() ||
+            value
+          );
+
+      drawerPills.set(key, { el, type, value, label });
+
+      // 初始选中等非点击来源的选项，追加到末尾
+      trackPillOrder(type, value, true);
+    });
+
+    pillClickOrder.forEach(key => {
+      const item = drawerPills.get(key);
+      if (!item) return;
+
+      const { el, type, value, label } = item;
+
       const pill = document.createElement('span');
       pill.className = 'jc-pill';
-      pill.innerHTML = `${label} <span class="jc-pill-remove">×</span>`;
-      pill.querySelector('.jc-pill-remove').addEventListener('click', () => {
+      pill.appendChild(document.createTextNode(`${label} `));
+
+      const remove = document.createElement('span');
+      remove.className = 'jc-pill-remove';
+      remove.textContent = '×';
+
+      remove.addEventListener('click', () => {
+        trackPillOrder(type, value, false);
+
         el.classList.remove('active');
-        if (el.type === 'checkbox') el.checked = false;
+        if (el.type === 'checkbox') {
+          el.checked = false;
+        }
+
         updateDrawerPills();
       });
+
+      pill.appendChild(remove);
       bar.appendChild(pill);
     });
   }
+
 
   // 从抽屉获取选中值
   function getDrawerActiveVals(filter) {
@@ -1793,24 +1939,80 @@
 
 
   // Pills
-  function updatePills() {
-    pillsEl.innerHTML = '';
-    const all = [
-      ...state.shapes.map(v    => ({ label: SHAPE_BLOCKS.find(b => b.value===v)?.label||v, type:'shape',     value:v })),
-      ...state.metals.map(v    => ({ label: METAL_BLOCKS.find(b => b.value===v)?.value||v, type:'metal',     value:v })),
-      ...state.widths.map(v    => ({ label: v, type:'width',     value:v })),
-      ...state.prongType.map(v => ({ label: v, type:'prongType', value:v })),
-      ...state.styles.map(v    => ({ label: v, type:'styles',    value:v })),
-      ...(state.minPrice||state.maxPrice ? [{ label:`$${state.minPrice||0}–$${state.maxPrice||'∞'}`, type:'price', value:'price' }] : [])
-    ];
-    all.forEach(f => {
-      const pill = document.createElement('span');
-      pill.className = 'jc-pill';
-      pill.innerHTML = `${f.label} <span class="jc-pill-remove" data-type="${f.type}" data-value="${f.value}">×</span>`;
-      pill.querySelector('.jc-pill-remove').addEventListener('click', () => removePill(f.type, f.value));
-      pillsEl.appendChild(pill);
-    });
-  }
+    function updatePills() {
+      pillsEl.innerHTML = '';
+
+      const all = [
+        ...state.shapes.map(v => ({
+          label: SHAPE_BLOCKS.find(b => b.value === v)?.label || v,
+          type: 'shape',
+          value: v
+        })),
+        ...state.metals.map(v => ({
+          label: v,
+          type: 'metal',
+          value: v
+        })),
+        ...state.widths.map(v => ({
+          label: v,
+          type: 'width',
+          value: v
+        })),
+        ...state.prongType.map(v => ({
+          label: v,
+          type: 'prongType',
+          value: v
+        })),
+        ...state.styles.map(v => ({
+          label: v,
+          type: 'styles',
+          value: v
+        })),
+        ...(state.minPrice || state.maxPrice ? [{
+          label: `$${state.minPrice || 0}–$${state.maxPrice || '∞'}`,
+          type: 'price',
+          value: 'price'
+        }] : [])
+      ];
+
+      const activePills = new Map(
+        all.map(item => [
+          pillOrderKey(item.type, item.value),
+          item
+        ])
+      );
+
+      // 移除已取消的选项，保留其余选项的点击顺序
+      pillClickOrder = pillClickOrder.filter(key => activePills.has(key));
+
+      // URL 初始化等非点击来源的筛选项，追加到末尾
+      activePills.forEach((item, key) => {
+        if (!pillClickOrder.includes(key)) {
+          pillClickOrder.push(key);
+        }
+      });
+
+      pillClickOrder.forEach(key => {
+        const f = activePills.get(key);
+        const pill = document.createElement('span');
+        pill.className = 'jc-pill';
+        pill.appendChild(document.createTextNode(`${f.label} `));
+
+        const remove = document.createElement('span');
+        remove.className = 'jc-pill-remove';
+        remove.dataset.type = f.type;
+        remove.dataset.value = f.value;
+        remove.textContent = '×';
+        remove.addEventListener('click', () => {
+          trackPillOrder(f.type, f.value, false);
+          removePill(f.type, f.value);
+        });
+
+        pill.appendChild(remove);
+        pillsEl.appendChild(pill);
+      });
+    }
+
 
   function removePill(type, value) {
     const uncheck = (filter, val) => {

@@ -1,0 +1,46 @@
+{% doc %}
+  Supplies a filter-value image to the parent Filters block through captured child markup.
+  The selectable image wrapper is rendered inside the matching filter option.
+  @example
+  <!-- Add this child under Filtering and sorting; set Style, Choker, and an image. -->
+{% enddoc %}
+
+{% liquid
+  assign filter_label = block.settings.filter_label | strip | downcase | url_encode
+  assign option_value = block.settings.title | strip | downcase | url_encode
+%}
+{% if block.settings.image != blank and filter_label != blank and option_value != blank %}
+  <template data-filter-image-key="{{ filter_label }}:{{ option_value }}">
+    <span class="filter-option-image" {{ block.shopify_attributes }}>
+      {{ block.settings.image | image_url: width: 300 | image_tag: alt: '', loading: 'lazy', widths: '48, 96, 144, 300', sizes: '(max-width: 749px) 48px, 125px' }}
+    </span>
+  </template>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:style_filter_images.block_name",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "filter_label",
+      "label": "t:style_filter_images.filter_label",
+      "info": "t:style_filter_images.filter_info",
+      "default": "Style"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:style_filter_images.value_label",
+      "info": "t:style_filter_images.value_info"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:style_filter_images.image_label"
+    }
+  ],
+  "presets": [{ "name": "t:style_filter_images.block_name" }]
+}
+{% endschema %}

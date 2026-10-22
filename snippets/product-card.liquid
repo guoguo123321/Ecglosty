@@ -157,6 +157,11 @@
     assign product_group_value = product.metafields.custom.product_group.value | default: product.metafields.custom.product_group | default: '' | strip
   endunless
 
+  capture product_title_metals
+    render 'product-style-title', output: 'metals_json'
+  endcapture
+  assign product_title_metals = product_title_metals | strip
+
   assign card_style_title = product.title
   if template.name == 'collection' or request.page_type == 'collection'
     capture card_style_title
@@ -173,6 +178,7 @@
   data-product-handle="{{ product.handle }}"
   data-product-title="{{ product.title | escape }}"
   data-product-style-title="{{ card_style_title | escape }}"
+  data-product-title-metals="{{ product_title_metals | escape }}"
   {% if product_group_value != blank %}
     data-product-group="{{ product_group_value | escape }}"
   {% endif %}

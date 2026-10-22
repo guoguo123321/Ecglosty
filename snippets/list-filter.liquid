@@ -8,6 +8,7 @@
   @param {boolean} [should_render_clear] - Whether to render the clear button
   @param {boolean} [show_swatch_label] - Whether to show the swatch label
   @param {boolean} [in_drawer] - Whether the filter is in a drawer
+  @param {string} [filter_image_mappings] - Captured filter-image child blocks
 
   Metal drawer captions show the karat or PT; inputs retain the full metal label.
 {%- enddoc -%}
@@ -24,6 +25,17 @@
   if filter.presentation == 'image'
     assign is_image = true
   endif
+
+  assign configured_filter_label = filter.label | strip | downcase | url_encode
+  for value in filter.values
+    assign configured_value = value.label | strip | downcase | url_encode
+    assign image_marker = '<template data-filter-image-key="' | append: configured_filter_label | append: ':' | append: configured_value | append: '">'
+    if filter_image_mappings contains image_marker
+      assign is_image = true
+      assign is_swatch = false
+      break
+    endif
+  endfor
 %}
 
 {%- liquid
@@ -203,6 +215,13 @@
             {%- for value in filter.values -%}
               {% liquid
                 assign option_caption = value.label
+                assign option_image = value.image
+                assign mapped_image_markup = blank
+                assign configured_value = value.label | strip | downcase | url_encode
+                assign image_marker = '<template data-filter-image-key="' | append: configured_filter_label | append: ':' | append: configured_value | append: '">'
+                if filter_image_mappings contains image_marker
+                  assign mapped_image_markup = filter_image_mappings | split: image_marker | last | split: '</template>' | first
+                endif
                 if in_drawer and filter.param_name contains 'metal'
                   assign metal_karat = value.label | split: ' ' | first | upcase
                   if metal_karat == '14K' or metal_karat == '18K'
@@ -245,8 +264,10 @@
                     on:keydown="#facet-inputs-component-{{ filter.param_name | escape | replace: '.', '-' }}/handleKeyDown"
                   >
                     <div class="facets__image-wrapper">
-                      {% if value.image %}
-                        {{ value.image | image_url: width: 300 | image_tag: alt: '' }}
+                      {% if mapped_image_markup != blank %}
+                        {{ mapped_image_markup }}
+                      {% elsif option_image %}
+                        {{ option_image | image_url: width: 300 | image_tag: alt: '', loading: 'lazy', widths: '48, 96, 144, 300', sizes: '(max-width: 749px) 48px, 125px' }}
                       {% endif %}
                       {% if is_disabled %}
                         <svg
@@ -289,12 +310,7 @@
                     aria-label="{{ value.label }}"
                     on:keydown="#facet-inputs-component-{{ filter.param_name | escape | replace: '.', '-' }}/handleKeyDown"
                   >
-                    <{% if in_drawer %}div{% else %}label{% endif %}
-                      class="variant-option__button-label variant-option__button-label--has-swatch"
-                      {% unless in_drawer %}for="{{ input_id }}"{% endunless %}
-                      on:pointerenter="/prefetchPage"
-                      on:pointerleave="/cancelPrefetchPage"
-                    >
+                    {% capture swatch_content %}
                       <div
                         class="variant-option__swatch-wrapper"
                       >
@@ -331,7 +347,25 @@
                       >
                         {{- option_caption | escape }}
                       </span>
-                    </{% if in_drawer %}div{% else %}label{% endif %}>
+                    {% endcapture %}
+                    {% if in_drawer %}
+                      <div
+                        class="variant-option__button-label variant-option__button-label--has-swatch"
+                        on:pointerenter="/prefetchPage"
+                        on:pointerleave="/cancelPrefetchPage"
+                      >
+                        {{ swatch_content }}
+                      </div>
+                    {% else %}
+                      <label
+                        class="variant-option__button-label variant-option__button-label--has-swatch"
+                        for="{{ input_id }}"
+                        on:pointerenter="/prefetchPage"
+                        on:pointerleave="/cancelPrefetchPage"
+                      >
+                        {{ swatch_content }}
+                      </label>
+                    {% endif %}
                   </fieldset>
                 {% else %}
                   {% if should_use_pills %}

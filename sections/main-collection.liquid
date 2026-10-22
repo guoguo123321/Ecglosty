@@ -101,6 +101,9 @@
   style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
   section-id="{{ section.id }}"
   infinite-scroll="{{ enable_infinite_scroll }}"
+  {% unless enable_infinite_scroll %}
+    data-product-group-pagination="true"
+  {% endunless %}
 >
   {% render 'skip-to-content-link', href: '#ResultsList', text: 'accessibility.skip_to_results_list' %}
 

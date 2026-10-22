@@ -1,7 +1,17 @@
-
-
+{% comment %}
+  Product list with merchant-configured cards and product-group deduplication.
+  Keep the candidate window bounded: scanning 250 products caused product-page render failures.
+  @example
+  Added below product information to show products from the selected collection.
+{% endcomment %}
 {% liquid
   assign max_items = section.settings.max_products
+  assign candidate_limit = max_items
+  assign rendered_product_count = 0
+  assign seen_product_groups = ''
+  if request.page_type == 'product'
+    assign candidate_limit = 50
+  endif
 %}
 
 {% style %}
@@ -62,8 +72,35 @@
 
   {% capture list_items %}
     {% if section.settings.collection != blank and shop.products_count != 0 %}
-      {% paginate section.settings.collection.products by max_items %}
-        {% for product in section.settings.collection.products limit: max_items %}
+      {% paginate section.settings.collection.products by candidate_limit %}
+        {% liquid
+          assign candidates = section.settings.collection.products
+          if request.page_type == 'product' and candidates.size > 0
+            # Vary the representative without client-side card replacement.
+            assign start_index = 'now' | date: '%s' | modulo: candidates.size
+            assign tail_count = candidates.size | minus: start_index
+            assign tail = candidates | slice: start_index, tail_count
+            assign head = candidates | slice: 0, start_index
+            assign candidates = tail | concat: head
+          endif
+        %}
+        {% for product in candidates %}
+          {% liquid
+            if rendered_product_count >= max_items
+              break
+            endif
+            if request.page_type == 'product'
+              assign group_value = product.metafields.custom.product_group.value | default: product.metafields.custom.product_group | default: '' | strip
+              if group_value != blank
+                assign group_token = group_value | json | prepend: '|' | append: '|'
+                if seen_product_groups contains group_token
+                  continue
+                endif
+                assign seen_product_groups = seen_product_groups | append: group_token
+              endif
+            endif
+          %}
+          {% if rendered_product_count > 0 %}<!--@list/split-->{% endif %}
           <div
             class="resource-list__item"
           >
@@ -71,10 +108,7 @@
               {% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: product %}
             {% # theme-check-enable UniqueStaticBlockId %}
           </div>
-
-          {% unless forloop.last %}
-            <!--@list/split-->
-          {% endunless %}
+          {% assign rendered_product_count = rendered_product_count | plus: 1 %}
         {% endfor %}
       {% endpaginate %}
     {% else %}
@@ -103,7 +137,7 @@
     list_items: list_items,
     list_items_array: list_items_array,
     settings: section.settings,
-    slide_count: max_items,
+    slide_count: list_items_array.size,
     content_type: 'products',
     test_id: 'resource-list-grid'
   %}

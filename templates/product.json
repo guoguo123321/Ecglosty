@@ -16,8 +16,8 @@
           "type": "lg-groub",
           "name": "lg group",
           "settings": {
-            "layout": "lgs-container",
-            "custom_container": "1230px",
+            "layout": "custom-container",
+            "custom_container": "1950px",
             "design_heading": "1",
             "heading_align": "lgs-text-center",
             "top_heading": "",
@@ -77,6 +77,7 @@
         "layout": "custom-container",
         "custom_container": "1230px",
         "box_align": "lgs-text-center",
+        "active_step_bg": "#d9d9d9",
         "color_scheme": "",
         "design_heading": "1",
         "heading_align": "lgs-text-center",
@@ -376,6 +377,7 @@
               "blocks": {
                 "quantity": {
                   "type": "quantity",
+                  "disabled": true,
                   "static": true,
                   "settings": {},
                   "blocks": {}
@@ -405,10 +407,10 @@
                 "color_scheme": "scheme-4df12b91-c5d4-406e-a832-2a7395c6df9e",
                 "heading": "Order Details",
                 "delivery_text": "Delivery by:",
-                "ship_days": 10,
+                "ship_days": 18,
                 "date_format": "%b %d, %Y",
                 "shipping_text": "Free Express Shipping",
-                "returns_text": "Free 60-Day Returns",
+                "returns_text": "Free 30-Day Returns",
                 "warranty_text": "Free Lifetime Warranty",
                 "image": "shopify://shop_images/17.jpg",
                 "padding": 12,

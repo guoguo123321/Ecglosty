@@ -1,0 +1,39 @@
+{% doc %}
+  Compact product state for selecting an exact variant from a section response.
+  Purchase markup, prices and availability are still rendered by Liquid.
+  @param {product} product - Product rendered by the owning product section.
+  @example
+  {% render 'product-switch-data', product: closest.product %}
+{% enddoc %}
+<script type="application/json" data-product-switch-state>
+  {
+    "id": {{ product.id | json }},
+    "handle": {{ product.handle | json }},
+    "url": {{ product.url | json }},
+    "title": {{ product.title | json }},
+    "options": {{ product.options | json }},
+    "images": {{ product.images | map: 'src' | json }},
+    "available": {{ product.available | json }},
+    "requires_selling_plan": {{ product.requires_selling_plan | json }},
+    "has_volume_pricing": {{ product.quantity_price_breaks_configured? | default: false | json }},
+    "selected_variant_id": {{ product.selected_or_first_available_variant.id | json }},
+    "variants": [
+      {%- for variant in product.variants -%}
+        {
+          "id": {{ variant.id | json }},
+          "title": {{ variant.title | json }},
+          "options": {{ variant.options | json }},
+          "available": {{ variant.available | json }},
+          "price": {{ variant.price | json }},
+          "compare_at_price": {{ variant.compare_at_price | json }},
+          "formatted_price": {% if settings.currency_code_enabled_product_pages %}{{ variant.price | money_with_currency | json }}{% else %}{{ variant.price | money | json }}{% endif %},
+          "formatted_compare_at_price": {% if settings.currency_code_enabled_product_pages %}{{ variant.compare_at_price | money_with_currency | json }}{% else %}{{ variant.compare_at_price | money | json }}{% endif %},
+          "unit_price": {{ variant.unit_price | json }},
+          "featured_media_id": {{ variant.featured_media.id | json }},
+          "sku": {{ variant.sku | json }},
+          "quantity_rule": {{ variant.quantity_rule | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>

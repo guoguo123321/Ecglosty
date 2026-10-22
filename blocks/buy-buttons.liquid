@@ -36,7 +36,7 @@
 %}
 
 <span
-  class="buy-buttons-block buy-buttons-block--{{ block.id }}"
+  class="buy-buttons-block buy-buttons-block--{{ block.id }}{% if request.page_type == 'product' and template.suffix == blank %} buy-buttons-block--desktop-actions{% endif %}"
   {{ block.shopify_attributes }}
 >
   {%- if product != blank -%}

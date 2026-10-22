@@ -335,4 +335,26 @@
   .shopify-payment-button__more-options[aria-hidden='true'] {
     display: none;
   }
+  @media screen and (min-width: 750px) {
+    .buy-buttons-block--desktop-actions .add-to-cart-button {
+      border-radius: 4px;
+    }
+
+    .buy-buttons-block--desktop-actions .product-form-buttons > span:has(.add-to-cart-button) {
+      flex: 1 1 0;
+      min-inline-size: 0;
+    }
+
+    .buy-buttons-block--desktop-actions .product-form-buttons > .product-wishlist-btn {
+      flex: 0 0 var(--height-buy-buttons);
+      inline-size: var(--height-buy-buttons);
+      min-inline-size: 0;
+      block-size: var(--height-buy-buttons);
+      padding-inline: 0;
+    }
+
+    .buy-buttons-block--desktop-actions .product-wishlist-btn [data-wishlist-label] {
+      display: none;
+    }
+  }
 {% endstylesheet %}

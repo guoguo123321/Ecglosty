@@ -6,6 +6,7 @@
     lang="{{ request.locale.iso_code }}"
   >
     <head>
+      {% render 'rpr-review-flow-cleanup' %}
       {% comment %} Delay GA until after load so it does not compete with LCP on mobile {% endcomment %}
       <script>
         window.dataLayer = window.dataLayer || [];
@@ -68,10 +69,10 @@
       {% comment %}
         Combined Listings: URL updates + MainContent refresh, swatch DOM preserved.
         CRITICAL: use Shopify asset_url ?v= (do NOT strip to ?mpg= — CDN served 0-byte empty file).
-        Verify: __mpgSoftNav.build === "20260814k"  (if undefined, hardnav.js failed to load)
+        Verify: __mpgSoftNav.build === "20261019a"  (if undefined, hardnav.js failed to load)
       {% endcomment %}
       {% if request.page_type == 'product' %}
-        <!-- mpg-hardnav-20260814k -->
+        <!-- mpg-hardnav-20261019a -->
         <style id="mpg-preserve-combined-listings">
           .mpg-swatch:not(.mpg-card) {
             view-transition-name: mpg-combined-listings;
@@ -93,7 +94,13 @@
             mix-blend-mode: normal !important;
           }
         </style>
-        <script src="{{ 'combined-listings-hardnav.js' | asset_url }}" defer></script>
+        <script
+          id="mpg-navigation-script"
+          src="{{ 'combined-listings-hardnav.js' | asset_url }}"
+          data-load-error="{{ 'products.product.group_load_error' | t | escape }}"
+          data-retry-label="{{ 'products.product.group_load_retry' | t | escape }}"
+          defer
+        ></script>
       {% endif %}
 
       {% assign model_viewer_templates = 'ring-setting,diamond' | split: ',' %}

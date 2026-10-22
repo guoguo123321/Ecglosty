@@ -150,6 +150,7 @@
         "layout": "lgs-container",
         "custom_container": "1200px",
         "box_align": "lgs-text-center",
+        "active_step_bg": "#d9d9d9",
         "color_scheme": "",
         "design_heading": "1",
         "heading_align": "lgs-text-center",
@@ -257,6 +258,13 @@
             "shape_image": "shopify://shop_images/ecglostyheartdiamond.png",
             "shape_name": "Heart"
           }
+        },
+        "diamond_shape_ghymtW": {
+          "type": "diamond_shape",
+          "settings": {
+            "shape_image": "shopify://shop_images/round_new.png",
+            "shape_name": "Quirky"
+          }
         }
       },
       "block_order": [
@@ -269,7 +277,8 @@
         "diamond_shape_kepfFC",
         "diamond_shape_byXxtm",
         "diamond_shape_94ict4",
-        "diamond_shape_bAhCn7"
+        "diamond_shape_bAhCn7",
+        "diamond_shape_ghymtW"
       ],
       "settings": {
         "api_endpoint": "https://api.ecglosty.com/20204/store/product/diamond/list",

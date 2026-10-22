@@ -19,6 +19,10 @@
   fetchpriority="low"
 ></script>
 
+{% capture filter_image_mappings %}
+  {% content_for 'blocks' %}
+{% endcapture %}
+
 {%- liquid
   assign block_settings = block.settings
   assign products_count = results_size
@@ -220,7 +224,7 @@
                         else
                           assign should_render_clear = false
                         endif
-                        render 'list-filter', filter: filter, filter_style: block_settings.filter_style, active_value_count: active_value_count, should_render_clear: should_render_clear, show_swatch_label: block_settings.show_swatch_label, sectionId: section.id
+                        render 'list-filter', filter_image_mappings: filter_image_mappings, filter: filter, filter_style: block_settings.filter_style, active_value_count: active_value_count, should_render_clear: should_render_clear, show_swatch_label: block_settings.show_swatch_label, sectionId: section.id
                       %}
                   {% endcase %}
                 {%- endfor -%}
@@ -584,7 +588,7 @@
 
                         assign active_value_count = filter.active_values | size
                         assign total_active_values = total_active_values | plus: active_value_count
-                        render 'list-filter', filter: filter, filter_style: 'vertical', active_value_count: active_value_count, should_render_clear: false, in_drawer: true, show_swatch_label: true, sectionId: section.id
+                        render 'list-filter', filter_image_mappings: filter_image_mappings, filter: filter, filter_style: 'vertical', active_value_count: active_value_count, should_render_clear: false, in_drawer: true, show_swatch_label: true, sectionId: section.id
                       %}
                   {% endcase %}
                 {%- endfor -%}
@@ -608,6 +612,18 @@
       <div
         class="facets__drawer-actions"
       >
+        <facet-remove-component
+          class="facets__drawer-clear"
+          data-url="{{ results_url | escape }}"
+        >
+          <button
+            class="button-secondary facets__drawer-clear-button"
+            type="button"
+            on:click="/removeFilter?form={{ form_component }}"
+          >
+            {{- 'actions.clear_all' | t -}}
+          </button>
+        </facet-remove-component>
         {% if products_count > 0 %}
           <button
             class="button facets__see-results"
@@ -1424,6 +1440,10 @@
   }
 
   /* Clear all button */
+  .facets__drawer-clear {
+    display: none;
+  }
+
   .facets__clear-all {
     display: none;
     cursor: pointer;
@@ -1679,6 +1699,11 @@
       "unit": "px",
       "default": 20,
       "visible_if": "{{ block.settings.filter_style == 'vertical' }}"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_filter-image"
     }
   ]
 }

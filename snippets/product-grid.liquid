@@ -91,6 +91,18 @@
     --padding-inline-end: {{ section.settings.padding-inline-end }}px;
   "
 >
+  {% if template.name == 'collection' %}
+    <div class="collection-filter-loading" data-vm-loading-indicator role="status" hidden>
+      <svg class="collection-filter-loading__spinner" width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="3" stroke-linecap="round">
+          {% for ray in (0..7) %}
+            <path d="M24 4v8" transform="rotate({{ ray | times: 45 }} 24 24)" />
+          {% endfor %}
+        </g>
+      </svg>
+      <span class="visually-hidden">{{ 'accessibility.loading_collection' | t }}</span>
+    </div>
+  {% endif %}
   <div
     style="
       grid-column: var(--full-width);
@@ -170,6 +182,39 @@
 </div>
 
 {% stylesheet %}
+  .main-collection-grid {
+    position: relative;
+  }
+
+  .collection-filter-loading:not([hidden]) {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-block-start: 64px;
+    min-block-size: 160px;
+    color: var(--color-foreground);
+    background: rgb(var(--color-background-rgb) / var(--opacity-70));
+    cursor: progress;
+  }
+
+  .collection-filter-loading__spinner {
+    inline-size: 32px;
+    block-size: 32px;
+    flex-shrink: 0;
+    animation: collection-filter-spin calc(var(--animation-speed-slow) * 10) linear infinite;
+  }
+
+  @keyframes collection-filter-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .collection-filter-loading__spinner { animation: none; }
+  }
+
   .product-grid {
     --product-grid-gap: var(--product-grid-gap-mobile);
     --mobile-columns: 2; /* Default value */

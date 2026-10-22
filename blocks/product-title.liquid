@@ -24,7 +24,8 @@
     {% assign display_title = closest.product.title %}
   {% endif %}
   {% liquid
-    assign product_title = '<p role="heading" aria-level="3" ref="productCardTitle">' | append: display_title | append: '</p>'
+    assign display_title_escaped = display_title | escape
+    assign product_title = '<p role="heading" aria-level="3" ref="productCardTitle">' | append: display_title_escaped | append: '</p>'
 
     capture product_title_url
       render 'collection-product-url', url: selected_variant.url, product: closest.product

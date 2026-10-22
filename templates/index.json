@@ -190,6 +190,7 @@
         "group_xwnnYm": {
           "type": "group",
           "name": "t:names.group",
+          "disabled": true,
           "settings": {
             "content_direction": "column",
             "vertical_on_mobile": true,
@@ -353,14 +354,14 @@
       "name": "t:names.hero_bottom_aligned",
       "settings": {
         "media_type_1": "image",
-        "image_1": "shopify://shop_images/banner.jpg",
+        "image_1": "shopify://shop_images/ecglosty1020pcbanner.jpg",
         "media_type_2": "image",
         "stack_media_on_mobile": false,
         "custom_mobile_media": true,
         "media_type_1_mobile": "image",
-        "image_1_mobile": "shopify://shop_images/banner_mobile.jpg",
+        "image_1_mobile": "shopify://shop_images/ecglosty1020banner.png",
         "media_type_2_mobile": "image",
-        "link": "",
+        "link": "shopify://collections/jewelry-gifts",
         "open_in_new_tab": false,
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -373,7 +374,7 @@
         "section_width": "page-width",
         "section_height": "full-screen",
         "section_height_custom": 50,
-        "color_scheme": "scheme-ee7ae4eb-fae8-4fd3-a1ad-4e4f348cd5b5",
+        "color_scheme": "scheme-a97c9659-a0db-4d84-8600-7102a1d805b4",
         "toggle_overlay": false,
         "overlay_color": "#00000026",
         "overlay_style": "gradient",
@@ -639,26 +640,50 @@
     "collection_diamonds_8Ubj4W": {
       "type": "collection-diamonds",
       "blocks": {
+        "item_Mpgiei": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/rounddiamond.png",
+            "title": "Round",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=round"
+          }
+        },
         "item_AWpNXh": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/ecglosty_Oval_Diamond.webp",
+            "image": "shopify://shop_images/ovaldiamond.png",
             "title": "Oval",
             "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=oval"
           }
         },
-        "item_Mpgiei": {
+        "item_adqUep": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/ecglosty_Round_Diamond.jpg",
-            "title": "Round",
-            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=round"
+            "image": "shopify://shop_images/cushiondiamond.png",
+            "title": "Cushion",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=cushion"
+          }
+        },
+        "item_mmxJQt": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/peardiamond.png",
+            "title": "Pear",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=pear"
+          }
+        },
+        "item_KCKjJy": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/princessdiamond.png",
+            "title": "Princess",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=princess"
           }
         },
         "item_NKTJMB": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/ecglosty_Emerald_Diamond.jpg",
+            "image": "shopify://shop_images/emeralddiamond.png",
             "title": "Emerald",
             "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=emerald"
           }
@@ -666,71 +691,47 @@
         "item_7RhGDJ": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/ecglosty_Marquise_Diamond.png",
+            "image": "shopify://shop_images/marquisediamond.png",
             "title": "Marquise",
             "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=marquise"
-          }
-        },
-        "item_q3wHQr": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/ecglosty_Radiant_Diamond.webp",
-            "title": "Radiant",
-            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=radiant"
-          }
-        },
-        "item_mmxJQt": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/ecglosty_Pear-Shaped_Diamond.jpg",
-            "title": "Pear",
-            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=pear"
-          }
-        },
-        "item_bVPQXw": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/ecglostyheartdiamond.png",
-            "title": "Heart",
-            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=heart"
-          }
-        },
-        "item_adqUep": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/ecglosty_cushion_diamond.jpg",
-            "title": "Cushion",
-            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=cushion"
-          }
-        },
-        "item_KCKjJy": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/ecglosty_Princess_Diamond.webp",
-            "title": "Princess",
-            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=princess"
           }
         },
         "item_CRRLNG": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/ecglosty_Asscher_Diamond.jpg",
+            "image": "shopify://shop_images/asscherdiamond.png",
             "title": "Asscher",
             "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=asscher"
+          }
+        },
+        "item_q3wHQr": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/radiantdiamond.png",
+            "title": "Radiant",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=radiant"
+          }
+        },
+        "item_bVPQXw": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/heartdiamond.png",
+            "title": "Heart",
+            "url": "https://ecglosty.com/collections/lab-grown-diamond?shape=heart"
           }
         }
       },
       "block_order": [
-        "item_AWpNXh",
         "item_Mpgiei",
+        "item_AWpNXh",
+        "item_adqUep",
+        "item_mmxJQt",
+        "item_KCKjJy",
         "item_NKTJMB",
         "item_7RhGDJ",
+        "item_CRRLNG",
         "item_q3wHQr",
-        "item_mmxJQt",
-        "item_bVPQXw",
-        "item_adqUep",
-        "item_KCKjJy",
-        "item_CRRLNG"
+        "item_bVPQXw"
       ],
       "name": "Collection Diamonds",
       "settings": {
@@ -777,56 +778,55 @@
         "item_3eTaTN": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/category-1.jpg",
-            "image_hover": "shopify://shop_images/category-2.jpg",
-            "title": "Engagement Rings",
-            "btn_title": "SHOP NOW",
-            "btn_link": ""
+            "image": "shopify://shop_images/1_4.png",
+            "title": "",
+            "btn_title": "Engagement Rings",
+            "btn_link": "shopify://collections/lab-grown-diamond-engagement-rings"
           }
         },
         "item_Vx6L9x": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/category-2.jpg",
-            "title": "Diamond Rings",
-            "btn_title": "SHOP NOW",
-            "btn_link": ""
+            "image": "shopify://shop_images/2_1.png",
+            "title": "",
+            "btn_title": "Wedding Rings",
+            "btn_link": "shopify://collections/lab-grown-diamond-wedding-rings"
           }
         },
         "item_AJRBda": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/category-3.jpg",
-            "title": "Earrings",
-            "btn_title": "SHOP NOW",
-            "btn_link": ""
+            "image": "shopify://shop_images/earring.png",
+            "title": "",
+            "btn_title": "Earrings",
+            "btn_link": "shopify://collections/lab-grown-diamond-earrings"
           }
         },
         "item_krwt94": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/category-4.jpg",
-            "title": "Necklaces",
-            "btn_title": "SHOP NOW",
-            "btn_link": ""
+            "image": "shopify://shop_images/8_5.png",
+            "title": "",
+            "btn_title": "Necklaces",
+            "btn_link": "shopify://collections/lab-grown-diamond-necklaces"
           }
         },
         "item_wnjPNf": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/category-5.jpg",
-            "title": "Bracelets",
-            "btn_title": "SHOP NOW",
-            "btn_link": ""
+            "image": "shopify://shop_images/6_2.png",
+            "title": "",
+            "btn_title": "Bracelets",
+            "btn_link": "shopify://collections/lab-grown-diamond-bracelets"
           }
         },
         "item_7WFQ4K": {
           "type": "item",
           "settings": {
-            "image": "shopify://shop_images/category-5.jpg",
-            "title": "Gifts",
-            "btn_title": "SHOP NOW",
-            "btn_link": ""
+            "image": "shopify://shop_images/3_1.png",
+            "title": "",
+            "btn_title": "Gifts",
+            "btn_link": "shopify://collections/jewelry-gifts"
           }
         }
       },
@@ -850,7 +850,7 @@
         "show_pagination_mb": false,
         "show_navigation_mb": false,
         "media_align_mb": "center",
-        "color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
+        "color_scheme": "scheme-65823a3e-d515-4d4b-aac8-b6a4d5977996",
         "title_type_preset": "rte",
         "title_font": "var(--font-body--family)",
         "title_font_size": "1rem",
@@ -999,6 +999,10 @@
       "settings": {
         "collection": "lab-grown-diamond-necklaces",
         "collection_number": 12,
+        "col_dk": "5",
+        "col_tb": "3",
+        "col_mb": "2",
+        "slide_mode": "row",
         "color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
         "brand_color_scheme": "scheme-a7daaf06-b576-48f7-a888-22cffc39be11",
         "title_type_preset": "rte",

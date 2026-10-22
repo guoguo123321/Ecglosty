@@ -16,6 +16,8 @@
       :root {
         --vertical_gap: {{ section.settings.option_vertical_gap | default: 15 }}px;
         --horizontal_gap: {{ section.settings.option_horizontal_gap | default: 8 }}px;
+        --spec_vertical_gap: {{ section.settings.spec_option_vertical_gap | default: 15 }}px;
+        --spec_horizontal_gap: {{ section.settings.spec_option_horizontal_gap | default: 8 }}px;
       }
 </style>
  
@@ -624,7 +626,7 @@
 
 
 /* ── Spec Selectors ── */
-.dpi-rp__specs { display: flex; flex-direction: column; gap: var(--vertical_gap); }
+.dpi-rp__specs { display: flex; flex-direction: column; gap: var(--spec_vertical_gap); }
 .dpi-rp__specs-loading { color: #aaa; font-size: 14px; padding: 20px 0; }
 .dpi-rp__spec-group { display: flex; flex-direction: column; gap: 10px; }
 .dpi-rp__spec-label {
@@ -642,7 +644,7 @@
 .dpi-rp__spec-options {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--horizontal_gap);
+  gap: var(--spec_horizontal_gap);
 }
 
 /* Shape selector */
@@ -964,6 +966,7 @@
   cursor: pointer;
   text-align: center;
   transition: background 0.2s, color 0.2s;
+  margin-top: -3px;
 }
 .dpi-rp__btn-browse-diamonds:hover {
   background: #f0f4f6;
@@ -2956,9 +2959,22 @@
 
     // ── 渲染 Spec 选择器 ──
     function renderSpecs(trees) {
+      // 保留同一个 Browse 按钮节点及其事件，避免重新渲染时被删除。
+      if (browseDiamondsBtn) browseDiamondsBtn.remove();
+
       specsEl.innerHTML = '';
-      const hasDiamond = !!localStorage.getItem('current_diamond'); 
-      trees.forEach((spec, specIndex) => {
+      const hasDiamond = !!localStorage.getItem('current_diamond');
+
+      const isDiamondQualitySpec = spec =>
+        String(spec.specName || '').trim().toLowerCase() === 'diamond quality';
+
+      // 仅调整 DOM 渲染顺序，不改变 specTrees 的 SKU 拼接顺序。
+      const displayTrees = [
+        ...trees.filter(spec => !isDiamondQualitySpec(spec)),
+        ...trees.filter(isDiamondQualitySpec)
+      ];
+
+      displayTrees.forEach((spec, specIndex) => {
         const isCenterstone = spec.specName && spec.specName.toLowerCase().includes('centerstone'); 
         // ── 有 current_diamond 且是 centerstone：跳过渲染，但默认选中第一个值 ──
         if (hasDiamond && isCenterstone) {
@@ -2971,6 +2987,11 @@
 
         const group = document.createElement('div');
         group.className = 'dpi-rp__spec-group';
+
+        if (isDiamondQualitySpec(spec)) {
+          group.dataset.diamondQuality = 'true';
+        }
+
 
         const labelRow = document.createElement('div');
         labelRow.className = 'dpi-rp__spec-label';
@@ -3103,9 +3124,25 @@
 
 
         group.appendChild(optionsRow);
+
+        // Browse 按钮紧跟 Centerstone 的选项，不再放在购买面板里。
+        if (isCenterstone && browseDiamondsBtn) {
+          group.appendChild(browseDiamondsBtn);
+        }
+
         specsEl.appendChild(group);
       });
+
+      // 没有渲染 Centerstone 时，保留 Browse 按钮，
+      // 同时确保它仍位于 Diamond Quality 前面。
+      if (browseDiamondsBtn && !specsEl.contains(browseDiamondsBtn)) {
+        const qualityGroup = specsEl.querySelector(
+          '[data-diamond-quality="true"]'
+        );
+        specsEl.insertBefore(browseDiamondsBtn, qualityGroup);
+      }
     }
+
 
     // ── SKU 匹配 ──
     function findMatchedSku() {
@@ -3233,10 +3270,154 @@
       });
     }
 
+    // ── 折叠内容中的动态选项文字和条件文案 ──
+    function updateAccordionContent() {
+      const normalizeName = value =>
+        String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+
+      function getSelectedValue(names) {
+        const spec = specTrees.find(item =>
+          names.includes(normalizeName(item.specName))
+        );
+
+        if (!spec) return '';
+
+        const selectedId = selectedSpecs[spec.specId];
+
+        const selectedValue = (spec.specValues || []).find(value =>
+          String(value.specValueId) === String(selectedId)
+        );
+
+        return selectedValue ? String(selectedValue.specValue || '') : '';
+      }
+
+      const metalValue = getSelectedValue(['metal']);
+
+      const showRhodium = [
+        '14k white gold',
+        '18k white gold'
+      ].includes(normalizeName(metalValue));
+
+      const values = {
+        shape: getSelectedValue(['diamond shape', 'shape']),
+        metal: metalValue
+      };
+
+      section.querySelectorAll('[data-dpi-dynamic-content]').forEach(content => {
+        if (!content.hasAttribute('data-dpi-tokens-ready')) {
+          const walker = document.createTreeWalker(
+            content,
+            NodeFilter.SHOW_TEXT,
+            {
+              acceptNode(node) {
+                if (node.parentElement?.closest(
+                  'script, style, textarea, code, pre, ' +
+                  '[data-dpi-content-token], [data-dpi-rhodium]'
+                )) {
+                  return NodeFilter.FILTER_REJECT;
+                }
+
+                return /\[\[(shape|metal|rhodium)\]\]/i.test(
+                  node.nodeValue || ''
+                )
+                  ? NodeFilter.FILTER_ACCEPT
+                  : NodeFilter.FILTER_REJECT;
+              }
+            }
+          );
+
+          const textNodes = [];
+
+          while (walker.nextNode()) {
+            textNodes.push(walker.currentNode);
+          }
+
+          textNodes.forEach(node => {
+            const text = node.nodeValue || '';
+
+            // 条件文案优先整体匹配，Shape / Metal 单独匹配。
+            const pattern =
+              /\[\[rhodium\]\]([\s\S]*?)\[\[\/rhodium\]\]|\[\[(shape|metal)\]\]/gi;
+
+            const fragment = document.createDocumentFragment();
+
+            let lastIndex = 0;
+            let match;
+
+            while ((match = pattern.exec(text)) !== null) {
+              fragment.appendChild(
+                document.createTextNode(text.slice(lastIndex, match.index))
+              );
+
+              const span = document.createElement('span');
+
+              if (match[1] !== undefined) {
+                // 文案来自 content，而不是写死在 JavaScript 里。
+                span.setAttribute('data-dpi-rhodium', '');
+                span.textContent = match[1];
+              } else {
+                span.dataset.dpiContentToken = match[2].toLowerCase();
+              }
+
+              fragment.appendChild(span);
+              lastIndex = pattern.lastIndex;
+            }
+
+            fragment.appendChild(
+              document.createTextNode(text.slice(lastIndex))
+            );
+
+            node.replaceWith(fragment);
+          });
+
+          content.setAttribute('data-dpi-tokens-ready', '');
+        }
+
+        // 更新 Shape 和 Metal。
+        content.querySelectorAll('[data-dpi-content-token]').forEach(token => {
+          const value = values[token.dataset.dpiContentToken] || '';
+
+          if (token.textContent !== value) {
+            token.textContent = value;
+          }
+        });
+
+        // 根据 Metal 显示或隐藏条件文案。
+        content.querySelectorAll('[data-dpi-rhodium]').forEach(element => {
+          element.hidden = !showRhodium;
+          element.style.setProperty(
+            'display',
+            showRhodium ? 'inline' : 'none'
+          );
+
+          // 如果整段只有这一句，同步隐藏外层段落，避免留下空行。
+          const parent = element.parentElement;
+
+          if (parent && parent !== content && parent.tagName === 'P') {
+            const isStandalone = Array.from(parent.childNodes).every(node =>
+              node === element ||
+              (node.nodeType === Node.TEXT_NODE && !node.textContent.trim()) ||
+              (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR')
+            );
+
+            if (isStandalone) {
+              parent.hidden = !showRhodium;
+
+              if (showRhodium) {
+                parent.style.removeProperty('display');
+              } else {
+                parent.style.setProperty('display', 'none');
+              }
+            }
+          }
+        });
+      });
+    }
 
 
     // ── Spec 变化处理 ──
     function onSpecChange() {
+      updateAccordionContent();
       const sku = findMatchedSku();
       if (!sku) return;
 
@@ -3282,11 +3463,34 @@
         
           let selectedSku = sku;
             selectedSku.medias = medias;
+            // 保存当前页面变体数据中的 variantId → specSkuValue 对应关系
+            const variantSpecSkuMap = {};
+
+            if (attrsPos) {
+              const optionKey = `option${attrsPos}`;
+
+              variantsJson.forEach(variant => {
+                const specSkuValue = variant[optionKey];
+
+                if (variant.id != null && specSkuValue != null) {
+                  variantSpecSkuMap[specSkuValue] = String(variant.id);
+                }
+              });
+            }
+
             const saveData = {
               ...currentProductData,
               selectedSku: selectedSku,
               selectedVariantId: shopifyVariant ? shopifyVariant.numericId : null,
+              variantSpecSkuMap: variantSpecSkuMap,
             };
+            const selectedShapeBtn = section.querySelector(
+              '.dpi-rp__opt-shape.selected'
+            );
+            if (selectedShapeBtn) {
+              saveData.selectedShape = selectedShapeBtn.dataset.specValue;
+            }
+
             localStorage.setItem('current_ringsetting', JSON.stringify(saveData));
             const diamond = localStorage.getItem('current_diamond');
             if (diamond) {
@@ -3311,16 +3515,30 @@
                 }
               }
 
-              // 拼接 shape 参数
-              if(shapeParam){
-                const separator=current_collections_diamond.includes('?')?'&':'?';
-                current_collections_diamond=current_collections_diamond+separator+'shape='+encodeURIComponent(shapeParam);
+              // 使用戒托当前选择的 Shape，替换旧筛选 URL 中的 Shape。
+              // 保留其他筛选条件，但重新从第 1 页开始。
+              const diamondURL = new URL(
+                current_collections_diamond,
+                window.location.origin
+              );
+
+              if (shapeParam) {
+                // set 会替换旧值，并清除重复的 shape 参数。
+                diamondURL.searchParams.set('shape', shapeParam);
               }
 
-              // 存入 localStorage（含 shape 参数）
-              localStorage.setItem('current_collections_diamond',current_collections_diamond);
+              diamondURL.searchParams.set('page', '1');
 
-              window.location.href=current_collections_diamond;
+              current_collections_diamond =
+                diamondURL.pathname +
+                diamondURL.search +
+                diamondURL.hash;
+
+              localStorage.setItem(
+                'current_collections_diamond',
+                current_collections_diamond
+              );
+              window.location.href = current_collections_diamond;
 
             }
         });
@@ -3409,8 +3627,62 @@
     const dpiRpPriceLabel     = section.querySelector(`#dpi-rp__price-label`);
 
     const addonsEngraving     = section.querySelector(`#dpi-rp__addons-engraving-${sid}`);
-    
+        // 隐藏/恢复 Diamond Quality。
+    // 进入 Browse 模式时，直接同步第一个值，不触发选项点击事件。
+    function syncDiamondQualityMode(isBrowseMode) {
+      specTrees.forEach(spec => {
+        const isDiamondQuality =
+          String(spec.specName || '').trim().toLowerCase() ===
+          'diamond quality';
+
+        if (!isDiamondQuality) return;
+
+        const group = Array.from(
+          specsEl.querySelectorAll('[data-diamond-quality="true"]')
+        ).find(el =>
+          Array.from(el.querySelectorAll('[data-spec-id]')).some(
+            btn => btn.dataset.specId === String(spec.specId)
+          )
+        );
+
+        if (group) {
+          group.hidden = isBrowseMode;
+
+          if (isBrowseMode) {
+            group.style.setProperty('display', 'none', 'important');
+          } else {
+            group.style.removeProperty('display');
+          }
+        }
+
+        if (!isBrowseMode) return;
+
+        const firstValue = spec.specValues?.[0];
+        if (!firstValue) return;
+
+        selectedSpecs[spec.specId] = firstValue.specValueId;
+
+        if (group) {
+          group.querySelectorAll('[data-spec-value-id]').forEach(btn => {
+            btn.classList.toggle(
+              'selected',
+              btn.dataset.specValueId === String(firstValue.specValueId)
+            );
+          });
+
+          const selectedValEl = group.querySelector(
+            '.dpi-rp__spec-selected-val'
+          );
+
+          if (selectedValEl) {
+            selectedValEl.textContent = firstValue.specValue;
+          }
+        }
+      });
+    }
+
     function switchToDefaultMode() {
+      syncDiamondQualityMode(false);
       // 1. 隐藏 CHOOSE THIS SETTING，显示 ADD TO BAG
       if (chooseBtn)   chooseBtn.style.display = 'none';
       if (addToBagBtn) addToBagBtn.style.display = '';
@@ -3433,6 +3705,7 @@
     }
 
     function switchToBrowseMode() {
+      syncDiamondQualityMode(true);
       // 1. 隐藏 ADD TO BAG，显示 CHOOSE THIS SETTING
       if (addToBagBtn) addToBagBtn.style.display = 'none';
       if (addonsEngraving) addonsEngraving.style.display = 'none';
@@ -3466,8 +3739,9 @@
           // 复用选项事件，更新 selectedSpecs、标签及 SKU
           browseOption.click();
         } else {
-          // 保留没有渲染该选项时的原有行为
+          // 没有隐藏的 Browse 选项时，也需要重置 Quality 并更新 SKU。
           switchToBrowseMode();
+          onSpecChange();
         }
       });
     }
@@ -3852,6 +4126,26 @@
     ]
   },
   "settings": [
+    {
+      "type": "range",
+      "id": "spec_option_vertical_gap",
+      "label": "t:settings.vertical_gap",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "spec_option_horizontal_gap",
+      "label": "t:settings.horizontal_gap",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
     {
       "type": "text",
       "id": "api_endpoint",

@@ -25,7 +25,7 @@
         {{- 'icon-plus.svg' | inline_asset_content -}}
       </span>
     </summary>
-    <div class="details-content">
+    <div class="details-content" data-dpi-dynamic-content>
       {%- case blo_setts.content_type -%}
         {%- when 'text' -%}
           {{ blo_setts.text_content }}

@@ -1,55 +1,70 @@
 {%- doc -%}
-  Returns a collection-friendly product title with metal/color removed from
-  the start or end of the title.
-  Examples:
-  - "Necklace in 18K Rose Gold" → "Necklace"
-  - "18K Rose Gold Radiant Bezel Necklace" → "Radiant Bezel Necklace"
-  - "Platinum Radiant Bezel Necklace" → "Radiant Bezel Necklace"
+  Removes Metal metaobject Variant Color Title values and a preceding "in".
+  The same values are exposed as JSON for client-side updates.
+  Matching accepts the legacy Whtie spelling without changing merchant data.
 
-  @param {string} title - Raw product title
+  @param {string} [title] - Raw product title
   @param {string} [variant_title] - Optional custom.variant_title override
+  @param {string} [output] - Set to metals_json to return the matching values as JSON
+
+  @example
+  {% render 'product-style-title', title: 'Necklace in 14K White Gold' %}
 {%- enddoc -%}
 
 {%- liquid
   assign style_title = variant_title | default: title | default: '' | strip
+  assign metal_entries = shop.metaobjects.variant_color.values
+  if metal_entries == blank
+    assign metal_entries = shop.metaobjects['variant-color'].values
+  endif
+  assign metals = metal_entries | map: 'variant_color_title' | map: 'value' | compact | uniq
 
-  if style_title != blank
-    # Longer prefixes first so "18K Rose Gold" wins over "Rose Gold"
-    assign metal_prefixes = '18K Rose Gold,18K Yellow Gold,18K White Gold,18K Pink Gold,14K Rose Gold,14K Yellow Gold,14K White Gold,14K Pink Gold,10K Rose Gold,10K Yellow Gold,10K White Gold,10K Pink Gold,9K Rose Gold,9K Yellow Gold,9K White Gold,Sterling Silver,Rose Gold,Yellow Gold,White Gold,Pink Gold,Platinum,Palladium,Silver' | split: ','
+  if output == 'metals_json'
+    echo metals | json
+  else
 
-    for prefix in metal_prefixes
-      assign prefix_spaced = prefix | append: ' '
-      assign head = style_title | slice: 0, prefix_spaced.size
-      assign head_down = head | downcase
-      assign prefix_down = prefix_spaced | downcase
-      if head_down == prefix_down
-        assign style_title = style_title | remove_first: head | strip
-        break
+    for metal_value in metals
+      assign metal = metal_value | strip
+      if metal == blank
+        continue
       endif
+      # The sentinel preserves the final fragment when a title ends in metal.
+      # This spelling correction preserves length, keeping original slices aligned.
+      assign searchable_title = style_title | append: '~' | downcase | replace: 'whtie', 'white'
+      assign metal_down = metal | downcase | replace: 'whtie', 'white'
+      assign parts = searchable_title | split: metal_down
+      assign offset = 0
+      assign cleaned_title = ''
+
+      for part in parts
+        assign original_part = style_title | slice: offset, part.size
+        assign cleaned_title = cleaned_title | append: original_part
+        assign offset = offset | plus: part.size | plus: metal.size
+
+        unless forloop.last
+          assign cleaned_title = cleaned_title | rstrip
+          assign preceding_word = cleaned_title | split: ' ' | last | downcase
+          if preceding_word == 'in'
+            assign remaining_size = cleaned_title.size | minus: 2
+            assign cleaned_title = cleaned_title | slice: 0, remaining_size | rstrip
+          endif
+          assign cleaned_title = cleaned_title | append: ' '
+        endunless
+      endfor
+
+      assign style_title = cleaned_title | strip
     endfor
 
-    # Trailing " in <metal>"
-    assign title_parts = style_title | split: ' in '
-    if title_parts.size > 1
-      assign metal_tail = title_parts | last | strip | downcase
-      assign looks_like_metal = false
-      if metal_tail contains 'gold' or metal_tail contains 'platinum' or metal_tail contains 'silver' or metal_tail contains 'palladium' or metal_tail contains '白金' or metal_tail contains '黄金' or metal_tail contains '玫瑰金' or metal_tail contains '白银'
-        assign looks_like_metal = true
+    assign words = style_title | split: ' '
+    assign style_title = ''
+    for word in words
+      if word != blank
+        unless style_title == blank
+          assign style_title = style_title | append: ' '
+        endunless
+        assign style_title = style_title | append: word
       endif
-      if looks_like_metal
-        assign style_title = ''
-        for part in title_parts
-          unless forloop.last
-            if style_title != blank
-              assign style_title = style_title | append: ' in '
-            endif
-            assign style_title = style_title | append: part
-          endunless
-        endfor
-        assign style_title = style_title | strip
-      endif
-    endif
+    endfor
+    echo style_title
   endif
-
-  echo style_title
 -%}

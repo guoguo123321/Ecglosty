@@ -1090,11 +1090,11 @@
         <span>Price</span><span class="dl-chevron"><svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7242"><path d="M948.560332 281.179984c-13.765515-13.833053-36.127825-13.833053-49.89334 0L511.991302 668.591431 125.313565 281.179984c-13.763468-13.798261-36.093033-13.798261-49.856501 0-13.799284 13.798261-13.799284 36.161594 0 49.993624l410.857439 411.674037c7.067976 7.085372 16.402575 10.521634 25.675776 10.331299 9.274224 0.191358 18.608823-3.245927 25.677822-10.331299l410.891208-411.708829c6.863315-6.89913 10.331299-15.940041 10.331299-24.979928S955.423647 288.078091 948.560332 281.179984z" fill="#262B2C" p-id="7243"></path></svg></span>
       </div>
       <div class="dl-filter-group-body">
-        <div class="dl-range-wrap" data-filter="price" data-min="10" data-max="10000" data-step="10">
+        <div class="dl-range-wrap" data-filter="price" data-min="10" data-max="100000" data-step="10">
           <div class="dl-range-track">
             <div class="dl-range-fill"></div>
-            <input type="range" min="10" max="10000" step="10" value="10" data-role="min">
-            <input type="range" min="10" max="10000" step="10" value="10000" data-role="max">
+            <input type="range" min="10" max="100000" step="10" value="10" data-role="min">
+            <input type="range" min="10" max="100000" step="10" value="100000" data-role="max">
           </div>
           <div class="dl-range-labels">
             <span class="dl-range-min-label">$10</span>
@@ -1255,9 +1255,9 @@
     color: [0, 9],
     clarity: [0, 7],
     cut: [0, 4],
-    price: [10, 10000],
+    price: [10, 100000],
     _initPriceMin: 10,
-    _initPriceMax: 10000,
+    _initPriceMax: 100000,
     reports: [],
     quickShip: false,
     sort: 'popular',
@@ -1274,106 +1274,245 @@
   const CLARITY_LABELS = ['SI2','SI1','VS2','VS1','VVS2','VVS1','IF','FL'];
   const CUT_LABELS = ['Fair','Good','Very Good','Ideal','Super Ideal'];
   // ===== URL 参数回填筛选器 =====
-  function dlInitFromURL() {
-    const params = new URLSearchParams(location.search);
+  // ===== 筛选状态：URL 保存与恢复 =====
+  function dlSaveFiltersToURL() {
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
 
-    // origin
+    // 保留 URL 中与筛选无关的参数。
+    params.set('origin', state.origin);
+
+    if (state.shapes.length) {
+      params.set('shape', state.shapes.join(','));
+    } else {
+      params.delete('shape');
+    }
+
+    const ranges = [
+      ['carat', 'minCarat', 'maxCarat'],
+      ['price', 'minPrice', 'maxPrice'],
+      ['color', 'minColor', 'maxColor'],
+      ['clarity', 'minClarity', 'maxClarity'],
+      ['cut', 'minCut', 'maxCut']
+    ];
+
+    ranges.forEach(([key, minName, maxName]) => {
+      params.set(minName, String(state[key][0]));
+      params.set(maxName, String(state[key][1]));
+    });
+
+    if (state.reports.length) {
+      params.set('report', state.reports.join(','));
+    } else {
+      params.delete('report');
+    }
+
+    params.set('sort', state.sort);
+    params.set('page', String(state.page));
+
+    const nextURL = url.pathname + url.search + url.hash;
+    const currentURL =
+      window.location.pathname +
+      window.location.search +
+      window.location.hash;
+
+    // replaceState 不会让每次拖动滑块都新增一条后退记录。
+    if (nextURL !== currentURL) {
+      window.history.replaceState(window.history.state, '', nextURL);
+    }
+
+    // 保留现有选钻流程使用的 key。
+    try {
+      localStorage.setItem('current_collections_diamond', nextURL);
+    } catch (error) {
+      console.warn('[DL] Could not save collection return URL.', error);
+    }
+
+    return nextURL;
+  }
+
+  function dlInitFromURL() {
+    const params = new URLSearchParams(window.location.search);
+
     const origin = params.get('origin');
-    if (origin === 'Lab Grown' || origin === 'natural') {
+    const originButtons = Array.from(
+      document.querySelectorAll(`#dl-origin-${SID} button`)
+    );
+
+    if (
+      origin &&
+      originButtons.some(button => button.dataset.origin === origin)
+    ) {
       state.origin = origin;
-      document.querySelectorAll(`#dl-origin-${SID} button`).forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.origin === origin);
+    }
+
+    originButtons.forEach(button => {
+      button.classList.toggle(
+        'active',
+        button.dataset.origin === state.origin
+      );
+    });
+
+    // 保持当前单选 Shape 行为。
+    // 兼容旧链接：重复传入 shape 时，最后一个值代表最新选择。
+    const shapeParams = params.getAll('shape');
+    const shapeParam = shapeParams.length
+      ? shapeParams[shapeParams.length - 1]
+      : null;
+
+
+    if (shapeParam !== null) {
+      const requestedShape = shapeParam
+        .split(',')
+        .map(value => value.trim())
+        .find(Boolean);
+
+      const shapeItems = Array.from(
+        document.querySelectorAll(`#dl-shapes-${SID} .dl-shape-item`)
+      );
+
+      // 戒托页面会将空格转成连字符，比较时统一格式。
+      const normalizeShape = value =>
+        String(value || '')
+          .trim()
+          .toLowerCase()
+          .replace(/[\s_-]+/g, '');
+
+      const selectedItem = requestedShape
+        ? shapeItems.find(item =>
+            normalizeShape(item.dataset.shape) ===
+            normalizeShape(requestedShape)
+          )
+        : null;
+
+      state.shapes = selectedItem ? [selectedItem.dataset.shape] : [];
+
+      shapeItems.forEach(item => {
+        item.classList.toggle('active', item === selectedItem);
       });
     }
 
-    // shape（支持逗号分隔多个，如 shape=round,oval）
-    const shapeParam = params.get('shape');
-    if (shapeParam) {
-      const shape = shapeParam.split(',').map(s => s.trim()).find(Boolean);
-      const el = [...document.querySelectorAll(`#dl-shapes-${SID} .dl-shape-item`)]
-        .find(item => item.dataset.shape?.toLowerCase() === shape?.toLowerCase());
+    function readRangeValue(name, labels) {
+      const raw = params.get(name);
+      if (raw === null || raw.trim() === '') return null;
 
-      if (el) {
-        el.classList.add('active');
-        state.shapes = [el.dataset.shape];
-      }
+      const numericValue = Number(raw);
+      if (Number.isFinite(numericValue)) return numericValue;
+
+      if (!labels) return null;
+
+      const index = labels.findIndex(
+        label => label.toLowerCase() === raw.trim().toLowerCase()
+      );
+
+      return index >= 0 ? index : null;
     }
 
+    function restoreRange(key, minName, maxName, labels) {
+      const requestedMin = readRangeValue(minName, labels);
+      const requestedMax = readRangeValue(maxName, labels);
 
-    // range slider 通用回填
-    function setRangeSlider(filterKey, minVal, maxVal) {
-      const wrap = document.querySelector(`#dl-filters-${SID} .dl-range-wrap[data-filter="${filterKey}"]`);
+      if (requestedMin === null && requestedMax === null) return;
+
+      const wrap = document.querySelector(
+        `#dl-filters-${SID} .dl-range-wrap[data-filter="${key}"]`
+      );
       if (!wrap) return;
+
       const minInput = wrap.querySelector('[data-role=min]');
       const maxInput = wrap.querySelector('[data-role=max]');
-      if (minVal !== null && minInput) { minInput.value = minVal; minInput.dispatchEvent(new Event('input')); }
-      if (maxVal !== null && maxInput) { maxInput.value = maxVal; maxInput.dispatchEvent(new Event('input')); }
+      if (!minInput || !maxInput) return;
+
+      const absMin = Number(minInput.min);
+      const absMax = Number(maxInput.max);
+
+      const clamp = value => Math.min(absMax, Math.max(absMin, value));
+
+      let minValue = clamp(requestedMin ?? state[key][0]);
+      let maxValue = clamp(requestedMax ?? state[key][1]);
+
+      if (minValue > maxValue) {
+        [minValue, maxValue] = [maxValue, minValue];
+      }
+
+      // 必须先设置两个值，再触发事件，避免旧端点把新端点截断。
+      minInput.value = minValue;
+      maxInput.value = maxValue;
+
+      // 使用已有事件同步 state、填充条和标签。
+      minInput.dispatchEvent(new Event('input'));
     }
 
-    // carat
-    const minCarat = params.get('minCarat');
-    const maxCarat = params.get('maxCarat');
-    if (minCarat || maxCarat) {
-      setRangeSlider('carat', minCarat ? parseFloat(minCarat) : null, maxCarat ? parseFloat(maxCarat) : null);
+    // 回填过程中不触发延迟请求，最后统一 fetchData()。
+    state._batchResetting = true;
+
+    try {
+      restoreRange('carat', 'minCarat', 'maxCarat');
+      restoreRange('price', 'minPrice', 'maxPrice');
+      restoreRange('color', 'minColor', 'maxColor', COLOR_LABELS);
+      restoreRange('clarity', 'minClarity', 'maxClarity', CLARITY_LABELS);
+      restoreRange('cut', 'minCut', 'maxCut', CUT_LABELS);
+    } finally {
+      state._batchResetting = false;
     }
 
-    // price（先存 state，等 API 返回后 updatePriceSliderRange 再同步 UI）
-    const minPrice = params.get('minPrice');
-    const maxPrice = params.get('maxPrice');
-    if (minPrice) { state.price[0] = parseFloat(minPrice); state._urlPriceMin = parseFloat(minPrice); }
-    if (maxPrice) { state.price[1] = parseFloat(maxPrice); state._urlPriceMax = parseFloat(maxPrice); }
-
-    // color（支持字母 D-I 或数字索引）
-    
-    const minColorStr = params.get('minColor');
-    const maxColorStr = params.get('maxColor');
-    if (minColorStr || maxColorStr) {
-      const toIdx = s => isNaN(s) ? COLOR_LABELS.indexOf(s.toUpperCase()) : parseInt(s);
-      setRangeSlider('color', minColorStr ? toIdx(minColorStr) : null, maxColorStr ? toIdx(maxColorStr) : null);
-    }
-
-    // clarity（支持字母 FL/VVS1/... 或数字索引）
-    const minClarityStr = params.get('minClarity');
-    const maxClarityStr = params.get('maxClarity');
-    if (minClarityStr || maxClarityStr) {
-      const toIdx = s => isNaN(s) ? CLARITY_LABELS.indexOf(s.toUpperCase()) : parseInt(s);
-      setRangeSlider('clarity', minClarityStr ? toIdx(minClarityStr) : null, maxClarityStr ? toIdx(maxClarityStr) : null);
-    }
-
-    // cut（支持字母 Good/Very Good/Excellent 或数字索引）
-    const minCutStr = params.get('minCut');
-    const maxCutStr = params.get('maxCut');
-    if (minCutStr || maxCutStr) {
-      const toIdx = s => isNaN(s) ? CUT_LABELS.findIndex(c => c.toLowerCase() === s.toLowerCase()) : parseInt(s);
-      setRangeSlider('cut', minCutStr ? toIdx(minCutStr) : null, maxCutStr ? toIdx(maxCutStr) : null);
-    }
-
-    // quickShip
-    {% comment %} const quickShip = params.get('quickShip');
-    if (quickShip === 'true' || quickShip === '1') {
-      state.quickShip = true;
-      const cb = document.getElementById(`dl-quickship-${SID}`);
-      if (cb) cb.checked = true;
-    } {% endcomment %}
-
-    // report（支持逗号分隔多个，如 report=GIA,IGI）
     const reportParam = params.get('report');
-    if (reportParam) {
-      const reports = reportParam.split(',').map(s => s.trim()).filter(Boolean);
-      state.reports = reports;
-      reports.forEach(r => {
-        const cb = document.querySelector(`#dl-fg-report-${SID} input[type=checkbox][value="${r}"]`);
-        if (cb) cb.checked = true;
+
+    if (reportParam !== null) {
+      const requestedReports = reportParam
+        .split(',')
+        .map(value => value.trim())
+        .filter(Boolean);
+
+      const reportInputs = Array.from(
+        document.querySelectorAll(
+          `#dl-fg-report-${SID} input[type=checkbox]`
+        )
+      );
+
+      reportInputs.forEach(input => {
+        input.checked = requestedReports.includes(input.value);
       });
+
+      state.reports = reportInputs
+        .filter(input => input.checked)
+        .map(input => input.value);
+    }
+
+    const sort = params.get('sort');
+    if (sort) state.sort = sort;
+
+    const sortSelect = document.getElementById(`dl-sort-${SID}`);
+    if (
+      sortSelect &&
+      Array.from(sortSelect.options).some(option => option.value === state.sort)
+    ) {
+      sortSelect.value = state.sort;
+    }
+
+    const page = Number(params.get('page'));
+    if (Number.isInteger(page) && page >= 1) {
+      state.page = page;
     }
   }
-  // ===== END URL 参数回填 =====
+  // ===== END 筛选状态：URL 保存与恢复 =====
+
   // 防抖：slider 停止拖动 300ms 后才发请求
   let _dlFetchTimer = null;
+  let _dlFetchVersion = 0;
+
   function debouncedFetchData() {
+    // 筛选一变化，就让之前的请求失效，包括防抖等待期间。
+    _dlFetchVersion++;
+
+    state.page = 1;
+    dlSaveFiltersToURL();
+
     clearTimeout(_dlFetchTimer);
-    _dlFetchTimer = setTimeout(() => fetchData(), 300);
+    _dlFetchTimer = setTimeout(() => fetchData(), 1000);
   }
+
+
 
   // ---- Init ----
   function init() {
@@ -1470,11 +1609,11 @@ function updateFilterReset() {
   const tags = [];
 
   // Price
-  if (state.price[0] !== 10 || state.price[1] !== 10000) {
+  if (state.price[0] !== 10 || state.price[1] !== 100000) {
     tags.push({
       label: `$${state.price[0].toLocaleString()} - $${state.price[1].toLocaleString()}`,
       clear: () => {
-        state.price = [10, 10000];
+        state.price = [10, 100000];
         resetRangeSlider('price');
       }
     });
@@ -1598,12 +1737,20 @@ function resetRangeSlider(filterKey) {
 }
 
   function fetchData() {
+    // 直接请求时，取消尚未执行的防抖请求。
+    clearTimeout(_dlFetchTimer);
+    _dlFetchTimer = null;
+
+    // 记录本次请求版本，后续只有最新版本可以更新页面。
+    const requestVersion = ++_dlFetchVersion;
+
+    dlSaveFiltersToURL();
     updateFilterReset();
     const tbody = document.getElementById(`dl-tbody-${SID}`);
     tbody.innerHTML = '<tr><td colspan="7" class="dl-loading">Loading diamonds...</td></tr>';
     let shopDomain = window.Shopify?.shop || location.hostname;
     shopDomain= "https://"+shopDomain
-    const body = {
+    let body = {
       shopDomain: shopDomain,
       shapes:     state.shapes.length ? state.shapes : [],
       minCarat:   state.carat[0],
@@ -1628,6 +1775,9 @@ function resetRangeSlider(filterKey) {
     if(state.origin){
       body.diamondOrigin = state.origin
     }
+    if(body.shapes && body.shapes.length>0 && body.shapes[0] =='Quirky'){
+      body.shapes=['Elongated Cushion','Triangular','Cushion Antique','Cushion Mixed Cut','Hexagonal Modified Brilliant','Oval Modified Brilliant']
+    }
     {% comment %} if(state.quickShip){
       body.quickShip = 1;
     } {% endcomment %}
@@ -1642,6 +1792,8 @@ function resetRangeSlider(filterKey) {
     })
       .then(r => r.json())
       .then(json => {
+          // 旧请求即使最后才返回，也不能覆盖最新筛选结果。
+          if (requestVersion !== _dlFetchVersion) return;
           const diamonds = json.content || [];
           const total = json.totalElements || diamonds.length;
           state.data = diamonds;
@@ -1662,6 +1814,8 @@ function resetRangeSlider(filterKey) {
         })
 
       .catch((e) => {
+        // 旧请求失败时，也不能覆盖最新请求的列表或加载状态。
+        if (requestVersion !== _dlFetchVersion) return;
         console.log(e);
         tbody.innerHTML = '<tr><td colspan="7" class="dl-loading">Failed to load data. Please check your API endpoint.</td></tr>';
       });
@@ -1923,7 +2077,7 @@ function resetRangeSlider(filterKey) {
               </div>
               <div class="dl-expand-actions">
                 <button class="dl-btn-select" onclick="dlSelectDiamond('${SID}',${idx})">Select Diamond</button>
-                <button class="dl-btn-details" data-sid="${SID}" 
+                <button class="dl-btn-details" data-sid="${SID}"  data-productId="${d.productId}" 
                   data-url-handle='${JSON.stringify(d.urlHandle)}' onclick="dlViewDetails(this)">View Diamond Details</button>
               </div>
             </div>
@@ -2893,56 +3047,182 @@ window.dlSetTab = function(sid, tab, el) {
     fetchData();
   };
 
-  window.dlSelectDiamond = function(sid, idx) {
-    if (sid !== SID) return;
+    window.dlSelectDiamond = async function(sid, idx) {
+      if (sid !== SID) return;
 
-    // 找到当前选中的钻石数据
-    const diamond = state.data[idx];
-    if (!diamond) return;
+      // 找到当前选中的钻石数据
+      const diamond = state.data[idx];
+      if (!diamond) return;
 
-    // 保存到本地存储
-    localStorage.setItem('current_diamond', JSON.stringify(diamond));
+      const ringSettingRaw = localStorage.getItem('current_ringsetting');
 
-    // 判断是否已有戒托选择
-    const ringSetting = localStorage.getItem('current_ringsetting');
-    if (ringSetting) {
-      window.location.href = '/pages/purchase-review';
-    } else {
-      localStorage.setItem('select_purchase_number', 'diamond');
+      if (ringSettingRaw) {
+        try {
+          const ringSetting = JSON.parse(ringSettingRaw);
 
-      const path = window.location.pathname;
-      const search = window.location.search;
-      const fullPathAndQuery = path + search;
-      localStorage.setItem('current_collections_diamond',fullPathAndQuery);
+          if (!ringSetting || typeof ringSetting !== 'object') {
+            throw new Error('Invalid current_ringsetting');
+          }
 
-      let current_collections_ringsetting = localStorage.getItem('current_collections_ringsetting');
-      if(!current_collections_ringsetting){
-        current_collections_ringsetting = '/collections/start-with-a-setting';
-        localStorage.setItem('current_collections_ringsetting',current_collections_ringsetting);
+          const diamondShape = diamond.shape;
+          const selectedShape = ringSetting.selectedShape;
+
+           // selectedShape 不存在或为空时，保留戒托数据，继续原流程。
+          const hasSelectedShape =
+            typeof selectedShape === 'string' &&
+            selectedShape.trim() !== '';
+
+          // 仅在已有戒托形状且与钻石形状不同时，匹配并更新规格。
+          if (hasSelectedShape && selectedShape !== diamondShape) {
+            if (!diamondShape) {
+              throw new Error('Missing diamond shape');
+            }
+            const specSkuValue = ringSetting.selectedSku?.specSkuValue;
+
+            if (typeof specSkuValue !== 'string' || !specSkuValue) {
+              throw new Error('Missing selectedSku.specSkuValue');
+            }
+
+            const specValues = specSkuValue.split('::');
+            const shapeIndex = specValues.indexOf(selectedShape);
+
+            if (shapeIndex === -1) {
+              throw new Error(
+                'selectedShape was not found in selectedSku.specSkuValue'
+              );
+            }
+
+            specValues[shapeIndex] = diamondShape;
+            const nextSpecSkuValue = specValues.join('::');
+
+            // 使用新的完整规格组合匹配 Shopify variant
+            // 当前 API_ENDPOINT 是 .../store/product/diamond/list，
+            // 去掉该路径后得到与戒托详情页一致的 API_BASE。
+            const apiEndpoint = String(API_ENDPOINT || '').trim();
+            const API_BASE = apiEndpoint.replace(
+              /\/store\/product\/diamond\/list\/?(?:\?.*)?$/,
+              ''
+            );
+
+            if (!API_BASE || API_BASE === apiEndpoint) {
+              throw new Error('Unexpected diamond API endpoint: ' + apiEndpoint);
+            }
+
+            const SHOP_DOMAIN =
+              'https://' + (window.Shopify?.shop || window.location.hostname);
+
+            const res = await fetch(
+              `${API_BASE}/store/product/variant/lookup`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  shopDomain: SHOP_DOMAIN,
+                  optionField: `option1`,
+                  specSkuValue: nextSpecSkuValue
+                })
+              }
+            );
+
+            if (!res.ok) {
+              throw new Error('Variant lookup failed: HTTP ' + res.status);
+            }
+
+            const response = await res.json();
+            const node = response.data?.result?.productVariants?.edges?.[0]?.node;
+            const variantId = node?.id ? String(node.id).split('/').pop() : null;
+
+            const productSkuList =
+              ringSetting.skuCombination?.productSkuList;
+
+            // 使用相同规格组合匹配完整 productSku
+            const productSku = Array.isArray(productSkuList)
+              ? productSkuList.find(
+                  item => item.specSkuValue === nextSpecSkuValue
+                )
+              : null;
+
+            // 两项均匹配成功后才更新，避免存入不一致的数据
+            if (!variantId || !productSku) {
+              throw new Error(
+                'No matching variant or productSku: ' + nextSpecSkuValue
+              );
+            }
+
+            ringSetting.selectedVariantId = variantId;
+            ringSetting.selectedSku = productSku;
+            ringSetting.selectedShape = diamondShape;
+
+            localStorage.setItem(
+              'current_ringsetting',
+              JSON.stringify(ringSetting)
+            );
+          }
+        } catch (error) {
+          console.error('[dlSelectDiamond] 戒托规格同步失败:', error);
+          alert('Current ring setting cannot match the selected diamond shape. Please reselect the ring setting or diamond.');
+          return;
+        }
+
+        // 戒托匹配完成后，再保存钻石并跳转
+        localStorage.setItem('current_diamond', JSON.stringify(diamond));
+        window.location.href = '/pages/purchase-review';
+      } else {
+        // 未选择戒托，保留原有流程
+        localStorage.setItem('current_diamond', JSON.stringify(diamond));
+        localStorage.setItem('select_purchase_number', 'diamond');
+
+        const path = window.location.pathname;
+        const search = window.location.search;
+        const fullPathAndQuery = path + search;
+        localStorage.setItem(
+          'current_collections_diamond',
+          fullPathAndQuery
+        );
+
+        let current_collections_ringsetting =
+          localStorage.getItem('current_collections_ringsetting');
+
+        if (!current_collections_ringsetting) {
+          current_collections_ringsetting =
+            '/collections/start-with-a-setting';
+
+          localStorage.setItem(
+            'current_collections_ringsetting',
+            current_collections_ringsetting
+          );
+        }
+
+        window.location.href = current_collections_ringsetting;
       }
-      window.location.href = current_collections_ringsetting;
-    }
-  };
+    };
+
 
 
   window.dlViewDetails = function(button) {
-   const sid = button.dataset.sid;
-  // dataset 会自动处理 HTML 实体转义，直接 parse 即可
-  const urlHandle = JSON.parse(button.dataset.urlHandle);
-    // e.g. window.location.href = '/products/diamond-' + id;
-     const ringSetting = localStorage.getItem('current_ringsetting');
+    const sid = button.dataset.sid;
+    if (sid && sid !== SID) return;
+
+    const urlHandle = JSON.parse(button.dataset.urlHandle);
+    if (!urlHandle) return;
+
+    // 确保浏览器后退和已有返回链接都使用最新筛选参数。
+    dlSaveFiltersToURL();
+    clearTimeout(_dlFetchTimer);
+
+    const ringSetting = localStorage.getItem('current_ringsetting');
+
     if (ringSetting) {
       localStorage.setItem('select_purchase_number', 'ringSetting');
-    }else{
+    } else {
       localStorage.setItem('select_purchase_number', 'diamond');
     }
-    const path = window.location.pathname;
-    const search = window.location.search;
-    const fullPathAndQuery = path + search;
-    localStorage.setItem('current_collections_diamond',fullPathAndQuery);
-    
+
     window.location.href = '/products/' + urlHandle;
-  };
+    };
+
 
   // ===== WISHLIST HELPERS =====
 

@@ -1,5 +1,13 @@
+{% comment %}
+  Product collection carousel with single-item or responsive row navigation.
+  @example
+  Configure the collection and select one or row in the slide mode setting.
+{% endcomment %}
 {% liquid
   assign se_stts = section.settings
+  assign col_dk = se_stts.col_dk | default: 5 | plus: 0
+  assign col_tb = se_stts.col_tb | default: 3 | plus: 0
+  assign col_mb = se_stts.col_mb | default: 2 | plus: 0
   assign set_blo = section.blocks
   assign stt_layout = se_stts.layout
   if stt_layout == 'lgs-container'
@@ -20,6 +28,9 @@
     assign show_nav = true
   endif
 %}
+{%- capture image_sizes -%}
+  (min-width: 1025px) {{ 100.0 | divided_by: col_dk }}vw, (min-width: 768px) {{ 100.0 | divided_by: col_tb }}vw, {{ 100.0 | divided_by: col_mb }}vw
+{%- endcapture -%}
 <style>
   {%- if se_stts.layout == 'custom-container' -%}
   .{{ section.id }} .custom-container{max-width:{{ se_stts.custom_container }};margin: 0 auto;}
@@ -91,7 +102,7 @@
                             class: 'index-collection-img index-collection-img-main',
                             loading: 'lazy',
                             widths: '200,300,400,600',
-                            sizes: '(min-width: 1025px) 20vw, (min-width: 768px) 33vw, 50vw',
+                            sizes: image_sizes,
                             alt: product.title,
                             width: main_media.width,
                             height: main_media.height
@@ -107,7 +118,7 @@
                             class: 'index-collection-img index-collection-img-hover',
                             loading: 'lazy',
                             widths: '200,300,400,600',
-                            sizes: '(min-width: 1025px) 20vw, (min-width: 768px) 33vw, 50vw',
+                            sizes: image_sizes,
                             alt: product.title,
                             width: hover_media.width,
                             height: hover_media.height
@@ -165,9 +176,11 @@
 themeSwiperReady(function () {
 
     new Swiper('.{{ section.id }} .index-collection', {
-      slidesPerView : 2,
+      slidesPerView: {{ col_mb }},
+      slidesPerGroup: {% if se_stts.slide_mode == 'row' %}{{ col_mb }}{% else %}1{% endif %},
       loop: true,
-      loopAdditionalSlides: 5,
+      // Keep loop duplicates aligned with row groups at every breakpoint.
+      loopAdditionalSlides: {% if se_stts.slide_mode == 'row' %}0{% else %}5{% endif %},
       {%- if show_pag -%}
       pagination: {
         el: '.{{ section.id }} .index-collection-pagination',
@@ -183,15 +196,18 @@ themeSwiperReady(function () {
        breakpointsBase: 'container',
        breakpoints: { 
          0: {
-           slidesPerView: 2,
+           slidesPerView: {{ col_mb }},
+           slidesPerGroup: {% if se_stts.slide_mode == 'row' %}{{ col_mb }}{% else %}1{% endif %},
            spaceBetween: 8
          },
          768: {
-           slidesPerView: 3,
+           slidesPerView: {{ col_tb }},
+           slidesPerGroup: {% if se_stts.slide_mode == 'row' %}{{ col_tb }}{% else %}1{% endif %},
            spaceBetween: 8
          },
          1025: {
-           slidesPerView: 5,
+           slidesPerView: {{ col_dk }},
+           slidesPerGroup: {% if se_stts.slide_mode == 'row' %}{{ col_dk }}{% else %}1{% endif %},
            spaceBetween: 15
          }
        },
@@ -206,7 +222,44 @@ themeSwiperReady(function () {
     "settings": [
       {"type": "collection","id": "collection","label": "collection"},
       {"type": "range","id": "collection_number","label": "collection number","min": 1,"max": 50,"step": 1,"default": 20},
+      {
+        "type": "select","id": "col_dk","label": "t:settings.collection_items_per_row","default": "5",
+        "options": [
+          {"value": "1","label": "t:options.collection_row_counts.one"},
+          {"value": "2","label": "t:options.collection_row_counts.two"},
+          {"value": "3","label": "t:options.collection_row_counts.three"},
+          {"value": "4","label": "t:options.collection_row_counts.four"},
+          {"value": "5","label": "t:options.collection_row_counts.five"},
+          {"value": "6","label": "t:options.collection_row_counts.six"}
+        ]
+      },
+      {
+        "type": "select","id": "col_tb","label": "t:settings.collection_items_per_row_tablet","default": "3",
+        "options": [
+          {"value": "1","label": "t:options.collection_row_counts.one"},
+          {"value": "2","label": "t:options.collection_row_counts.two"},
+          {"value": "3","label": "t:options.collection_row_counts.three"},
+          {"value": "4","label": "t:options.collection_row_counts.four"}
+        ]
+      },
+      {
+        "type": "select","id": "col_mb","label": "t:settings.collection_items_per_row_mobile","default": "2",
+        "options": [
+          {"value": "1","label": "t:options.collection_row_counts.one"},
+          {"value": "2","label": "t:options.collection_row_counts.two"}
+        ]
+      },
 
+      {
+        "type": "select",
+        "id": "slide_mode",
+        "label": "t:settings.collection_slide_mode",
+        "options": [
+          {"value": "one","label": "t:options.collection_slide_one"},
+          {"value": "row","label": "t:options.collection_slide_row"}
+        ],
+        "default": "one"
+      },
       {"type": "header","content": "Colors"},
       {"type": "color_scheme","id": "color_scheme","label": "t:settings.color_scheme","default": "scheme-1","info": "Navigation arrows. Title / price colors come from Typography below. Section heading uses Headings / Sub heading when set; otherwise Config Header"},
       {"type": "color_scheme","id": "brand_color_scheme","label": "Brand badge","default": "scheme-1"},
